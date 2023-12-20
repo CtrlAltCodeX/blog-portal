@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ListingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +15,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('dashboard');
+});
+
+Route::prefix('listing')->group(function () {
+    Route::get('/', [ListingController::class, 'index'])->name('listing.index');
+
+    Route::get('/create', [ListingController::class, 'create'])->name('listing.create');
 });
