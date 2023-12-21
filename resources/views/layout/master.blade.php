@@ -22,27 +22,30 @@
     <link href="/assets/css/themes/all-themes.css" rel="stylesheet" />
     <link href="/custom.css" rel="stylesheet" />
     @stack('css')
+	@vite('resources/css/app.css')
 </head>
 
 <body class="theme-blush">
-    <div class="color-bg">
-        <div class="sidebar__toggle" data-toggle="sidebar">
-            <a class="open-toggle" href="javascript:void(0);"><i class="fe fe-menu"></i></a>
+    <div id="app">
+        <div class="color-bg">
+            <div class="sidebar__toggle" data-toggle="sidebar">
+                <a class="open-toggle" href="javascript:void(0);"><i class="fe fe-menu"></i></a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="nav-item"><a class="btn btn-danger text-white mr-3 btn-header" href="https://spruko.com/licenses.html" target="_blank"><i class="icon-bag3"></i>LogOut</a></li>
+            </ul>
         </div>
-        <ul class="nav navbar-nav">
-            <li class="nav-item"><a class="btn btn-danger text-white mr-3 btn-header" href="https://spruko.com/licenses.html" target="_blank"><i class="icon-bag3"></i>LogOut</a></li>
-        </ul>
+    
+        <section class="d-flex">
+            @include('layout.sidebar')
+    
+            <div class="main-section">
+                @yield('section')
+            </div>
+        </section>
     </div>
-
-    <section class="d-flex">
-        @include('layout.sidebar')
-
-        <div class="main-section">
-            @yield('section')
-        </div>
-    </section>
-
     @stack('scripts')
+	@vite('resources/js/app.js')
 </body>
 
 </html>
