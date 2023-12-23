@@ -23,3 +23,11 @@ Route::prefix('listing')->group(function () {
 
     Route::get('/create', [ListingController::class, 'create'])->name('listing.create');
 });
+
+
+Route::get('user', function () {
+    return view('users.index');
+});
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
