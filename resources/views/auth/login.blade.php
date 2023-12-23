@@ -15,7 +15,7 @@
                 <div class="tab-content">
                     <div class="tab-pane active" id="tab5">
                         <div class="wrap-input100 validate-input input-group is-invalid">
-                            <input type="email" class="form-control @error('email') is-invalid @enderror"
+                            <input type="email" class="form-control @error('email') is-invalid @enderror" name="email"
                                 placeholder="Email" value="{{ old('email') }}" autocomplete="email" autofocus>
 
                             @error('email')
@@ -26,7 +26,7 @@
                         </div>
 
                         <div class="wrap-input100 validate-input input-group mt-5" id="Password-toggle">
-                            <input type="password" class="form-control @error('password') is-invalid @enderror"
+                            <input type="password" class="form-control @error('password') is-invalid @enderror" name="password"
                                 placeholder="Password" autofocus>
 
                             @error('password')
