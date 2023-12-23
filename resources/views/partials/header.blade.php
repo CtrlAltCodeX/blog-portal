@@ -12,10 +12,10 @@
                                 class="header-brand-img light-logo1" alt="logo">
                         </a>
                         <!-- LOGO -->
-                        <div class="main-header-center ms-3 d-none d-lg-block">
+                        {{-- <div class="main-header-center ms-3 d-none d-lg-block">
                             <input class="form-control" placeholder="Search for results..." type="search">
                             <button class="btn px-0 pt-2"><i class="fe fe-search" aria-hidden="true"></i></button>
-                        </div>
+                        </div> --}}
                         <div class="d-flex order-lg-2 ms-auto header-right-icons">
                             <div class="dropdown d-none">
                                 <a href="javascript:void(0)" class="nav-link icon" data-bs-toggle="dropdown">
@@ -40,7 +40,7 @@
                             <div class="navbar navbar-collapse responsive-navbar p-0">
                                 <div class="collapse navbar-collapse" id="navbarSupportedContent-4">
                                     <div class="d-flex order-lg-2">
-                                        <div class="dropdown d-lg-none d-flex">
+                                        {{-- <div class="dropdown d-lg-none d-flex">
                                             <a href="javascript:void(0)" class="nav-link icon"
                                                 data-bs-toggle="dropdown">
                                                 <i class="fe fe-search"></i>
@@ -136,9 +136,9 @@
                                                     class="dropdown-item text-center p-3 text-muted">View all
                                                     Notification</a>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <!-- NOTIFICATIONS -->
-                                        <div class="dropdown  d-flex message">
+                                        {{-- <div class="dropdown  d-flex message">
                                             <a class="nav-link icon text-center" data-bs-toggle="dropdown">
                                                 <i class="fe fe-message-square"></i><span class="pulse-danger"></span>
                                             </a>
@@ -217,14 +217,14 @@
                                                     class="dropdown-item text-center p-3 text-muted">See all
                                                     Messages</a>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <!-- MESSAGE-BOX -->
-                                        <div class="dropdown d-flex header-settings">
+                                        {{-- <div class="dropdown d-flex header-settings">
                                             <a href="javascript:void(0);" class="nav-link icon"
                                                 data-bs-toggle="sidebar-right" data-target=".sidebar-right">
                                                 <i class="fe fe-align-right"></i>
                                             </a>
-                                        </div>
+                                        </div> --}}
                                         <!-- SIDE-MENU -->
                                         <div class="dropdown d-flex profile-1">
                                             <a href="javascript:void(0)" data-bs-toggle="dropdown"
