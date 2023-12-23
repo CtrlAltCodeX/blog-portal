@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\ListingController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+Illuminate\Support\Facades\Auth::routes();
 
 /*
 |--------------------------------------------------------------------------
@@ -13,21 +14,6 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-Route::get('/', function () {
-    return view('dashboard');
+Route::group(['prefix' => 'admin'], function()  {
+    Route::resource('users', UserController::class);
 });
-
-Route::prefix('listing')->group(function () {
-    Route::get('/', [ListingController::class, 'index'])->name('listing.index');
-
-    Route::get('/create', [ListingController::class, 'create'])->name('listing.create');
-});
-
-
-Route::get('user', function () {
-    return view('users.index');
-});
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
