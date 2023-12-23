@@ -13,7 +13,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('users.index');
+        $users = User::orderBy('id', 'asc')->paginate(1);
+
+        return view('users.index', compact('users'));
     }
 
     /**
@@ -31,6 +33,8 @@ class UserController extends Controller
     {
         User::create($request->validated());
 
+        session()->flash('success', __('User created successfully.'));
+
         return redirect()->route('users.index');
     }
 
@@ -45,17 +49,25 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id): \Illuminate\View\View
     {
-        //
+        $user = User::find($id);
+
+        return view('users.edit', compact('user'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UserRequest $request, string $id)
     {
-        //
+        $user = User::find($id);
+
+        $user->update($request->validated());
+
+        session()->flash('success', __('User updated successfully.'));
+
+        return redirect()->route('users.index');
     }
 
     /**
@@ -63,6 +75,10 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $user = User::find($id);
+
+        $user?->delete();
+
+        return redirect()->route('users.index');
     }
 }

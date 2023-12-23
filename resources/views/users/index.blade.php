@@ -35,51 +35,44 @@
                             <table class="table text-nowrap text-md-nowrap mb-0">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
-                                        <th>Name</th>
-                                        <th>Position</th>
-                                        <th>Salary</th>
+                                        <th>{{ __('ID') }}</th>
+                                        <th>{{ __('Name') }}</th>
+                                        <th>{{ __('Email') }}</th>
+                                        <th>{{ __('Actions') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Joan Powell</td>
-                                        <td>Associate Developer</td>
-                                        <td>$450,870</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Gavin Gibson</td>
-                                        <td>Account manager</td>
-                                        <td>$230,540</td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>Julian Kerr</td>
-                                        <td>Senior Javascript Developer</td>
-                                        <td>$55,300</td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td>Cedric Kelly</td>
-                                        <td>Accountant</td>
-                                        <td>$234,100</td>
-                                    </tr>
-                                    <tr>
-                                        <td>5</td>
-                                        <td>Samantha May</td>
-                                        <td>Junior Technical Author</td>
-                                        <td>$43,198</td>
-                                    </tr>
+                                    @forelse ($users as $user)
+                                        <tr>
+                                            <td>{{ $user->id }}</td>
+                                            <td>{{ $user->name }}</td>
+                                            <td><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></td>
+                                            <td>
+                                                <div class="btn-group" role="group" aria-label="{{ __('Actions') }}">
+                                                    <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary">{{ __('EDIT') }}</a>
+                                                    <button type="button" onclick="confim('{{ __('Are you sure want to delete this records?') }}');document.getElementById('delete-user').submit()" class="btn btn-danger">{{ __('DELETE') }}</button>
+                                                    <form action="{{ route('users.destroy', $user->id) }}" id="delete-user" method="post">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="5" class="text-center">{{ __('No records found.') }}</td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
                     </div>
 
-                    <div class="card-footer">
-
-                    </div>
+                    @if (count($users))
+                        <div class="card-footer">
+                            {!! $users->links() !!}
+                        </div>                       
+                    @endif
                 </div>
             </div>
         </div>

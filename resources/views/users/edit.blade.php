@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', __('Create User'))
+@section('title', $user->name)
 
 @section('content')
     <!-- CONTAINER -->
@@ -8,28 +8,29 @@
 
         <!-- PAGE-HEADER -->
         <div class="page-header">
-            <h1 class="page-title">{{ __('Create User') }}</h1>
+            <h1 class="page-title">{{ __('Update User') }}</h1>
             <div>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="javascript:void(0)">{{ __('Users') }}</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">{{ __('Create User') }}</li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ __('Update User') }}</li>
                 </ol>
             </div>
         </div>
         <!-- PAGE-HEADER END -->
 
         <!-- Row -->
-        <form action="{{ route('users.store') }}" method="POST">
+        <form action="{{ route('users.update', $user->id) }}" method="POST">
             @csrf
+            @method('PUT')
             <div class="row">
                 <div class="col-md-12 col-xl-12">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between">
                             <h4 class="card-title">
-                                {{ __('Create User') }}
+                                {{ __('Update User') }}
                             </h4>
 
-                            <button type="submit" class="btn btn-primary float-right">Save</button>
+                            <button type="submit" class="btn btn-primary float-right">{{ __('Save') }}</button>
                         </div>
 
                         <div class="card-body">
@@ -38,7 +39,8 @@
                                     <label for="name" class="form-label">{{ __('Name') }}</label>
                                     <input id="name" type="text"
                                         class="form-control @error('name') is-invalid @enderror" name="name"
-                                        value="{{ old('name') }}" autocomplete="name" autofocus placeholder="Name">
+                                        value="{{ old('name') ?? $user->name }}" autocomplete="name" autofocus
+                                        placeholder="Name">
 
                                     @error('name')
                                         <span class="invalid-feedback" role="alert">
@@ -51,36 +53,14 @@
 
                                     <input id="email" type="email"
                                         class="form-control @error('email') is-invalid @enderror" name="email"
-                                        value="{{ old('email') }}" autocomplete="email" placeholder="Email">
+                                        value="{{ old('email') ?? $user->email }}" autocomplete="email"
+                                        placeholder="Email">
 
                                     @error('email')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                     @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="password" class="form-label">{{ __('Password') }}</label>
-
-                                    <input id="password" type="password"
-                                        class="form-control @error('password') is-invalid @enderror" name="password"
-                                        autocomplete="new-password" placeholder="Password">
-
-                                    @error('password')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="password_confirmation"
-                                        class="form-label">{{ __('Confirm Password') }}</label>
-
-                                    <input id="password-confirm" type="password" class="form-control"
-                                        name="password_confirmation" autocomplete="new-password"
-                                        placeholder="Confirm Password">
                                 </div>
                             </div>
                         </div>
