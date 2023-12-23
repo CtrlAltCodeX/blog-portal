@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\GoogleController;
+
 Illuminate\Support\Facades\Auth::routes();
 
 /*
@@ -14,6 +17,11 @@ Illuminate\Support\Facades\Auth::routes();
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function()  {
+Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::resource('users', UserController::class);
+
+    Route::get('settings', [SettingsController::class, 'index'])->name('setting.index');
 });
+
+Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
