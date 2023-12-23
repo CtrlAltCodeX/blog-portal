@@ -14,6 +14,6 @@ Illuminate\Support\Facades\Auth::routes();
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::group(['prefix' => 'admin'], function()  {
+Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function()  {
     Route::resource('users', UserController::class);
 });
