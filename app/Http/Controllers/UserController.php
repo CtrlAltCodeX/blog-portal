@@ -90,6 +90,8 @@ class UserController extends Controller
 
         $user?->delete();
 
+        session()->flash('success', __('User delete successfully.'));
+
         return redirect()->route('users.index');
     }
 }

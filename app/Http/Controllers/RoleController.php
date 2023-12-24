@@ -60,6 +60,8 @@ class RoleController extends Controller
 
         $role->syncPermissions($request->permissions);
 
+        session()->flash('success', __("Role created successfully."));
+
         return redirect()->route('roles.index');
     }
 
@@ -89,6 +91,8 @@ class RoleController extends Controller
         $role->update(['name' => $request->name]);
         $role->syncPermissions($request->permissions);
 
+        session()->flash('error', __("Role updated successfully."));
+
         return redirect()->route('roles.index');
     }
 
@@ -101,6 +105,8 @@ class RoleController extends Controller
     public function destroy(Role $role)
     {
         $role->delete();
+
+        session()->flash('error', __("Role deleted successfully."));
 
         return redirect()->route('roles.index');
     }
