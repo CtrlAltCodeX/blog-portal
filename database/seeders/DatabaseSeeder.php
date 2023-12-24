@@ -14,8 +14,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $adminRole = Role::create(['name' => 'admin']);
-        $writerRole = Role::create(['name' => 'writer']);
+        $adminRole = Role::create(['name' => 'Admin']);
+        $writerRole = Role::create(['name' => 'Writer']);
 
         Permission::create(['name' => 'Post access']);
         Permission::create(['name' => 'Post edit']);
@@ -46,7 +46,7 @@ class DatabaseSeeder extends Seeder
         $adminRole->givePermissionTo(Permission::all());
 
         User::create([
-            'name'     => 'writer',
+            'name'     => 'Writer',
             'email'    => 'writer@example.com',
             'password' => bcrypt('admin123'),
         ])->assignRole($writerRole);
