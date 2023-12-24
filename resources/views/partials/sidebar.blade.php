@@ -34,27 +34,32 @@
                 </li>
 
                 @can('User access')
-                    <li class="slide">
-                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
+                    <li class="slide {{ request()->is('admin/users*') ? 'is-expanded' : '' }}">
+                        <a class="side-menu__item {{ request()->is('admin/users*') ? 'active is-expanded' : '' }}"
+                            data-bs-toggle="slide" href="javascript:void(0)"><i
                                 class="side-menu__icon fe fe-users"></i><span
                                 class="side-menu__label">{{ __('Users') }}</span><i
                                 class="angle fe fe-chevron-right"></i></a>
                         <ul class="slide-menu">
                             <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
-                            <li><a href="{{ route('users.index') }}" class="slide-item">{{ __('Users') }}</a></li>
+                            <li><a href="{{ route('users.index') }}"
+                                    class="slide-item {{ request()->is('admin/users*') ? 'active' : '' }}">{{ __('Users') }}</a>
+                            </li>
                         </ul>
                     </li>
                 @endcan
 
                 @can('Role access')
-                    <li class="slide">
-                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
-                                class="side-menu__icon fe fe-lock"></i><span
+                    <li class="slide {{ request()->is('admin/roles*') ? 'is-expanded' : '' }}">
+                        <a class="side-menu__item  {{ request()->is('admin/roles*') ? 'active is-expanded' : '' }}"
+                            data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-lock"></i><span
                                 class="side-menu__label">{{ __('Role & Permission') }}</span><i
                                 class="angle fe fe-chevron-right"></i></a>
                         <ul class="slide-menu">
                             <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
-                            <li><a href="{{ route('roles.index') }}" class="slide-item">{{ __('Roles') }}</a></li>
+                            <li><a href="{{ route('roles.index') }}"
+                                    class="slide-item  {{ request()->is('admin/roles*') ? 'active' : '' }}">{{ __('Roles') }}</a>
+                            </li>
                         </ul>
                     </li>
                 @endcan

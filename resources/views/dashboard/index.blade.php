@@ -1,16 +1,18 @@
 @extends('layouts.master')
 
+@section('title', __("Dashboard"))
+
 @section('content')
     <!-- CONTAINER -->
     <div class="main-container container-fluid">
 
         <!-- PAGE-HEADER -->
         <div class="page-header">
-            <h1 class="page-title">{{ __('Create Role') }}</h1>
+            <h1 class="page-title">{{ __('Dashboard') }}</h1>
             <div>
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="javascript:void(0)">{{ __('Roles') }}</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">{{ __('Create Role') }}</li>
+                    <li class="breadcrumb-item"><a href="javascript:void(0)">{{ __('Dashboard') }}</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ __('Dashboard') }}</li>
                 </ol>
             </div>
         </div>
