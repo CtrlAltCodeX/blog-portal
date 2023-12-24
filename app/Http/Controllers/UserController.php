@@ -8,13 +8,26 @@ use App\Models\User;
 class UserController extends Controller
 {
     /**
+     * Initiate the class instance
+     *
+     * @return void
+     */
+    function __construct()
+    {
+        $this->middleware('role_or_permission:User access|User create|User edit|User delete', ['only' => ['index', 'show']]);
+        $this->middleware('role_or_permission:User create', ['only' => ['create', 'store']]);
+        $this->middleware('role_or_permission:User edit', ['only' => ['edit', 'update']]);
+        $this->middleware('role_or_permission:User delete', ['only' => ['destroy']]);
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index()
     {
         $users = User::orderBy('id', 'asc')->paginate(10);
 
-        return view('users.index', compact('users'));
+        return view('accounts.users.index', compact('users'));
     }
 
     /**
@@ -22,7 +35,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.create');
+        return view('accounts.users.create');
     }
 
     /**
@@ -52,7 +65,7 @@ class UserController extends Controller
     {
         $user = User::find($id);
 
-        return view('users.edit', compact('user'));
+        return view('accounts.users.edit', compact('user'));
     }
 
     /**

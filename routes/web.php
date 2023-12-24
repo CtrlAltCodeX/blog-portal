@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+
 Illuminate\Support\Facades\Auth::routes();
 
 /*
@@ -14,6 +17,7 @@ Illuminate\Support\Facades\Auth::routes();
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function()  {
+Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
+    Route::resource('roles', RoleController::class);
     Route::resource('users', UserController::class);
 });

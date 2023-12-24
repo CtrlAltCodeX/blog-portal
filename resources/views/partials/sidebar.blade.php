@@ -27,15 +27,30 @@
                 <li class="sub-category">
                     <h3>{{ __('Accounts') }}</h3>
                 </li>
-                <li class="slide">
-                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
-                            class="side-menu__icon fe fe-users"></i><span class="side-menu__label">{{ __('Users') }}</span><i
-                            class="angle fe fe-chevron-right"></i></a>
-                    <ul class="slide-menu">
-                        <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
-                        <li><a href="{{ route('users.index') }}" class="slide-item">{{ __('Users') }}</a></li>
-                    </ul>
-                </li>
+
+                @can('User access')
+                    <li class="slide">
+                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
+                                class="side-menu__icon fe fe-users"></i><span class="side-menu__label">{{ __('Users') }}</span><i
+                                class="angle fe fe-chevron-right"></i></a>
+                        <ul class="slide-menu">
+                            <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
+                            <li><a href="{{ route('users.index') }}" class="slide-item">{{ __('Users') }}</a></li>
+                        </ul>
+                    </li>
+                @endcan
+
+                @can('Role access')
+                    <li class="slide">
+                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
+                                class="side-menu__icon fe fe-lock"></i><span class="side-menu__label">{{ __('Role & Permission') }}</span><i
+                                class="angle fe fe-chevron-right"></i></a>
+                        <ul class="slide-menu">
+                            <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
+                            <li><a href="{{ route('roles.index') }}" class="slide-item">{{ __('Roles') }}</a></li>
+                        </ul>
+                    </li>
+                @endcan
             </ul>
 
             <div 
