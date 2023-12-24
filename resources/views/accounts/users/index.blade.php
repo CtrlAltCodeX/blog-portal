@@ -41,6 +41,7 @@
                                         <th>{{ __('Name') }}</th>
                                         <th>{{ __('Email') }}</th>
                                         <th>{{ __('Roles') }}</th>
+                                        <th>{{ __('Status') }}</th>
                                         @canany(['User edit', 'User delete'])
                                             <th>{{ __('Actions') }}</th>
                                         @endcanany
@@ -61,6 +62,7 @@
                                                         @endif
                                                     @endforeach
                                                 </td>
+                                                <td><span class="badge bg-{{ $user->status ? 'success' : 'danger' }}">{{ $user->status ? 'Active' : 'Inactive' }}</span></td>
                                                 <td>
                                                     <div class="btn-group btn-group-sm" role="group"
                                                         aria-label="{{ __('Actions') }}">

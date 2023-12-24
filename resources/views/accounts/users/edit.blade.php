@@ -64,24 +64,36 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="email" class="form-label">{{ __('Roles') }}</label>
+                                    <label for="status" class="form-label">{{ __('Status') }}</label>
 
-                                    <div class="row">
-                                        @foreach ($roles as $role)
-                                            <div class="col-md-4">
-                                                <div class="custom-controls-stacked">
-                                                    <label class="custom-control custom-checkbox-md">
-                                                        <input type="checkbox" class="custom-control-input" type="checkbox"
-                                                            name="roles[]" id="role_{{ $role->id }}"
-                                                            @if (count($user->roles->where('id', $role->id))) checked @endif
-                                                            value="{{ $role->name }}">
-                                                        <label class="custom-control-label" for="role_{{ $role->id }}">
-                                                            {{ $role->name }}</label>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
+                                    <select id="status" class="form-control @error('status') is-invalid @enderror"
+                                        name="status">
+                                        <option value="0" {{ $user->status == 0 ? 'selected' : '' }}>{{ __('Inactive') }}</option>
+                                        <option value="1" {{ $user->status ? 'selected' : '' }}>{{ __('Active') }}</option>
+                                    </select>
+
+                                    @error('status')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="roles" class="form-label">{{ __('Roles') }}</label>
+
+                                    @foreach ($roles as $role)
+                                        <div class="custom-controls-stacked">
+                                            <label class="custom-control custom-checkbox-md">
+                                                <input type="checkbox" class="custom-control-input" type="checkbox"
+                                                    name="roles[]" id="role_{{ $role->id }}"
+                                                    @if (count($user->roles->where('id', $role->id))) checked @endif
+                                                    value="{{ $role->name }}">
+                                                <label class="custom-control-label" for="role_{{ $role->id }}">
+                                                    {{ $role->name }}</label>
+                                            </label>
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>

@@ -25,6 +25,7 @@ class UserRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'status' => ['required', 'in:0,1'],
         ];
 
         if ($this->isMethod('patch') || $this->isMethod('put')) {

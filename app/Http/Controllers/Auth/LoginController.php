@@ -46,4 +46,16 @@ class LoginController extends Controller
     {
         return redirect()->route('login');
     }
+
+    /**
+     * Validate credentials
+     */
+    protected function credentials(Request $request)
+    {
+        return [
+            'email'    => request()->email,
+            'password' => request()->password,
+            'status'   => 1
+        ];
+    }
 }

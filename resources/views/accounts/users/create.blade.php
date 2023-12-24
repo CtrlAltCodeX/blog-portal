@@ -61,6 +61,22 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label for="status" class="form-label">{{ __('Status') }}</label>
+
+                                    <select id="status" class="form-control @error('status') is-invalid @enderror"
+                                        name="status">
+                                        <option value="0">{{ __('Active') }}</option>
+                                        <option value="1">{{ __('Inactive') }}</option>
+                                    </select>
+
+                                    @error('email')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group">
                                     <label for="password" class="form-label">{{ __('Password') }}</label>
 
                                     <input id="password" type="password"
@@ -86,21 +102,17 @@
                                 <div class="form-group">
                                     <label for="email" class="form-label">{{ __('Roles') }}</label>
 
-                                    <div class="row">
-                                        @foreach ($roles as $role)
-                                            <div class="col-md-4">
-                                                <div class="custom-controls-stacked">
-                                                    <label class="custom-control custom-checkbox-md">
-                                                        <input type="checkbox" class="custom-control-input" type="checkbox"
-                                                            name="roles[]" id="role_{{ $role->id }}"
-                                                            value="{{ $role->name }}">
-                                                        <label class="custom-control-label" for="role_{{ $role->id }}">
-                                                            {{ $role->name }}</label>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
+                                    @foreach ($roles as $role)
+                                        <div class="custom-controls-stacked">
+                                            <label class="custom-control custom-checkbox-md">
+                                                <input type="checkbox" class="custom-control-input" type="checkbox"
+                                                    name="roles[]" id="role_{{ $role->id }}"
+                                                    value="{{ $role->name }}">
+                                                <label class="custom-control-label" for="role_{{ $role->id }}">
+                                                    {{ $role->name }}</label>
+                                            </label>
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
