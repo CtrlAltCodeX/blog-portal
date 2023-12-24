@@ -41,7 +41,8 @@ class DatabaseSeeder extends Seeder
             'name'     => 'Admin',
             'email'    => 'admin@example.com',
             'password' => bcrypt('admin123'),
-        ])->assignRole($adminRole);
+            'status'   => 1,
+        ])->assignRole($adminRole)->assignRole($writerRole);
 
         $adminRole->givePermissionTo(Permission::all());
 
@@ -49,6 +50,7 @@ class DatabaseSeeder extends Seeder
             'name'     => 'Writer',
             'email'    => 'writer@example.com',
             'password' => bcrypt('admin123'),
+            'status'   => 1,
         ])->assignRole($writerRole);
 
         $writerRole->givePermissionTo(['User create', 'User access']);
