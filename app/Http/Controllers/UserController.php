@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
 use App\Models\User;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -35,7 +36,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('accounts.users.create');
+        $roles = Role::get();
+
+        return view('accounts.users.create', compact('roles'));
     }
 
     /**
@@ -43,19 +46,11 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
-        User::create($request->validated());
+        User::create($request->validated())?->syncRoles(request()->input('roles'));
 
         session()->flash('success', __('User created successfully.'));
 
         return redirect()->route('users.index');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
     }
 
     /**
@@ -65,7 +60,9 @@ class UserController extends Controller
     {
         $user = User::find($id);
 
-        return view('accounts.users.edit', compact('user'));
+        $roles = Role::get();
+
+        return view('accounts.users.edit', compact('user', 'roles'));
     }
 
     /**
@@ -76,6 +73,8 @@ class UserController extends Controller
         $user = User::find($id);
 
         $user->update($request->validated());
+
+        $user->syncRoles(request()->input('roles'));
 
         session()->flash('success', __('User updated successfully.'));
 

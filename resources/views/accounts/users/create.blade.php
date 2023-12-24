@@ -82,6 +82,26 @@
                                         name="password_confirmation" autocomplete="new-password"
                                         placeholder="Confirm Password">
                                 </div>
+
+                                <div class="form-group">
+                                    <label for="email" class="form-label">{{ __('Roles') }}</label>
+
+                                    <div class="row">
+                                        @foreach ($roles as $role)
+                                            <div class="col-md-4">
+                                                <div class="custom-controls-stacked">
+                                                    <label class="custom-control custom-checkbox-md">
+                                                        <input type="checkbox" class="custom-control-input" type="checkbox"
+                                                            name="roles[]" id="role_{{ $role->id }}"
+                                                            value="{{ $role->name }}">
+                                                        <label class="custom-control-label" for="role_{{ $role->id }}">
+                                                            {{ $role->name }}</label>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

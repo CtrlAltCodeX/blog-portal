@@ -27,7 +27,9 @@
                             Users
                         </h4>
 
-                        <a href="{{ route('users.create') }}" class="btn btn-primary float-right">Create User</a>
+                        @can('User create')
+                            <a href="{{ route('users.create') }}" class="btn btn-primary float-right">{{ __('Create User') }}</a>
+                        @endcan
                     </div>
 
                     <div class="card-body">
@@ -38,6 +40,7 @@
                                         <th>{{ __('ID') }}</th>
                                         <th>{{ __('Name') }}</th>
                                         <th>{{ __('Email') }}</th>
+                                        <th>{{ __('Roles') }}</th>
                                         @canany(['User edit', 'User delete'])
                                             <th>{{ __('Actions') }}</th>
                                         @endcanany
@@ -50,6 +53,14 @@
                                                 <td>{{ $user->id }}</td>
                                                 <td>{{ $user->name }}</td>
                                                 <td><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></td>
+                                                <td>
+                                                    @foreach ($user->roles as $index => $role)
+                                                        <span class="badge bg-primary">{{ $role->name }}</span>
+                                                        @if (($index + 1) % 5 == 0)
+                                                            <br>
+                                                        @endif
+                                                    @endforeach
+                                                </td>
                                                 <td>
                                                     <div class="btn-group btn-group-sm" role="group"
                                                         aria-label="{{ __('Actions') }}">
