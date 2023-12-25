@@ -28,7 +28,8 @@
                         </h4>
 
                         @can('User create')
-                            <a href="{{ route('users.create') }}" class="btn btn-primary float-right">{{ __('Create User') }}</a>
+                            <a href="{{ route('users.create') }}"
+                                class="btn btn-primary float-right">{{ __('Create User') }}</a>
                         @endcan
                     </div>
 
@@ -62,7 +63,9 @@
                                                         @endif
                                                     @endforeach
                                                 </td>
-                                                <td><span class="badge bg-{{ $user->status ? 'success' : 'danger' }}">{{ $user->status ? 'Active' : 'Inactive' }}</span></td>
+                                                <td><span
+                                                        class="badge bg-{{ $user->status ? 'success' : 'danger' }}">{{ $user->status ? 'Active' : 'Inactive' }}</span>
+                                                </td>
                                                 <td>
                                                     <div class="btn-group btn-group-sm" role="group"
                                                         aria-label="{{ __('Actions') }}">

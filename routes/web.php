@@ -22,3 +22,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     Route::resource('roles', RoleController::class);
     Route::resource('users', UserController::class);
 });
+
+Route::get('/', function () {
+    return redirect()->route('dashboard');
+});
