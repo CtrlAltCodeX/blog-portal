@@ -185,4 +185,5 @@ return [
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 
+    'local_hash' => env('TEXT_LOCAL_HASH'),
 ];
