@@ -54,6 +54,5 @@ class DatabaseSeeder extends Seeder
         ])->assignRole($writerRole);
 
         $writerRole->givePermissionTo(['User create', 'User access']);
-
     }
 }
