@@ -1,6 +1,6 @@
 <?php
 
-class OtpServices {
+class OtpVerificationService {
 
     /**
      * Define the instance of class.
