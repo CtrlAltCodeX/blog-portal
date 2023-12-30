@@ -1,16 +1,12 @@
 <?php
 
-<<<<<<< HEAD
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoogleController;
-=======
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ListingController;
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Route;
->>>>>>> 6892cc288438bec0e136420bfd32331227f539fd
 
 Illuminate\Support\Facades\Auth::routes();
 
@@ -24,18 +20,19 @@ Illuminate\Support\Facades\Auth::routes();
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
-    Route::resource('users', UserController::class);
-
-    Route::get('settings', [SettingsController::class, 'index'])->name('setting.index');
-});
 
 Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
+
 Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('roles', RoleController::class);
     Route::resource('users', UserController::class);
+
+    Route::get('settings', [SettingsController::class, 'index'])->name('setting.index');
+
+    Route::get('listing', [ListingController::class, 'index'])->name('listing.index');
 });
 
 Route::get('/', function () {
