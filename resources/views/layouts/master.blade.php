@@ -50,6 +50,8 @@
             <!--app-content open-->
             <div class="main-content app-content mt-0">
                 <div class="side-app">
+                    @include('partials.errors')
+
                     @yield('content')
                 </div>
             </div>

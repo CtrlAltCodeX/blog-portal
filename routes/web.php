@@ -1,9 +1,16 @@
 <?php
 
+<<<<<<< HEAD
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoogleController;
+=======
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Route;
+>>>>>>> 6892cc288438bec0e136420bfd32331227f539fd
 
 Illuminate\Support\Facades\Auth::routes();
 
@@ -25,3 +32,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
 
 Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function () {
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::resource('roles', RoleController::class);
+    Route::resource('users', UserController::class);
+});
+
+Route::get('/', function () {
+    return redirect()->route('dashboard');
+});
