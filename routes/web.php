@@ -21,7 +21,7 @@ Illuminate\Support\Facades\Auth::routes();
 |
 */
 
-Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
+Route::post('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
 
 Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
