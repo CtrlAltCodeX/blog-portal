@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BlogPost;
 use App\Services\GoogleService;
 
 class ListingController extends Controller
@@ -23,9 +24,8 @@ class ListingController extends Controller
      */
     public function index()
     {
-        $posts = $this->googleService->posts();
+        $googlePosts = $this->googleService->posts();
 
-        dd($posts);
-        return view('listing.index', compact('posts'));
+        return view('listing.index', compact('googlePosts'));
     }
 }
