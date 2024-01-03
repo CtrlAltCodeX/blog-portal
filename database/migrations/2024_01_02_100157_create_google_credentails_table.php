@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('client_id')->nullable();
             $table->string('redirect_uri')->nullable();
             $table->text('token')->nullable();
+            $table->string('blog_id');
             $table->timestamps();
         });
     }

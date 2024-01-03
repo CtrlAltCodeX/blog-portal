@@ -13,7 +13,7 @@ class SettingsController extends Controller
      */
     public function index()
     {
-        $creds = GoogleCredentail::find(1);
+        $creds = GoogleCredentail::latest()->first();
 
         return view('settings.index', compact('creds'));
     }

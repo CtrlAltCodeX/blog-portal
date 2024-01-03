@@ -26,7 +26,7 @@ class GoogleService {
 
             $authUrl = $client->createAuthUrl();
     
-            $credExists = GoogleCredentail::find(1);
+            $credExists = GoogleCredentail::latest()->first();
     
             if (! $credExists) {
                 GoogleCredentail::create(request()->all());
@@ -62,7 +62,7 @@ class GoogleService {
     public function handleGoogleCallback(array $data)
     {
         try {
-            $credential = GoogleCredentail::find(1);
+            $credential = GoogleCredentail::latest()->first();
 
             $client = $this->createGoogleClient($credential->toArray());
             
@@ -83,16 +83,16 @@ class GoogleService {
      */
     public function posts() 
     {
-        $credential = GoogleCredentail::find(1);
+        $credential = GoogleCredentail::latest()->first();
 
         $client = $this->createGoogleClient($credential->toArray());
         $client->setAccessToken($credential->token);
 
         $blogger = new Google_Service_Blogger($client);
        
-        $blogId = '5026178240038339034';
+        // $blogId = '5026178240038339034';
        
-        return $blogger->posts->listPosts($blogId);
+        return $blogger->posts->listPosts($credential->blog_id);
     }
 }
 

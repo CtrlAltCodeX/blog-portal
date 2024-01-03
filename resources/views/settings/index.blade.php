@@ -25,6 +25,12 @@
             
                         <input id="redirect_uri" type="text" class="form-control @error('callback_uri') is-invalid @enderror" name="redirect_uri" value="{{ $creds->redirect_uri??'' }}" autofocus placeholder="Google Redirect URI">
                     </div>
+
+                    <div class="form-group">
+                        <label for="name" class="form-label">Blog Id<span class="text-danger">*</span></label>
+            
+                        <input id="blog_id" type="text" class="form-control @error('blog_id') is-invalid @enderror" name="blog_id" value="{{ $creds->blog_id??'' }}" autofocus placeholder="Blog Id">
+                    </div>
             
                     <button class="btn btn-primary mt-5">{{ !$creds ? 'Connect with Google' : 'Account Connected' }}</button>
                 </form>
