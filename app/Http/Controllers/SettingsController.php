@@ -3,14 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\GoogleCredentail;
-use Illuminate\Http\Request;
 
 class SettingsController extends Controller
 {   
     /**
      * Index function
      *
-     * @return void
+     * @return \Illuminate\View\View
      */
     public function index()
     {
