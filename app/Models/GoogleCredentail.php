@@ -13,6 +13,7 @@ class GoogleCredentail extends Model
         'client_id',
         'client_secret',
         'redirect_uri',
+        'blog_id',
         'token',
     ];
 }

@@ -3,18 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\GoogleCredentail;
-use Illuminate\Http\Request;
 
 class SettingsController extends Controller
 {   
     /**
      * Index function
      *
-     * @return void
+     * @return \Illuminate\View\View
      */
     public function index()
     {
-        $creds = GoogleCredentail::find(1);
+        $creds = GoogleCredentail::latest()->first();
 
         return view('settings.index', compact('creds'));
     }

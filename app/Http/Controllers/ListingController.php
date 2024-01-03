@@ -2,15 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\BlogPost;
+use App\Services\GoogleService;
 
 class ListingController extends Controller
 {
+
+    /**
+     * Create a new controller instance.
+     * 
+     * @return void
+     */
+    public function __construct(protected GoogleService $googleService)
+    {
+    }
+
+    /**
+     * Display the listing of the resources
+     * 
+     * @return \Illuminate\View\View
+     */
     public function index()
     {
-        return view('listing.index');
-        // $client = new Google_Client(config('google'));
-        // $code = $request->get('code');
-        // // $token = $client->fetchAccessTokenWithAuthCode($code);
+        $googlePosts = $this->googleService->posts();
+
+        return view('listing.index', compact('googlePosts'));
     }
 }
