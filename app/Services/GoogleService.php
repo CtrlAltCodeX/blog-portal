@@ -95,7 +95,7 @@ class GoogleService {
     public function createPost(array $data)
     {
         try {
-            $credential = GoogleCredentail::find(1);
+            $credential = GoogleCredentail::latest()->first();
     
             $client = new Google_Client();
             $client->setAccessToken($credential->token);

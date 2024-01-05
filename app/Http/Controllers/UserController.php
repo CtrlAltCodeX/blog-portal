@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
+use App\Mail\UserMail;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -47,6 +49,8 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         User::create($request->validated())?->syncRoles(request()->input('roles'));
+
+        Mail::to($request->email)->send(new UserMail($request->all()));
 
         session()->flash('success', __('User created successfully.'));
 

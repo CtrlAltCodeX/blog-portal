@@ -22,10 +22,19 @@ class UserRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'status' => ['required', 'in:0,1'],
+            'name'         => ['required', 'string', 'max:255'],
+            'name'         => ['required', 'string', 'max:255'],
+            'mobile'       => ['required'],
+            'account_type' => ['required'],
+            'aadhaar_no'   => ['required'],
+            'father_name'  => ['required'],
+            'mother_name'  => ['required'],
+            'state'        => ['required'],
+            'pincode'      => ['required'],
+            'full_address' => ['required'],
+            'email'        => ['required', 'string', 'email', 'max:255'],
+            'password'     => ['required', 'string', 'min:8', 'confirmed'],
+            'status'       => ['required', 'in:0,1'],
         ];
 
         if ($this->isMethod('patch') || $this->isMethod('put')) {
