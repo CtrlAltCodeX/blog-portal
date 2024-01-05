@@ -4,17 +4,11 @@ namespace App\Services;
 
 use Google_Client;
 use Google_Service_Blogger;
+use Google_Service_Blogger_Post;
 use App\Models\GoogleCredentail;
 use Illuminate\Support\Facades\Log;
 
 class GoogleService {
-    /**
-     * Google Client
-     * 
-     * @var array
-     */
-    public $client = [];
-    
     /**
      * Redirect to google for auth
      * 
@@ -90,9 +84,32 @@ class GoogleService {
 
         $blogger = new Google_Service_Blogger($client);
        
-        // $blogId = '5026178240038339034';
-       
         return $blogger->posts->listPosts($credential->blog_id);
+    }
+
+    /**
+     * Create blog post in blogger
+     * 
+     * @param array $data
+     */
+    public function createPost(array $data)
+    {
+        try {
+            $credential = GoogleCredentail::latest()->first();
+    
+            $client = new Google_Client();
+            $client->setAccessToken($credential->token);
+
+            $blogger = new Google_Service_Blogger($client);
+
+            $post = new Google_Service_Blogger_Post();
+            $post->setTitle($data['title']);
+            $post->setContent($data['description']);
+
+            return $blogger->posts->insert($credential->blog_id, $post);
+        } catch (\Google_Service_Exception $e) {
+            return json_decode($e->getMessage());
+        }
     }
 }
 

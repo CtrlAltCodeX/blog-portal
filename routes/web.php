@@ -26,13 +26,17 @@ Route::post('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name
 Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function () {
-    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('roles', RoleController::class);
+    
     Route::resource('users', UserController::class);
+    
+    Route::resource('listing', ListingController::class);
+    
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('settings', [SettingsController::class, 'index'])->name('setting.index');
-
-    Route::get('listing', [ListingController::class, 'index'])->name('listing.index');
+    Route::get('users/verified/approved', [UserController::class, 'verified'])->name('verified.users');
+    
+    Route::get('settings/blog', [SettingsController::class, 'blog'])->name('settings.blog');
 });
 
 Route::get('/', function () {

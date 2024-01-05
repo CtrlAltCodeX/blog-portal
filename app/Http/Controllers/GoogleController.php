@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\GoogleService;
 use Illuminate\Http\Request;
+use App\Models\GoogleCredentail;
 
 class GoogleController extends Controller
 {
@@ -18,6 +19,14 @@ class GoogleController extends Controller
      */
     public function redirectToGoogle()
     {
+        $credExists = GoogleCredentail::latest()->first();
+                
+        if ($credExists) {
+            GoogleCredentail::latest()->delete();
+            
+            return redirect()->route('setting.index')->with('success', 'Removed successfully');
+        } 
+
         $redirectUri = $this->googleService->redirectToGoogle(request()->all());
 
         return redirect()->to($redirectUri);

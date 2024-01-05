@@ -26,6 +26,9 @@
                     <h4 class="card-title">
                         Listing
                     </h4>
+
+                    <a href="{{ route('listing.create') }}"
+                        class="btn btn-primary float-right">{{ __('Create Listing') }}</a>
                 </div>
 
                 <div class="card-body">

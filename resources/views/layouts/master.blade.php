@@ -34,6 +34,7 @@
     <link id="theme" rel="stylesheet" type="text/css" media="all"
         href="{{ asset('assets/colors/color1.css') }}" />
 
+    @stack('css')
 </head>
 
 <body class="app sidebar-mini ltr">
@@ -110,6 +111,7 @@
     <!-- CUSTOM JS -->
     <script src="{{ asset('assets/js/custom.js') }}"></script>
 
+    @stack('js')
 </body>
 
 </html>
