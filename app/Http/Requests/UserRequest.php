@@ -23,7 +23,6 @@ class UserRequest extends FormRequest
     {
         $rules = [
             'name'         => ['required', 'string', 'max:255'],
-            'name'         => ['required', 'string', 'max:255'],
             'mobile'       => ['required'],
             'account_type' => ['required'],
             'aadhaar_no'   => ['required'],

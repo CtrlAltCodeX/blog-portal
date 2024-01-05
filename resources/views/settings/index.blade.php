@@ -32,7 +32,7 @@
                         <input id="blog_id" type="text" class="form-control @error('blog_id') is-invalid @enderror" name="blog_id" value="{{ $creds->blog_id??'' }}" autofocus placeholder="Blog Id">
                     </div>
             
-                    <button class="btn btn-primary mt-5">{{ !$creds ? 'Connect with Google' : 'Account Connected' }}</button>
+                    <button class="btn btn-primary mt-5">{{ !$creds ? 'Connect with Google' : 'Account Disconnect' }}</button>
                 </form>
             </div>
         </div>

@@ -20,50 +20,64 @@
                     <h3>{{ __('Main') }}</h3>
                 </li>
                 <li class="slide">
-                    <a class="side-menu__item" data-bs-toggle="slide" href="index.html"><i class="side-menu__icon fe fe-home"></i><span class="side-menu__label">{{ __('Dashboard') }}</span></a>
+                    <a class="side-menu__item" data-bs-toggle="slide" href="{{ route('dashboard') }}"><i class="side-menu__icon fe fe-home"></i><span class="side-menu__label">{{ __('Dashboard') }}</span></a>
                 </li>
                 <li class="sub-category">
                     <h3>{{ __('Accounts') }}</h3>
                 </li>
-                <li class="slide">
-                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-users"></i><span class="side-menu__label">{{ __('Users') }}</span><i class="angle fe fe-chevron-right"></i></a>
-                    <ul class="slide-menu">
-                        <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
-                        <li><a href="{{ route('users.index') }}" class="slide-item">{{ __('Users') }}</a></li>
-                    </ul>
-                </li>
 
-                <li class="slide">
-                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-users"></i><span class="side-menu__label">{{ __('Settings') }}</span><i class="angle fe fe-chevron-right"></i></a>
-                    <ul class="slide-menu">
-                        <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
-                        <li><a href="{{ route('setting.index') }}" class="slide-item">{{ __('Settings') }}</a></li>
-                    </ul>
-                </li>
-
-                <li class="slide">
+                <li class="slide {{ (request()->is('admin/listing/*') || request()->is('admin/listing')) ? 'is-expanded' : '' }}">
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-users"></i><span class="side-menu__label">{{ __('Listing') }}</span><i class="angle fe fe-chevron-right"></i></a>
                     <ul class="slide-menu">
                         <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
-                        <li><a href="{{ route('listing.index') }}" class="slide-item">{{ __('Catalogue') }}</a></li>
+                        <li><a href="{{ route('listing.create') }}" class="slide-item {{ (request()->is('admin/listing/*') || request()->is('admin/listing')) ? 'active' : '' }}">{{ __('Create Listing') }}</a></li>
+                        <li><a href="{{ route('listing.create') }}" class="slide-item {{ (request()->is('admin/listing/*') || request()->is('admin/listing')) ? 'active' : '' }}">{{ __('Create Listing (Scrap)') }}</a></li>
+                        <li><a href="{{ route('listing.index') }}" class="slide-item {{ (request()->is('admin/listing/*') || request()->is('admin/listing')) ? 'active' : '' }}">{{ __('Catalogue') }}</a></li>
+                    </ul>
+                </li>
+
+                <li class="slide {{ (request()->is('admin/users/*') || request()->is('admin/users')) ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-users"></i><span class="side-menu__label">{{ __('Users') }}</span><i class="angle fe fe-chevron-right"></i></a>
+                    <ul class="slide-menu">
+                        <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
+                        @can('User create')
+                        <li><a href="{{ route('users.create') }}" class="slide-item">{{ __('Create Users') }}</a></li>
+                        @endcan
+                        <li><a href="{{ route('verified.users') }}" class="slide-item {{ request()->is('admin/users/verified/approved') ? 'active' : '' }}">{{ __('Approved Users') }}</a>
+                        </li>
+                        <li><a href="{{ route('users.index') }}" class="slide-item {{ request()->is('admin/users/*') ? 'active' : '' }}">{{ __('All Users') }}</a>
+                        </li>
                     </ul>
                 </li>
 
                 @can('Role access')
-                <li class="slide {{ request()->is('admin/roles*') ? 'is-expanded' : '' }}">
+                <li class="slide {{ (request()->is('admin/roles/*') || request()->is('admin/roles')) ? 'is-expanded' : '' }}">
                     <a class="side-menu__item  {{ request()->is('admin/roles*') ? 'active is-expanded' : '' }}" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-lock"></i><span class="side-menu__label">{{ __('Role & Permission') }}</span><i class="angle fe fe-chevron-right"></i></a>
                     <ul class="slide-menu">
                         <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
-                        <li><a href="{{ route('roles.index') }}" class="slide-item  {{ request()->is('admin/roles*') ? 'active' : '' }}">{{ __('Roles') }}</a>
+                        @can('Role create')
+                        <li><a href="{{ route('roles.create') }}" class="slide-item  {{ request()->is('admin/roles/*') ? 'active' : '' }}">{{ __('Create New Role') }}</a>
+                        @endcan
+                        <li><a href="{{ route('roles.create') }}" class="slide-item  {{ request()->is('admin/roles/*') ? 'active' : '' }}">{{ __('Assign Permissions to Roles') }}</a>
+                        <li><a href="{{ route('roles.index') }}" class="slide-item  {{ (request()->is('admin/roles/*') || request()->is('admin/roles')) ? 'active' : '' }}">{{ __('View all Roles & Permissions') }}</a>
                         </li>
                     </ul>
                 </li>
                 @endcan
+
+                <li class="slide {{ (request()->is('admin/settings/*') || request()->is('admin/settings')) ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-users"></i><span class="side-menu__label">{{ __('Settings') }}</span><i class="angle fe fe-chevron-right"></i></a>
+                    <ul class="slide-menu">
+                        <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
+                        <li><a href="{{ route('settings.blog') }}" class="slide-item {{ request()->is('admin/settings/*') ? 'active' : '' }}">{{ __('Site settings') }}</a></li>
+                        <li><a href="{{ route('settings.blog') }}" class="slide-item {{ request()->is('admin/settings/*') ? 'active' : '' }}">{{ __('Confiure with blog') }}</a></li>
+                    </ul>
+                </li>
             </ul>
 
             <div class="slide-right" id="slide-right">
                 @can('User access')
-                <li class="slide {{ request()->is('admin/users*') ? 'is-expanded' : '' }}">
+                <li class="slide {{ request()->is('admin/users/*') ? 'is-expanded' : '' }}">
                     <a class="side-menu__item {{ request()->is('admin/users*') ? 'active is-expanded' : '' }}" data-bs-toggle="slide" href="javascript:void(0)">
                         <i class="side-menu__icon fe fe-users"></i>
                         <span class="side-menu__label">{{ __('Users') }}</span>
@@ -71,8 +85,7 @@
                     </a>
                     <ul class="slide-menu">
                         <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
-                        <li><a href="{{ route('users.index') }}" class="slide-item {{ request()->is('admin/users*') ? 'active' : '' }}">{{ __('Users') }}</a>
-                        </li>
+                        <li><a href="{{ route('users.index') }}" class="slide-item {{ request()->is('admin/users*') ? 'active' : '' }}">{{ __('Create New Users') }}</a></li>
                     </ul>
                 </li>
                 @endcan

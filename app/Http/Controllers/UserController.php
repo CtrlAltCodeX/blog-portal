@@ -98,4 +98,18 @@ class UserController extends Controller
 
         return redirect()->route('users.index');
     }
+
+    /**
+     * Get Pending Users
+     *
+     * @return void
+     */
+    public function verified()
+    {
+        $users = User::orderBy('id', 'asc')
+            ->where('status', 1)
+            ->paginate(10);
+
+        return view('accounts.users.index', compact('users'));
+    }
 }

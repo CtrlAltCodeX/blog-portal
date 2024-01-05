@@ -27,10 +27,10 @@
                             Users
                         </h4>
 
-                        @can('User create')
+                        <!-- @can('User create')
                             <a href="{{ route('users.create') }}"
                                 class="btn btn-primary float-right">{{ __('Create User') }}</a>
-                        @endcan
+                        @endcan -->
                     </div>
 
                     <div class="card-body">
