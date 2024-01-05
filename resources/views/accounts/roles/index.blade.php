@@ -27,10 +27,10 @@
                             {{ __('Roles') }}
                         </h4>
 
-                        @can('Role create')
+                        <!-- @can('Role create')
                             <a href="{{ route('roles.create') }}"
                                 class="btn btn-primary float-right">{{ __('Create Role') }}</a>
-                        @endcan
+                        @endcan -->
                     </div>
 
                     <div class="card-body">

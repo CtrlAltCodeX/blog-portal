@@ -30,10 +30,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('roles', RoleController::class);
-    Route::resource('users', UserController::class);
-    Route::get('settings', [SettingsController::class, 'index'])->name('setting.index');
 
-    Route::get('listing', [ListingController::class, 'index'])->name('listing.index');
+    Route::resource('users', UserController::class);
 
     Route::group(['prefix' => 'find-products'], function () {
         Route::get('amazon', [AmazonSrcappingController::class, 'find'])->name('amazon.find');
@@ -41,6 +39,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         Route::post('amazon', [AmazonSrcappingController::class, 'findProducts'])->name('amazon.find.products');
     });
 
+    Route::resource('listing', ListingController::class);
+
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('users/verified/approved', [UserController::class, 'verified'])->name('verified.users');
+
+    Route::get('settings/blog', [SettingsController::class, 'blog'])->name('settings.blog');
 });
 
 Route::get('/', function () {
