@@ -20,16 +20,15 @@ class GoogleController extends Controller
     public function redirectToGoogle()
     {
         $credExists = GoogleCredentail::latest()->first();
-                
         if ($credExists) {
             GoogleCredentail::latest()->delete();
-            
-            return redirect()->route('setting.index')->with('success', 'Removed successfully');
-        } 
 
-        $redirectUri = $this->googleService->redirectToGoogle(request()->all());
+            return redirect()->route('settings.blog')->with('success', 'Removed successfully');
+        } else {
+            $redirectUri = $this->googleService->redirectToGoogle(request()->all());
 
-        return redirect()->to($redirectUri);
+            return redirect()->to($redirectUri);
+        }
     }
 
     /**
@@ -42,6 +41,6 @@ class GoogleController extends Controller
     {
         $this->googleService->handleGoogleCallback($request->all());
 
-        return redirect()->route('setting.index')->with('success', 'Authenticated successfully');
+        return redirect()->route('settings.blog')->with('success', 'Authenticated successfully');
     }
 }

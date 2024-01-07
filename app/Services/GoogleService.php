@@ -7,6 +7,7 @@ use Google_Service_Blogger;
 use Google_Service_Blogger_Post;
 use App\Models\GoogleCredentail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class GoogleService {
     /**
@@ -98,17 +99,113 @@ class GoogleService {
             $credential = GoogleCredentail::latest()->first();
     
             $client = new Google_Client();
-            $client->setAccessToken($credential->token);
+            
+            $client->setScopes('https://www.googleapis.com/auth/blogger');
+            $client->setAccessToken(json_decode($credential->token)->access_token);
 
             $blogger = new Google_Service_Blogger($client);
 
             $post = new Google_Service_Blogger_Post();
-            $post->setTitle($data['title']);
-            $post->setContent($data['description']);
+            $post->title = $data['title'];
+            $post->content = view('listing.template', compact('data'))->render();
+            $post->setLabels($data['label']);
 
             return $blogger->posts->insert($credential->blog_id, $post);
         } catch (\Google_Service_Exception $e) {
             return json_decode($e->getMessage());
+        }
+    }
+
+    /**
+     * Edit the post 
+     * 
+     * @return void
+     */
+    public function editPost($postId)
+    {
+        try {
+            $credential = GoogleCredentail::latest()->first();
+            
+            $client = new Google_Client();
+            
+            $client->setScopes('https://www.googleapis.com/auth/blogger');
+            
+            $client->setAccessToken(json_decode($credential->token)->access_token);
+        
+            $blogger = new Google_Service_Blogger($client);
+        
+            // Retrieve the existing post
+            return $blogger->posts->get($credential->blog_id, $postId);
+        } catch (\Google_Service_Exception $e) {
+            // Log the error details for debugging
+            \Log::error('Blogger API Error: ' . $e->getMessage());
+        
+            // Handle the error as needed
+            return json_decode($e->getMessage());
+        }
+    }
+
+    /**
+     * Update the post 
+     * 
+     * @return void
+     */
+    public function updatePost($data, $postId)
+    {
+        try {
+            $credential = GoogleCredentail::latest()->first();
+            
+            $client = new Google_Client();
+            
+            $client->setScopes('https://www.googleapis.com/auth/blogger');
+            
+            $client->setAccessToken(json_decode($credential->token)->access_token);
+        
+            $blogger = new Google_Service_Blogger($client);
+        
+            $existingPost = $blogger->posts->get($credential->blog_id, $postId);
+
+            $existingPost->title = $data['title'];
+            $existingPost->content = $data['description'];
+        
+            return $blogger->posts->update($credential->blog_id, $postId, $existingPost);
+        } catch (\Google_Service_Exception $e) {
+            \Log::error('Blogger API Error: ' . $e->getMessage());
+        
+            return json_decode($e->getMessage());
+        }
+    }
+
+    /**
+     * Delete post
+     * 
+     * @return mixed
+     */
+    public function deletePost($postId)
+    {
+        try {
+            // Get the latest Google credential
+            $credential = GoogleCredentail::latest()->first();
+
+            // Create a new Google client
+            $client = new Google_Client();
+
+            // Set the required scope
+            $client->setScopes('https://www.googleapis.com/auth/blogger');
+
+            // Set the access token from the credential
+            $client->setAccessToken(json_decode($credential->token)->access_token);
+
+            // Create a Blogger service using the client
+            $blogger = new Google_Service_Blogger($client);
+
+            // Get the existing post
+            $existingPost = $blogger->posts->get($credential->blog_id, $postId);
+
+            // Delete the post
+            return $blogger->posts->delete($credential->blog_id, $postId);
+        } catch (\Exception $e) {
+            return $e->getMessage();
         }
     }
 }

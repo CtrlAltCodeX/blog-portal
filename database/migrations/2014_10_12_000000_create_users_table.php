@@ -25,6 +25,7 @@ return new class extends Migration
             $table->text('full_address');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('plain_password');
             $table->boolean('status')->default(0);
             $table->rememberToken();
             $table->timestamps();

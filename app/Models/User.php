@@ -31,6 +31,7 @@ class User extends Authenticatable
         'state',
         'pincode',
         'full_address',
+        'plain_password',
     ];
 
     /**

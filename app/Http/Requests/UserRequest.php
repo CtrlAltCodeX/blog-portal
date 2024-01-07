@@ -40,6 +40,7 @@ class UserRequest extends FormRequest
             $userId = $this->route('user');
             $rules['email'][] = 'unique:users,email,' . $userId;
             $rules['password'] = ['nullable', 'string', 'min:8', 'confirmed'];
+            $rules['plain_password'] = ['nullable', 'string', 'min:8'];
         } else {
             $rules['email'][] = 'unique:users';
         }

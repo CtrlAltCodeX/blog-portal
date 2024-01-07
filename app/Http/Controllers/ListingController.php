@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\GoogleService;
+use App\Http\Requests\BlogRequest;
+use Illuminate\Support\Facades\Http;
 
 class ListingController extends Controller
 {
@@ -36,7 +38,11 @@ class ListingController extends Controller
      */
     public function create()
     {
-        return view('listing.create');
+        $response = Http::get('https://publication.exam360.in/feeds/posts/default?alt=json');
+
+        $categories = $response->json()['feed']['category'];
+
+        return view('listing.create', compact('categories'));
     }
 
     /**
@@ -44,13 +50,8 @@ class ListingController extends Controller
      * 
      * @param \Illuminate\Http\Request
      */
-    public function store(Request $request)
+    public function store(BlogRequest $request)
     {
-        $this->validate($request, [
-            'title'       => 'required',
-            'description' => 'required',
-        ]);
-
         $result = $this->googleService->createPost($request->all());
 
         if ($message = $result?->error?->message) {
@@ -60,6 +61,41 @@ class ListingController extends Controller
         }
         
         session()->flash('success', 'Post created successfully');
+        
+        return redirect()->route('listing.index');
+    }
+
+    /**
+     * Return the edit of post
+     * 
+     * @return \Illumindate\View\View
+     */
+    public function edit($postId) 
+    {
+        $post = $this->googleService->editPost($postId);
+        
+        return view('listing.edit', compact('post'));
+    }
+    
+    /**
+     * Return the edit of post
+     * 
+     * @return \Illumindate\View\View
+     */
+    public function update(Request $request, $postId) 
+    {
+        $post = $this->googleService->updatePost($request->all(), $postId);
+
+        session()->flash('success', 'Post updated successfully');
+        
+        return redirect()->route('listing.index');
+    }
+
+    public function destroy($postId)
+    {
+        $post = $this->googleService->deletePost($postId);
+
+        session()->flash('success', 'Post delete successfully');
         
         return redirect()->route('listing.index');
     }

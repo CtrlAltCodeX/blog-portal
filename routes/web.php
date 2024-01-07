@@ -8,6 +8,7 @@ use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\TinyMCEController;
 
 Illuminate\Support\Facades\Auth::routes();
 
@@ -41,11 +42,15 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::resource('listing', ListingController::class);
 
+    Route::get('inventory', [ListingController::class, 'inventory'])->name('inventory.index');
+
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('users/verified/approved', [UserController::class, 'verified'])->name('verified.users');
 
     Route::get('settings/blog', [SettingsController::class, 'blog'])->name('settings.blog');
+
+    Route::post('tinymce/upload', [TinyMCEController::class, 'upload'])->name('tinymce.upload');
 });
 
 Route::get('/', function () {

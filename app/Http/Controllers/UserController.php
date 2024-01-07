@@ -100,7 +100,7 @@ class UserController extends Controller
     }
 
     /**
-     * Get Pending Users
+     * Get verified Users
      *
      * @return void
      */

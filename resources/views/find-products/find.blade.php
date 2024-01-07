@@ -26,12 +26,12 @@
                             {{ __('Search') }}
                         </h4>
 
-                        <button type="submit" class="btn btn-primary float-right">Save</button>
+                        <button type="submit" class="btn btn-primary float-right">Find</button>
                     </div>
                     <div class="card-body">
                         <div>
                             <div class="form-group">
-                                <input id="search" type="text" class="form-control @error('search') is-invalid @enderror" name="search" value="{{ old('search') }}" autocomplete="name" autofocus placeholder="Search....">
+                                <input id="search" type="text" class="form-control @error('search') is-invalid @enderror" name="search" value="{{ old('search') }}" autocomplete="name" autofocus placeholder="Find Product from ASIN, URL">
                             </div>
                         </div>
 
