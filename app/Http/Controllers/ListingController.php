@@ -59,9 +59,9 @@ class ListingController extends Controller
 
             return redirect()->route('listing.index');
         }
-        
+
         session()->flash('success', 'Post created successfully');
-        
+
         return redirect()->route('listing.index');
     }
 
@@ -70,33 +70,78 @@ class ListingController extends Controller
      * 
      * @return \Illumindate\View\View
      */
-    public function edit($postId) 
+    public function edit($postId)
     {
         $post = $this->googleService->editPost($postId);
-        
-        return view('listing.edit', compact('post'));
+        $labels = $post->getLabels();
+
+        $doc = new \DOMDocument();
+        $doc->loadHTML($post->content);
+        $sku = $doc->getElementById('sku')->textContent;
+        $publication = $doc->getElementById('publication')->textContent;
+        $author = $doc->getElementById('author')->textContent;
+        $author_name = $doc->getElementById('author_name')->textContent;
+        $page_no = $doc->getElementById('page_no')->textContent;
+        $weight = $doc->getElementById('weight')->textContent;
+        $search_key = $doc->getElementById('search_key')->textContent;
+        $desc = $doc->getElementById('desc')->textContent;
+        $edition = $doc->getElementById('edition')->textContent;
+        $selling = $doc->getElementById('selling')->textContent;
+        $mrp = $doc->getElementById('mrp')->textContent;
+
+        for ($i = 0; $i < 3; $i++) {
+            $image = $doc->getElementsByTagName("img")->item($i);
+            $images[] = $image->getAttribute('src');
+        }
+
+        $allInfo = [
+            'sku' => $sku,
+            'publication' => $publication,
+            'author' => $author,
+            'author_name' => $author_name,
+            'page_no' => $page_no,
+            'weight' => $weight,
+            'search_key' => $search_key,
+            'desc' => $desc,
+            'edition' => $edition,
+            'selling' => $selling,
+            'mrp' => $mrp,
+            'image1' => $images,
+        ];
+
+        $response = Http::get('https://publication.exam360.in/feeds/posts/default?alt=json');
+
+        $categories = $response->json()['feed']['category'];
+
+        return view('listing.edit', compact('post', 'categories', 'allInfo', 'labels'));
     }
-    
+
     /**
      * Return the edit of post
      * 
      * @return \Illumindate\View\View
      */
-    public function update(Request $request, $postId) 
+    public function update(Request $request, $postId)
     {
-        $post = $this->googleService->updatePost($request->all(), $postId);
+        $this->googleService->updatePost($request->all(), $postId);
 
         session()->flash('success', 'Post updated successfully');
-        
+
         return redirect()->route('listing.index');
     }
 
+    /**
+     * Delete Posts
+     *
+     * @param int $postId
+     * @return \Illumindate\View\View
+     */
     public function destroy($postId)
     {
         $post = $this->googleService->deletePost($postId);
 
         session()->flash('success', 'Post delete successfully');
-        
+
         return redirect()->route('listing.index');
     }
 }

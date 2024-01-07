@@ -9,26 +9,28 @@ use App\Models\GoogleCredentail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
-class GoogleService {
+class GoogleService
+{
     /**
      * Redirect to google for auth
      * 
      * @return string|void
      */
-    public function redirectToGoogle(array $data) {
+    public function redirectToGoogle(array $data)
+    {
         try {
             $client = $this->createGoogleClient($data);
 
             $authUrl = $client->createAuthUrl();
-    
+
             $credExists = GoogleCredentail::latest()->first();
-    
-            if (! $credExists) {
+
+            if (!$credExists) {
                 GoogleCredentail::create(request()->all());
             }
-    
+
             return $authUrl;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             report($e);
         }
     }
@@ -60,9 +62,9 @@ class GoogleService {
             $credential = GoogleCredentail::latest()->first();
 
             $client = $this->createGoogleClient($credential->toArray());
-            
+
             $token = $client->fetchAccessTokenWithAuthCode($data['code']);
-            
+
             $credential->token = json_encode($token);
 
             $credential->save();
@@ -76,7 +78,7 @@ class GoogleService {
      * 
      * @return array
      */
-    public function posts() 
+    public function posts()
     {
         $credential = GoogleCredentail::latest()->first();
 
@@ -84,7 +86,7 @@ class GoogleService {
         $client->setAccessToken($credential->token);
 
         $blogger = new Google_Service_Blogger($client);
-       
+
         return $blogger->posts->listPosts($credential->blog_id);
     }
 
@@ -97,9 +99,9 @@ class GoogleService {
     {
         try {
             $credential = GoogleCredentail::latest()->first();
-    
+
             $client = new Google_Client();
-            
+
             $client->setScopes('https://www.googleapis.com/auth/blogger');
             $client->setAccessToken(json_decode($credential->token)->access_token);
 
@@ -125,21 +127,21 @@ class GoogleService {
     {
         try {
             $credential = GoogleCredentail::latest()->first();
-            
+
             $client = new Google_Client();
-            
+
             $client->setScopes('https://www.googleapis.com/auth/blogger');
-            
+
             $client->setAccessToken(json_decode($credential->token)->access_token);
-        
+
             $blogger = new Google_Service_Blogger($client);
-        
+
             // Retrieve the existing post
             return $blogger->posts->get($credential->blog_id, $postId);
         } catch (\Google_Service_Exception $e) {
             // Log the error details for debugging
             \Log::error('Blogger API Error: ' . $e->getMessage());
-        
+
             // Handle the error as needed
             return json_decode($e->getMessage());
         }
@@ -154,24 +156,25 @@ class GoogleService {
     {
         try {
             $credential = GoogleCredentail::latest()->first();
-            
+
             $client = new Google_Client();
-            
+
             $client->setScopes('https://www.googleapis.com/auth/blogger');
-            
+
             $client->setAccessToken(json_decode($credential->token)->access_token);
-        
+
             $blogger = new Google_Service_Blogger($client);
-        
+
             $existingPost = $blogger->posts->get($credential->blog_id, $postId);
 
             $existingPost->title = $data['title'];
-            $existingPost->content = $data['description'];
-        
+            $existingPost->content = view('listing.template', compact('data'))->render();
+            $existingPost->setLabels($data['label']);
+
             return $blogger->posts->update($credential->blog_id, $postId, $existingPost);
         } catch (\Google_Service_Exception $e) {
             \Log::error('Blogger API Error: ' . $e->getMessage());
-        
+
             return json_decode($e->getMessage());
         }
     }
@@ -208,6 +211,17 @@ class GoogleService {
             return $e->getMessage();
         }
     }
-}
 
-?>
+    /**
+     * Refresh Token
+     *
+     * @param array $data
+     * @return void
+     */
+    public function refreshToken($data)
+    {
+        $redirectUri = $this->redirectToGoogle($data);
+
+        return $redirectUri;
+    }
+}

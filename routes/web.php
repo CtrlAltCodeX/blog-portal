@@ -27,10 +27,14 @@ Route::post('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name
 
 Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
+Route::post('/auth/google/refresh', [GoogleController::class, 'refreshGoogle'])->name('google.refresh.token');
+
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('roles', RoleController::class);
+
+    Route::get('roles/all/view', [RoleController::class, 'view'])->name('view.roles');
 
     Route::resource('users', UserController::class);
 

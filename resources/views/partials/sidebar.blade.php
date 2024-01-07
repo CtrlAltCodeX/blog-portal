@@ -65,9 +65,9 @@
                         <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
                         @can('Role create')
                         <li><a href="{{ route('roles.create') }}" class="slide-item  {{ request()->is('admin/roles/*') ? 'active' : '' }}">{{ __('Create New Role') }}</a>
-                        @endcan
-                        <li><a href="{{ route('roles.create') }}" class="slide-item  {{ request()->is('admin/roles/*') ? 'active' : '' }}">{{ __('Assign Permissions to Roles') }}</a>
-                        <li><a href="{{ route('roles.index') }}" class="slide-item  {{ (request()->is('admin/roles/*') || request()->is('admin/roles')) ? 'active' : '' }}">{{ __('View all Roles & Permissions') }}</a>
+                            @endcan
+                        <li><a href="{{ route('roles.index') }}" class="slide-item  {{ request()->is('admin/roles/*') ? 'active' : '' }}">{{ __('Assign Permissions to Roles') }}</a>
+                        <li><a href="{{ route('view.roles') }}" class="slide-item  {{ (request()->is('admin/roles/*')) ? 'active' : '' }}">{{ __('View all Roles & Permissions') }}</a>
                         </li>
                     </ul>
                 </li>

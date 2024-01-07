@@ -35,22 +35,22 @@
                         <table class="table text-nowrap text-md-nowrap mb-0">
                             <thead>
                                 <tr>
-                                    <th>{{ __('Actions') }}</th>
-                                    <th>{{ __('Post Id') }}</th>
-                                    <th>{{ __('Blog Id') }}</th>
-                                    <th>{{ __('Author Id') }}</th>
-                                    <th>{{ __('Published At') }}</th>
                                     <th>{{ __('Title') }}</th>
                                     <th>{{ __('Url') }}</th>
+                                    <th>{{ __('Published At') }}</th>
+                                    <th>{{ __('Actions') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse ($googlePosts as $googlePost)
                                 <tr>
+                                    <td>{{ $googlePost->title }}</td>
+                                    <td>{{ $googlePost->url }}</td>
+                                    <td>{{ $googlePost->published }}</td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic example">
                                             <a href="{{ route('listing.edit', $googlePost->id) }}" class="btn btn-sm btn-primary">{{ __('Edit') }}</a>
-                                            <form action="{{ route('listing.destroy', $googlePost->id) }}" method="POST">
+                                            <form action="{{ route('listing.destroy', $googlePost->id) }}" method="POST" class="ml-2">
                                                 @csrf
                                                 @method('DELETE')
 
@@ -60,12 +60,6 @@
                                             </form>
                                         </div>
                                     </td>
-                                    <td>{{ $googlePost->id }}</td>
-                                    <td>{{ $googlePost->blog->id }}</td>
-                                    <td>{{ $googlePost->author->id }}</td>
-                                    <td>{{ $googlePost->published }}</td>
-                                    <td>{{ $googlePost->title }}</td>
-                                    <td>{{ $googlePost->url }}</td>
                                 </tr>
                                 @empty
                                 <tr>

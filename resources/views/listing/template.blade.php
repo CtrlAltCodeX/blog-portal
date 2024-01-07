@@ -4,19 +4,19 @@
             <tr>
                 <td style="text-align: center;">
                     <a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgnpEuMjLNcBWjt1eq9oRYaZdeK1hu-iPk258s8aopd2pdYD5EowbWS-tJIFJnUBBtcuiHoQuaTnEmzePuNb04Wkc7Ia1VfCf2aIshbRcBBDTyqpN3sMLOVBXjkFIJKWA6Nt5deS5DpfoXGLcUNYV-EsM9KYM3Lxe18FwCRZ6dcXLBUDB-3b6BiJWD8puCU/s555/Background..jpg" style="margin-left: auto; margin-right: auto;">
-                        <img border="0" data-original-height="555" data-original-width="555" height="320" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgnpEuMjLNcBWjt1eq9oRYaZdeK1hu-iPk258s8aopd2pdYD5EowbWS-tJIFJnUBBtcuiHoQuaTnEmzePuNb04Wkc7Ia1VfCf2aIshbRcBBDTyqpN3sMLOVBXjkFIJKWA6Nt5deS5DpfoXGLcUNYV-EsM9KYM3Lxe18FwCRZ6dcXLBUDB-3b6BiJWD8puCU/s320/Background..jpg" width="320" />
+                        <img class='img' border="0" data-original-height="555" data-original-width="555" height="320" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgnpEuMjLNcBWjt1eq9oRYaZdeK1hu-iPk258s8aopd2pdYD5EowbWS-tJIFJnUBBtcuiHoQuaTnEmzePuNb04Wkc7Ia1VfCf2aIshbRcBBDTyqpN3sMLOVBXjkFIJKWA6Nt5deS5DpfoXGLcUNYV-EsM9KYM3Lxe18FwCRZ6dcXLBUDB-3b6BiJWD8puCU/s320/Background..jpg" width="320" />
                     </a>
                 </td>
             </tr>
             <tr>
-                <td class="tr-caption" style="text-align: center;">{{ $data['selling_price'] }}-{{ $data['mrp'] }}</td>
+                <td class="tr-caption" style="text-align: center;"><span id='selling'>{{ $data['selling_price'] }}</span>-<span id='mrp'>{{ $data['mrp'] }}</span></td>
             </tr>
         </tbody>
     </table>
 
     <div class="separator" style="clear: both; text-align: center;">
         <a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjT4Xv9HNaaVQocNxLzPSQVwzon_c_hWtvHBgOdmC5bAvw6KZQwb9fXUpEs_NXXxvCBsVIYDlp0Vt-a7bUIfnIItCuYogx2Hl5Rclyr0NK-piAvTV-LrUdcOo3wVfq27A4nVbDsLHjuNfoTI4aWZxW2EuqGc702tPbrRmTu2nF-2SJtfkmblBkctu3QjjrS/s970/5b321baf-e984-412d-a8b8-79978d74.jpg" style="margin-left: 1em; margin-right: 1em;">
-            <img border="0" data-original-height="600" data-original-width="970" height="198" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjT4Xv9HNaaVQocNxLzPSQVwzon_c_hWtvHBgOdmC5bAvw6KZQwb9fXUpEs_NXXxvCBsVIYDlp0Vt-a7bUIfnIItCuYogx2Hl5Rclyr0NK-piAvTV-LrUdcOo3wVfq27A4nVbDsLHjuNfoTI4aWZxW2EuqGc702tPbrRmTu2nF-2SJtfkmblBkctu3QjjrS/s320/5b321baf-e984-412d-a8b8-79978d74.jpg" width="320" />
+            <img class='img' border="0" data-original-height="600" data-original-width="970" height="198" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjT4Xv9HNaaVQocNxLzPSQVwzon_c_hWtvHBgOdmC5bAvw6KZQwb9fXUpEs_NXXxvCBsVIYDlp0Vt-a7bUIfnIItCuYogx2Hl5Rclyr0NK-piAvTV-LrUdcOo3wVfq27A4nVbDsLHjuNfoTI4aWZxW2EuqGc702tPbrRmTu2nF-2SJtfkmblBkctu3QjjrS/s320/5b321baf-e984-412d-a8b8-79978d74.jpg" width="320" />
         </a>
     </div>
 
@@ -24,7 +24,7 @@
 
     <div class="separator" style="clear: both; text-align: center;">
         <a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjwu-GKJOhHETGZM0mBsYtbkVj9BaMHFgLbacLFlKJFzhPeGc1EZ3isxSdofKrYCIgfF1HFw3K5_1d9lM0HeKZ8KpxR8UmdYSsjuXm8ccgdUHyuZ7DSiCn_jsDGIkSPKweBpZn_yrBVlSL-cVv9XPLEpko78t9NLfkPXYq1LTRbb5uUs3gnyutGcnnnxCT2/s970/dd3a1ee7-20e3-4afc-82b4-e3d1e346.jpg" style="margin-left: 1em; margin-right: 1em;">
-            <img border="0" data-original-height="600" data-original-width="970" height="198" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjwu-GKJOhHETGZM0mBsYtbkVj9BaMHFgLbacLFlKJFzhPeGc1EZ3isxSdofKrYCIgfF1HFw3K5_1d9lM0HeKZ8KpxR8UmdYSsjuXm8ccgdUHyuZ7DSiCn_jsDGIkSPKweBpZn_yrBVlSL-cVv9XPLEpko78t9NLfkPXYq1LTRbb5uUs3gnyutGcnnnxCT2/s320/dd3a1ee7-20e3-4afc-82b4-e3d1e346.jpg" width="320" />
+            <img class='img' border="0" data-original-height="600" data-original-width="970" height="198" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjwu-GKJOhHETGZM0mBsYtbkVj9BaMHFgLbacLFlKJFzhPeGc1EZ3isxSdofKrYCIgfF1HFw3K5_1d9lM0HeKZ8KpxR8UmdYSsjuXm8ccgdUHyuZ7DSiCn_jsDGIkSPKweBpZn_yrBVlSL-cVv9XPLEpko78t9NLfkPXYq1LTRbb5uUs3gnyutGcnnnxCT2/s320/dd3a1ee7-20e3-4afc-82b4-e3d1e346.jpg" width="320" />
         </a>
     </div>
 
@@ -45,7 +45,7 @@
 <div>
     <div style="text-align: justify;"><br /></div>
     <div style="text-align: justify;"><b>About the Author:</b></div>
-    <div style="text-align: justify;">{{ $data['about_author'] }}</div>
+    <div style="text-align: justify;" id='author'>{{ $data['about_author'] }}</div>
     <div style="text-align: justify;"><br /></div>
     <div style="text-align: justify;"><b>Search Key -&nbsp;</b>{{ $data['search_key'] }}</div>
     <div><span><!--more--></span><br />
@@ -59,15 +59,15 @@
                     <tbody>
                         <tr>
                             <td class="detailsku">SKU, Publisher</td>
-                            <td itemprop="sku">{{ $data['sku'] }}</td>
+                            <td itemprop="sku" id='sku'>{{ $data['sku'] }}</td>
                         </tr>
                         <tr>
                             <td class="detailcolor">Publisher</td>
-                            <td itemprop="color">{{ $data['publication'] }}</td>
+                            <td itemprop="color" id='publication'>{{ $data['publication'] }}</td>
                         </tr>
                         <tr>
                             <td class="detailguide">Author, Edition</td>
-                            <td>{{ $data['author_name'] }}, {{ $data['edition'] }}</td>
+                            <td><span id='author_name'>{{ $data['author_name'] }}</span>, <span id='edition'>{{ $data['edition'] }}</span></td>
                         </tr>
                         <tr>
                             <td class="detailguide">Binding, Type</td>
@@ -76,25 +76,25 @@
 
                         <tr>
                             <td class="detailcoupon">No. of Pages</td>
-                            <td>{{ $data['pages'] }}</td>
+                            <td id='page_no'>{{ $data['pages'] }}</td>
                         </tr>
 
                         <tr>
                             <td class="detailcoupon">Weight</td>
-                            <td>{{ $data['weight'] }}</td>
+                            <td id='weight'>{{ $data['weight'] }}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <div class="dt_header">
                 Product Description</div>
-            <div class="pbl box dtmoredetail dt_content"><span style="text-align: justify;">{{ $data['description'] }}</span>
+            <div class="pbl box dtmoredetail dt_content"><span style="text-align: justify;" id="desc">{{ $data['description'] }}</span>
                 <div>
                     <div style="text-align: justify;"><br /></div>
                     <div style="text-align: justify;"><b>About the Author:</b></div>
                     <div style="text-align: justify;">{{ $data['about_author'] }}</div>
                     <div style="text-align: justify;"><br /></div>
-                </div><b style="text-align: justify;">Search Key -&nbsp;</b><span style="text-align: justify;">{{ $data['search_key'] }}</span>. <br />
+                </div><b style="text-align: justify;">Search Key -&nbsp;</b><span style="text-align: justify;" id='search_key'>{{ $data['search_key'] }}</span>. <br />
             </div>
         </div>
         <div class="dt_header">
