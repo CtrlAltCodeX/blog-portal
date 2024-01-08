@@ -30,9 +30,9 @@
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-users"></i><span class="side-menu__label">{{ __('Listing') }}</span><i class="angle fe fe-chevron-right"></i></a>
                     <ul class="slide-menu">
                         <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
-                        <li><a href="{{ route('listing.create') }}" class="slide-item {{ (request()->is('admin/listing/*') || request()->is('admin/listing')) ? 'active' : '' }}">{{ __('Create Listing') }}</a></li>
+                        <li><a href="{{ route('listing.create') }}" class="slide-item {{ (request()->is('admin/listing/create')) ? 'active' : '' }}">{{ __('Create Listing') }}</a></li>
                         <li><a href="{{ route('amazon.find') }}" class="slide-item {{ (request()->is('admin/find-products/amazon')) ? 'active' : '' }}">{{ __('Create Listing (Amazon scrap)') }}</a></li>
-                        <li><a href="{{ route('listing.index') }}" class="slide-item {{ (request()->is('admin/listing/*') || request()->is('admin/listing')) ? 'active' : '' }}">{{ __('Catalogue') }}</a></li>
+                        <li><a href="{{ route('listing.index') }}" class="slide-item {{ (request()->is('admin/listing')) ? 'active' : '' }}">{{ __('Catalogue') }}</a></li>
                     </ul>
                 </li>
 

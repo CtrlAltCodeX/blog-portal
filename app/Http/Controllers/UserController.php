@@ -110,6 +110,6 @@ class UserController extends Controller
             ->where('status', 1)
             ->paginate(10);
 
-        return view('accounts.users.index', compact('users'));
+        return view('accounts.users.approved', compact('users'));
     }
 }

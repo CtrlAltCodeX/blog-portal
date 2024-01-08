@@ -9,6 +9,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TinyMCEController;
+use App\Services\GoogleService;
 
 Illuminate\Support\Facades\Auth::routes();
 
@@ -28,6 +29,8 @@ Route::post('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name
 Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
 Route::post('/auth/google/refresh', [GoogleController::class, 'refreshGoogle'])->name('google.refresh.token');
+
+Route::get('/process-image', [GoogleService::class, 'processImage']);
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');

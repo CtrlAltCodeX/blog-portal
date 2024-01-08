@@ -31,6 +31,7 @@ class AmazonSrcappingController extends Controller
             $productCrawler = Goutte::request('GET', $keyword);
         } else {
             $crawler = Goutte::request('GET', 'https://www.amazon.in/s?k=' . $keyword);
+            
 
             $productUrl = $crawler
                 ->filter('.s-product-image-container > .rush-component a')
@@ -38,12 +39,11 @@ class AmazonSrcappingController extends Controller
 
             $productCrawler = Goutte::request('GET', 'https://www.amazon.in' . $productUrl);
         }
-
         $title = $productCrawler->filter('#productTitle')->html();
 
         $image = $productCrawler->filter('#landingImage')->attr('src');
-
-        $desc = $productCrawler->filter('#pInfoTabsContainer')->html();
+        $desc = $productCrawler->filter('#pInfoTabsContainer span')->html();
+        // $desc = $productCrawler->filter('#bookDescription_feature_div')->html();
 
         $keys = $productCrawler->filter('#detailBullets_feature_div ul li')->each(function ($node) {
             $data = $node->filter('.a-text-bold')->each(function ($innerNode) {
@@ -75,6 +75,6 @@ class AmazonSrcappingController extends Controller
         $allDetails['desc'] = $desc;
         $allDetails['specifications'] = $specifications;
 
-        dd($allDetails);
+        return view('find-products.show', compact('allDetails'));
     }
 }

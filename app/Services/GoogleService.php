@@ -6,8 +6,10 @@ use Google_Client;
 use Google_Service_Blogger;
 use Google_Service_Blogger_Post;
 use App\Models\GoogleCredentail;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class GoogleService
 {
@@ -223,5 +225,35 @@ class GoogleService
         $redirectUri = $this->redirectToGoogle($data);
 
         return $redirectUri;
+    }
+
+    /**
+     * Process Image
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function processImage(Request $request)
+    {
+        $manager = new ImageManager(
+            new Driver()
+        );
+        // Step 1: Generate a background image
+        $background = $manager->canvas(555, 555, '#ffffff'); // Change dimensions as needed
+dd($background);
+        // Step 2: Upload the user's image
+        $uploadedImage = $request->file('image');
+        $userImage = Image::make($uploadedImage);
+
+        // Step 3: Merge both images
+        $background->insert($userImage, 'center');
+
+        // Step 4: Save the merged image
+        $outputPath = public_path('merged_images/');
+        $outputFileName = 'merged_image_' . time() . '.' . $uploadedImage->getClientOriginalExtension();
+        $background->save($outputPath . $outputFileName);
+
+        // Step 5: Return the path to the merged image
+        return $outputPath . $outputFileName;
     }
 }
