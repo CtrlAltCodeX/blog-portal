@@ -3,8 +3,8 @@
 @section('title', __('Listing'))
 
 @section('content')
-  <!-- CONTAINER -->
-  <div class="main-container container-fluid">
+<!-- CONTAINER -->
+<div class="main-container container-fluid">
 
     <!-- PAGE-HEADER -->
     <div class="page-header">
@@ -26,6 +26,8 @@
                     <h4 class="card-title">
                         Listing
                     </h4>
+
+                    <a href="{{ route('listing.create') }}" class="btn btn-primary float-right">{{ __('Create Listing') }}</a>
                 </div>
 
                 <div class="card-body">
@@ -33,30 +35,36 @@
                         <table class="table text-nowrap text-md-nowrap mb-0">
                             <thead>
                                 <tr>
-                                    <th>{{ __('Post Id') }}</th>
-                                    <th>{{ __('Blog Id') }}</th>
-                                    <th>{{ __('Author Id') }}</th>
-                                    <th>{{ __('Content') }}</th>
-                                    <th>{{ __('Published At') }}</th>
                                     <th>{{ __('Title') }}</th>
                                     <th>{{ __('Url') }}</th>
+                                    <th>{{ __('Published At') }}</th>
+                                    <th>{{ __('Actions') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse ($googlePosts as $googlePost)
-                                    <tr>
-                                        <td>{{ $googlePost->id }}</td>
-                                        <td>{{ $googlePost->blog->id }}</td>
-                                        <td>{{ $googlePost->author->id }}</td>
-                                        <td>{!! $googlePost->content !!}</td>
-                                        <td>{{ $googlePost->published }}</td>
-                                        <td>{{ $googlePost->title }}</td>
-                                        <td>{{ $googlePost->url }}</td>
-                                    </tr>
+                                <tr>
+                                    <td>{{ $googlePost->title }}</td>
+                                    <td>{{ $googlePost->url }}</td>
+                                    <td>{{ $googlePost->published }}</td>
+                                    <td>
+                                        <div class="btn-group" role="group" aria-label="Basic example">
+                                            <a href="{{ route('listing.edit', $googlePost->id) }}" class="btn btn-sm btn-primary">{{ __('Edit') }}</a>
+                                            <form action="{{ route('listing.destroy', $googlePost->id) }}" method="POST" class="ml-2">
+                                                @csrf
+                                                @method('DELETE')
+
+                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this item?')">
+                                                    {{ __('Delete') }}
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
                                 @empty
-                                    <tr>
-                                        <td colspan="5" class="text-center">{{ __('No records found.') }}</td>
-                                    </tr>
+                                <tr>
+                                    <td colspan="5" class="text-center">{{ __('No records found.') }}</td>
+                                </tr>
                                 @endforelse
                             </tbody>
                         </table>

@@ -4,9 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Services\GoogleService;
 use Illuminate\Http\Request;
+use App\Models\GoogleCredentail;
 
 class GoogleController extends Controller
-{
+{   
+    /**
+     * Construct
+     *
+     * @param GoogleService $googleService
+     */
     public function __construct(protected GoogleService $googleService)
     {
     }
@@ -18,9 +24,16 @@ class GoogleController extends Controller
      */
     public function redirectToGoogle()
     {
-        $redirectUri = $this->googleService->redirectToGoogle(request()->all());
+        $credExists = GoogleCredentail::latest()->first();
+        if ($credExists) {
+            GoogleCredentail::latest()->delete();
 
-        return redirect()->to($redirectUri);
+            return redirect()->route('settings.blog')->with('success', 'Removed successfully');
+        } else {
+            $redirectUri = $this->googleService->redirectToGoogle(request()->all());
+
+            return redirect()->to($redirectUri);
+        }
     }
 
     /**
@@ -33,6 +46,18 @@ class GoogleController extends Controller
     {
         $this->googleService->handleGoogleCallback($request->all());
 
-        return redirect()->route('setting.index')->with('success', 'Authenticated successfully');
+        return redirect()->route('settings.blog')->with('success', 'Authenticated successfully');
+    }
+
+    /**
+     * Refresh The Tokenn
+     *
+     * @return void
+     */
+    public function refreshGoogle()
+    {
+        $url = $this->googleService->refreshToken(request()->all());
+
+        return response()->json($url, 200);
     }
 }

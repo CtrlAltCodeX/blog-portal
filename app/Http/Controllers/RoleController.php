@@ -110,4 +110,16 @@ class RoleController extends Controller
 
         return redirect()->route('roles.index');
     }
+
+    /**
+     * View Roles and Permissions
+     *
+     * @return void
+     */
+    public function view()
+    {
+        $roles = Role::latest()->get();
+
+        return view('accounts.roles.view', compact('roles'));
+    }
 }

@@ -9,12 +9,14 @@
         "firebase/php-jwt": "^6.10",
         "google/apiclient": "^2.15",
         "guzzlehttp/guzzle": "^7.2",
+        "intervention/image": "^3.2",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
         "laravel/ui": "^4.3",
         "sadiqsalau/laravel-otp": "^1.0",
-        "spatie/laravel-permission": "^6.3"
+        "spatie/laravel-permission": "^6.3",
+        "weidner/goutte": "^2.3"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

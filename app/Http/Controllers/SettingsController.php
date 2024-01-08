@@ -11,7 +11,7 @@ class SettingsController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index()
+    public function blog()
     {
         $creds = GoogleCredentail::latest()->first();
 

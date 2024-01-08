@@ -41,9 +41,6 @@
                                         <th>{{ __('ID') }}</th>
                                         <th>{{ __('Role Name') }}</th>
                                         <th>{{ __('Permissions') }}</th>
-                                        @canany(['Role edit', 'Role delete'])
-                                            <th>{{ __('Actions') }}</th>
-                                        @endcan
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -59,26 +56,6 @@
                                                             <br>
                                                         @endif
                                                     @endforeach
-                                                </td>
-                                                <td>
-                                                    <div class="btn-group btn-group-sm" role="group"
-                                                        aria-label="{{ __('Actions') }}">
-                                                        @can('Role edit')
-                                                            <a href="{{ route('roles.edit', $role->id) }}"
-                                                                class="btn btn-primary">{{ __('EDIT') }}</a>
-                                                        @endcan
-
-                                                        @can('Role delete')
-                                                            <button type="button"
-                                                                onclick="return confirm('{{ __('Are you sure you want to delete this record?') }}') ? document.getElementById('delete-role').submit() : false;"
-                                                                class="btn btn-danger">{{ __('DELETE') }}</button>
-                                                            <form action="{{ route('roles.destroy', $role->id) }}" id="delete-role"
-                                                                method="post">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                            </form>
-                                                        @endcan
-                                                    </div>
                                                 </td>
                                             </tr>
                                         @empty

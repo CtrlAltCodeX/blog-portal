@@ -23,6 +23,15 @@ class User extends Authenticatable
         'email',
         'status',
         'password',
+        'mobile',
+        'account_type',
+        'aadhaar_no',
+        'father_name',
+        'mother_name',
+        'state',
+        'pincode',
+        'full_address',
+        'plain_password',
     ];
 
     /**

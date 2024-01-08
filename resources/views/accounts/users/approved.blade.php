@@ -43,9 +43,6 @@
                                         <th>{{ __('Email') }}</th>
                                         <th>{{ __('Roles') }}</th>
                                         <th>{{ __('Status') }}</th>
-                                        @canany(['User edit', 'User delete'])
-                                            <th>{{ __('Actions') }}</th>
-                                        @endcanany
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -65,27 +62,6 @@
                                                 </td>
                                                 <td><span
                                                         class="badge bg-{{ $user->status ? 'success' : 'danger' }}">{{ $user->status ? 'Active' : 'Inactive' }}</span>
-                                                </td>
-                                                <td>
-                                                    <div class="btn-group btn-group-sm" role="group"
-                                                        aria-label="{{ __('Actions') }}">
-                                                        @can('User edit')
-                                                            <a href="{{ route('users.edit', $user->id) }}"
-                                                                class="btn btn-primary">{{ __('EDIT') }}</a>
-                                                        @endcan
-
-                                                        @can('User delete')
-                                                            <button type="button"
-                                                                onclick="return confirm('{{ __('Are you sure you want to delete this record?') }}') ? document.getElementById('delete-user').submit() : false;"
-                                                                class="btn btn-danger">{{ __('DELETE') }}</button>
-
-                                                            <form action="{{ route('users.destroy', $user->id) }}" id="delete-user"
-                                                                method="post">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                            </form>
-                                                        @endcan
-                                                    </div>
                                                 </td>
                                             </tr>
                                         @empty

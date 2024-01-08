@@ -9,6 +9,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="Sash – Bootstrap 5  Admin & Dashboard Template">
     <meta name="author" content="Spruko Technologies Private Limited">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="keywords"
         content="admin,admin dashboard,admin panel,admin template,bootstrap,clean,dashboard,flat,jquery,modern,responsive,premium admin templates,responsive admin,ui,ui kit.">
 
@@ -34,6 +35,7 @@
     <link id="theme" rel="stylesheet" type="text/css" media="all"
         href="{{ asset('assets/colors/color1.css') }}" />
 
+    @stack('css')
 </head>
 
 <body class="app sidebar-mini ltr">
@@ -110,6 +112,7 @@
     <!-- CUSTOM JS -->
     <script src="{{ asset('assets/js/custom.js') }}"></script>
 
+    @stack('js')
 </body>
 
 </html>
