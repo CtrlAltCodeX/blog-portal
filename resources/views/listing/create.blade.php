@@ -308,7 +308,7 @@
                             <label for="label" class="form-label">{{ __('Label*') }}</label>
                             <select class="form-control select2  @error('label') is-invalid @enderror" data-placeholder="Choose Label" multiple value="{{ old('label') }}" name="label[]">
                                 @foreach($categories as $category)
-                                <option value="{{ $category['term'] }}">
+                                <option value="{{ $category['term'] }}" {{ $category['term'] == 'Product' ? 'selected' : '' }}>
                                     {{$category['term']}}
                                 </option>
                                 @endforeach

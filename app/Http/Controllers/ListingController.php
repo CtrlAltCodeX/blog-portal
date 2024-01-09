@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Services\GoogleService;
 use App\Http\Requests\BlogRequest;
 use Illuminate\Support\Facades\Http;
+use Carbon\Carbon;
 
 class ListingController extends Controller
 {
@@ -26,6 +27,16 @@ class ListingController extends Controller
      */
     public function index()
     {
+        $credential = $this->googleService->getCredentails();
+        
+        $data = json_decode($credential->token);
+        $currentTime = Carbon::now();
+
+        $expirationDateTime = $currentTime->addSeconds($data->expires_in);
+        // Check if the token is expired by comparing with the current time
+        if (Carbon::now()->greaterThanOrEqualTo($expirationDateTime))
+                return view('settings.authenticate');
+
         $googlePosts = $this->googleService->posts();
 
         return view('listing.index', compact('googlePosts'));

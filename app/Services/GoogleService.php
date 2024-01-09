@@ -25,7 +25,7 @@ class GoogleService
 
             $authUrl = $client->createAuthUrl();
 
-            $credExists = GoogleCredentail::latest()->first();
+            $credExists = $this->getCredentails();
 
             if (!$credExists) {
                 GoogleCredentail::create(request()->all());
@@ -61,7 +61,7 @@ class GoogleService
     public function handleGoogleCallback(array $data)
     {
         try {
-            $credential = GoogleCredentail::latest()->first();
+            $credential = $this->getCredentails();
 
             $client = $this->createGoogleClient($credential->toArray());
 
@@ -82,7 +82,7 @@ class GoogleService
      */
     public function posts()
     {
-        $credential = GoogleCredentail::latest()->first();
+        $credential = $this->getCredentails();
 
         $client = $this->createGoogleClient($credential->toArray());
         $client->setAccessToken($credential->token);
@@ -100,7 +100,7 @@ class GoogleService
     public function createPost(array $data)
     {
         try {
-            $credential = GoogleCredentail::latest()->first();
+            $credential = $this->getCredentails();
 
             $client = new Google_Client();
 
@@ -128,7 +128,7 @@ class GoogleService
     public function editPost($postId)
     {
         try {
-            $credential = GoogleCredentail::latest()->first();
+            $credential = $this->getCredentails();
 
             $client = new Google_Client();
 
@@ -157,7 +157,7 @@ class GoogleService
     public function updatePost($data, $postId)
     {
         try {
-            $credential = GoogleCredentail::latest()->first();
+            $credential = $this->getCredentails();
 
             $client = new Google_Client();
 
@@ -190,7 +190,7 @@ class GoogleService
     {
         try {
             // Get the latest Google credential
-            $credential = GoogleCredentail::latest()->first();
+            $credential = $this->getCredentails();
 
             // Create a new Google client
             $client = new Google_Client();
@@ -228,6 +228,16 @@ class GoogleService
     }
 
     /**
+     * Get Credentails
+     *
+     * @return void
+     */
+    public function getCredentails()
+    {
+        return  GoogleCredentail::latest()->first();
+    }
+
+    /**
      * Process Image
      *
      * @param Request $request
@@ -240,7 +250,7 @@ class GoogleService
         );
         // Step 1: Generate a background image
         $background = $manager->canvas(555, 555, '#ffffff'); // Change dimensions as needed
-dd($background);
+        dd($background);
         // Step 2: Upload the user's image
         $uploadedImage = $request->file('image');
         $userImage = Image::make($uploadedImage);
