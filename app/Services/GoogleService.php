@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use Illuminate\Support\Facades\Storage;
 
 class GoogleService
 {
@@ -156,6 +157,10 @@ class GoogleService
      */
     public function updatePost($data, $postId)
     {
+        $this->processImage($data['images'][0]->getClientOriginalName());
+
+
+        die;
         try {
             $credential = $this->getCredentails();
 
@@ -243,27 +248,27 @@ class GoogleService
      * @param Request $request
      * @return void
      */
-    public function processImage(Request $request)
+    public function processImage($fileName)
     {
         $manager = new ImageManager(
             new Driver()
         );
-        // Step 1: Generate a background image
-        $background = $manager->canvas(555, 555, '#ffffff'); // Change dimensions as needed
-        dd($background);
-        // Step 2: Upload the user's image
-        $uploadedImage = $request->file('image');
-        $userImage = Image::make($uploadedImage);
 
-        // Step 3: Merge both images
-        $background->insert($userImage, 'center');
+        // open an image file
+        $image = $manager->read(public_path('background.jpg'));
 
-        // Step 4: Save the merged image
-        $outputPath = public_path('merged_images/');
-        $outputFileName = 'merged_image_' . time() . '.' . $uploadedImage->getClientOriginalExtension();
-        $background->save($outputPath . $outputFileName);
+        // resize image instance
+        $image->resize(width: 555, height: 555);
 
-        // Step 5: Return the path to the merged image
-        return $outputPath . $outputFileName;
+        // insert a watermark
+        $image->place($fileName, 'center');
+
+        // encode edited image
+        $encoded = $image->toJpg();
+
+        // save encoded image
+        $encoded->save(public_path($fileName));
+
+        return '' . $fileName;
     }
 }

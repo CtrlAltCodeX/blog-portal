@@ -24,40 +24,64 @@ Illuminate\Support\Facades\Auth::routes();
 |
 */
 
-Route::post('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
+Route::post('/auth/google', [GoogleController::class, 'redirectToGoogle'])
+    ->name('auth.google');
 
 Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
-Route::post('/auth/google/refresh', [GoogleController::class, 'refreshGoogle'])->name('google.refresh.token');
-
-Route::get('/process-image', [GoogleService::class, 'processImage']);
+Route::post('/auth/google/refresh', [GoogleController::class, 'refreshGoogle'])
+    ->name('google.refresh.token');
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function () {
-    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('dashboard', [DashboardController::class, 'index'])
+        ->name('dashboard');
 
     Route::resource('roles', RoleController::class);
 
-    Route::get('roles/all/view', [RoleController::class, 'view'])->name('view.roles');
+    Route::get('roles/all/view', [RoleController::class, 'view'])
+        ->name('view.roles');
 
     Route::resource('users', UserController::class);
 
-    Route::group(['prefix' => 'find-products'], function () {
-        Route::get('amazon', [AmazonSrcappingController::class, 'find'])->name('amazon.find');
+    Route::get('change/password', [UserController::class, 'updatePassword'])
+        ->name('change.user.password');
 
-        Route::post('amazon', [AmazonSrcappingController::class, 'findProducts'])->name('amazon.find.products');
+    Route::post('update/password', [UserController::class, 'updatePassword'])
+        ->name('update.user.password');
+
+    Route::group(['prefix' => 'find-products'], function () {
+        Route::get('amazon', [AmazonSrcappingController::class, 'find'])
+            ->name('amazon.find');
+
+        Route::post('amazon', [AmazonSrcappingController::class, 'findProducts'])
+            ->name('amazon.find.products');
     });
 
     Route::resource('listing', ListingController::class);
 
-    Route::get('inventory', [ListingController::class, 'inventory'])->name('inventory.index');
+    Route::get('inventory', [ListingController::class, 'inventory'])
+        ->name('inventory.index');
 
-    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('dashboard', [DashboardController::class, 'index'])
+        ->name('dashboard');
 
-    Route::get('users/verified/approved', [UserController::class, 'verified'])->name('verified.users');
+    Route::get('users/verified/approved', [UserController::class, 'verified'])
+        ->name('verified.users');
 
-    Route::get('settings/blog', [SettingsController::class, 'blog'])->name('settings.blog');
+    Route::group(['prefix' => 'settings'], function () {
+        Route::get('blog', [SettingsController::class, 'blog'])
+            ->name('settings.blog');
 
-    Route::post('tinymce/upload', [TinyMCEController::class, 'upload'])->name('tinymce.upload');
+        Route::get('site', [SettingsController::class, 'site'])
+            ->name('settings.site');
+
+        Route::post('update/site', [SettingsController::class, 'update'])
+            ->name('settings.site.update');
+    });
+
+
+    Route::post('tinymce/upload', [TinyMCEController::class, 'upload'])
+        ->name('tinymce.upload');
 });
 
 Route::get('/', function () {

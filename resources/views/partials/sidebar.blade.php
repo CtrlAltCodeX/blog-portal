@@ -1,3 +1,8 @@
+@php
+    $userInfo = app('App\Models\SiteSetting')->first();
+
+@endphp
+
 <!--APP-SIDEBAR-->
 <div class="sticky">
     <div class="app-sidebar__overlay" data-bs-toggle="sidebar"></div>
@@ -7,7 +12,7 @@
                 <img src="{{ asset('assets/images/brand/logo.png') }}" class="header-brand-img desktop-logo" alt="logo">
                 <img src="{{ asset('assets/images/brand/logo-1.png') }}" class="header-brand-img toggle-logo" alt="logo">
                 <img src="{{ asset('assets/images/brand/logo-2.png') }}" class="header-brand-img light-logo" alt="logo">
-                <img src="{{ asset('assets/images/brand/logo-3.png') }}" class="header-brand-img light-logo1" alt="logo">
+                <img src="/storage/{{ $userInfo->logo }}" class="header-brand-img light-logo1" alt="logo" width="50" height="50">
             </a>
             <!-- LOGO -->
         </div>
@@ -77,8 +82,8 @@
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-users"></i><span class="side-menu__label">{{ __('Settings') }}</span><i class="angle fe fe-chevron-right"></i></a>
                     <ul class="slide-menu">
                         <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
-                        <li><a href="{{ route('settings.blog') }}" class="slide-item {{ request()->is('admin/settings/*') ? 'active' : '' }}">{{ __('Site settings') }}</a></li>
-                        <li><a href="{{ route('settings.blog') }}" class="slide-item {{ request()->is('admin/settings/*') ? 'active' : '' }}">{{ __('Confiure with blog') }}</a></li>
+                        <li><a href="{{ route('settings.site') }}" class="slide-item {{ request()->is('admin/settings/site') ? 'active' : '' }}">{{ __('Site settings') }}</a></li>
+                        <li><a href="{{ route('settings.blog') }}" class="slide-item {{ request()->is('admin/settings/blog') ? 'active' : '' }}">{{ __('Confiure with blog') }}</a></li>
                     </ul>
                 </li>
             </ul>
