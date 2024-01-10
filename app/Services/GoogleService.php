@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
-use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class GoogleService
 {
@@ -108,6 +108,10 @@ class GoogleService
             $client->setScopes('https://www.googleapis.com/auth/blogger');
             $client->setAccessToken(json_decode($credential->token)->access_token);
 
+            foreach ($data['images'] as $image) {
+                $data['images'] = $this->processImage($image);
+            }
+
             $blogger = new Google_Service_Blogger($client);
 
             $post = new Google_Service_Blogger_Post();
@@ -157,10 +161,6 @@ class GoogleService
      */
     public function updatePost($data, $postId)
     {
-        $this->processImage($data['images'][0]->getClientOriginalName());
-
-
-        die;
         try {
             $credential = $this->getCredentails();
 
@@ -248,27 +248,16 @@ class GoogleService
      * @param Request $request
      * @return void
      */
-    public function processImage($fileName)
+    public function processImage($image)
     {
-        $manager = new ImageManager(
-            new Driver()
-        );
+        $background = (new ImageManager())->canvas(555, 555, '#ffffff');
 
-        // open an image file
-        $image = $manager->read(public_path('background.jpg'));
+        $background->insert(Image::make($image), 'center');
 
-        // resize image instance
-        $image->resize(width: 555, height: 555);
+        $outputFileName = 'merged_image_' . time() . '.' . $image->getClientOriginalExtension();
 
-        // insert a watermark
-        $image->place($fileName, 'center');
-
-        // encode edited image
-        $encoded = $image->toJpg();
-
-        // save encoded image
-        $encoded->save(public_path($fileName));
-
-        return '' . $fileName;
+        $background->save(public_path('merged_images/') . $outputFileName);
+        
+        return config('app.url') . '/public/merged_images/' . $outputFileName;
     }
 }

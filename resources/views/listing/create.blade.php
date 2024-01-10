@@ -306,7 +306,7 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label for="label" class="form-label">{{ __('Label*') }}</label>
-                            <select class="form-control select2  @error('label') is-invalid @enderror" data-placeholder="Choose Label" multiple value="{{ old('label') }}" name="label[]">
+                            <select class="form-control select2  @error('label') is-invalid @enderror" data-placeholder="Choose Label" multiple name="label[]">
                                 @foreach($categories as $category)
                                 <option value="{{ $category['term'] }}" {{ $category['term'] == 'Product' ? 'selected' : '' }}>
                                     {{$category['term']}}
