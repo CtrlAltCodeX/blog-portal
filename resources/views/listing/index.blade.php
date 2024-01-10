@@ -2,6 +2,14 @@
 
 @section('title', __('Listing'))
 
+@push('css')
+<style>
+    ul {
+        justify-content: end;
+    }
+</style>
+@endpush
+
 @section('content')
 <!-- CONTAINER -->
 <div class="main-container container-fluid">
@@ -30,7 +38,7 @@
                     <a href="{{ route('listing.create') }}" class="btn btn-primary float-right">{{ __('Create Listing') }}</a>
                 </div>
 
-                <div class="card-body">
+                <div class="card-body text-right">
                     <div class="table-responsive">
                         <table class="table text-nowrap text-md-nowrap mb-0">
                             <thead>
@@ -69,6 +77,7 @@
                             </tbody>
                         </table>
                     </div>
+                    {{ $googlePosts->links() }}
                 </div>
             </div>
         </div>

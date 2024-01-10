@@ -171,7 +171,7 @@
                         <div>
                             <div class="form-group">
                                 <label for="title" class="form-label">{{ __('Title*') }}</label>
-                                <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') }}" autocomplete="title" autofocus placeholder="Title">
+                                <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') ?? $product->title }}" autocomplete="title" autofocus placeholder="Title">
 
                                 @error('title')
                                 <span class="invalid-feedback" role="alert">
@@ -182,7 +182,7 @@
 
                             <div class="form-group">
                                 <label for="description" class="form-label">{{ __('Description*') }}</label>
-                                <textarea id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" autocomplete="description" autofocus placeholder="Description" rows="10">{{ old('description') }}</textarea>
+                                <textarea id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" autocomplete="description" autofocus placeholder="Description" rows="10">{{ old('description')?? $product->desc }}</textarea>
 
                                 @error('description')
                                 <span class="invalid-feedback" role="alert">
@@ -221,7 +221,7 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label for="selling_price" class="form-label">{{ __('Selling Price*') }}</label>
-                            <input id="selling_price" type="number" class="form-control @error('selling_price') is-invalid @enderror" name="selling_price" value="{{ old('selling_price') }}" autocomplete="selling_price" autofocus placeholder="Selling Price">
+                            <input id="selling_price" type="number" class="form-control @error('selling_price') is-invalid @enderror" name="selling_price" value="{{ old('selling_price') ?? $product->selling }}" autocomplete="selling_price" autofocus placeholder="Selling Price">
 
                             @error('selling_price')
                             <span class="invalid-feedback" role="alert">
@@ -232,7 +232,7 @@
 
                         <div class="form-group">
                             <label for="mrp" class="form-label">{{ __('MRP*') }}</label>
-                            <input id="mrp" type="number" class="form-control @error('mrp') is-invalid @enderror" name="mrp" value="{{ old('mrp') }}" autocomplete="mrp" autofocus placeholder="MRP">
+                            <input id="mrp" type="number" class="form-control @error('mrp') is-invalid @enderror" name="mrp" value="{{ old('mrp') ?? $product->mrp }}" autocomplete="mrp" autofocus placeholder="MRP">
 
                             @error('mrp')
                             <span class="invalid-feedback" role="alert">
@@ -247,7 +247,7 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label for="publication" class="form-label">{{ __('Publication*') }}</label>
-                            <input id="publication" type="text" class="form-control @error('publication') is-invalid @enderror" name="publication" value="{{ old('publication') }}" autocomplete="publication" autofocus placeholder="Publication">
+                            <input id="publication" type="text" class="form-control @error('publication') is-invalid @enderror" name="publication" value="{{ old('publication') ?? $product->specifications->Publisher  }}" autocomplete="publication" autofocus placeholder="Publication">
 
                             @error('publication')
                             <span class="invalid-feedback" role="alert">
@@ -345,7 +345,7 @@
 
                         <div class="form-group">
                             <label for="pages" class="form-label">{{ __('No. of Pages') }}</label>
-                            <input id="pages" type="number" class="form-control @error('pages') is-invalid @enderror" name="pages" value="{{ old('pages') }}" autocomplete="pages" autofocus placeholder="No. of Pages">
+                            <input id="pages" type="number" class="form-control @error('pages') is-invalid @enderror" name="pages" value="{{ old('pages')?? $product->specifications->Paperback }}" autocomplete="pages" autofocus placeholder="No. of Pages">
 
                             @error('pages')
                             <span class="invalid-feedback" role="alert">
@@ -371,7 +371,7 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label for="country_origin" class="form-label">{{ __('Country of Origin*') }}</label>
-                            <input id="country_origin" type="text" class="form-control @error('country_origin') is-invalid @enderror" name="country_origin" value="{{ old('country_origin') ?? 'India' }}" autocomplete="country_origin" autofocus placeholder="Country of Origin">
+                            <input id="country_origin" type="text" class="form-control @error('country_origin') is-invalid @enderror" name="country_origin" value="{{ old('country_origin') }}" autocomplete="country_origin" autofocus placeholder="Country of Origin">
 
                             @error('country_origin')
                             <span class="invalid-feedback" role="alert">
@@ -382,7 +382,7 @@
 
                         <div class="form-group">
                             <label for="language" class="form-label">{{ __('Language*') }}</label>
-                            <input id="language" type="text" class="form-control @error('language') is-invalid @enderror" name="language" value="{{ old('language') }}" autocomplete="language" autofocus placeholder="Language">
+                            <input id="language" type="text" class="form-control @error('language') is-invalid @enderror" name="language" value="{{ old('language') ?? $product->specifications->Language }}" autocomplete="language" autofocus placeholder="Language">
 
                             @error('language')
                             <span class="invalid-feedback" role="alert">

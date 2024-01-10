@@ -7,6 +7,7 @@ use App\Services\GoogleService;
 use App\Http\Requests\BlogRequest;
 use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ListingController extends Controller
 {
@@ -28,16 +29,16 @@ class ListingController extends Controller
     public function index()
     {
         $credential = $this->googleService->getCredentails();
-        
+
         $data = json_decode($credential->token);
+        $updatedTime = new Carbon($credential->updated_at);
         $currentTime = Carbon::now();
+        $expirationDateTime = $updatedTime->addSeconds($data->expires_in);
 
-        $expirationDateTime = $currentTime->addSeconds($data->expires_in);
-        // Check if the token is expired by comparing with the current time
-        if (Carbon::now()->greaterThanOrEqualTo($expirationDateTime))
-                return view('settings.authenticate');
+        if ($currentTime->greaterThanOrEqualTo($expirationDateTime))
+            return view('settings.authenticate');
 
-        $googlePosts = $this->googleService->posts();
+        $googlePosts = $this->getPaginatedData(collect($this->googleService->posts()));
 
         return view('listing.index', compact('googlePosts'));
     }
@@ -154,5 +155,51 @@ class ListingController extends Controller
         session()->flash('success', 'Post delete successfully');
 
         return redirect()->route('listing.index');
+    }
+
+    /**
+     * Inventory Listing
+     *
+     * @return void
+     */
+    public function inventory()
+    {
+        $credential = $this->googleService->getCredentails();
+
+        $data = json_decode($credential->token);
+        $updatedTime = new Carbon($credential->updated_at);
+        $currentTime = Carbon::now();
+
+        $expirationDateTime = $updatedTime->addSeconds($data->expires_in);
+        if ($currentTime->greaterThanOrEqualTo($expirationDateTime))
+            return view('settings.authenticate');
+
+        $googlePosts = $this->getPaginatedData(collect($this->googleService->posts()));
+
+        return view('listing.inventory', compact('googlePosts'));
+    }
+
+    /**
+     * Get Paginated Data
+     *
+     * @param Object $googlePosts
+     * @param integer $perPage
+     * @return Object
+     */
+    public function getPaginatedData($googlePosts, $perPage = 10)
+    {
+        $currentPage = request()->get('page') ?: 1;
+
+        $currentPageItems = $googlePosts->slice(($currentPage - 1) * $perPage, $perPage)->values();
+
+        $googlePosts = new LengthAwarePaginator(
+            $currentPageItems,
+            $googlePosts->count(),
+            $perPage,
+            $currentPage,
+            ['path' => LengthAwarePaginator::resolveCurrentPath()]
+        );
+
+        return $googlePosts;
     }
 }
