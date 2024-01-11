@@ -154,7 +154,7 @@
     <!-- PAGE-HEADER END -->
 
     <!-- Row -->
-    <form action="{{ route('listing.store') }}" method="POST" enctype='multipart/form-data'>
+    <form action="{{ route('listing.store') }}" method="POST" enctype='multipart/form-data' id='form'>
         @csrf
         <div class="row">
             <div class="col-md-12 col-xl-12">
@@ -164,7 +164,10 @@
                             {{ __('Create Listing') }}
                         </h4>
 
-                        <button type="submit" class="btn btn-primary float-right">Save</button>
+                        <div>
+                            <button type="submit" class="btn btn-primary float-right">Publish</button>
+                            <button type="submit" class="btn btn-primary float-right" id='draft'>Save as Draft</button>
+                        </div>
                     </div>
 
                     <div class="card-body">
@@ -425,3 +428,17 @@
 <!-- End Row -->
 </div>
 @endsection
+
+@push('js')
+<script>
+    $(document).ready(function() {
+        $("#draft").click(function(e) {
+            e.preventDefault();
+
+            $("#form").append("<input type='hidden' name='isDraft' value=1 />");
+
+            $("#form").submit();
+        })
+    })
+</script>
+@endpush

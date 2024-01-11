@@ -109,7 +109,7 @@ class GoogleService
             $client->setAccessToken(json_decode($credential->token)->access_token);
 
             foreach ($data['images'] as $image) {
-                $data['images'] = $this->processImage($image);
+                $data['processed_images'][] = $this->processImage($image);
             }
 
             $blogger = new Google_Service_Blogger($client);
@@ -119,7 +119,10 @@ class GoogleService
             $post->content = view('listing.template', compact('data'))->render();
             $post->setLabels($data['label']);
 
-            return $blogger->posts->insert($credential->blog_id, $post);
+            $isDraft = [];
+            if (request()->isDraft) $isDraft = ['isDraft' => request()->isDraft];
+
+            return $blogger->posts->insert($credential->blog_id, $post, $isDraft);
         } catch (\Google_Service_Exception $e) {
             return json_decode($e->getMessage());
         }
@@ -256,8 +259,8 @@ class GoogleService
 
         $outputFileName = 'merged_image_' . time() . '.' . $image->getClientOriginalExtension();
 
-        $background->save(public_path('merged_images/') . $outputFileName);
-        
-        return config('app.url') . '/public/merged_images/' . $outputFileName;
+        $background->save(public_path($outputFileName));
+
+        return config('app.url') . '/' . $outputFileName;
     }
 }

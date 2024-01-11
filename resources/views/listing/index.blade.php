@@ -54,7 +54,7 @@
                                 <tr>
                                     <td>{{ $googlePost->title }}</td>
                                     <td>{{ $googlePost->url }}</td>
-                                    <td>{{ $googlePost->published }}</td>
+                                    <td>{{ date("d-m-Y", strtotime($googlePost->published)) }}</td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic example">
                                             <a href="{{ route('listing.edit', $googlePost->id) }}" class="btn btn-sm btn-primary">{{ __('Edit') }}</a>

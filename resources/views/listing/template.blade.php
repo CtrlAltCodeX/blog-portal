@@ -1,7 +1,7 @@
 <div style="text-align: justify;">
     <table align="center" cellpadding="0" cellspacing="0" class="tr-caption-container" style="margin-left: auto; margin-right: auto;">
         <tbody>
-            @foreach ($data['images'] as $image)
+            @foreach ($data['processed_images'] as $image)
                 <tr>
                     <td style="text-align: center;">
                         <a href="{{ $image }}" style="margin-left: auto; margin-right: auto;">

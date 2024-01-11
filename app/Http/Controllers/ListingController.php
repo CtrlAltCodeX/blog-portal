@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\GoogleService;
 use App\Http\Requests\BlogRequest;
+use App\Models\SiteSetting;
 use Illuminate\Support\Facades\Http;
-use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class ListingController extends Controller
@@ -17,8 +17,10 @@ class ListingController extends Controller
      * 
      * @return void
      */
-    public function __construct(protected GoogleService $googleService)
-    {
+    public function __construct(
+        protected GoogleService $googleService,
+        protected SiteSetting $siteSetting
+    ) {
     }
 
     /**
@@ -28,14 +30,7 @@ class ListingController extends Controller
      */
     public function index()
     {
-        $credential = $this->googleService->getCredentails();
-
-        $data = json_decode($credential->token);
-        $updatedTime = new Carbon($credential->updated_at);
-        $currentTime = Carbon::now();
-        $expirationDateTime = $updatedTime->addSeconds($data->expires_in);
-
-        if ($currentTime->greaterThanOrEqualTo($expirationDateTime))
+        if ($this->tokenIsExpired($this->googleService))
             return view('settings.authenticate');
 
         $googlePosts = $this->getPaginatedData(collect($this->googleService->posts()));
@@ -50,7 +45,9 @@ class ListingController extends Controller
      */
     public function create()
     {
-        $response = Http::get('https://publication.exam360.in/feeds/posts/default?alt=json');
+        $getSettings = $this->siteSetting->first();
+
+        $response = Http::get($getSettings->url . '/feeds/posts/default?alt=json');
 
         $categories = $response->json()['feed']['category'];
 
@@ -101,7 +98,7 @@ class ListingController extends Controller
         $selling = $doc->getElementById('selling')->textContent;
         $mrp = $doc->getElementById('mrp')->textContent;
 
-        for ($i = 0; $i < 3; $i++) {
+        for ($i = 0; $i < $doc->getElementsByTagName("img")->length; $i++) {
             $image = $doc->getElementsByTagName("img")->item($i);
             $images[] = $image->getAttribute('src');
         }
@@ -150,7 +147,7 @@ class ListingController extends Controller
      */
     public function destroy($postId)
     {
-        $post = $this->googleService->deletePost($postId);
+        $this->googleService->deletePost($postId);
 
         session()->flash('success', 'Post delete successfully');
 
@@ -164,14 +161,7 @@ class ListingController extends Controller
      */
     public function inventory()
     {
-        $credential = $this->googleService->getCredentails();
-
-        $data = json_decode($credential->token);
-        $updatedTime = new Carbon($credential->updated_at);
-        $currentTime = Carbon::now();
-
-        $expirationDateTime = $updatedTime->addSeconds($data->expires_in);
-        if ($currentTime->greaterThanOrEqualTo($expirationDateTime))
+        if ($this->tokenIsExpired($this->googleService))
             return view('settings.authenticate');
 
         $googlePosts = $this->getPaginatedData(collect($this->googleService->posts()));
