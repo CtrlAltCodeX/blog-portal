@@ -88,6 +88,12 @@ class GoogleService
         $client = $this->createGoogleClient($credential->toArray());
         $client->setAccessToken($credential->token);
 
+        // if ($client->isAccessTokenExpired()) {
+        //     $url = $this->refreshToken($credential->toArray());
+
+        //     return redirect()->to($url);
+        // }
+
         $blogger = new Google_Service_Blogger($client);
 
         return $blogger->posts->listPosts($credential->blog_id);
@@ -177,6 +183,12 @@ class GoogleService
 
             $existingPost = $blogger->posts->get($credential->blog_id, $postId);
 
+            if (isset($data['images'])) {
+                foreach ($data['images'] as $image) {
+                    $data['processed_images'][] = $this->processImage($image);
+                }
+            }
+
             $existingPost->title = $data['title'];
             $existingPost->content = view('listing.template', compact('data'))->render();
             $existingPost->setLabels($data['label']);
@@ -255,12 +267,12 @@ class GoogleService
     {
         $background = (new ImageManager())->canvas(555, 555, '#ffffff');
 
-        $background->insert(Image::make($image), 'center');
+        $background->insert(Image::make($image)->resize(300, 425), 'center');
 
-        $outputFileName = 'merged_image_' . time() . '.' . $image->getClientOriginalExtension();
+        $outputFileName = 'merged_image_'. $image->getClientOriginalName() . time() . '.' . $image->getClientOriginalExtension();
 
         $background->save(public_path($outputFileName));
 
-        return config('app.url') . '/' . $outputFileName;
+        return config('app.url') . '/public/' . $outputFileName;
     }
 }

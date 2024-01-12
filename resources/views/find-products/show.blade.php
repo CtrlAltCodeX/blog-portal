@@ -15,7 +15,7 @@
             </ol>
         </div>
     </div>
-    
+
     <form action="{{ route('amazon.find.store') }}" method="POST">
         @csrf
         <input type="hidden" value='@json($allDetails)' name="details" />
@@ -42,7 +42,7 @@
                                     <b>Images:</b>
                                 </label>
                                 <span>
-                                    <img src="{{ $allDetails['image'] }}" width="200" />
+                                    <img src="{{ $allDetails['baseImage'] }}" width="200" />
                                 </span>
                             </div>
                         </div>

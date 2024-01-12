@@ -68,6 +68,7 @@
                                     <label for="fileInput1">Images*</label>
                                     @foreach($allInfo['image1'] as $key => $image)
                                     <div class="input-group{{$key}} my-2">
+                                        <input type="hidden"  name="processed_images[]" value="{{ $image }}">
                                         <input type="file" class="form-control-file @error('images') is-invalid @enderror" id="fileInput1" name="images[]" value="{{ $image }}">
 
                                         <div class="input-group-append pt-2">

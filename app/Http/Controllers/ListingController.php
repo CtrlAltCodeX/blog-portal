@@ -17,10 +17,8 @@ class ListingController extends Controller
      * 
      * @return void
      */
-    public function __construct(
-        protected GoogleService $googleService,
-        protected SiteSetting $siteSetting
-    ) {
+    public function __construct(protected GoogleService $googleService)
+    {
     }
 
     /**
@@ -45,9 +43,13 @@ class ListingController extends Controller
      */
     public function create()
     {
-        $getSettings = $this->siteSetting->first();
+        if (!$url = $this->getSiteBaseUrl()) {
+            session()->flash('message', 'Please complete your Site Setting Then Continue');
 
-        $response = Http::get($getSettings->url . '/feeds/posts/default?alt=json');
+            return view('settings.error');
+        }
+
+        $response = Http::get($url . '/feeds/posts/default?alt=json');
 
         $categories = $response->json()['feed']['category'];
 
@@ -118,7 +120,13 @@ class ListingController extends Controller
             'image1' => $images,
         ];
 
-        $response = Http::get('https://publication.exam360.in/feeds/posts/default?alt=json');
+        if (!$url = $this->getSiteBaseUrl()) {
+            session()->flash('message', 'Please complete your Site Setting Then Continue');
+
+            return view('settings.error');
+        }
+
+        $response = Http::get($url . '/feeds/posts/default?alt=json');
 
         $categories = $response->json()['feed']['category'];
 

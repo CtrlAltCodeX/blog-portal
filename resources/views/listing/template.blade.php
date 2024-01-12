@@ -19,11 +19,11 @@
 
     <br />
 
-    <div class="separator" style="clear: both; text-align: center;">
+    <!-- <div class="separator" style="clear: both; text-align: center;">
         <a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjwu-GKJOhHETGZM0mBsYtbkVj9BaMHFgLbacLFlKJFzhPeGc1EZ3isxSdofKrYCIgfF1HFw3K5_1d9lM0HeKZ8KpxR8UmdYSsjuXm8ccgdUHyuZ7DSiCn_jsDGIkSPKweBpZn_yrBVlSL-cVv9XPLEpko78t9NLfkPXYq1LTRbb5uUs3gnyutGcnnnxCT2/s970/dd3a1ee7-20e3-4afc-82b4-e3d1e346.jpg" style="margin-left: 1em; margin-right: 1em;">
             <img class='img' border="0" data-original-height="600" data-original-width="970" height="198" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjwu-GKJOhHETGZM0mBsYtbkVj9BaMHFgLbacLFlKJFzhPeGc1EZ3isxSdofKrYCIgfF1HFw3K5_1d9lM0HeKZ8KpxR8UmdYSsjuXm8ccgdUHyuZ7DSiCn_jsDGIkSPKweBpZn_yrBVlSL-cVv9XPLEpko78t9NLfkPXYq1LTRbb5uUs3gnyutGcnnnxCT2/s320/dd3a1ee7-20e3-4afc-82b4-e3d1e346.jpg" width="320" />
         </a>
-    </div>
+    </div> -->
 
     <br />
 
@@ -85,7 +85,7 @@
             </div>
             <div class="dt_header">
                 Product Description</div>
-            <div class="pbl box dtmoredetail dt_content"><span style="text-align: justify;" id="desc">{{ $data['description'] }}</span>
+            <div class="pbl box dtmoredetail dt_content"><span style="text-align: justify;" id="desc">{!! $data['description'] !!}</span>
                 <div>
                     <div style="text-align: justify;"><br /></div>
                     <div style="text-align: justify;"><b>About the Author:</b></div>

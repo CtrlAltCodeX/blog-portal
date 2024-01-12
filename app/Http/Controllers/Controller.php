@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SiteSetting;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
@@ -26,5 +27,15 @@ class Controller extends BaseController
         $expirationDateTime = $updatedTime->addSeconds($data->expires_in);
 
         if ($currentTime->greaterThanOrEqualTo($expirationDateTime)) return true;
+    }
+
+    /**
+     * Get Site Base URL
+     *
+     * @return void
+     */
+    public function getSiteBaseUrl()
+    {
+        return SiteSetting::first()->url;
     }
 }

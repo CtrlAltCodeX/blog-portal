@@ -200,8 +200,14 @@
                             <div id="fileInputContainer">
                                 <div class="form-group">
                                     <label for="fileInput1">Images*</label>
-                                    <div class="input-group">
-                                        <input type="file" class="form-control-file @error('images') is-invalid @enderror" id="fileInput1" name="images[]">
+                                    @foreach($allDetails['image'] as $key => $image)
+                                    <div class="input-group{{$key}} my-2">
+                                        <input type="hidden"  name="processed_images[]" value="{{ $image }}">
+                                        <input type="file" class="form-control-file @error('images') is-invalid @enderror" id="fileInput1" name="images[]" value="{{ $image }}">
+
+                                        <div class="input-group-append pt-2">
+                                            <button class="btn btn-danger btn-sm removeFileInput" id={{$key}}>Remove</button>
+                                        </div>
 
                                         @error('images')
                                         <span class="invalid-feedback" role="alert">
@@ -209,6 +215,7 @@
                                         </span>
                                         @enderror
                                     </div>
+                                    @endforeach
                                 </div>
                             </div>
 
