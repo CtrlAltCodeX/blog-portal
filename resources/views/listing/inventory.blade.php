@@ -2,19 +2,25 @@
 
 @section('title', __('Manage Inventory'))
 
+@push('css')
+<style>
+    ul {
+        justify-content: end;
+    }
+</style>
+@endpush
+
 @section('content')
 <div>
-    <div class="row">
+    <div class="row row-sm">
         <div class="col-lg-12">
             <div class="card">
-                <div class="card-header d-flex justify-content-between">
-                    <h4 class="card-title">
-                        Manage Inventory
-                    </h4>
+                <div class="card-header">
+                    <h3 class="card-title">Manage Inventory</h3>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table text-nowrap text-md-nowrap mb-0">
+                        <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">
                             <thead>
                                 <tr>
                                     <th>{{ __('Status') }}</th>
@@ -30,7 +36,10 @@
                                 @forelse ($googlePosts as $googlePost)
                                 @php
                                 $doc = new \DOMDocument();
-
+                                $doc->loadHTML($googlePost->content);
+                                $selling = $doc->getElementById('selling')->textContent;
+                                $mrp = $doc->getElementById('mrp')->textContent;
+                                $image = $doc->getElementsByTagName("img")->item(0)->getAttribute('src');
                                 @endphp
                                 <tr>
                                     <td>
@@ -45,10 +54,10 @@
                                         @else {{ 'In Stock' }}
                                         @endif
                                     </td>
-                                    <td>{{ $googlePost->images??'No Image' }}</td>
+                                    <td>@if(isset($image)) <img src="{{ $image }}" alt="Product Image"/> @else "No Image" @endif</td>
                                     <td>{{ $googlePost->id.'/'.$googlePost->title }}</td>
-                                    <td>{{ 'MRP' }}</td>
-                                    <td>{{ 'Selling' }}</td>
+                                    <td>₹{{ $mrp }}</td>
+                                    <td>₹{{ $selling }}</td>
                                     <td>{{ date("d-m-Y", strtotime($googlePost->published)).'/'.date("d-m-Y", strtotime($googlePost->updated)) }}</td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic example">
@@ -64,18 +73,23 @@
                                         </div>
                                     </td>
                                 </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="5" class="text-center">{{ __('No records found.') }}</td>
-                                </tr>
-                                @endforelse
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
-                    {{ $googlePosts->links() }}
                 </div>
             </div>
         </div>
     </div>
 </div>
 @endsection
+
+@push('js')
+<script src="../assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
+<script src="../assets/plugins/datatable/js/dataTables.bootstrap5.js"></script>
+<script src="../assets/plugins/datatable/js/dataTables.buttons.min.js"></script>
+<script src="../assets/plugins/datatable/js/buttons.bootstrap5.min.js"></script>
+<script src="../assets/plugins/datatable/dataTables.responsive.min.js"></script>
+<script src="../assets/plugins/datatable/responsive.bootstrap5.min.js"></script>
+<script src="../assets/js/table-data.js"></script>
+@endpush

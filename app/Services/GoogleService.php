@@ -81,12 +81,14 @@ class GoogleService
      * 
      * @return array
      */
-    public function posts()
+    public function posts($status = null)
     {
         $credential = $this->getCredentails();
 
         $client = $this->createGoogleClient($credential->toArray());
         $client->setAccessToken($credential->token);
+
+        $blogger = new Google_Service_Blogger($client);
 
         // if ($client->isAccessTokenExpired()) {
         //     $url = $this->refreshToken($credential->toArray());
@@ -94,9 +96,29 @@ class GoogleService
         //     return redirect()->to($url);
         // }
 
-        $blogger = new Google_Service_Blogger($client);
+        $allPosts = [];
+        $pageToken = null;
 
-        return $blogger->posts->listPosts($credential->blog_id);
+        do {
+            try {
+                // Fetch a page of posts
+                $postsResponse = $blogger->posts->listPosts($credential->blog_id, ['status' => $status, 'pageToken' => $pageToken]);
+                $posts = $postsResponse->getItems();
+
+                if (!empty($posts)) {
+                    // Add the posts to the result array
+                    $allPosts = array_merge($allPosts, $posts);
+
+                    // Get the next page token
+                    $pageToken = $postsResponse->getNextPageToken();
+                }
+            } catch (\Exception $e) {
+                // Handle any errors that may occur during the API request
+                return response()->json(['error' => $e->getMessage()], 500);
+            }
+        } while ($pageToken);
+
+        return $allPosts;
     }
 
     /**
@@ -269,7 +291,7 @@ class GoogleService
 
         $background->insert(Image::make($image)->resize(300, 425), 'center');
 
-        $outputFileName = 'merged_image_'. $image->getClientOriginalName() . time() . '.' . $image->getClientOriginalExtension();
+        $outputFileName = 'merged_image_' . $image->getClientOriginalName() . time() . '.' . $image->getClientOriginalExtension();
 
         $background->save(public_path($outputFileName));
 

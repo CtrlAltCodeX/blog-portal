@@ -36,6 +36,8 @@ class Controller extends BaseController
      */
     public function getSiteBaseUrl()
     {
-        return SiteSetting::first()->url;
+        $siteSetting = SiteSetting::first();
+
+        if($siteSetting) return $siteSetting->url;
     }
 }

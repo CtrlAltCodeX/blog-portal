@@ -33,6 +33,8 @@ class DashboardController extends Controller
             return view('settings.authenticate');
 
         $allGooglePosts = $this->googleService->posts();
+        
+        $allDraftedGooglePosts = $this->googleService->posts('draft');
 
         $productStats = [];
 
@@ -40,7 +42,7 @@ class DashboardController extends Controller
             if (isset($allGooglePost->labels) && in_array('Stk_o', $allGooglePost->labels)) {
                 $productStats['out_stock'][] = $allGooglePost;
             } else if (isset($allGooglePost->labels) && in_array('Stk_d', $allGooglePost->labels)) {
-                $productStats['on_demand'][]= $allGooglePost;
+                $productStats['on_demand'][] = $allGooglePost;
             } else if (isset($allGooglePost->labels) && in_array('Stk_b', $allGooglePost->labels)) {
                 $productStats['pre_booking'][] = $allGooglePost;
             } else if (isset($allGooglePost->labels) && in_array('Stk_l', $allGooglePost->labels)) {
@@ -52,6 +54,6 @@ class DashboardController extends Controller
             }
         }
 
-        return view('dashboard.index', compact('allUser', 'inactive', 'active', 'productStats'));
+        return view('dashboard.index', compact('allUser', 'inactive', 'active', 'productStats', 'allDraftedGooglePosts', 'allGooglePosts'));
     }
 }
