@@ -3,10 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Http\Request;
+use App\Services\GoogleService;
 
 class DashboardController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     * 
+     * @return void
+     */
+    public function __construct(protected GoogleService $googleService)
+    {
+    }
+
     /**
      * Show the application dashboard.
      *
@@ -20,6 +29,31 @@ class DashboardController extends Controller
 
         $allUser = User::count();
 
-        return view('dashboard.index', compact('allUser', 'inactive', 'active'));
+        if ($this->tokenIsExpired($this->googleService))
+            return view('settings.authenticate');
+
+        $allGooglePosts = $this->googleService->posts();
+        
+        $allDraftedGooglePosts = $this->googleService->posts('draft');
+
+        $productStats = [];
+
+        foreach ($allGooglePosts as $allGooglePost) {
+            if (isset($allGooglePost->labels) && in_array('Stk_o', $allGooglePost->labels)) {
+                $productStats['out_stock'][] = $allGooglePost;
+            } else if (isset($allGooglePost->labels) && in_array('Stk_d', $allGooglePost->labels)) {
+                $productStats['on_demand'][] = $allGooglePost;
+            } else if (isset($allGooglePost->labels) && in_array('Stk_b', $allGooglePost->labels)) {
+                $productStats['pre_booking'][] = $allGooglePost;
+            } else if (isset($allGooglePost->labels) && in_array('Stk_l', $allGooglePost->labels)) {
+                $productStats['low_stock'][] = $allGooglePost;
+            } else if (isset($allGooglePost->labels) && in_array('Stk_l', $allGooglePost->labels)) {
+                $productStats['low_stock'][] = $allGooglePost;
+            } else {
+                $productStats['in_stock'][] = $allGooglePost;
+            }
+        }
+
+        return view('dashboard.index', compact('allUser', 'inactive', 'active', 'productStats', 'allDraftedGooglePosts', 'allGooglePosts'));
     }
 }

@@ -2,7 +2,7 @@
 
 @section('title', __('Create Listing'))
 
-@push('jss')
+@push('js')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.6.2/tinymce.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
@@ -154,7 +154,7 @@
     <!-- PAGE-HEADER END -->
 
     <!-- Row -->
-    <form action="{{ route('listing.store') }}" method="POST" enctype='multipart/form-data'>
+    <form action="{{ route('listing.store') }}" method="POST" enctype='multipart/form-data' id='form'>
         @csrf
         <div class="row">
             <div class="col-md-12 col-xl-12">
@@ -164,7 +164,10 @@
                             {{ __('Create Listing') }}
                         </h4>
 
-                        <button type="submit" class="btn btn-primary float-right">Save</button>
+                        <div>
+                            <button type="submit" class="btn btn-primary float-right">Publish</button>
+                            <button type="submit" class="btn btn-primary float-right" id='draft'>Save as Draft</button>
+                        </div>
                     </div>
 
                     <div class="card-body">
@@ -306,9 +309,9 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label for="label" class="form-label">{{ __('Label*') }}</label>
-                            <select class="form-control select2  @error('label') is-invalid @enderror" data-placeholder="Choose Label" multiple value="{{ old('label') }}" name="label[]">
+                            <select class="form-control select2  @error('label') is-invalid @enderror" data-placeholder="Choose Label" multiple name="label[]">
                                 @foreach($categories as $category)
-                                <option value="{{ $category['term'] }}">
+                                <option value="{{ $category['term'] }}" {{ $category['term'] == 'Product' ? 'selected' : '' }}>
                                     {{$category['term']}}
                                 </option>
                                 @endforeach
@@ -425,3 +428,17 @@
 <!-- End Row -->
 </div>
 @endsection
+
+@push('js')
+<script>
+    $(document).ready(function() {
+        $("#draft").click(function(e) {
+            e.preventDefault();
+
+            $("#form").append("<input type='hidden' name='isDraft' value=1 />");
+
+            $("#form").submit();
+        })
+    })
+</script>
+@endpush

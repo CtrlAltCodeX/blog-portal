@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Goutte;
+use Illuminate\Support\Facades\Http;
 
 class AmazonSrcappingController extends Controller
 {
@@ -25,56 +25,95 @@ class AmazonSrcappingController extends Controller
      */
     public function findProducts()
     {
-        $keyword = request()->search;
+        try {
+            $keyword = request()->search;
 
-        if (strpos($keyword, "amazon.in")) {
-            $productCrawler = Goutte::request('GET', $keyword);
-        } else {
-            $crawler = Goutte::request('GET', 'https://www.amazon.in/s?k=' . $keyword);
-            
+            if (strpos($keyword, "amazon.in")) {
+                $productCrawler = Goutte::request('GET', $keyword);
+            } else {
+                $crawler = Goutte::request('GET', 'https://www.amazon.in/s?k=' . $keyword);
 
-            $productUrl = $crawler
-                ->filter('.s-product-image-container > .rush-component a')
-                ->attr('href');
 
-            $productCrawler = Goutte::request('GET', 'https://www.amazon.in' . $productUrl);
-        }
-        $title = $productCrawler->filter('#productTitle')->html();
+                $productUrl = $crawler
+                    ->filter('.s-product-image-container > .rush-component a')
+                    ->attr('href');
 
-        $image = $productCrawler->filter('#landingImage')->attr('src');
-        $desc = $productCrawler->filter('#pInfoTabsContainer span')->html();
-        // $desc = $productCrawler->filter('#bookDescription_feature_div')->html();
+                $productCrawler = Goutte::request('GET', 'https://www.amazon.in' . $productUrl);
+            }
+            $title = $productCrawler->filter('#productTitle')->html();
 
-        $keys = $productCrawler->filter('#detailBullets_feature_div ul li')->each(function ($node) {
-            $data = $node->filter('.a-text-bold')->each(function ($innerNode) {
-                $trimedHtml = trim($innerNode->html());
-                $specifications = preg_replace('/[^\p{L}\p{N}\s]/u', '', $trimedHtml);
+            $baseImage = $productCrawler->filter('#landingImage')->attr('src');
+            $desc = $productCrawler->filter('#pInfoTabsContainer span')->html();
+            $selling = $productCrawler->filter('#price')->html();
+            $mrp = $productCrawler->filter('#listPrice')->html();
+            // $desc = $productCrawler->filter('#bookDescription_feature_div')->html();
 
-                return $specifications;
+            $keys = $productCrawler->filter('#detailBullets_feature_div ul li')->each(function ($node) {
+                $data = $node->filter('.a-text-bold')->each(function ($innerNode) {
+                    $trimedHtml = trim($innerNode->html());
+                    $specifications = preg_replace('/[^\p{L}\p{N}\s]/u', '', $trimedHtml);
+
+                    return $specifications;
+                });
+
+                return trim($data[0] ?? 0);
             });
 
-            return trim($data[0] ?? 0);
-        });
+            $specificationsValues = $productCrawler->filter('#detailBullets_feature_div ul li')->each(function ($node) {
+                $data = $node->filter('.a-list-item > span')->eq(1)->each(function ($innerNode) {
+                    return $innerNode->html();
+                });
 
-        $specificationsValues = $productCrawler->filter('#detailBullets_feature_div ul li')->each(function ($node) {
-            $data = $node->filter('.a-list-item > span')->eq(1)->each(function ($innerNode) {
-                return $innerNode->html();
+                return $data[0] ?? 0;
             });
 
-            return $data[0] ?? 0;
-        });
+            $specifications = [];
 
-        $specifications = [];
+            foreach ($keys as $index => $key) {
+                $specifications[$key] = $specificationsValues[$index];
+            }
 
-        foreach ($keys as $index => $key) {
-            $specifications[$key] = $specificationsValues[$index];
+            $images = $productCrawler->filter('#altImages ul li')->each(function ($node) {
+                return $node->filter('span > span')->html();
+            });
+
+            $allDetails['title'] = $title;
+            $allDetails['baseImage'] = $baseImage;
+            $allDetails['image'] = $images;
+            $allDetails['desc'] = $desc;
+            $allDetails['selling'] = (int) str_replace(["₹", ","], "", $selling);
+            $allDetails['mrp'] = (int) str_replace(["₹", ","], "", $mrp);;
+            $allDetails['specifications'] = $specifications;
+
+            return view('find-products.show', compact('allDetails'));
+        } catch (\Exception $e) {
+            if ($e->getMessage()) {
+                session()->flash('message', 'Currently Facing some issues. Please try again later');
+
+                return view('settings.error');
+            }
+        }
+    }
+
+    /**
+     * Store
+     *
+     * @return void
+     */
+    public function StoreFindProducts()
+    {
+        if (!$url = $this->getSiteBaseUrl()) {
+            session()->flash('message', 'Please complete your Site Setting Then Continue');
+
+            return view('settings.error');
         }
 
-        $allDetails['title'] = $title;
-        $allDetails['image'] = $image;
-        $allDetails['desc'] = $desc;
-        $allDetails['specifications'] = $specifications;
+        $response = Http::get($url . '/feeds/posts/default?alt=json');
 
-        return view('find-products.show', compact('allDetails'));
+        $categories = $response->json()['feed']['category'];
+
+        $product = json_decode(request()->details);
+
+        return view('find-products.create', compact('categories', 'product'));
     }
 }

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class GoogleService
 {
@@ -25,7 +26,7 @@ class GoogleService
 
             $authUrl = $client->createAuthUrl();
 
-            $credExists = GoogleCredentail::latest()->first();
+            $credExists = $this->getCredentails();
 
             if (!$credExists) {
                 GoogleCredentail::create(request()->all());
@@ -61,7 +62,7 @@ class GoogleService
     public function handleGoogleCallback(array $data)
     {
         try {
-            $credential = GoogleCredentail::latest()->first();
+            $credential = $this->getCredentails();
 
             $client = $this->createGoogleClient($credential->toArray());
 
@@ -80,16 +81,44 @@ class GoogleService
      * 
      * @return array
      */
-    public function posts()
+    public function posts($status = null)
     {
-        $credential = GoogleCredentail::latest()->first();
+        $credential = $this->getCredentails();
 
         $client = $this->createGoogleClient($credential->toArray());
         $client->setAccessToken($credential->token);
 
         $blogger = new Google_Service_Blogger($client);
 
-        return $blogger->posts->listPosts($credential->blog_id);
+        // if ($client->isAccessTokenExpired()) {
+        //     $url = $this->refreshToken($credential->toArray());
+
+        //     return redirect()->to($url);
+        // }
+
+        $allPosts = [];
+        $pageToken = null;
+
+        do {
+            try {
+                // Fetch a page of posts
+                $postsResponse = $blogger->posts->listPosts($credential->blog_id, ['status' => $status, 'pageToken' => $pageToken]);
+                $posts = $postsResponse->getItems();
+
+                if (!empty($posts)) {
+                    // Add the posts to the result array
+                    $allPosts = array_merge($allPosts, $posts);
+
+                    // Get the next page token
+                    $pageToken = $postsResponse->getNextPageToken();
+                }
+            } catch (\Exception $e) {
+                // Handle any errors that may occur during the API request
+                return response()->json(['error' => $e->getMessage()], 500);
+            }
+        } while ($pageToken);
+
+        return $allPosts;
     }
 
     /**
@@ -100,12 +129,16 @@ class GoogleService
     public function createPost(array $data)
     {
         try {
-            $credential = GoogleCredentail::latest()->first();
+            $credential = $this->getCredentails();
 
             $client = new Google_Client();
 
             $client->setScopes('https://www.googleapis.com/auth/blogger');
             $client->setAccessToken(json_decode($credential->token)->access_token);
+
+            foreach ($data['images'] as $image) {
+                $data['processed_images'][] = $this->processImage($image);
+            }
 
             $blogger = new Google_Service_Blogger($client);
 
@@ -114,7 +147,10 @@ class GoogleService
             $post->content = view('listing.template', compact('data'))->render();
             $post->setLabels($data['label']);
 
-            return $blogger->posts->insert($credential->blog_id, $post);
+            $isDraft = [];
+            if (request()->isDraft) $isDraft = ['isDraft' => request()->isDraft];
+
+            return $blogger->posts->insert($credential->blog_id, $post, $isDraft);
         } catch (\Google_Service_Exception $e) {
             return json_decode($e->getMessage());
         }
@@ -128,7 +164,7 @@ class GoogleService
     public function editPost($postId)
     {
         try {
-            $credential = GoogleCredentail::latest()->first();
+            $credential = $this->getCredentails();
 
             $client = new Google_Client();
 
@@ -157,7 +193,7 @@ class GoogleService
     public function updatePost($data, $postId)
     {
         try {
-            $credential = GoogleCredentail::latest()->first();
+            $credential = $this->getCredentails();
 
             $client = new Google_Client();
 
@@ -168,6 +204,12 @@ class GoogleService
             $blogger = new Google_Service_Blogger($client);
 
             $existingPost = $blogger->posts->get($credential->blog_id, $postId);
+
+            if (isset($data['images'])) {
+                foreach ($data['images'] as $image) {
+                    $data['processed_images'][] = $this->processImage($image);
+                }
+            }
 
             $existingPost->title = $data['title'];
             $existingPost->content = view('listing.template', compact('data'))->render();
@@ -190,7 +232,7 @@ class GoogleService
     {
         try {
             // Get the latest Google credential
-            $credential = GoogleCredentail::latest()->first();
+            $credential = $this->getCredentails();
 
             // Create a new Google client
             $client = new Google_Client();
@@ -228,32 +270,31 @@ class GoogleService
     }
 
     /**
+     * Get Credentails
+     *
+     * @return void
+     */
+    public function getCredentails()
+    {
+        return  GoogleCredentail::latest()->first();
+    }
+
+    /**
      * Process Image
      *
      * @param Request $request
      * @return void
      */
-    public function processImage(Request $request)
+    public function processImage($image)
     {
-        $manager = new ImageManager(
-            new Driver()
-        );
-        // Step 1: Generate a background image
-        $background = $manager->canvas(555, 555, '#ffffff'); // Change dimensions as needed
-dd($background);
-        // Step 2: Upload the user's image
-        $uploadedImage = $request->file('image');
-        $userImage = Image::make($uploadedImage);
+        $background = (new ImageManager())->canvas(555, 555, '#ffffff');
 
-        // Step 3: Merge both images
-        $background->insert($userImage, 'center');
+        $background->insert(Image::make($image)->resize(300, 425), 'center');
 
-        // Step 4: Save the merged image
-        $outputPath = public_path('merged_images/');
-        $outputFileName = 'merged_image_' . time() . '.' . $uploadedImage->getClientOriginalExtension();
-        $background->save($outputPath . $outputFileName);
+        $outputFileName = 'merged_image_' . $image->getClientOriginalName() . time() . '.' . $image->getClientOriginalExtension();
 
-        // Step 5: Return the path to the merged image
-        return $outputPath . $outputFileName;
+        $background->save(public_path($outputFileName));
+
+        return config('app.url') . '/public/' . $outputFileName;
     }
 }

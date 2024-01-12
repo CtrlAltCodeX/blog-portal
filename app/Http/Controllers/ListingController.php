@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\GoogleService;
 use App\Http\Requests\BlogRequest;
+use App\Models\SiteSetting;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ListingController extends Controller
 {
@@ -26,7 +28,10 @@ class ListingController extends Controller
      */
     public function index()
     {
-        $googlePosts = $this->googleService->posts();
+        if ($this->tokenIsExpired($this->googleService))
+            return view('settings.authenticate');
+
+        $googlePosts = $this->getPaginatedData(collect($this->googleService->posts()));
 
         return view('listing.index', compact('googlePosts'));
     }
@@ -38,7 +43,13 @@ class ListingController extends Controller
      */
     public function create()
     {
-        $response = Http::get('https://publication.exam360.in/feeds/posts/default?alt=json');
+        if (!$url = $this->getSiteBaseUrl()) {
+            session()->flash('message', 'Please complete your Site Setting Then Continue');
+
+            return view('settings.error');
+        }
+
+        $response = Http::get($url . '/feeds/posts/default?alt=json');
 
         $categories = $response->json()['feed']['category'];
 
@@ -89,7 +100,7 @@ class ListingController extends Controller
         $selling = $doc->getElementById('selling')->textContent;
         $mrp = $doc->getElementById('mrp')->textContent;
 
-        for ($i = 0; $i < 3; $i++) {
+        for ($i = 0; $i < $doc->getElementsByTagName("img")->length; $i++) {
             $image = $doc->getElementsByTagName("img")->item($i);
             $images[] = $image->getAttribute('src');
         }
@@ -109,7 +120,13 @@ class ListingController extends Controller
             'image1' => $images,
         ];
 
-        $response = Http::get('https://publication.exam360.in/feeds/posts/default?alt=json');
+        if (!$url = $this->getSiteBaseUrl()) {
+            session()->flash('message', 'Please complete your Site Setting Then Continue');
+
+            return view('settings.error');
+        }
+
+        $response = Http::get($url . '/feeds/posts/default?alt=json');
 
         $categories = $response->json()['feed']['category'];
 
@@ -138,10 +155,49 @@ class ListingController extends Controller
      */
     public function destroy($postId)
     {
-        $post = $this->googleService->deletePost($postId);
+        $this->googleService->deletePost($postId);
 
         session()->flash('success', 'Post delete successfully');
 
         return redirect()->route('listing.index');
+    }
+
+    /**
+     * Inventory Listing
+     *
+     * @return void
+     */
+    public function inventory()
+    {
+        if ($this->tokenIsExpired($this->googleService))
+            return view('settings.authenticate');
+
+        $googlePosts = $this->getPaginatedData(collect($this->googleService->posts()));
+
+        return view('listing.inventory', compact('googlePosts'));
+    }
+
+    /**
+     * Get Paginated Data
+     *
+     * @param Object $googlePosts
+     * @param integer $perPage
+     * @return Object
+     */
+    public function getPaginatedData($googlePosts, $perPage = 10)
+    {
+        $currentPage = request()->get('page') ?: 1;
+
+        $currentPageItems = $googlePosts->slice(($currentPage - 1) * $perPage, $perPage)->values();
+
+        $googlePosts = new LengthAwarePaginator(
+            $currentPageItems,
+            $googlePosts->count(),
+            $perPage,
+            $currentPage,
+            ['path' => LengthAwarePaginator::resolveCurrentPath()]
+        );
+
+        return $googlePosts;
     }
 }

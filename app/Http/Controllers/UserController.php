@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserRequest;
 use App\Mail\UserMail;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Mail;
 
@@ -111,5 +113,44 @@ class UserController extends Controller
             ->paginate(10);
 
         return view('accounts.users.approved', compact('users'));
+    }
+
+    /**
+     * Update the Password
+     *
+     * @return void
+     */
+    public function updatePassword()
+    {
+        try {
+            if (!request()->current) {
+                return view('accounts.users.change-password');
+            }
+
+            $this->validate(request(), [
+                'current' => 'required',
+                'new'     => 'required',
+            ]);
+
+            $hashedPassword = Hash::make(request()->new);
+
+            $user = Auth::user();
+
+            // Check if the entered password matches the hashed password
+            if (Hash::check(request()->current, $user->password)) {
+                $user->update(['password' => $hashedPassword]);
+
+                session()->flash('success', __('Password updated successfully'));
+
+                return redirect()->route('dashboard');
+            }
+            session()->flash('success', __('Please check your current password'));
+
+            return redirect()->back();
+        } catch (\Exception $e) {
+            session()->flash('success', __('An error occurred on the server. Please try again later'));
+
+            return redirect()->back();
+        }
     }
 }

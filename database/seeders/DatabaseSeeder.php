@@ -37,11 +37,37 @@ class DatabaseSeeder extends Seeder
         Permission::create(['name' => 'Permission create']);
         Permission::create(['name' => 'Permission delete']);
 
+
+        Permission::create(['name' => 'Listing edit']);
+        Permission::create(['name' => 'Listing access']);
+        Permission::create(['name' => 'Listing create']);
+        Permission::create(['name' => 'Listing delete']);
+        Permission::create(['name' => 'Listing publish']);
+
+        
+        Permission::create(['name' => 'Inventory edit']);
+        Permission::create(['name' => 'Inventory access']);
+        Permission::create(['name' => 'Inventory create']);
+        Permission::create(['name' => 'Inventory delete']);
+
+
+        Permission::create(['name' => 'Blog Access']);
+        Permission::create(['name' => 'Site Access']);
+
         User::create([
             'name'     => 'Admin',
             'email'    => 'admin@example.com',
             'password' => bcrypt('admin123'),
             'status'   => 1,
+            'mobile'   => '123456789',
+            'account_type' => 1,
+            'aadhaar_no' => '545454654',
+            'father_name' => 'Jhon Doe',
+            'mother_name' => 'Jenny',
+            'state' => 'test',
+            'pincode' => '201009',
+            'full_address' => 'Test address',
+            'plain_password' => 'admin123',
         ])->assignRole($adminRole)->assignRole($writerRole);
 
         $adminRole->givePermissionTo(Permission::all());
@@ -51,6 +77,15 @@ class DatabaseSeeder extends Seeder
             'email'    => 'writer@example.com',
             'password' => bcrypt('admin123'),
             'status'   => 1,
+            'mobile'   => '123456789',
+            'account_type' => 1,
+            'aadhaar_no' => '545454654',
+            'father_name' => 'Jhon Doe',
+            'mother_name' => 'Jenny',
+            'state' => 'test',
+            'pincode' => '201009',
+            'full_address' => 'Test address',
+            'plain_password' => 'admin123',
         ])->assignRole($writerRole);
 
         $writerRole->givePermissionTo(['User create', 'User access']);

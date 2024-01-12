@@ -13,7 +13,7 @@
             </svg></span>
         <strong>Message!!!</strong>
         <hr class="message-inner-separator">
-        <p>Please complete your authentication</p>
+        <p>Please complete your authentication OR Token is Expired</p>
     </div>
 </div>
 
