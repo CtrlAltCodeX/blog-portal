@@ -8,6 +8,17 @@ use App\Models\SiteSetting;
 class SettingsController extends Controller
 {
     /**
+     * Initiate the class instance
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('role_or_permission:Configure Blog', ['only' => ['blog']]);
+        $this->middleware('role_or_permission:Site Access', ['only' => ['site']]);
+    }
+
+    /**
      * Index function
      *
      * @return \Illuminate\View\View

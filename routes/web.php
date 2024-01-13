@@ -82,7 +82,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
             ->name('settings.site.update');
     });
 
-
     Route::post('tinymce/upload', [TinyMCEController::class, 'upload'])
         ->name('tinymce.upload');
 });

@@ -11,7 +11,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class ListingController extends Controller
 {
-
     /**
      * Create a new controller instance.
      * 
@@ -19,6 +18,10 @@ class ListingController extends Controller
      */
     public function __construct(protected GoogleService $googleService)
     {
+        $this->middleware('role_or_permission:Listing access|Listing create|Listing edit|Inventory edit|Inventory delete|Inventory access|Listing delete', ['only' => ['index', 'show']]);
+        $this->middleware('role_or_permission:Listing create|Inventory create', ['only' => ['create', 'store']]);
+        $this->middleware('role_or_permission:Listing edit|Inventory edit', ['only' => ['edit', 'update']]);
+        $this->middleware('role_or_permission:Listing delete|Inventory delete', ['only' => ['destroy']]);
     }
 
     /**
