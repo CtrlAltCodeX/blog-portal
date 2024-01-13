@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
         Permission::create(['name' => 'Role delete']);
 
         Permission::create(['name' => 'User access']);
+        Permission::create(['name' => 'User approved']);
         Permission::create(['name' => 'User edit']);
         Permission::create(['name' => 'User create']);
         Permission::create(['name' => 'User delete']);
@@ -49,10 +50,15 @@ class DatabaseSeeder extends Seeder
         Permission::create(['name' => 'Inventory access']);
         Permission::create(['name' => 'Inventory create']);
         Permission::create(['name' => 'Inventory delete']);
-
-
-        Permission::create(['name' => 'Blog Access']);
+        
         Permission::create(['name' => 'Site Access']);
+        Permission::create(['name' => 'Site Update']);
+
+        Permission::create(['name' => 'Configure Blog']);
+        Permission::create(['name' => 'Configure Update']);
+        
+        
+        Permission::create(['name' => 'Dashboard Access']);
 
         User::create([
             'name'     => 'Admin',

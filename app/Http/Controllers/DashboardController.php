@@ -14,12 +14,13 @@ class DashboardController extends Controller
      */
     public function __construct(protected GoogleService $googleService)
     {
+        $this->middleware('role_or_permission:Dashboard Access', ['only' => ['index']]);
     }
 
     /**
      * Show the application dashboard.
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return \Illuminate\View\View
      */
     public function index()
     {
