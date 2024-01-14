@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', __('Create User'))
+@section('title', __('Change Password'))
 
 @section('content')
 <!-- CONTAINER -->
@@ -29,7 +29,7 @@
                             {{ __('Change Password') }}
                         </h4>
 
-                        <button type="submit" class="btn btn-primary float-right">Save</button>
+                        <button type="submit" class="btn btn-primary float-right">Update</button>
                     </div>
 
                     <div class="card-body">

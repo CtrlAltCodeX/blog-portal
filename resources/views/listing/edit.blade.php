@@ -303,8 +303,8 @@
                             </div>
                         </div>
                         <div style="text-align: right;">
-                            <button type="submit" class="btn btn-primary float-right">Publish</button>
-                            <button type="submit" class="btn btn-primary float-right" id='draft'>Save as Draft</button>
+                            <button type="submit" class="btn btn-primary float-right">Update</button>
+                            <!-- <button type="submit" class="btn btn-primary float-right" id='draft'>Save as Draft</button> -->
                         </div>
                     </div>
                 </div>
