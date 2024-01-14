@@ -43,17 +43,19 @@
                         <table class="table text-nowrap text-md-nowrap mb-0">
                             <thead>
                                 <tr>
+                                    <th>{{ __('Sr no.') }}</th>
                                     <th>{{ __('Title') }}</th>
-                                    <th>{{ __('Url') }}</th>
+                                    <th>{{ __('Blog Url') }}</th>
                                     <th>{{ __('Published At') }}</th>
                                     <th>{{ __('Actions') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($googlePosts as $googlePost)
+                                @forelse ($googlePosts as $key => $googlePost)
                                 <tr>
+                                    <td>{{ ++$key }}</td>
                                     <td>{{ $googlePost->title }}</td>
-                                    <td>{{ $googlePost->url }}</td>
+                                    <td><a href="{{ $googlePost->url }}" target="_blank">View</a></td>
                                     <td>{{ date("d-m-Y", strtotime($googlePost->published)) }}</td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic example">

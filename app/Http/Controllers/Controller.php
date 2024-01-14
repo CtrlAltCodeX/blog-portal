@@ -19,7 +19,7 @@ class Controller extends BaseController
      */
     public function tokenIsExpired($googleService)
     {
-        $credential = $googleService->getCredentails();
+        if (!$credential = $googleService->getCredentails()) return true;
 
         $data = json_decode($credential->token);
         $updatedTime = new Carbon($credential->updated_at);
@@ -38,6 +38,6 @@ class Controller extends BaseController
     {
         $siteSetting = SiteSetting::first();
 
-        if($siteSetting) return $siteSetting->url;
+        if ($siteSetting) return $siteSetting->url;
     }
 }
