@@ -58,6 +58,20 @@
                             </div>
                         </div>
                         @endif
+                        @if(isset($allDetails['selling']))
+                        <div>
+                            <div class="form-group">
+                                <label><b>Selling Price:</b> </label><span> ₹{{ $allDetails['selling'] }}</span>
+                            </div>
+                        </div>
+                        @endif
+                        @if(isset($allDetails['mrp']))
+                        <div>
+                            <div class="form-group">
+                                <label><b>MRP:</b> </label><span> ₹{{ $allDetails['mrp'] }}</span>
+                            </div>
+                        </div>
+                        @endif
                         @if(isset($allDetails['specifications']['Publisher']))
                         <div>
                             <div class="form-group">
@@ -128,7 +142,7 @@
                             </div>
                         </div>
                         @endif
-                        @if(isset($allDetails['specifications']['Best Sellers Rank']))
+                        <!-- @if(isset($allDetails['specifications']['Best Sellers Rank']))
                         <div>
                             <div class="form-group">
                                 <label><b>Best Sellers Rank: </b></label><span>{{ $allDetails['specifications']['Best Sellers Rank'] }}</span>
@@ -141,7 +155,7 @@
                                 <label><b>Customer Reviews: </b> </label><span>{{ $allDetails['specifications']['Customer Reviews'] }}</span>
                             </div>
                         </div>
-                        @endif
+                        @endif -->
                     </div>
                 </div>
             </div>

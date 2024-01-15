@@ -14,6 +14,11 @@
         <div class="panel-body tabs-menu-body p-0 pt-2">
             <div class="tab-content">
                 <div class="tab-pane active" id="tab5">
+                    @if(session('error'))
+                    <div class="alert alert-success" role="alert">
+                        {{ session('error') }}
+                    </div>
+                    @endif
                     <div class="wrap-input100 validate-input input-group is-invalid">
                         <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" placeholder="Email" value="{{ old('email') }}" autocomplete="email" autofocus>
 

@@ -25,7 +25,7 @@
                             <h5>Filters</h5>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <select class="form-control" id='status'>
                                 <option value="">Status</option>
                                 <option value="In Stock">In Stock</option>
@@ -34,7 +34,7 @@
                             </select>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <select class="form-control" id='specification'>
                                 <option value="">Product ID/Title</option>
                                 <option value=2>Product Id</option>
@@ -43,8 +43,28 @@
                             </select>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <input type="text" class="form-control" placeholder="Product ID/Title" id='field' />
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="wd-200 mg-b-30">
+                                <div class="input-group">
+                                    <div class="input-group-text">
+                                        <span class="fa fa-calendar tx-16 lh-0 op-6"></span>
+                                    </div><input class="form-control fc-datepicker" placeholder="MM/DD/YYYY" type="text">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="wd-200 mg-b-30">
+                                <div class="input-group">
+                                    <div class="input-group-text">
+                                        <span class="fa fa-calendar tx-16 lh-0 op-6"></span>
+                                    </div><input class="form-control fc-datepicker" placeholder="MM/DD/YYYY" type="text">
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -87,7 +107,7 @@
                                     </td>
                                     <td><img onerror="this.onerror=null;this.src='/dummy.jpg';" src="{{ $image }}" alt="Product Image" /></td>
                                     <td>{{ $googlePost->id }}</td>
-                                    <td>{{ $googlePost->title }}</td>
+                                    <td>{{ \Illuminate\Support\Str::limit($googlePost->title, 20) }}</td>
                                     <td>₹{{ $mrp }}</td>
                                     <td>₹{{ $selling }}</td>
                                     <td>{{ date("d-m-Y H:i", strtotime($googlePost->published)) }}</td>
@@ -131,6 +151,22 @@
 <script src="../assets/plugins/datatable/js/buttons.bootstrap5.min.js"></script>
 <script src="../assets/plugins/datatable/dataTables.responsive.min.js"></script>
 <script src="../assets/plugins/datatable/responsive.bootstrap5.min.js"></script>
+
+<script src="../assets/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
+
+<!-- TIMEPICKER JS -->
+<script src="../assets/plugins/time-picker/jquery.timepicker.js"></script>
+<script src="../assets/plugins/time-picker/toggles.min.js"></script>
+
+<!-- DATEPICKER JS -->
+<script src="../assets/plugins/date-picker/date-picker.js"></script>
+<script src="../assets/plugins/date-picker/jquery-ui.js"></script>
+
+<!-- COLOR PICKER JS -->
+<script src="../assets/plugins/pickr-master/pickr.es5.min.js"></script>
+
+<!-- FORMELEMENTS JS -->
+<script src="../assets/js/form-elements.js"></script>
 
 <script>
     $(document).ready(function() {

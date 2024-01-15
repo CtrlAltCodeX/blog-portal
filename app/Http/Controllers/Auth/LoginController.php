@@ -163,7 +163,7 @@ class LoginController extends Controller
 
             return view('auth.enter-otp');
         } catch (\Exception $e) {
-            session()->flash('error', 'Something went wrong please contact support');
+            session()->flash('error', 'Something went wrong please contact Admin');
             \Log::error('Error: ' . $e->getMessage());
 
             return redirect()->route('login');

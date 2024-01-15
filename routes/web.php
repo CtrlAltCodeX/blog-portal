@@ -56,7 +56,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         Route::post('amazon', [AmazonSrcappingController::class, 'findProducts'])
             ->name('amazon.find.products');
 
-        Route::post('store', [AmazonSrcappingController::class, 'StoreFindProducts'])
+        Route::match(['get', 'post'], 'store', [AmazonSrcappingController::class, 'StoreFindProducts'])
             ->name('amazon.find.store');
     });
 

@@ -71,12 +71,12 @@ class ListingController extends Controller
         if ($message = $result?->error?->message) {
             session()->flash('error', $message);
 
-            return redirect()->route('listing.index');
+            return redirect()->route('inventory.index');
         }
 
         session()->flash('success', 'Post created successfully');
 
-        return redirect()->route('listing.index');
+        return redirect()->route('inventory.index');
     }
 
     /**
@@ -147,7 +147,7 @@ class ListingController extends Controller
 
         session()->flash('success', 'Post updated successfully');
 
-        return redirect()->route('listing.index');
+        return redirect()->route('inventory.index');
     }
 
     /**
@@ -162,7 +162,7 @@ class ListingController extends Controller
 
         session()->flash('success', 'Post delete successfully');
 
-        return redirect()->route('listing.index');
+        return redirect()->route('inventory.index');
     }
 
     /**
