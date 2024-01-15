@@ -32,6 +32,8 @@ class User extends Authenticatable
         'pincode',
         'full_address',
         'plain_password',
+        'verify_browser',
+        'otp'
     ];
 
     /**

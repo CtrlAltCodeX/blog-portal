@@ -32,17 +32,21 @@
     <link href="{{ asset('assets/css/icons.css') }}" rel="stylesheet" />
 
     <!-- COLOR SKIN CSS -->
-    <link id="theme" rel="stylesheet" type="text/css" media="all"
-        href="{{ asset('assets/colors/color1.css') }}" />
+    <link id="theme" rel="stylesheet" type="text/css" media="all" href="{{ asset('assets/colors/color1.css') }}" />
 </head>
 
 <body class="app sidebar-mini ltr">
     <div class="page">
         <div class="container-login100">
-            <div class="wrap-login100 p-6  w-30" >
+            <div class="wrap-login100 p-6  w-30">
                 @yield('content')
             </div>
         </div>
     </div>
+    <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
+
+    @stack('js')
+
 </body>
+
 </html>

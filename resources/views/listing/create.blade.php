@@ -444,9 +444,9 @@
                                             <input type="file" class="dropify" data-bs-height="180" id="fileInput1" name="images[]" />
                                         </div>
                                     </div>
-                                    <!-- <div class="form-group mb-0">
+                                    <div class="form-group mb-0">
                                         <input id="demo" type="file" name="multipleImages[]" multiple>
-                                    </div> -->
+                                    </div>
                                 </div>
                             </div>
                         </div>

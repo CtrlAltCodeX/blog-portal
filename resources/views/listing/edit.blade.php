@@ -338,9 +338,9 @@
                                             @endforeach
                                         </div>
                                     </div>
-                                    <!-- <div class="form-group mb-0">
+                                    <div class="form-group mb-0">
                                         <input id="demo" type="file" name="multipleImages[]" multiple>
-                                    </div> -->
+                                    </div>
                                 </div>
                             </div>
                         </div>

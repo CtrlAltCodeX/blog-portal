@@ -24,12 +24,14 @@
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
                     <div class="card overflow-hidden">
                         <div class="card-body">
-                            <div class="d-flex">
-                                <div class="mt-2">
-                                    <h6 class="">Total Products</h6>
-                                    <h2 class="mb-0 number-font">{{ count($allGooglePosts) + count($allDraftedGooglePosts) }}</h2>
+                            <a href="{{ route('inventory.index') }}">
+                                <div class="d-flex">
+                                    <div class="mt-2">
+                                        <h6 class="">Total Products</h6>
+                                        <h2 class="mb-0 number-font">{{ count($allGooglePosts) + count($allDraftedGooglePosts) }}</h2>
+                                    </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -155,24 +157,28 @@
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
                     <div class="card overflow-hidden">
                         <div class="card-body">
-                            <div class="d-flex">
-                                <div class="mt-2">
-                                    <h6 class="">Total Users</h6>
-                                    <h2 class="mb-0 number-font">{{ $allUser }}</h2>
+                            <a href="{{ route('users.index') }}">
+                                <div class="d-flex">
+                                    <div class="mt-2">
+                                        <h6 class="">Total Users</h6>
+                                        <h2 class="mb-0 number-font">{{ $allUser }}</h2>
+                                    </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
                     <div class="card overflow-hidden">
                         <div class="card-body">
-                            <div class="d-flex">
-                                <div class="mt-2">
-                                    <h6 class="">Total Active User</h6>
-                                    <h2 class="mb-0 number-font">{{ $active }}</h2>
+                            <a href="{{ route('verified.users') }}">
+                                <div class="d-flex">
+                                    <div class="mt-2">
+                                        <h6 class="">Total Active User</h6>
+                                        <h2 class="mb-0 number-font">{{ $active }}</h2>
+                                    </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                     </div>
                 </div>
