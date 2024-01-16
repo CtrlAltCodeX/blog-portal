@@ -16,7 +16,7 @@
         </div>
     </div>
 
-    <form action="{{ route('amazon.find.store') }}" method="POST">
+    <form action="{{ route('flipkart.find.store') }}" method="POST">
         @csrf
         <input type="hidden" value='@json($allDetails)' name="details" />
         <!-- Row -->
@@ -88,24 +88,24 @@
                             </div>
                         </div>
                         @endif
-                        @if(isset($allDetails['specifications']['Perfect Paperback']))
+                        @if(isset($allDetails['specifications']['Pages']))
                         <div>
                             <div class="form-group">
-                                <label><b>Perfect </b>Paperback: </label><span>{{ $allDetails['specifications']['Perfect Paperback'] }}</span>
+                                <label><b>Pages:</b> </label><span>{{ $allDetails['specifications']['Pages'] }}</span>
                             </div>
                         </div>
                         @endif
                         @if(isset($allDetails['specifications']['Reading age']))
                         <div>
                             <div class="form-group">
-                                <label><b>Reading </b>age: </label><span>{{ $allDetails['specifications']['Reading age'] }}</span>
+                                <label><b>Reading age: </b></label><span>{{ $allDetails['specifications']['Reading age'] }}</span>
                             </div>
                         </div>
                         @endif
                         @if(isset($allDetails['specifications']['Item Weight']))
                         <div>
                             <div class="form-group">
-                                <label><b>Item </b>Weight: </label><span>{{ $allDetails['specifications']['Item Weight'] }}</span>
+                                <label><b>Item Weight:</b> </label><span>{{ $allDetails['specifications']['Item Weight'] }}</span>
                             </div>
                         </div>
                         @endif
@@ -119,14 +119,14 @@
                         @if(isset($allDetails['specifications']['Country of Origin']))
                         <div>
                             <div class="form-group">
-                                <label><b>Country </b>of Origin: </label><span>{{ $allDetails['specifications']['Country of Origin'] }}</span>
+                                <label><b>Country of Origin:</b> </label><span>{{ $allDetails['specifications']['Country of Origin'] }}</span>
                             </div>
                         </div>
                         @endif
                         @if(isset($allDetails['specifications']['Net Quantity']))
                         <div>
                             <div class="form-group">
-                                <label><b>Net </b>Quantity: </label><span>{{ $allDetails['specifications']['Net Quantity'] }}</span>
+                                <label><b>Net Quantity:</b> </label><span>{{ $allDetails['specifications']['Net Quantity'] }}</span>
                             </div>
                         </div>
                         @endif
@@ -141,6 +141,20 @@
                         <div>
                             <div class="form-group">
                                 <label><b>Generic Name: </b></label><span>{{ $allDetails['specifications']['Generic Name'] }}</span>
+                            </div>
+                        </div>
+                        @endif
+                        @if(isset($allDetails['specifications']['ISBN']))
+                        <div>
+                            <div class="form-group">
+                                <label><b>ISBN 10: </b></label><span>{{ $allDetails['specifications']['ISBN'][0] }}</span>
+                            </div>
+                        </div>
+                        @endif
+                        @if(isset($allDetails['specifications']['ISBN']))
+                        <div>
+                            <div class="form-group">
+                                <label><b>ISBN 13: </b></label><span>{{ $allDetails['specifications']['ISBN'][1] }}</span>
                             </div>
                         </div>
                         @endif

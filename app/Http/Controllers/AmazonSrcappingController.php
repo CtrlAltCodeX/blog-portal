@@ -33,7 +33,6 @@ class AmazonSrcappingController extends Controller
             } else {
                 $crawler = Goutte::request('GET', 'https://www.amazon.in/s?k=' . $keyword);
 
-
                 $productUrl = $crawler
                     ->filter('.s-product-image-container > .rush-component a')
                     ->attr('href');
@@ -43,7 +42,7 @@ class AmazonSrcappingController extends Controller
             $title = $productCrawler->filter('#productTitle')->html();
 
             $baseImage = $productCrawler->filter('#landingImage')->attr('src');
-            $desc = $productCrawler->filter('#pInfoTabsContainer span')->html();
+            $desc = $productCrawler->filter('.a-expander-content span')->html();
             $selling = $productCrawler->filter('#price')->html();
             $mrp = $productCrawler->filter('#listPrice')->html();
             // $desc = $productCrawler->filter('#bookDescription_feature_div')->html();
@@ -71,6 +70,12 @@ class AmazonSrcappingController extends Controller
 
             foreach ($keys as $index => $key) {
                 $specifications[$key] = $specificationsValues[$index];
+
+                if ($key == 'Paperback') {
+                    $specifications[$key] = (int) str_replace([" pages", ""], "", $specificationsValues[$index]);
+                } else if ($key == 'Country of Origin') {
+                    $specifications[str_replace([" ", "_"], "_", $key)] = $specificationsValues[$index];
+                }
             }
 
             $images = $productCrawler->filter('#altImages ul li')->each(function ($node) {

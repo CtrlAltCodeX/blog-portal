@@ -1,15 +1,16 @@
 <?php
 
 use App\Http\Controllers\AmazonSrcappingController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FlipkartSrcappingController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TinyMCEController;
-use App\Services\GoogleService;
 
 Illuminate\Support\Facades\Auth::routes();
 
@@ -32,6 +33,8 @@ Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallb
 Route::post('/auth/google/refresh', [GoogleController::class, 'refreshGoogle'])
     ->name('google.refresh.token');
 
+Route::post('/verify/otp', [LoginController::class, 'authenticateOTP'])->name('verify.otp');
+
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function () {
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
@@ -40,8 +43,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::get('roles/all/view', [RoleController::class, 'view'])
         ->name('view.roles');
-
-    Route::resource('users', UserController::class);
 
     Route::get('change/password', [UserController::class, 'updatePassword'])
         ->name('change.user.password');
@@ -56,8 +57,17 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         Route::post('amazon', [AmazonSrcappingController::class, 'findProducts'])
             ->name('amazon.find.products');
 
-        Route::post('store', [AmazonSrcappingController::class, 'StoreFindProducts'])
+        Route::match(['get', 'post'], 'store', [AmazonSrcappingController::class, 'StoreFindProducts'])
             ->name('amazon.find.store');
+
+        Route::get('flipkart', [FlipkartSrcappingController::class, 'find'])
+            ->name('flipkart.find');
+
+        Route::post('flipkart', [FlipkartSrcappingController::class, 'findProducts'])
+            ->name('flipkart.find.products');
+
+        Route::match(['get', 'post'], 'store', [FlipkartSrcappingController::class, 'StoreFindProducts'])
+            ->name('flipkart.find.store');
     });
 
     Route::resource('listing', ListingController::class);
@@ -67,6 +77,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
+
+    Route::resource('users', UserController::class);
 
     Route::get('users/verified/approved', [UserController::class, 'verified'])
         ->name('verified.users');

@@ -136,8 +136,10 @@ class GoogleService
             $client->setScopes('https://www.googleapis.com/auth/blogger');
             $client->setAccessToken(json_decode($credential->token)->access_token);
 
-            foreach ($data['images'] as $image) {
-                $data['processed_images'][] = $this->processImage($image);
+            if (isset($data['images'])) {
+                foreach ($data['images'] as $image) {
+                    $data['processed_images'][] = $this->processImage($image);
+                }
             }
 
             $blogger = new Google_Service_Blogger($client);

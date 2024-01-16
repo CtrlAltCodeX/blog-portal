@@ -354,7 +354,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="pages" class="form-label">{{ __('No. of Pages') }}</label>
-                                    <input id="pages" type="number" class="form-control @error('pages') is-invalid @enderror" name="pages" value="{{ old('pages')?? $product->specifications->Paperback??'' }}" autocomplete="pages" autofocus placeholder="No. of Pages">
+                                    <input id="pages" type="number" class="form-control @error('pages') is-invalid @enderror" name="pages" value="{{ old('pages')?? $product->specifications->Pages??'' }}" autocomplete="pages" autofocus placeholder="No. of Pages">
 
                                     @error('pages')
                                     <span class="invalid-feedback" role="alert">
@@ -385,7 +385,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="country_origin" class="form-label">{{ __('Country of Origin*') }}</label>
-                                    <input id="country_origin" type="text" class="form-control @error('country_origin') is-invalid @enderror" name="country_origin" value="{{ old('country_origin')?? $product->specifications->Country_of_Origin??''}}" autocomplete="country_origin" autofocus placeholder="Country of Origin">
+                                    <input id="country_origin" type="text" class="form-control @error('country_origin') is-invalid @enderror" name="country_origin" value="{{ old('country_origin')?? $product->specifications->Country_of_Origin??'India'}}" autocomplete="country_origin" autofocus placeholder="Country of Origin">
 
                                     @error('country_origin')
                                     <span class="invalid-feedback" role="alert">
@@ -409,14 +409,13 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="isbn_10" class="form-label">{{ __('ISBN 10') }}</label>
-                                    <input id="isbn_10" type="text" class="form-control @error('isbn_10') is-invalid @enderror" name="isbn_10" value="{{ old('isbn_10') }}" autocomplete="isbn_10" autofocus placeholder="ISBN 10">
+                                    <input id="isbn_10" type="text" class="form-control @error('isbn_10') is-invalid @enderror" name="isbn_10" value="{{ old('isbn_10') ?? $product->specifications->ISBN[0] ?? '' }}" autocomplete="isbn_10" autofocus placeholder="ISBN 10">
 
                                     @error('isbn_10')
                                     <span class="invalid-feedback" role="alert">
@@ -428,7 +427,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="isbn_13" class="form-label">{{ __('ISBN 13') }}</label>
-                                    <input id="isbn_13" type="text" class="form-control @error('isbn_13') is-invalid @enderror" name="isbn_13" value="{{ old('isbn_13') }}" autocomplete="isbn_13" autofocus placeholder="ISBN 13">
+                                    <input id="isbn_13" type="text" class="form-control @error('isbn_13') is-invalid @enderror" name="isbn_13" value="{{ old('isbn_13') ?? $product->specifications->ISBN[1] ?? '' }}" autocomplete="isbn_13" autofocus placeholder="ISBN 13">
 
                                     @error('isbn_13')
                                     <span class="invalid-feedback" role="alert">
@@ -455,7 +454,7 @@
                                     <label for="fileInput1">Images*</label>
                                     <div class="row mb-5">
                                         <div class="col-lg-12 col-sm-12 mb-4">
-                                            <input type="file" class="dropify" data-bs-height="180" id="fileInput1" name="images[]" value="{{ old('images')??$product->baseImage }}" data-default-file='{{ $product->baseImage??"" }}' />
+                                            <input type="file" class="dropify" data-bs-height="180" id="fileInput1" name="images[]" value="" data-default-file='' />
                                         </div>
                                     </div>
                                     <div class="form-group mb-0">

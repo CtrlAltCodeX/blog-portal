@@ -68,7 +68,7 @@
                         </tr>
                         <tr>
                             <td class="detailguide">Binding, Type</td>
-                            <td>Paperback, New</td>
+                            <td>$data['binding']</td>
                         </tr>
 
                         <tr>

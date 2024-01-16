@@ -168,7 +168,7 @@
                     <div class="card-body">
                         <div>
                             <div class="form-group">
-                                <label for="title" class="form-label">{{ __('Title*') }}</label>
+                                <label for="title" class="form-label">{{ __('Title') }}<span class="text-danger">*</span></label>
                                 <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') }}" autocomplete="title" autofocus placeholder="Title">
 
                                 @error('title')
@@ -179,7 +179,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="description" class="form-label">{{ __('Description*') }}</label>
+                                <label for="description" class="form-label">{{ __('Description') }}<span class="text-danger">*</span></label>
                                 <textarea id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" autocomplete="description" autofocus placeholder="Description" rows="10">{{ old('description') }}</textarea>
 
                                 @error('description')
@@ -197,7 +197,7 @@
                         <div class="form-group">
                             <div id="fileInputContainer">
                                 <div class="form-group">
-                                    <label for="fileInput1">Images*</label>
+                                    <label for="fileInput1">Images</label>
                                     <div class="input-group">
                                         <input type="file" class="form-control-file @error('images') is-invalid @enderror" id="fileInput1" name="images[]">
 
@@ -219,7 +219,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <label for="selling_price" class="form-label">{{ __('Selling Price*') }}</label>
+                                <label for="selling_price" class="form-label">{{ __('Selling Price') }}<span class="text-danger">*</span></label>
                                 <input id="selling_price" type="number" class="form-control @error('selling_price') is-invalid @enderror" name="selling_price" value="{{ old('selling_price') }}" autocomplete="selling_price" autofocus placeholder="Selling Price">
 
                                 @error('selling_price')
@@ -230,7 +230,7 @@
                             </div>
 
                             <div class="form-group col-md-6">
-                                <label for="mrp" class="form-label">{{ __('MRP*') }}</label>
+                                <label for="mrp" class="form-label">{{ __('MRP') }}<span class="text-danger">*</span></label>
                                 <input id="mrp" type="number" class="form-control @error('mrp') is-invalid @enderror" name="mrp" value="{{ old('mrp') }}" autocomplete="mrp" autofocus placeholder="MRP">
 
                                 @error('mrp')
@@ -247,7 +247,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="form-group col-md-4">
-                                <label for="publication" class="form-label">{{ __('Publication*') }}</label>
+                                <label for="publication" class="form-label">{{ __('Publication') }}<span class="text-danger">*</span></label>
                                 <input id="publication" type="text" class="form-control @error('publication') is-invalid @enderror" name="publication" value="{{ old('publication') }}" autocomplete="publication" autofocus placeholder="Publication">
 
                                 @error('publication')
@@ -258,7 +258,7 @@
                             </div>
 
                             <div class="form-group col-md-4">
-                                <label for="author_name" class="form-label">{{ __('Author Name*') }}</label>
+                                <label for="author_name" class="form-label">{{ __('Author Name') }}<span class="text-danger">*</span></label>
                                 <input id="author_name" type="text" class="form-control @error('author_name') is-invalid @enderror" name="author_name" value="{{ old('author_name') }}" autocomplete="author_name" autofocus placeholder="Author name">
 
                                 @error('author_name')
@@ -280,7 +280,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="about_author" class="form-label">{{ __('About Author*') }}</label>
+                                <label for="about_author" class="form-label">{{ __('About Author') }}<span class="text-danger">*</span></label>
                                 <textarea id="about_author" class="form-control @error('about_author') is-invalid @enderror" name="about_author" autocomplete="about_author" autofocus placeholder="About Author Name" rows="5">{{ old('about_author') }}</textarea>
 
                                 @error('about_author')
@@ -292,7 +292,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="search_key" class="form-label">{{ __('Search Key*') }}</label>
+                            <label for="search_key" class="form-label">{{ __('Search Key') }}<span class="text-danger">*</span></label>
                             <textarea id="search_key" class="form-control @error('search_key') is-invalid @enderror" name="search_key" autocomplete="search_key" autofocus placeholder="Search Key" rows="5">{{ old('search_key') }}</textarea>
 
                             @error('search_key')
@@ -307,7 +307,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="label" class="form-label">{{ __('Label*') }}</label>
+                            <label for="label" class="form-label">{{ __('Label') }}<span class="text-danger">*</span></label>
                             <select class="form-control select2  @error('label') is-invalid @enderror" data-placeholder="Choose Label" multiple name="label[]">
                                 @foreach($categories as $category)
                                 <option value="{{ $category['term'] }}" {{ $category['term'] == 'Product' ? 'selected' : '' }}>
@@ -324,8 +324,8 @@
                         </div>
 
                         <div class="row">
-                            <div class="form-group col-md-6">
-                                <label for="sku" class="form-label">{{ __('SKU*') }}</label>
+                            <div class="form-group col-md-4">
+                                <label for="sku" class="form-label">{{ __('SKU') }}<span class="text-danger">*</span></label>
                                 <input id="sku" type="text" class="form-control @error('sku') is-invalid @enderror" name="sku" value="{{ old('sku') }}" autocomplete="sku" autofocus placeholder="SKU">
 
                                 @error('sku')
@@ -335,11 +335,22 @@
                                 @enderror
                             </div>
 
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-4">
                                 <label for="medium" class="form-label">{{ __('Medium') }}</label>
                                 <input id="medium" type="text" class="form-control @error('medium') is-invalid @enderror" name="medium" value="{{ old('medium') }}" autocomplete="medium" autofocus placeholder="Medium">
 
                                 @error('medium')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label for="binding" class="form-label">{{ __('Binding Type') }}<span class="text-danger">*</span></label>
+                                <input id="binding" type="text" class="form-control @error('binding') is-invalid @enderror" name="binding" value="{{ old('binding') }}" autocomplete="binding" autofocus placeholder="Binding Type">
+
+                                @error('binding')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -375,7 +386,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <label for="country_origin" class="form-label">{{ __('Country of Origin*') }}</label>
+                                <label for="country_origin" class="form-label">{{ __('Country of Origin') }}<span class="text-danger">*</span></label>
                                 <input id="country_origin" type="text" class="form-control @error('country_origin') is-invalid @enderror" name="country_origin" value="{{ old('country_origin') ?? 'India' }}" autocomplete="country_origin" autofocus placeholder="Country of Origin">
 
                                 @error('country_origin')
@@ -386,7 +397,7 @@
                             </div>
 
                             <div class="form-group col-md-6">
-                                <label for="language" class="form-label">{{ __('Language*') }}</label>
+                                <label for="language" class="form-label">{{ __('Language') }}<span class="text-danger">*</span></label>
                                 <input id="language" type="text" class="form-control @error('language') is-invalid @enderror" name="language" value="{{ old('language') }}" autocomplete="language" autofocus placeholder="Language">
 
                                 @error('language')
@@ -438,15 +449,15 @@
                         <div class="form-group">
                             <div id="fileInputContainer">
                                 <div class="form-group">
-                                    <label for="fileInput1">Images*</label>
+                                    <label for="fileInput1">Images<span class="text-danger">*</span></label>
                                     <div class="row mb-5">
                                         <div class="col-lg-12 col-sm-12 mb-4">
                                             <input type="file" class="dropify" data-bs-height="180" id="fileInput1" name="images[]" />
                                         </div>
                                     </div>
-                                    <!-- <div class="form-group mb-0">
+                                    <div class="form-group mb-0">
                                         <input id="demo" type="file" name="multipleImages[]" multiple>
-                                    </div> -->
+                                    </div>
                                 </div>
                             </div>
                         </div>

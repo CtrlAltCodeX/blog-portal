@@ -45,8 +45,9 @@
                                 <li><a href="{{ route('listing.create') }}" class="slide-item {{ (request()->is('admin/listing/create')) ? 'active' : '' }}">{{ __('Create Listing') }}</a></li>
                             @endcan
                             <li><a href="{{ route('amazon.find') }}" class="slide-item {{ (request()->is('admin/find-products/amazon')) ? 'active' : '' }}">{{ __('Create Listing (Amazon scrap)') }}</a></li>
+                            <li><a href="{{ route('flipkart.find') }}" class="slide-item {{ (request()->is('admin/find-products/flipkart')) ? 'active' : '' }}">{{ __('Create Listing (Flipkart scrap)') }}</a></li>
                             @can('Listing access')
-                                <li><a href="{{ route('listing.index') }}" class="slide-item {{ (request()->is('admin/listing')) ? 'active' : '' }}">{{ __('Catalogue') }}</a></li>
+                                <!-- <li><a href="{{ route('listing.index') }}" class="slide-item {{ (request()->is('admin/listing')) ? 'active' : '' }}">{{ __('Catalogue') }}</a></li> -->
                             @endcan
                         </ul>
                     </li>
@@ -69,7 +70,7 @@
                             <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
                             
                             @can('User create')
-                             <li><a href="{{ route('users.create') }}" class="slide-item">{{ __('Create Users') }}</a></li>
+                             <li><a href="{{ route('users.create') }}" class="slide-item {{ request()->is('admin/users/create') ? 'active' : '' }}">{{ __('Create Users') }}</a></li>
                             @endcan
                             
                             @can('User approved')
@@ -78,7 +79,7 @@
                             @endcan
                             
                             @can('User access')
-                                <li><a href="{{ route('users.index') }}" class="slide-item {{ request()->is('admin/users/*') ? 'active' : '' }}">{{ __('All Users') }}</a>
+                                <li><a href="{{ route('users.index') }}" class="slide-item {{ (request()->is('admin/users') || request()->is('admin/users/*/edit')) ? 'active' : '' }}">{{ __('All Users') }}</a>
                                 </li>
                             @endcan
                         </ul>
@@ -91,19 +92,19 @@
                         <ul class="slide-menu">
                             @can('Role create')
                                 <li>
-                                    <a href="{{ route('roles.create') }}" class="slide-item  {{ request()->is('admin/roles/*') ? 'active' : '' }}">{{ __('Create New Role') }}</a>
+                                    <a href="{{ route('roles.create') }}" class="slide-item  {{ request()->is('admin/roles/create') ? 'active' : '' }}">{{ __('Create New Role') }}</a>
                                 </li>
                             @endcan
 
                             @can('Role access')
                                 <li>
-                                    <a href="{{ route('roles.index') }}" class="slide-item  {{ request()->is('admin/roles/*') ? 'active' : '' }}">{{ __('Assign Permissions to Roles') }}</a>
+                                    <a href="{{ route('roles.index') }}" class="slide-item  {{ (request()->is('admin/roles') || request()->is('admin/roles/edit')) ? 'active' : '' }}">{{ __('Assign Permissions to Roles') }}</a>
                                 </li>
                             @endcan
 
                             @can('Role access')
                                 <li>
-                                    <a href="{{ route('view.roles') }}" class="slide-item  {{ (request()->is('admin/roles/*')) ? 'active' : '' }}">{{ __('View all Roles & Permissions') }}</a>
+                                    <a href="{{ route('view.roles') }}" class="slide-item  {{ (request()->is('admin/roles/all/view')) ? 'active' : '' }}">{{ __('View all Roles & Permissions') }}</a>
                                 </li>
                             @endcan
                         </ul>
