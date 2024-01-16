@@ -76,6 +76,7 @@
                                     <th>{{ __('Image') }}</th>
                                     <th>{{ __('Product ID') }}</th>
                                     <th>{{ __('Product name') }}</th>
+                                    <th>{{ __('Labels') }}</th>
                                     <th>{{ __('MRP') }}</th>
                                     <th>{{ __('Selling Price') }}</th>
                                     <th>{{ __('Created at') }}</th>
@@ -106,8 +107,9 @@
                                         @endif
                                     </td>
                                     <td><img onerror="this.onerror=null;this.src='/dummy.jpg';" src="{{ $image }}" alt="Product Image" /></td>
-                                    <td>{{ $googlePost->id }}</td>
-                                    <td>{{ \Illuminate\Support\Str::limit($googlePost->title, 20) }}</td>
+                                    <td><a href="{{ $googlePost->url }}" target="_blank">{{ $googlePost->id }}</a></td>
+                                    <td><a href="{{ $googlePost->url }}" target="_blank">{{ \Illuminate\Support\Str::limit($googlePost->title, 20) }}</a></td>
+                                    <td>{{ count($googlePost->labels??[]) }}</td>
                                     <td>₹{{ $mrp }}</td>
                                     <td>₹{{ $selling }}</td>
                                     <td>{{ date("d-m-Y H:i", strtotime($googlePost->published)) }}</td>

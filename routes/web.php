@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FlipkartSrcappingController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TinyMCEController;
@@ -58,6 +59,15 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
         Route::match(['get', 'post'], 'store', [AmazonSrcappingController::class, 'StoreFindProducts'])
             ->name('amazon.find.store');
+
+        Route::get('flipkart', [FlipkartSrcappingController::class, 'find'])
+            ->name('flipkart.find');
+
+        Route::post('flipkart', [FlipkartSrcappingController::class, 'findProducts'])
+            ->name('flipkart.find.products');
+
+        Route::match(['get', 'post'], 'store', [FlipkartSrcappingController::class, 'StoreFindProducts'])
+            ->name('flipkart.find.store');
     });
 
     Route::resource('listing', ListingController::class);

@@ -45,6 +45,7 @@
                                 <li><a href="{{ route('listing.create') }}" class="slide-item {{ (request()->is('admin/listing/create')) ? 'active' : '' }}">{{ __('Create Listing') }}</a></li>
                             @endcan
                             <li><a href="{{ route('amazon.find') }}" class="slide-item {{ (request()->is('admin/find-products/amazon')) ? 'active' : '' }}">{{ __('Create Listing (Amazon scrap)') }}</a></li>
+                            <li><a href="{{ route('flipkart.find') }}" class="slide-item {{ (request()->is('admin/find-products/flipkart')) ? 'active' : '' }}">{{ __('Create Listing (Flipkart scrap)') }}</a></li>
                             @can('Listing access')
                                 <!-- <li><a href="{{ route('listing.index') }}" class="slide-item {{ (request()->is('admin/listing')) ? 'active' : '' }}">{{ __('Catalogue') }}</a></li> -->
                             @endcan

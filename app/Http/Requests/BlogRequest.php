@@ -36,6 +36,7 @@ class BlogRequest extends FormRequest
             'search_key' => 'required|string',
             'edition' => 'required|string|max:255',
             'medium' => 'required|string|max:255',
+            'binding' => 'required|string|max:255',
             'pages' => 'required|integer|min:1',
             'isbn_10' => 'required|string|max:255',
             'isbn_13' => 'required|string|max:255',
