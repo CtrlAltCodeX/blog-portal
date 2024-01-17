@@ -60,29 +60,29 @@ $(function(e) {
 
 
     // BOOTSTRAP DATEPICKER
-    $('#datepicker-date').bootstrapdatepicker({
-        format: "dd",
-        viewMode: "date",
-        multidate: true,
-        multidateSeparator: "-",
-    })
+    // $('#datepicker-date').bootstrapdatepicker({
+    //     format: "dd",
+    //     viewMode: "date",
+    //     multidate: true,
+    //     multidateSeparator: "-",
+    // })
 
-    // MONTH PICKER
-    $('#datepicker-month').bootstrapdatepicker({
-        format: "MM",
-        viewMode: "months",
-        minViewMode: "months",
-        multidate: true,
-        multidateSeparator: "-",
-    })
+    // // MONTH PICKER
+    // $('#datepicker-month').bootstrapdatepicker({
+    //     format: "MM",
+    //     viewMode: "months",
+    //     minViewMode: "months",
+    //     multidate: true,
+    //     multidateSeparator: "-",
+    // })
 
-    // YEAR PICKER
-    $('#datepicker-year').bootstrapdatepicker({
-        format: "yyyy",
-        viewMode: "year",
-        minViewMode: "years",
-        multidate: true,
-        multidateSeparator: "-",
-    })
+    // // YEAR PICKER
+    // $('#datepicker-year').bootstrapdatepicker({
+    //     format: "yyyy",
+    //     viewMode: "year",
+    //     minViewMode: "years",
+    //     multidate: true,
+    //     multidateSeparator: "-",
+    // })
 
 });
