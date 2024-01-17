@@ -90,11 +90,6 @@ class GoogleService
 
         $blogger = new Google_Service_Blogger($client);
 
-        // if ($client->isAccessTokenExpired()) {
-        //     $url = $this->refreshToken($credential->toArray());
-
-        //     return redirect()->to($url);
-        // }
 
         $allPosts = [];
         $pageToken = null;
