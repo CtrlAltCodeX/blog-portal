@@ -137,6 +137,12 @@ class GoogleService
                 }
             }
 
+            if (isset($data['multipleImages'])) {
+                foreach ($data['multipleImages'] as $image) {
+                    $data['multiple_images'][] = $this->processImage($image);
+                }
+            }
+
             $blogger = new Google_Service_Blogger($client);
 
             $post = new Google_Service_Blogger_Post();

@@ -460,7 +460,8 @@
                                             <strong>{{ $message }}</strong>
                                         </span>
                                     @enderror
-                                    
+
+                                    <label for="fileInput1">Images<span class="text-danger">*</span></label>
                                     <div class="form-group mt-2" @error('multipleImages') style="border: red 2px dotted;" @enderror>
                                         <input id="demo" type="file" class="dropify @error('multipleImages') is-invalid @enderror" name="multipleImages[]" multiple>
                                     </div>
