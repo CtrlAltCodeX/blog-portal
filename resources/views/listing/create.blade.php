@@ -3,138 +3,138 @@
 @section('title', __('Create Listing'))
 
 @push('js')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.6.2/tinymce.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.6.2/tinymce.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-<script>
-    tinymce.init({
-        selector: 'textarea#description',
-        menubar: false,
-        plugins: 'image media wordcount save fullscreen code table lists link',
-        toolbar1: 'formatselect | bold italic strikethrough forecolor backcolor image alignleft aligncenter alignright alignjustify | link hr |numlist bullist outdent indent  | removeformat | code | table | aibutton',
-        image_advtab: true,
-        valid_elements: '*[*]',
-        relative_urls: false,
-        remove_script_host: false,
-        document_base_url: '{{ asset(' / ') }}',
-        images_upload_handler: (blobInfo, progress) => new Promise((resolve, reject) => {
-            let xhr, formData;
+    <script>
+        tinymce.init({
+            selector: 'textarea#description',
+            menubar: false,
+            plugins: 'image media wordcount save fullscreen code table lists link',
+            toolbar1: 'formatselect | bold italic strikethrough forecolor backcolor image alignleft aligncenter alignright alignjustify | link hr |numlist bullist outdent indent  | removeformat | code | table | aibutton',
+            image_advtab: true,
+            valid_elements: '*[*]',
+            relative_urls: false,
+            remove_script_host: false,
+            document_base_url: '{{ asset(' / ') }}',
+            images_upload_handler: (blobInfo, progress) => new Promise((resolve, reject) => {
+                let xhr, formData;
 
-            xhr = new XMLHttpRequest();
+                xhr = new XMLHttpRequest();
 
-            xhr.withCredentials = false;
+                xhr.withCredentials = false;
 
-            xhr.open('POST', '{{ route("tinymce.upload") }}');
+                xhr.open('POST', '{{ route("tinymce.upload") }}');
 
-            xhr.upload.onprogress = ((e) => progress((e.loaded / e.total) * 100));
+                xhr.upload.onprogress = ((e) => progress((e.loaded / e.total) * 100));
 
-            xhr.onload = function() {
-                let json;
+                xhr.onload = function() {
+                    let json;
 
-                if (xhr.status === 403) {
-                    reject("http-error", {
-                        remove: true
-                    });
+                    if (xhr.status === 403) {
+                        reject("http-error", {
+                            remove: true
+                        });
 
-                    return;
-                }
+                        return;
+                    }
 
-                if (xhr.status < 200 || xhr.status >= 300) {
-                    reject("http-error");
+                    if (xhr.status < 200 || xhr.status >= 300) {
+                        reject("http-error");
 
-                    return;
-                }
+                        return;
+                    }
 
-                json = JSON.parse(xhr.responseText);
+                    json = JSON.parse(xhr.responseText);
 
-                if (!json || typeof json.location != 'string') {
-                    reject("invalid-json" + xhr.responseText);
+                    if (!json || typeof json.location != 'string') {
+                        reject("invalid-json" + xhr.responseText);
 
-                    return;
-                }
+                        return;
+                    }
 
-                resolve(json.location);
-            };
-
-            xhr.onerror = (() => reject("upload-failed"));
-
-            formData = new FormData();
-            formData.append('_token', '{{ csrf_token() }}');
-            formData.append('file', blobInfo.blob(), blobInfo.filename());
-
-            xhr.send(formData);
-        }),
-
-        file_picker_callback: function(cb, value, meta) {
-            let input = document.createElement('input');
-            input.setAttribute('type', 'file');
-            input.setAttribute('accept', 'image/*');
-
-            input.onchange = function() {
-                let file = this.files[0];
-
-                let reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = function() {
-                    let id = 'blobid' + new Date().getTime();
-                    let blobCache = tinymce.activeEditor.editorUpload.blobCache;
-                    let base64 = reader.result.split(',')[1];
-                    let blobInfo = blobCache.create(id, file, base64);
-
-                    blobCache.add(blobInfo);
-
-                    cb(blobInfo.blobUri(), {
-                        title: file.name
-                    });
+                    resolve(json.location);
                 };
-            };
 
-            input.click();
-        },
-    });
-</script>
+                xhr.onerror = (() => reject("upload-failed"));
+
+                formData = new FormData();
+                formData.append('_token', '{{ csrf_token() }}');
+                formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+                xhr.send(formData);
+            }),
+
+            file_picker_callback: function(cb, value, meta) {
+                let input = document.createElement('input');
+                input.setAttribute('type', 'file');
+                input.setAttribute('accept', 'image/*');
+
+                input.onchange = function() {
+                    let file = this.files[0];
+
+                    let reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = function() {
+                        let id = 'blobid' + new Date().getTime();
+                        let blobCache = tinymce.activeEditor.editorUpload.blobCache;
+                        let base64 = reader.result.split(',')[1];
+                        let blobInfo = blobCache.create(id, file, base64);
+
+                        blobCache.add(blobInfo);
+
+                        cb(blobInfo.blobUri(), {
+                            title: file.name
+                        });
+                    };
+                };
+
+                input.click();
+            },
+        });
+    </script>
 @endpush
 
 @push('js')
-<script>
-    $(document).ready(function() {
-        // Counter to keep track of the number of file input fields
-        var fileInputCounter = 2; // Start from 2 since the first one is already visible
+    <script>
+        $(document).ready(function() {
+            // Counter to keep track of the number of file input fields
+            var fileInputCounter = 2; // Start from 2 since the first one is already visible
 
-        // Function to add a new file input field
-        function addFileInput() {
-            var fileInputHtml = '<div class="form-group">' +
-                '<div class="input-group">' +
-                '<input type="file" class="form-control-file" id="fileInput' + fileInputCounter + '" name="images[]">' +
-                '<div class="input-group-append pt-2">' +
-                '<button class="btn btn-danger btn-sm removeFileInput">Remove</button>' +
-                '</div>' +
-                '</div>' +
-                '</div>';
+            // Function to add a new file input field
+            function addFileInput() {
+                var fileInputHtml = '<div class="form-group">' +
+                    '<div class="input-group">' +
+                    '<input type="file" class="form-control-file" id="fileInput' + fileInputCounter + '" name="images[]">' +
+                    '<div class="input-group-append pt-2">' +
+                    '<button class="btn btn-danger btn-sm removeFileInput">Remove</button>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>';
 
-            // Append the new file input field to the container
-            $("#fileInputContainer").append(fileInputHtml);
+                // Append the new file input field to the container
+                $("#fileInputContainer").append(fileInputHtml);
 
-            // Enable the remove button for subsequent file input fields
-            $("#fileInputContainer .form-group:not(:first-child) .removeFileInput").prop('disabled', false);
+                // Enable the remove button for subsequent file input fields
+                $("#fileInputContainer .form-group:not(:first-child) .removeFileInput").prop('disabled', false);
 
-            // Increment the counter for the next file input field
-            fileInputCounter++;
-        }
-
-        // Attach a click event to the "Add File Input" button
-        $("#addFileInput").click(function() {
-            addFileInput();
-        });
-
-        // Attach a click event to dynamically added "Remove" buttons
-        $("#fileInputContainer").on("click", ".removeFileInput", function() {
-            // Check if there's more than one file input field before removing
-            if ($("#fileInputContainer .form-group").length > 1) {
-                $(this).closest('.form-group').remove();
+                // Increment the counter for the next file input field
+                fileInputCounter++;
             }
+
+            // Attach a click event to the "Add File Input" button
+            $("#addFileInput").click(function() {
+                addFileInput();
+            });
+
+            // Attach a click event to dynamically added "Remove" buttons
+            $("#fileInputContainer").on("click", ".removeFileInput", function() {
+                // Check if there's more than one file input field before removing
+                if ($("#fileInputContainer .form-group").length > 1) {
+                    $(this).closest('.form-group').remove();
+                }
+            });
         });
-    });
-</script>
+    </script>
 @endpush
 
 @section('content')
@@ -450,14 +450,27 @@
                             <div id="fileInputContainer">
                                 <div class="form-group">
                                     <label for="fileInput1">Images<span class="text-danger">*</span></label>
-                                    <div class="row mb-5">
-                                        <div class="col-lg-12 col-sm-12 mb-4">
-                                            <input type="file" class="dropify" data-bs-height="180" id="fileInput1" name="images[]" />
-                                        </div>
+
+                                    <div class="form-group mb-0" @error('multipleImages') style="border: red 2px dotted;" @enderror>
+                                        <input type="file" class="dropify @error('images') is-invalid @enderror" data-bs-height="180" id="fileInput1" name="images[]" />
                                     </div>
-                                    <div class="form-group mb-0">
-                                        <input id="demo" type="file" name="multipleImages[]" multiple>
+
+                                    @error('images')
+                                        <span class="invalid-feedback mt-2" style="display:block" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+
+                                    <label for="fileInput1">Images<span class="text-danger">*</span></label>
+                                    <div class="form-group mt-2" @error('multipleImages') style="border: red 2px dotted;" @enderror>
+                                        <input id="demo" type="file" class="dropify @error('multipleImages') is-invalid @enderror" name="multipleImages[]" multiple>
                                     </div>
+
+                                    @error('multipleImages')
+                                        <span class="invalid-feedback mt-2" style="display:block" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
@@ -478,7 +491,6 @@
 <script src="{{ asset('assets/plugins/fancyuploder/jquery.ui.widget.js') }}"></script>
 <script src="{{ asset('assets/plugins/fancyuploder/jquery.fileupload.js') }}"></script>
 <script src="{{ asset('assets/plugins/fancyuploder/jquery.fancy-fileupload.js') }}"></script>
-<script src="{{ asset('assets/plugins/fancyuploder/fancy-uploader.js') }}"></script>
 <script>
     $(document).ready(function() {
         $("#draft").click(function(e) {
@@ -487,7 +499,7 @@
             $("#form").append("<input type='hidden' name='isDraft' value=1 />");
 
             $("#form").submit();
-        })
+        });
     })
 </script>
 @endpush

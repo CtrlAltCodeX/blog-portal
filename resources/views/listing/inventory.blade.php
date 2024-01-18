@@ -37,8 +37,8 @@
                         <div class="col-md-2">
                             <select class="form-control" id='specification'>
                                 <option value="">Product ID/Title</option>
-                                <option value=2>Product Id</option>
-                                <option value=3>Product Name</option>
+                                <option value=3>Product Id</option>
+                                <option value=4>Product Name</option>
                                 <!-- <option value="">Select</option> -->
                             </select>
                         </div>
@@ -72,6 +72,7 @@
                         <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">
                             <thead>
                                 <tr>
+                                    <th>{{ __('Sr no.') }}</th>
                                     <th>{{ __('Status') }}</th>
                                     <th>{{ __('Image') }}</th>
                                     <th>{{ __('Product ID') }}</th>
@@ -85,7 +86,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($googlePosts as $googlePost)
+                                @forelse ($googlePosts as $key => $googlePost)
                                 @php
                                 $doc = new \DOMDocument();
                                 $doc->loadHTML($googlePost->content);
@@ -94,6 +95,7 @@
                                 $image = $doc->getElementsByTagName("img")->item(0)->getAttribute('src');
                                 @endphp
                                 <tr>
+                                    <td>{{ ++$key }}</td>
                                     <td>
                                         @if(isset($googlePost->labels) && in_array('Stk_o', $googlePost->labels))
                                         {{ 'Out of Stock' }}
@@ -106,7 +108,7 @@
                                         @else {{ 'In Stock' }}
                                         @endif
                                     </td>
-                                    <td><img onerror="this.onerror=null;this.src='/dummy.jpg';" src="{{ $image }}" alt="Product Image" /></td>
+                                    <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $image }}" alt="Product Image" /></td>
                                     <td><a href="{{ $googlePost->url }}" target="_blank">{{ $googlePost->id }}</a></td>
                                     <td><a href="{{ $googlePost->url }}" target="_blank">{{ \Illuminate\Support\Str::limit($googlePost->title, 20) }}</a></td>
                                     <td>{{ count($googlePost->labels??[]) }}</td>
@@ -147,12 +149,14 @@
 @endsection
 
 @push('js')
+
 <script src="../assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
 <script src="../assets/plugins/datatable/js/dataTables.bootstrap5.js"></script>
 <script src="../assets/plugins/datatable/js/dataTables.buttons.min.js"></script>
 <script src="../assets/plugins/datatable/js/buttons.bootstrap5.min.js"></script>
 <script src="../assets/plugins/datatable/dataTables.responsive.min.js"></script>
 <script src="../assets/plugins/datatable/responsive.bootstrap5.min.js"></script>
+<script src="../assets/js/table-data.js"></script>
 
 <script src="../assets/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
 
@@ -176,7 +180,8 @@
         dataTable = $('#basic-datatable').DataTable({
             language: {
                 // searchPlaceholder: 'Search...',
-                sSearch: false,
+                // sSearch: false,
+                "iDisplayLength": 100
             }
         });
 
@@ -193,7 +198,7 @@
         $("#status").on("change", function(e) {
             var status = $(this).val();
             $("#status").val(status);
-            dataTable.column(0).search(status).draw();
+            dataTable.column(1).search(status).draw();
         });
     })
 </script>

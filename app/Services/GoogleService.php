@@ -90,11 +90,6 @@ class GoogleService
 
         $blogger = new Google_Service_Blogger($client);
 
-        // if ($client->isAccessTokenExpired()) {
-        //     $url = $this->refreshToken($credential->toArray());
-
-        //     return redirect()->to($url);
-        // }
 
         $allPosts = [];
         $pageToken = null;
@@ -139,6 +134,12 @@ class GoogleService
             if (isset($data['images'])) {
                 foreach ($data['images'] as $image) {
                     $data['processed_images'][] = $this->processImage($image);
+                }
+            }
+
+            if (isset($data['multipleImages'])) {
+                foreach ($data['multipleImages'] as $image) {
+                    $data['multiple_images'][] = $this->processImage($image);
                 }
             }
 

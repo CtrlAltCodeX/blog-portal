@@ -31,7 +31,7 @@
                     <div class="card-body">
                         <div>
                             <div class="form-group">
-                                <input id="search" type="text" class="form-control @error('search') is-invalid @enderror" name="search" value="{{ old('search') }}" autocomplete="name" autofocus placeholder="Find Product from ASIN, URL">
+                                <input id="search" type="text" class="form-control @error('search') is-invalid @enderror" name="search" value="{{ old('search') }}" autocomplete="name" autofocus placeholder="Find Product from ISBN, URL">
                             </div>
                         </div>
 

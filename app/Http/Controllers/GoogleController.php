@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\GoogleCredentail;
 
 class GoogleController extends Controller
-{   
+{
     /**
      * Construct
      *
@@ -46,6 +46,10 @@ class GoogleController extends Controller
     public function handleGoogleCallback(Request $request)
     {
         $this->googleService->handleGoogleCallback($request->all());
+
+        if (request()->session()->get('page_url')) {
+            return redirect()->to(request()->session()->get('page_url'));
+        }
 
         return redirect()->route('settings.blog')->with('success', 'Authenticated successfully');
     }
