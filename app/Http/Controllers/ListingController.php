@@ -102,6 +102,8 @@ class ListingController extends Controller
         $edition = $doc->getElementById('edition')->textContent;
         $selling = $doc->getElementById('selling')->textContent;
         $mrp = $doc->getElementById('mrp')->textContent;
+        $instaUrl = $doc->getElementById('url')->textContent??"";
+        $baseimg = $doc->getElementById('baseimg')->getAttribute('src');
 
         for ($i = 0; $i < $doc->getElementsByTagName("img")->length; $i++) {
             $image = $doc->getElementsByTagName("img")->item($i);
@@ -120,7 +122,9 @@ class ListingController extends Controller
             'edition' => $edition,
             'selling' => $selling,
             'mrp' => $mrp,
-            'image1' => $images,
+            'multiple' => $images,
+            'baseimg' => $baseimg,
+            'url' => $instaUrl
         ];
 
         if (!$url = $this->getSiteBaseUrl()) {

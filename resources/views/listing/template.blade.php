@@ -5,7 +5,7 @@
             <tr>
                 <td style="text-align: center;">
                     <a href="{{ $image }}" style="margin-left: auto; margin-right: auto;">
-                        <img class='img' border="0" data-original-height="555" data-original-width="555" height="320" src="{{ $image }}" width="320" />
+                        <img class='baseimg' id='baseimg' border="0" data-original-height="555" data-original-width="555" height="320" src="{{ $image }}" width="320" />
                     </a>
                 </td>
             </tr>
@@ -30,7 +30,7 @@
     <br />
 
     <div class="separator" style="clear: both; text-align: left;">
-        <a href="https://www.instamojo.com/EXAM360/" style="text-align: justify;" target="_blank">
+        <a href="{{ $data['url'] }}" id='url' style="text-align: justify;" target="_blank">
             BUY AT INSTAMOJO
         </a>
     </div>

@@ -19,7 +19,7 @@
     <!-- PAGE-HEADER END -->
 
     <!-- Row -->
-    <form action="{{ route('listing.update', $post->id) }}" method="POST" enctype='multipart/form-data'>
+    <form action="{{ route('listing.update', $post->id) }}" method="POST" enctype='multipart/form-data' id='form'>
         @csrf
         @method('PUT')
         <div class="row">
@@ -38,6 +38,7 @@
                             <div class="form-group">
                                 <label for="title" class="form-label">{{ __('Title') }}</label>
                                 <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') ?? $post->title }}" autocomplete="title" autofocus placeholder="title">
+                                <span class="error-message" id="urlErrorMessage" style="color: red;"></span>
 
                                 @error('title')
                                 <span class="invalid-feedback" role="alert">
@@ -59,39 +60,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- <div class="card">
-                    <div class="card-body">
-                        <div class="form-group">
-                            <div id="fileInputContainer">
-                                <div class="form-group">
-                                    <label for="fileInput1">Images*</label>
-                                    @foreach($allInfo['image1'] as $key => $image)
-                                    <div class="input-group{{$key}} my-2">
-                                        <input type="hidden" name="processed_images[]" value="{{ $image }}">
-                                        <input type="file" class="form-control-file @error('images') is-invalid @enderror" id="fileInput1" name="images[]" value="{{ $image }}">
-
-                                        <div class="input-group-append pt-2">
-                                            <button class="btn btn-danger btn-sm removeFileInput" id={{$key}}>Remove</button>
-                                        </div>
-
-                                        @error('images')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                    </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                            <button id="addFileInput" type="button" class="btn btn-primary">Add File Input</button>
-                            <br /><br />
-                            @foreach($allInfo['image1'] as $image)
-                            <img src="{{$image}}" width="200">
-                            @endforeach
-                        </div>
-                    </div>
-                </div> -->
 
                 <div class="card">
                     <div class="card-body">
@@ -235,7 +203,7 @@
                                 @enderror
                             </div>
 
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-4">
                                 <label for="pages" class="form-label">{{ __('No. of Pages') }}</label>
                                 <input id="pages" type="number" class="form-control @error('pages') is-invalid @enderror" name="pages" value="{{ old('pages') ?? $allInfo['page_no'] }}" autocomplete="pages" autofocus placeholder="No. of Pages">
 
@@ -246,11 +214,22 @@
                                 @enderror
                             </div>
 
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-4">
                                 <label for="weight" class="form-label">{{ __('Weight') }}</label>
-                                <input id="weight" type="text" class="form-control @error('weight') is-invalid @enderror" name="weight" value="{{ old('weight') ?? $allInfo['weight'] }}" autocomplete="weight" autofocus placeholder="Weight">
+                                <input id="weight" type="number" class="form-control @error('weight') is-invalid @enderror" name="weight" value="{{ old('weight') ?? $allInfo['weight'] }}" autocomplete="weight" autofocus placeholder="Weight">
 
                                 @error('weight')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label for="url" class="form-label">{{ __('Insta Mojo URL') }}</label>
+                                <input id="url" type="url" class="form-control @error('url') is-invalid @enderror" name="url" value="{{ old('url') ?? $allInfo['url'] }}" autocomplete="url" autofocus placeholder="Insta Mojo Url">
+
+                                @error('url')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -293,7 +272,7 @@
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="isbn_10" class="form-label">{{ __('ISBN 10') }}</label>
-                                <input id="isbn_10" type="text" class="form-control @error('isbn_10') is-invalid @enderror" name="isbn_10" value="{{ old('isbn_10') }}" autocomplete="isbn_10" autofocus placeholder="ISBN 10">
+                                <input id="isbn_10" type="number" class="form-control @error('isbn_10') is-invalid @enderror" name="isbn_10" value="{{ old('isbn_10') }}" autocomplete="isbn_10" autofocus placeholder="ISBN 10">
 
                                 @error('isbn_10')
                                 <span class="invalid-feedback" role="alert">
@@ -304,7 +283,7 @@
 
                             <div class="form-group col-md-6">
                                 <label for="isbn_13" class="form-label">{{ __('ISBN 13') }}</label>
-                                <input id="isbn_13" type="text" class="form-control @error('isbn_13') is-invalid @enderror" name="isbn_13" value="{{ old('isbn_13') }}" autocomplete="isbn_13" autofocus placeholder="ISBN 13">
+                                <input id="isbn_13" type="number" class="form-control @error('isbn_13') is-invalid @enderror" name="isbn_13" value="{{ old('isbn_13') }}" autocomplete="isbn_13" autofocus placeholder="ISBN 13">
 
                                 @error('isbn_13')
                                 <span class="invalid-feedback" role="alert">
@@ -327,31 +306,33 @@
                         <div class="form-group">
                             <div id="fileInputContainer">
                                 <div class="form-group">
-                                    <label for="fileInput1">Images*</label>
-                                    <div class="row mb-5">
-                                        <div class="col-lg-12 col-sm-12 mb-4">
-                                            @foreach($allInfo['image1'] as $key => $image)
-                                            <div class="input-group{{$key}} my-2">
-                                                <input type="hidden" name="processed_images[]" value="{{ $image }}">
-                                                <input type="file" class="dropify" data-default-file="{{ $image }}" name="images[]" />
-                                                <!-- <input type="file" class="form-control-file @error('images') is-invalid @enderror" id="fileInput1" name="images[]" value="{{ $image }}"> -->
+                                    <label for="fileInput1">Images<span class="text-danger">*</span></label>
 
-                                                <!-- <div class="input-group-append pt-2">
-                                                    <button class="btn btn-danger btn-sm removeFileInput" id={{$key}}>Remove</button>
-                                                </div> -->
+                                    <div class="form-group mb-0" @error('images') style="border: red 2px dotted;" @enderror>
+                                        <input type="hidden" name="images[]" value={{ $allInfo['baseimg'] }} />
+                                        <input type="file" class="dropify @error('images') is-invalid @enderror" data-bs-height="180" id="fileInput1" name="images[]" value={{ $allInfo['baseimg'] }} data-default-file={{$allInfo['baseimg']}} />
+                                    </div>
 
-                                                <!-- @error('images')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                                @enderror -->
-                                            </div>
-                                            @endforeach
-                                        </div>
+                                    @error('images')
+                                    <span class="invalid-feedback mt-2" style="display:block" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+
+                                    <label for="fileInput1">Images<span class="text-danger">*</span></label>
+                                    @foreach($allInfo['multiple'] as $key => $images)
+                                    @if($key == 0) @continue; @endif
+                                    <input type="hidden" name="multipleImages[]" value={{ $images }} />
+                                    <div class="form-group mt-2" @error('multipleImages') style="border: red 2px dotted;" @enderror>
+                                        <input data-default-file={{$images}} id="demo" type="file" class="dropify @error('multipleImages') is-invalid @enderror" name="multipleImages[]" multiple>
                                     </div>
-                                    <div class="form-group mb-0">
-                                        <input id="demo" type="file" name="multipleImages[]" multiple>
-                                    </div>
+
+                                    @error('multipleImages')
+                                    <span class="invalid-feedback mt-2" style="display:block" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -371,7 +352,7 @@
 <script src="{{ asset('assets/plugins/fancyuploder/jquery.ui.widget.js') }}"></script>
 <script src="{{ asset('assets/plugins/fancyuploder/jquery.fileupload.js') }}"></script>
 <script src="{{ asset('assets/plugins/fancyuploder/jquery.fancy-fileupload.js') }}"></script>
-<script src="{{ asset('assets/plugins/fancyuploder/fancy-uploader.js') }}"></script>
+<!-- <script src="{{ asset('assets/plugins/fancyuploder/fancy-uploader.js') }}"></script> -->
 <script>
     $(document).ready(function() {
         // Counter to keep track of the number of file input fields
@@ -504,6 +485,40 @@
 
             input.click();
         },
+    });
+
+    $('#form').submit(function(event) {
+        var valid = true; // Assume all fields are valid initially
+
+        // Validate each input field
+        $('input').each(function() {
+            var inputValue = $(this).val();
+
+            var urlRegex = /\b(?:https?|ftp):\/\/\S+\b/;
+            // Validate or sanitize input as needed for each field
+            if (urlRegex.test(inputValue)) {
+                var fieldName = $(this).attr('name');
+                // $('#' + fieldName + 'Error').text(fieldName + ' is required.');
+                // valid = false;
+            } else {
+                // $('#' + $(this).attr('name') + 'Error').text(''); // Clear error message if valid
+            }
+        });
+
+        if (!valid) {
+            event.preventDefault(); // Prevent form submission if any field is invalid
+        }
+
+        // var inputValue = $('#title').val();
+
+        // Use a regular expression to check for the presence of URLs
+        // var urlRegex = /\b(?:https?|ftp):\/\/\S+\b/;
+        // if (urlRegex.test(inputValue)) {
+        //     $('#urlErrorMessage').text('URLs are not allowed.');
+        //     event.preventDefault(); // Prevent form submission
+        // } else {
+        //     $('#urlErrorMessage').text(''); // Clear error message if valid
+        // }
     });
 </script>
 @endpush
