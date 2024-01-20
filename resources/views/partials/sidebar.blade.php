@@ -33,7 +33,7 @@
                 @endcan
                 
                 <li class="sub-category">
-                    <h3>{{ __('Accounts') }}</h3>
+                    <h3>{{ __('Information') }}</h3>
                 </li>
 
                 @can('Listing access')
@@ -42,9 +42,9 @@
                         <ul class="slide-menu">
                             <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
                             @can('Listing create')
-                                <li><a href="{{ route('listing.create') }}" class="slide-item {{ (request()->is('admin/listing/create')) ? 'active' : '' }}">{{ __('Create Listing') }}</a></li>
+                                <li><a href="{{ route('listing.create') }}" class="slide-item {{ (request()->is('admin/listing/create')) ? 'active' : '' }}">{{ __('Create New Listing') }}</a></li>
                             @endcan
-                            <li><a href="{{ route('amazon.find') }}" class="slide-item {{ (request()->is('admin/find-products/amazon')) ? 'active' : '' }}">{{ __('Create Listing (Amazon scrap)') }}</a></li>
+                            <li><a href="{{ route('amazon.find') }}" class="slide-item {{ (request()->is('admin/find-products/amazon')) ? 'active' : '' }}">{{ __('Create New Listing (Auto)') }}</a></li>
                             <li><a href="{{ route('flipkart.find') }}" class="slide-item {{ (request()->is('admin/find-products/flipkart')) ? 'active' : '' }}">{{ __('Create Listing (Flipkart scrap)') }}</a></li>
                             @can('Listing access')
                                 <!-- <li><a href="{{ route('listing.index') }}" class="slide-item {{ (request()->is('admin/listing')) ? 'active' : '' }}">{{ __('Catalogue') }}</a></li> -->
@@ -55,22 +55,22 @@
 
                 @can('Inventory access')
                     <li class="slide {{ request()->is('admin/inventory') ? 'is-expanded' : '' }}">
-                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-users"></i><span class="side-menu__label">{{ __('Manage all Inventory') }}</span><i class="angle fe fe-chevron-right"></i></a>
+                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-users"></i><span class="side-menu__label">{{ __('Inventory') }}</span><i class="angle fe fe-chevron-right"></i></a>
                         <ul class="slide-menu">
                             <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
-                            <li><a href="{{ route('inventory.index') }}" class="slide-item {{ request()->is('admin/inventory') ? 'active' : '' }}">{{ __('Manage all Inventory') }}</a></li>
+                            <li><a href="{{ route('inventory.index') }}" class="slide-item {{ request()->is('admin/inventory') ? 'active' : '' }}">{{ __('Manage Inventory') }}</a></li>
                         </ul>
                     </li>
                 @endcan
 
                 @can('User access')
                     <li class="slide {{ (request()->is('admin/users/*') || request()->is('admin/users')) ? 'is-expanded' : '' }}">
-                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-users"></i><span class="side-menu__label">{{ __('Users') }}</span><i class="angle fe fe-chevron-right"></i></a>
+                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-users"></i><span class="side-menu__label">{{ __('Users Details') }}</span><i class="angle fe fe-chevron-right"></i></a>
                         <ul class="slide-menu">
                             <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
                             
                             @can('User create')
-                             <li><a href="{{ route('users.create') }}" class="slide-item {{ request()->is('admin/users/create') ? 'active' : '' }}">{{ __('Create Users') }}</a></li>
+                             <li><a href="{{ route('users.create') }}" class="slide-item {{ request()->is('admin/users/create') ? 'active' : '' }}">{{ __('Create New Users') }}</a></li>
                             @endcan
                             
                             @can('User approved')
@@ -79,7 +79,7 @@
                             @endcan
                             
                             @can('User access')
-                                <li><a href="{{ route('users.index') }}" class="slide-item {{ (request()->is('admin/users') || request()->is('admin/users/*/edit')) ? 'active' : '' }}">{{ __('All Users') }}</a>
+                                <li><a href="{{ route('users.index') }}" class="slide-item {{ (request()->is('admin/users') || request()->is('admin/users/*/edit')) ? 'active' : '' }}">{{ __('All Users List') }}</a>
                                 </li>
                             @endcan
                         </ul>
@@ -88,11 +88,11 @@
 
                 @can('Role access')
                     <li class="slide {{ (request()->is('admin/roles/*') || request()->is('admin/roles')) ? 'is-expanded' : '' }}">
-                        <a class="side-menu__item  {{ request()->is('admin/roles*') ? 'active is-expanded' : '' }}" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-lock"></i><span class="side-menu__label">{{ __('Role & Permission') }}</span><i class="angle fe fe-chevron-right"></i></a>
+                        <a class="side-menu__item  {{ request()->is('admin/roles*') ? 'active is-expanded' : '' }}" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-lock"></i><span class="side-menu__label">{{ __('Roles & Permissions') }}</span><i class="angle fe fe-chevron-right"></i></a>
                         <ul class="slide-menu">
                             @can('Role create')
                                 <li>
-                                    <a href="{{ route('roles.create') }}" class="slide-item  {{ request()->is('admin/roles/create') ? 'active' : '' }}">{{ __('Create New Role') }}</a>
+                                    <a href="{{ route('roles.create') }}" class="slide-item  {{ request()->is('admin/roles/create') ? 'active' : '' }}">{{ __('Create New Roles') }}</a>
                                 </li>
                             @endcan
 
@@ -104,7 +104,7 @@
 
                             @can('Role access')
                                 <li>
-                                    <a href="{{ route('view.roles') }}" class="slide-item  {{ (request()->is('admin/roles/all/view')) ? 'active' : '' }}">{{ __('View all Roles & Permissions') }}</a>
+                                    <a href="{{ route('view.roles') }}" class="slide-item  {{ (request()->is('admin/roles/all/view')) ? 'active' : '' }}">{{ __('View All Roles & Permissions') }}</a>
                                 </li>
                             @endcan
                         </ul>
@@ -118,11 +118,11 @@
                             <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
                             
                             @can('Site Access')
-                                <li><a href="{{ route('settings.site') }}" class="slide-item {{ request()->is('admin/settings/site') ? 'active' : '' }}">{{ __('Site settings') }}</a></li>
+                                <li><a href="{{ route('settings.site') }}" class="slide-item {{ request()->is('admin/settings/site') ? 'active' : '' }}">{{ __('Site Settings') }}</a></li>
                             @endcan
 
                             @can('Configure Blog')
-                                <li><a href="{{ route('settings.blog') }}" class="slide-item {{ request()->is('admin/settings/blog') ? 'active' : '' }}">{{ __('Confiure with blog') }}</a></li>
+                                <li><a href="{{ route('settings.blog') }}" class="slide-item {{ request()->is('admin/settings/blog') ? 'active' : '' }}">{{ __('Confiure Blog') }}</a></li>
                             @endcan
                         </ul>
                     </li>

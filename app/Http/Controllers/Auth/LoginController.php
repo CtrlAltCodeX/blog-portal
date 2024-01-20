@@ -147,19 +147,25 @@ class LoginController extends Controller
 
             $userAgent = request()->header('User-Agent');
 
-            if (!$user->verify_browser) $user->update(['verify_browser' => $userAgent]);
-
-            if ($user->verify_browser != $userAgent && $user->verify_browser) {
+            if ((($user->verify_browser != $userAgent) && $user->verify_browser) || !$user->verify_browser) {
                 session()->flash('success', 'Please contact Admin for OTP');
 
-                $email = 'admin@example.com';
+                $adminUsers = User::role('admin')->get();
+
+                foreach ($adminUsers as $user) {
+                    $email = $user->email;
+
+                    Mail::to($email)->send(new OtpMail($otp));
+                }
             } else {
                 session()->flash('success', 'Please check your registered email for OTP');
 
                 $email = request()->email;
+
+                Mail::to($email)->send(new OtpMail($otp));
             }
 
-            Mail::to($email)->send(new OtpMail($otp));
+            if (!$user->verify_browser) $user->update(['verify_browser' => $userAgent]);
 
             return view('auth.enter-otp');
         } catch (\Exception $e) {

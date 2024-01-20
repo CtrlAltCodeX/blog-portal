@@ -102,7 +102,7 @@ class ListingController extends Controller
         $edition = $doc->getElementById('edition')->textContent;
         $selling = $doc->getElementById('selling')->textContent;
         $mrp = $doc->getElementById('mrp')->textContent;
-        $instaUrl = $doc->getElementById('url')->textContent??"";
+        $instaUrl = $doc->getElementById('url')->getAttribute('href')??"";
         $baseimg = $doc->getElementById('baseimg')->getAttribute('src');
 
         for ($i = 0; $i < $doc->getElementsByTagName("img")->length; $i++) {

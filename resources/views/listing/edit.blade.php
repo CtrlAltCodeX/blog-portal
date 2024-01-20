@@ -2,6 +2,10 @@
 
 @section('title', __('Update Listing'))
 
+@push('css')
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+@endpush
+
 @section('content')
 <!-- CONTAINER -->
 <div class="main-container container-fluid">
@@ -49,7 +53,7 @@
 
                             <div class="form-group">
                                 <label for="description" class="form-label">{{ __('Description') }}</label>
-                                <textarea id="description" class="form-control @error('description') is-invalid @enderror" name="description" placeholder="Description" rows="10">{{ old('description') ?? $allInfo['desc'] }}</textarea>
+                                <textarea id="desc" class="form-control @error('description') is-invalid @enderror" name="description" placeholder="Description" rows="10">{{ old('description') ?? $allInfo['desc'] }}</textarea>
 
                                 @error('description')
                                 <span class="invalid-feedback" role="alert">
@@ -352,9 +356,13 @@
 <script src="{{ asset('assets/plugins/fancyuploder/jquery.ui.widget.js') }}"></script>
 <script src="{{ asset('assets/plugins/fancyuploder/jquery.fileupload.js') }}"></script>
 <script src="{{ asset('assets/plugins/fancyuploder/jquery.fancy-fileupload.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+
 <!-- <script src="{{ asset('assets/plugins/fancyuploder/fancy-uploader.js') }}"></script> -->
 <script>
     $(document).ready(function() {
+        $('#desc').summernote();
+
         // Counter to keep track of the number of file input fields
         var fileInputCounter = 2; // Start from 2 since the first one is already visible
 
@@ -398,95 +406,7 @@
     });
 </script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.6.2/tinymce.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
 <script>
-    tinymce.init({
-        selector: 'textarea#description',
-        menubar: false,
-        plugins: 'image media wordcount save fullscreen code table lists link',
-        toolbar1: 'formatselect | bold italic strikethrough forecolor backcolor image alignleft aligncenter alignright alignjustify | link hr |numlist bullist outdent indent  | removeformat | code | table | aibutton',
-        image_advtab: true,
-        valid_elements: '*[*]',
-        relative_urls: false,
-        remove_script_host: false,
-        document_base_url: '{{ asset(' / ') }}',
-        images_upload_handler: (blobInfo, progress) => new Promise((resolve, reject) => {
-            let xhr, formData;
-
-            xhr = new XMLHttpRequest();
-
-            xhr.withCredentials = false;
-
-            xhr.open('POST', '{{ route("tinymce.upload") }}');
-
-            xhr.upload.onprogress = ((e) => progress((e.loaded / e.total) * 100));
-
-            xhr.onload = function() {
-                let json;
-
-                if (xhr.status === 403) {
-                    reject("http-error", {
-                        remove: true
-                    });
-
-                    return;
-                }
-
-                if (xhr.status < 200 || xhr.status >= 300) {
-                    reject("http-error");
-
-                    return;
-                }
-
-                json = JSON.parse(xhr.responseText);
-
-                if (!json || typeof json.location != 'string') {
-                    reject("invalid-json" + xhr.responseText);
-
-                    return;
-                }
-
-                resolve(json.location);
-            };
-
-            xhr.onerror = (() => reject("upload-failed"));
-
-            formData = new FormData();
-            formData.append('_token', '{{ csrf_token() }}');
-            formData.append('file', blobInfo.blob(), blobInfo.filename());
-
-            xhr.send(formData);
-        }),
-
-        file_picker_callback: function(cb, value, meta) {
-            let input = document.createElement('input');
-            input.setAttribute('type', 'file');
-            input.setAttribute('accept', 'image/*');
-
-            input.onchange = function() {
-                let file = this.files[0];
-
-                let reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = function() {
-                    let id = 'blobid' + new Date().getTime();
-                    let blobCache = tinymce.activeEditor.editorUpload.blobCache;
-                    let base64 = reader.result.split(',')[1];
-                    let blobInfo = blobCache.create(id, file, base64);
-
-                    blobCache.add(blobInfo);
-
-                    cb(blobInfo.blobUri(), {
-                        title: file.name
-                    });
-                };
-            };
-
-            input.click();
-        },
-    });
-
     $('#form').submit(function(event) {
         var valid = true; // Assume all fields are valid initially
 
