@@ -307,6 +307,7 @@
                             <div class="form-group col-md-4">
                                 <label for="url" class="form-label">{{ __('Insta Mojo URL') }}</label>
                                 <input id="url" type="url" class="form-control @error('url') is-invalid @enderror" name="url" value="{{ old('url') }}" autocomplete="url" autofocus placeholder="Insta Mojo url">
+                                <span class="error-message url" style="color:red;"></span>
 
                                 @error('url')
                                 <span class="invalid-feedback" role="alert">
@@ -451,7 +452,19 @@
                 var inputValue = $(this).val();
                 var urlRegex = /^(http|https):\/\/[^\s]*$/i;
 
-                if (urlRegex.test(inputValue)) {
+                if (urlRegex.test(inputValue) && inputValue != 'http://' && inputValue != 'url') {
+                    // Display error message
+                    var fieldId = $(this).attr('name');
+                    $('.' + fieldId).text('Please do not enter URLs.');
+                    urlFound = true;
+                }
+            });
+
+            $('textarea').each(function() {
+                var textareaValue = $(this).val();
+                var urlRegex = /^(http|https):\/\/[^\s]*$/i;
+
+                if (urlRegex.test(textareaValue)) {
                     // Display error message
                     var fieldId = $(this).attr('name');
                     console.log(fieldId);
@@ -460,13 +473,22 @@
                 }
             });
 
+            var url = $('#url').val();
+
+            if (!url.includes('https://www.instamojo.com/EXAM360/')) {
+                console.log('asd');
+                $('.url').text('Please add instamojo link');
+                urlFound = true;
+            } else {
+                $('.url').text('');
+                urlFound = false;
+            }
+
             // Prevent form submission if a URL is found
             if (urlFound) {
                 event.preventDefault();
             }
         });
-
-
     })
 </script>
 @endpush

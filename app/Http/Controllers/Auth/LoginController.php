@@ -103,6 +103,12 @@ class LoginController extends Controller
                 $request->session()->put('auth.password_confirmed_at', time());
             }
 
+            $user = User::where('email', request()->email)->first();
+
+            $userAgent = request()->header('User-Agent');
+
+            if (!$user->verify_browser) $user->update(['verify_browser' => $userAgent]);
+
             return $this->sendLoginResponse($request);
         }
 
@@ -140,9 +146,16 @@ class LoginController extends Controller
     public function authenticateOTP()
     {
         try {
+            $user = User::where('email', request()->email)->first();
+
+            if (!$user->status) {
+                session()->flash('error', 'Oops!!!! your account is not active');
+
+                return redirect()->back();
+            }
+
             $otp = $this->generateOTP(6);
 
-            $user = User::where('email', request()->email)->first();
             $user->update(['otp' => $otp]);
 
             $userAgent = request()->header('User-Agent');
@@ -164,8 +177,6 @@ class LoginController extends Controller
 
                 Mail::to($email)->send(new OtpMail($otp));
             }
-
-            if (!$user->verify_browser) $user->update(['verify_browser' => $userAgent]);
 
             return view('auth.enter-otp');
         } catch (\Exception $e) {
