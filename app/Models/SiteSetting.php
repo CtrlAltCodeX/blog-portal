@@ -11,6 +11,8 @@ class SiteSetting extends Model
 
     protected $fillable = [
         'url',
-        'logo'
+        'logo',
+        'product_background_image',
+        'homepage_image'
     ];
 }

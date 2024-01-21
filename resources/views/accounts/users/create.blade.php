@@ -157,7 +157,7 @@
                                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" autocomplete="new-password" placeholder="Confirm Password">
                             </div>
 
-                            <div class="form-group col-3">
+                            <!-- <div class="form-group col-3">
                                 <label for="status" class="form-label">{{ __('Status') }}</label>
 
                                 <select id="status" class="form-control @error('status') is-invalid @enderror" name="status">
@@ -170,7 +170,7 @@
                                     <strong>{{ $message }}</strong>
                                 </span>
                                 @enderror
-                            </div>
+                            </div> -->
 
                             <div class="form-group col-6">
                                 <label for="name" class="form-label">{{ __('Full Address') }}</label>
@@ -183,7 +183,7 @@
                                 @enderror
                             </div>
 
-                            <div class="form-group col-12">
+                            <!-- <div class="form-group col-12">
                                 <label for="email" class="form-label">{{ __('Roles') }}</label>
 
                                 @foreach ($roles as $role)
@@ -195,7 +195,7 @@
                                     </label>
                                 </div>
                                 @endforeach
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>

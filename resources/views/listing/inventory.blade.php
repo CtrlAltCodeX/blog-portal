@@ -72,14 +72,14 @@
                         <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">
                             <thead>
                                 <tr>
-                                    <th>{{ __('Sr no.') }}</th>
-                                    <th>{{ __('Status') }}</th>
+                                    <th>{{ __('Sl') }}</th>
+                                    <th>{{ __('Stock') }}</th>
                                     <th>{{ __('Image') }}</th>
-                                    <th>{{ __('Product ID') }}</th>
                                     <th>{{ __('Product name') }}</th>
+                                    <th>{{ __('Product ID') }}</th>
                                     <th>{{ __('Labels') }}</th>
                                     <th>{{ __('MRP') }}</th>
-                                    <th>{{ __('Selling Price') }}</th>
+                                    <th>{{ __('Sell Price') }}</th>
                                     <th>{{ __('Created at') }}</th>
                                     <th>{{ __('Updated at') }}</th>
                                     <th>{{ __('Action') }}</th>
@@ -114,8 +114,8 @@
                                     <td>{{ count($googlePost->labels??[]) }}</td>
                                     <td>₹{{ $mrp }}</td>
                                     <td>₹{{ $selling }}</td>
-                                    <td>{{ date("d-m-Y H:i", strtotime($googlePost->published)) }}</td>
-                                    <td>{{ date("d-m-Y H:i", strtotime($googlePost->updated)) }}</td>
+                                    <td>{{ date("d-m-Y h:i", strtotime($googlePost->published)) }}</td>
+                                    <td>{{ date("d-m-Y h:i", strtotime($googlePost->updated)) }}</td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic example">
                                             @can('Inventory edit')

@@ -103,6 +103,12 @@ class LoginController extends Controller
                 $request->session()->put('auth.password_confirmed_at', time());
             }
 
+            $user = User::where('email', request()->email)->first();
+
+            $userAgent = request()->header('User-Agent');
+
+            if (!$user->verify_browser) $user->update(['verify_browser' => $userAgent]);
+
             return $this->sendLoginResponse($request);
         }
 
@@ -140,26 +146,37 @@ class LoginController extends Controller
     public function authenticateOTP()
     {
         try {
+            $user = User::where('email', request()->email)->first();
+
+            if (!$user->status) {
+                session()->flash('error', 'Oops!!!! your account is not active');
+
+                return redirect()->back();
+            }
+
             $otp = $this->generateOTP(6);
 
-            $user = User::where('email', request()->email)->first();
             $user->update(['otp' => $otp]);
 
             $userAgent = request()->header('User-Agent');
 
-            if (!$user->verify_browser) $user->update(['verify_browser' => $userAgent]);
-
-            if ($user->verify_browser != $userAgent && $user->verify_browser) {
+            if ((($user->verify_browser != $userAgent) && $user->verify_browser) || !$user->verify_browser) {
                 session()->flash('success', 'Please contact Admin for OTP');
 
-                $email = 'admin@example.com';
+                $adminUsers = User::role('admin')->get();
+
+                foreach ($adminUsers as $user) {
+                    $email = $user->email;
+
+                    Mail::to($email)->send(new OtpMail($otp));
+                }
             } else {
                 session()->flash('success', 'Please check your registered email for OTP');
 
                 $email = request()->email;
-            }
 
-            Mail::to($email)->send(new OtpMail($otp));
+                Mail::to($email)->send(new OtpMail($otp));
+            }
 
             return view('auth.enter-otp');
         } catch (\Exception $e) {

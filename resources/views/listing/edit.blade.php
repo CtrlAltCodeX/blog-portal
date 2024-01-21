@@ -2,6 +2,10 @@
 
 @section('title', __('Update Listing'))
 
+@push('css')
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+@endpush
+
 @section('content')
 <!-- CONTAINER -->
 <div class="main-container container-fluid">
@@ -19,7 +23,7 @@
     <!-- PAGE-HEADER END -->
 
     <!-- Row -->
-    <form action="{{ route('listing.update', $post->id) }}" method="POST" enctype='multipart/form-data'>
+    <form action="{{ route('listing.update', $post->id) }}" method="POST" enctype='multipart/form-data' id='form'>
         @csrf
         @method('PUT')
         <div class="row">
@@ -36,8 +40,9 @@
                     <div class="card-body">
                         <div>
                             <div class="form-group">
-                                <label for="title" class="form-label">{{ __('Title') }}</label>
+                                <label for="title" class="form-label">{{ __('Title') }}<span class="text-danger">*</span> <span class="text-success">(Prduct Name | Author | Edition | Publication ( Medium ) )</span></label>
                                 <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') ?? $post->title }}" autocomplete="title" autofocus placeholder="title">
+                                <span class="error-message title" style="color:red;"></span>
 
                                 @error('title')
                                 <span class="invalid-feedback" role="alert">
@@ -47,8 +52,8 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="description" class="form-label">{{ __('Description') }}</label>
-                                <textarea id="description" class="form-control @error('description') is-invalid @enderror" name="description" placeholder="Description" rows="10">{{ old('description') ?? $allInfo['desc'] }}</textarea>
+                                <label for="description" class="form-label">{{ __('Description') }}<span class="text-danger">*</span><span class="text-danger"> ( Enter Detail Description without using 3rd party link)</span></label>
+                                <textarea id="desc" class="form-control @error('description') is-invalid @enderror" name="description" placeholder="Description" rows="10">{{ old('description') ?? $allInfo['desc'] }}</textarea>
 
                                 @error('description')
                                 <span class="invalid-feedback" role="alert">
@@ -60,47 +65,14 @@
                     </div>
                 </div>
 
-                <!-- <div class="card">
-                    <div class="card-body">
-                        <div class="form-group">
-                            <div id="fileInputContainer">
-                                <div class="form-group">
-                                    <label for="fileInput1">Images*</label>
-                                    @foreach($allInfo['image1'] as $key => $image)
-                                    <div class="input-group{{$key}} my-2">
-                                        <input type="hidden" name="processed_images[]" value="{{ $image }}">
-                                        <input type="file" class="form-control-file @error('images') is-invalid @enderror" id="fileInput1" name="images[]" value="{{ $image }}">
-
-                                        <div class="input-group-append pt-2">
-                                            <button class="btn btn-danger btn-sm removeFileInput" id={{$key}}>Remove</button>
-                                        </div>
-
-                                        @error('images')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                    </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                            <button id="addFileInput" type="button" class="btn btn-primary">Add File Input</button>
-                            <br /><br />
-                            @foreach($allInfo['image1'] as $image)
-                            <img src="{{$image}}" width="200">
-                            @endforeach
-                        </div>
-                    </div>
-                </div> -->
-
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <label for="selling_price" class="form-label">{{ __('Selling Price') }}<span class="text-danger">*</span></label>
-                                <input id="selling_price" type="number" class="form-control @error('selling_price') is-invalid @enderror" name="selling_price" value="{{ old('selling_price') ?? $allInfo['selling']  }}" autocomplete="selling_price" autofocus placeholder="Selling Price">
+                                <label for="mrp" class="form-label">{{ __('MRP') }}<span class="text-danger">*</span><span class="text-success"> ( Maximum Retail Price)</span></label>
+                                <input id="mrp" type="number" class="form-control @error('mrp') is-invalid @enderror" name="mrp" value="{{ old('mrp') ?? $allInfo['mrp']}}" autocomplete="mrp" autofocus placeholder="MRP">
 
-                                @error('selling_price')
+                                @error('mrp')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -108,10 +80,10 @@
                             </div>
 
                             <div class="form-group col-md-6">
-                                <label for="mrp" class="form-label">{{ __('MRP') }}<span class="text-danger">*</span></label>
-                                <input id="mrp" type="number" class="form-control @error('mrp') is-invalid @enderror" name="mrp" value="{{ old('mrp') ?? $allInfo['mrp']}}" autocomplete="mrp" autofocus placeholder="MRP">
+                                <label for="selling_price" class="form-label">{{ __('Selling Price') }}<span class="text-danger">*</span></label>
+                                <input id="selling_price" type="number" class="form-control @error('selling_price') is-invalid @enderror" name="selling_price" value="{{ old('selling_price') ?? $allInfo['selling']  }}" autocomplete="selling_price" autofocus placeholder="Selling Price">
 
-                                @error('mrp')
+                                @error('selling_price')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -125,8 +97,9 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="form-group col-md-4">
-                                <label for="publication" class="form-label">{{ __('Publication') }}<span class="text-danger">*</span></label>
+                                <label for="publication" class="form-label">{{ __('Publisher') }}<span class="text-danger">*</span></label>
                                 <input id="publication" type="text" class="form-control @error('publication') is-invalid @enderror" name="publication" value="{{ old('publication') ?? $allInfo['publication'] }}" autocomplete="publication" autofocus placeholder="Publication">
+                                <span class="error-message publication" style="color:red;"></span>
 
                                 @error('publication')
                                 <span class="invalid-feedback" role="alert">
@@ -138,6 +111,7 @@
                             <div class="form-group col-md-4">
                                 <label for="author_name" class="form-label">{{ __('Author Name') }}<span class="text-danger">*</span></label>
                                 <input id="author_name" type="text" class="form-control @error('author_name') is-invalid @enderror" name="author_name" value="{{ old('author_name') ?? $allInfo['author_name'] }}" autocomplete="author_name" autofocus placeholder="Author name">
+                                <span class="error-message author_name" style="color:red;"></span>
 
                                 @error('author_name')
                                 <span class="invalid-feedback" role="alert">
@@ -149,6 +123,7 @@
                             <div class="form-group col-md-4">
                                 <label for="edition" class="form-label">{{ __('Edition') }}</label>
                                 <input id="edition" type="text" class="form-control @error('edition') is-invalid @enderror" name="edition" value="{{ old('edition') ?? $allInfo['edition']  }}" autocomplete="edition" autofocus placeholder="Edition">
+                                <span class="error-message edition" style="color:red;"></span>
 
                                 @error('edition')
                                 <span class="invalid-feedback" role="alert">
@@ -160,6 +135,7 @@
                             <div class="form-group">
                                 <label for="about_author" class="form-label">{{ __('About Author') }}<span class="text-danger">*</span></label>
                                 <textarea id="about_author" class="form-control @error('about_author') is-invalid @enderror" name="about_author" autocomplete="about_author" autofocus placeholder="About Author Name" rows="5">{{ old('about_author') ?? $allInfo['author'] }}</textarea>
+                                <span class="error-message about_author" style="color:red;"></span>
 
                                 @error('about_author')
                                 <span class="invalid-feedback" role="alert">
@@ -172,6 +148,7 @@
                         <div class="form-group">
                             <label for="search_key" class="form-label">{{ __('Search Key') }}<span class="text-danger">*</span></label>
                             <textarea id="search_key" class="form-control @error('search_key') is-invalid @enderror" name="search_key" autocomplete="search_key" autofocus placeholder="Search Key" rows="5">{{ old('search_key') ?? $allInfo['search_key'] }}</textarea>
+                            <span class="error-message search_key" style="color:red;"></span>
 
                             @error('search_key')
                             <span class="invalid-feedback" role="alert">
@@ -185,7 +162,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="label" class="form-label">{{ __('Label') }}<span class="text-danger">*</span></label>
+                            <label for="label" class="form-label">{{ __('Category') }}<span class="text-danger">*</span><span class="text-danger"> ( Publication, 1 Category, 1 Tag, Others ) </span></label>
                             <select class="form-control select2  @error('label') is-invalid @enderror" data-placeholder="Choose Label" multiple value="{{ old('label') }}" name="label[]">
                                 @foreach($categories as $category)
                                 <option value="{{ $category['term'] }}" @foreach($labels as $label) @if($category['term']==$label) selected @endif @endforeach>
@@ -203,8 +180,9 @@
 
                         <div class="row">
                             <div class="form-group col-md-4">
-                                <label for="sku" class="form-label">{{ __('SKU') }}<span class="text-danger">*</span></label>
+                                <label for="sku" class="form-label">{{ __('SKU') }}<span class="text-danger">*</span><span class="text-danger"> ( Short Code ) </span></label>
                                 <input id="sku" type="text" class="form-control @error('sku') is-invalid @enderror" name="sku" value="{{ old('sku') ?? $allInfo['sku'] }}" autocomplete="sku" autofocus placeholder="SKU">
+                                <span class="error-message sku" style="color:red;"></span>
 
                                 @error('sku')
                                 <span class="invalid-feedback" role="alert">
@@ -214,10 +192,11 @@
                             </div>
 
                             <div class="form-group col-md-4">
-                                <label for="medium" class="form-label">{{ __('Medium') }}</label>
-                                <input id="medium" type="text" class="form-control @error('medium') is-invalid @enderror" name="medium" value="{{ old('medium') }}" autocomplete="medium" autofocus placeholder="Medium">
+                                <label for="language" class="form-label">{{ __('Language') }}<span class="text-danger">*</span></label>
+                                <input id="language" type="text" class="form-control @error('language') is-invalid @enderror" name="language" value="{{ old('language') }}" autocomplete="language" autofocus placeholder="Language">
+                                <span class="error-message language" style="color:red;"></span>
 
-                                @error('medium')
+                                @error('language')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -227,6 +206,7 @@
                             <div class="form-group col-md-4">
                                 <label for="binding" class="form-label">{{ __('Binding Type') }}<span class="text-danger">*</span></label>
                                 <input id="binding" type="text" class="form-control @error('binding') is-invalid @enderror" name="binding" value="{{ old('binding') }}" autocomplete="binding" autofocus placeholder="Binding Type">
+                                <span class="error-message binding" style="color:red;"></span>
 
                                 @error('binding')
                                 <span class="invalid-feedback" role="alert">
@@ -235,7 +215,7 @@
                                 @enderror
                             </div>
 
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-4">
                                 <label for="pages" class="form-label">{{ __('No. of Pages') }}</label>
                                 <input id="pages" type="number" class="form-control @error('pages') is-invalid @enderror" name="pages" value="{{ old('pages') ?? $allInfo['page_no'] }}" autocomplete="pages" autofocus placeholder="No. of Pages">
 
@@ -246,11 +226,23 @@
                                 @enderror
                             </div>
 
-                            <div class="form-group col-md-6">
-                                <label for="weight" class="form-label">{{ __('Weight') }}</label>
-                                <input id="weight" type="text" class="form-control @error('weight') is-invalid @enderror" name="weight" value="{{ old('weight') ?? $allInfo['weight'] }}" autocomplete="weight" autofocus placeholder="Weight">
+                            <div class="form-group col-md-4">
+                                <label for="weight" class="form-label">{{ __('Weight in gms') }}</label>
+                                <input id="weight" type="number" class="form-control @error('weight') is-invalid @enderror" name="weight" value="{{ old('weight') ?? $allInfo['weight'] }}" autocomplete="weight" autofocus placeholder="Weight">
 
                                 @error('weight')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label for="url" class="form-label">{{ __('Insta Mojo URL') }}</label>
+                                <input id="url" type="url" class="form-control @error('url') is-invalid @enderror" name="url" value="{{ old('url') ?? $allInfo['url'] }}" autocomplete="url" autofocus placeholder="Insta Mojo Url">
+                                <span class="error-message url" style="color:red;"></span>
+
+                                @error('url')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -266,6 +258,7 @@
                             <div class="form-group col-md-6">
                                 <label for="country_origin" class="form-label">{{ __('Country of Origin') }}<span class="text-danger">*</span></label>
                                 <input id="country_origin" type="text" class="form-control @error('country_origin') is-invalid @enderror" name="country_origin" value="{{ old('country_origin') ?? 'India' }}" autocomplete="country_origin" autofocus placeholder="Country of Origin">
+                                <span class="error-message country_origin" style="color:red;"></span>
 
                                 @error('country_origin')
                                 <span class="invalid-feedback" role="alert">
@@ -274,16 +267,7 @@
                                 @enderror
                             </div>
 
-                            <div class="form-group col-md-6">
-                                <label for="language" class="form-label">{{ __('Language') }}<span class="text-danger">*</span></label>
-                                <input id="language" type="text" class="form-control @error('language') is-invalid @enderror" name="language" value="{{ old('language') }}" autocomplete="language" autofocus placeholder="Language">
 
-                                @error('language')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -293,7 +277,7 @@
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="isbn_10" class="form-label">{{ __('ISBN 10') }}</label>
-                                <input id="isbn_10" type="text" class="form-control @error('isbn_10') is-invalid @enderror" name="isbn_10" value="{{ old('isbn_10') }}" autocomplete="isbn_10" autofocus placeholder="ISBN 10">
+                                <input id="isbn_10" type="number" class="form-control @error('isbn_10') is-invalid @enderror" name="isbn_10" value="{{ old('isbn_10') }}" autocomplete="isbn_10" autofocus placeholder="ISBN 10">
 
                                 @error('isbn_10')
                                 <span class="invalid-feedback" role="alert">
@@ -304,7 +288,7 @@
 
                             <div class="form-group col-md-6">
                                 <label for="isbn_13" class="form-label">{{ __('ISBN 13') }}</label>
-                                <input id="isbn_13" type="text" class="form-control @error('isbn_13') is-invalid @enderror" name="isbn_13" value="{{ old('isbn_13') }}" autocomplete="isbn_13" autofocus placeholder="ISBN 13">
+                                <input id="isbn_13" type="number" class="form-control @error('isbn_13') is-invalid @enderror" name="isbn_13" value="{{ old('isbn_13') }}" autocomplete="isbn_13" autofocus placeholder="ISBN 13">
 
                                 @error('isbn_13')
                                 <span class="invalid-feedback" role="alert">
@@ -327,31 +311,32 @@
                         <div class="form-group">
                             <div id="fileInputContainer">
                                 <div class="form-group">
-                                    <label for="fileInput1">Images*</label>
-                                    <div class="row mb-5">
-                                        <div class="col-lg-12 col-sm-12 mb-4">
-                                            @foreach($allInfo['image1'] as $key => $image)
-                                            <div class="input-group{{$key}} my-2">
-                                                <input type="hidden" name="processed_images[]" value="{{ $image }}">
-                                                <input type="file" class="dropify" data-default-file="{{ $image }}" name="images[]" />
-                                                <!-- <input type="file" class="form-control-file @error('images') is-invalid @enderror" id="fileInput1" name="images[]" value="{{ $image }}"> -->
-
-                                                <!-- <div class="input-group-append pt-2">
-                                                    <button class="btn btn-danger btn-sm removeFileInput" id={{$key}}>Remove</button>
-                                                </div> -->
-
-                                                <!-- @error('images')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                                @enderror -->
-                                            </div>
-                                            @endforeach
-                                        </div>
+                                    <label for="fileInput1">Main Images<span class="text-danger">*</span></label>
+                                    <div class="form-group mb-0" @error('images') style="border: red 2px dotted;" @enderror>
+                                        <input type="hidden" name="images[]" value={{ $allInfo['baseimg'] }} />
+                                        <input type="file" class="dropify @error('images') is-invalid @enderror" data-bs-height="180" id="fileInput1" name="images[]" value={{ $allInfo['baseimg'] }} data-default-file={{$allInfo['baseimg']}} />
                                     </div>
-                                    <div class="form-group mb-0">
-                                        <input id="demo" type="file" name="multipleImages[]" multiple>
+
+                                    @error('images')
+                                    <span class="invalid-feedback mt-2" style="display:block" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+
+                                    <label for="fileInput1">Additional Images<span class="text-danger">*</span></label>
+                                    @foreach($allInfo['multiple'] as $key => $images)
+                                    @if($key == 0) @continue; @endif
+                                    <input type="hidden" name="multipleImages[]" value={{ $images }} />
+                                    <div class="form-group mt-2" @error('multipleImages') style="border: red 2px dotted;" @enderror>
+                                        <input data-default-file={{$images}} id="demo" type="file" class="dropify @error('multipleImages') is-invalid @enderror" name="multipleImages[]" multiple>
                                     </div>
+
+                                    @error('multipleImages')
+                                    <span class="invalid-feedback mt-2" style="display:block" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -371,9 +356,13 @@
 <script src="{{ asset('assets/plugins/fancyuploder/jquery.ui.widget.js') }}"></script>
 <script src="{{ asset('assets/plugins/fancyuploder/jquery.fileupload.js') }}"></script>
 <script src="{{ asset('assets/plugins/fancyuploder/jquery.fancy-fileupload.js') }}"></script>
-<script src="{{ asset('assets/plugins/fancyuploder/fancy-uploader.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+
+<!-- <script src="{{ asset('assets/plugins/fancyuploder/fancy-uploader.js') }}"></script> -->
 <script>
     $(document).ready(function() {
+        $('#desc').summernote();
+
         // Counter to keep track of the number of file input fields
         var fileInputCounter = 2; // Start from 2 since the first one is already visible
 
@@ -417,93 +406,55 @@
     });
 </script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.6.2/tinymce.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
 <script>
-    tinymce.init({
-        selector: 'textarea#description',
-        menubar: false,
-        plugins: 'image media wordcount save fullscreen code table lists link',
-        toolbar1: 'formatselect | bold italic strikethrough forecolor backcolor image alignleft aligncenter alignright alignjustify | link hr |numlist bullist outdent indent  | removeformat | code | table | aibutton',
-        image_advtab: true,
-        valid_elements: '*[*]',
-        relative_urls: false,
-        remove_script_host: false,
-        document_base_url: '{{ asset(' / ') }}',
-        images_upload_handler: (blobInfo, progress) => new Promise((resolve, reject) => {
-            let xhr, formData;
+    $('#form').submit(function(event) {
+        // Reset previous error messages
+        $('.error-message').text('');
 
-            xhr = new XMLHttpRequest();
+        // Flag to check if any URL is found
+        var urlFound = false;
 
-            xhr.withCredentials = false;
+        // Iterate over each input field with the class 'no-url-validation'
+        $('input').each(function() {
+            var inputValue = $(this).val();
+            var urlRegex = /^(http|https):\/\/[^\s]*$/i;
 
-            xhr.open('POST', '{{ route("tinymce.upload") }}');
+            if (urlRegex.test(inputValue) && inputValue != 'http://' && inputValue != 'url') {
+                // Display error message
+                var fieldId = $(this).attr('name');
+                $('.' + fieldId).text('Please do not enter URLs.');
+                urlFound = true;
+            }
+        });
 
-            xhr.upload.onprogress = ((e) => progress((e.loaded / e.total) * 100));
+        $('textarea').each(function() {
+            var textareaValue = $(this).val();
+            var urlRegex = /^(http|https):\/\/[^\s]*$/i;
 
-            xhr.onload = function() {
-                let json;
+            if (urlRegex.test(textareaValue)) {
+                // Display error message
+                var fieldId = $(this).attr('name');
+                console.log(fieldId);
+                $('.' + fieldId).text('Please do not enter URLs.');
+                urlFound = true;
+            }
+        });
 
-                if (xhr.status === 403) {
-                    reject("http-error", {
-                        remove: true
-                    });
+        var url = $('#url').val();
 
-                    return;
-                }
+        if (!url.includes('https://www.instamojo.com/EXAM360/')) {
+            console.log('asd');
+            $('.url').text('Please add instamojo link');
+            urlFound = true;
+        } else {
+            $('.url').text('');
+            urlFound = false;
+        }
 
-                if (xhr.status < 200 || xhr.status >= 300) {
-                    reject("http-error");
-
-                    return;
-                }
-
-                json = JSON.parse(xhr.responseText);
-
-                if (!json || typeof json.location != 'string') {
-                    reject("invalid-json" + xhr.responseText);
-
-                    return;
-                }
-
-                resolve(json.location);
-            };
-
-            xhr.onerror = (() => reject("upload-failed"));
-
-            formData = new FormData();
-            formData.append('_token', '{{ csrf_token() }}');
-            formData.append('file', blobInfo.blob(), blobInfo.filename());
-
-            xhr.send(formData);
-        }),
-
-        file_picker_callback: function(cb, value, meta) {
-            let input = document.createElement('input');
-            input.setAttribute('type', 'file');
-            input.setAttribute('accept', 'image/*');
-
-            input.onchange = function() {
-                let file = this.files[0];
-
-                let reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = function() {
-                    let id = 'blobid' + new Date().getTime();
-                    let blobCache = tinymce.activeEditor.editorUpload.blobCache;
-                    let base64 = reader.result.split(',')[1];
-                    let blobInfo = blobCache.create(id, file, base64);
-
-                    blobCache.add(blobInfo);
-
-                    cb(blobInfo.blobUri(), {
-                        title: file.name
-                    });
-                };
-            };
-
-            input.click();
-        },
+        // Prevent form submission if a URL is found
+        if (urlFound) {
+            event.preventDefault();
+        }
     });
 </script>
 @endpush

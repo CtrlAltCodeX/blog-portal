@@ -35,9 +35,13 @@
     <link id="theme" rel="stylesheet" type="text/css" media="all" href="{{ asset('assets/colors/color1.css') }}" />
 </head>
 
-<body class="app sidebar-mini ltr">
+@php
+    $homepageImage = App\Models\SiteSetting::first()->homepage_image??'';
+@endphp
+
+<body class="app sidebar-mini ltr" style='background-image:url(storage/{{$homepageImage}});background-size:cover;'>
     <div class="page">
-        <div class="container-login100">
+        <div class="container-login100" >
             <div class="wrap-login100 p-6  w-30">
                 @yield('content')
             </div>

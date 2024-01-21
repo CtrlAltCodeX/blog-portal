@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('site_settings', function (Blueprint $table) {
-            $table->id();
-            $table->string('url')->nullable();
-            $table->string('logo');
-            $table->timestamps();
+        Schema::table('site_settings', function (Blueprint $table) {
+            $table->string('homepage_image');
+            $table->string('product_background_image');
         });
     }
 
@@ -24,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('site_settings');
+        Schema::table('site_settings', function (Blueprint $table) {
+            //
+        });
     }
 };
