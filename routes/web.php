@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FlipkartSrcappingController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\RoleController;
@@ -38,6 +39,12 @@ Route::post('/verify/otp', [LoginController::class, 'authenticateOTP'])->name('v
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function () {
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
+
+    Route::get('profile', [ProfileController::class, 'edit'])
+        ->name('profile.edit');
+
+    Route::post('profile', [ProfileController::class, 'update'])
+        ->name('profile.update');
 
     Route::resource('roles', RoleController::class);
 
@@ -82,6 +89,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::get('users/verified/approved', [UserController::class, 'verified'])
         ->name('verified.users');
+
+    Route::get('edit/users/status/{id}', [UserController::class, 'editStatus'])
+        ->name('edit.users.status');
+
+    Route::post('update/users/status', [UserController::class, 'updateStatus'])
+        ->name('update.users.status');
 
     Route::group(['prefix' => 'settings'], function () {
         Route::get('blog', [SettingsController::class, 'blog'])

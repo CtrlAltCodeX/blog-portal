@@ -109,7 +109,6 @@ class UserController extends Controller
     public function verified()
     {
         $users = User::orderBy('id', 'asc')
-            ->where('status', 1)
             ->paginate(10);
 
         return view('accounts.users.approved', compact('users'));
@@ -152,5 +151,27 @@ class UserController extends Controller
 
             return redirect()->back();
         }
+    }
+
+    /**
+     * Edit Status
+     *
+     * @return void
+     */
+    public function editStatus()
+    {
+        $roles = Role::get();
+
+        return view('accounts.users.update', compact('roles'));
+    }
+
+    /**
+     * Update Status
+     *
+     * @return void
+     */
+    public function updateStatus()
+    {
+        dd(request()->all());
     }
 }

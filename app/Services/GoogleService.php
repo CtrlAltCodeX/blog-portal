@@ -7,6 +7,7 @@ use Google_Service_Blogger;
 use Google_Service_Blogger_Post;
 use App\Models\GoogleCredentail;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
@@ -90,7 +91,6 @@ class GoogleService
 
         $blogger = new Google_Service_Blogger($client);
 
-
         $allPosts = [];
         $pageToken = null;
 
@@ -130,6 +130,9 @@ class GoogleService
 
             $client->setScopes('https://www.googleapis.com/auth/blogger');
             $client->setAccessToken(json_decode($credential->token)->access_token);
+
+            $data['multiple_images'] = [];
+            $data['processed_images'] = [];
 
             if (isset($data['images'])) {
                 foreach ($data['images'] as $image) {
@@ -210,7 +213,21 @@ class GoogleService
 
             if (isset($data['images'])) {
                 foreach ($data['images'] as $image) {
-                    $data['processed_images'][] = $this->processImage($image);
+                    if ($image instanceof UploadedFile) {
+                        $data['processed_images'][] = $this->processImage($image);
+                    } else {
+                        $data['processed_images'][] = $image;
+                    }
+                }
+            }
+
+            if (isset($data['multipleImages'])) {
+                foreach ($data['multipleImages'] as $image) {
+                    if ($image instanceof UploadedFile) {
+                        $data['multiple_images'][] = $this->processImage($image);
+                    } else {
+                        $data['multiple_images'][] = $image;
+                    }
                 }
             }
 

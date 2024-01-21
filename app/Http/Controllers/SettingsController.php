@@ -52,12 +52,25 @@ class SettingsController extends Controller
         $siteSettings = SiteSetting::latest()->first();
 
         if (request()->file('logo')) {
-            request()->file('logo')->storePubliclyAs('public/logo.jpg');
+            request()->file('logo')
+                ->storePubliclyAs('public/logo.jpg');
+        }
+
+        if (request()->file('homepage_image')) {
+            request()->file('homepage_image')
+                ->storePubliclyAs('public/homepage_image.jpg');
+        }
+
+        if (request()->file('product_background_image')) {
+            request()->file('product_background_image')
+                ->storePubliclyAs('public/product_background_image.jpg');
         }
 
         $data = [
             'url' => request()->url,
-            'logo' => 'logo.jpg'
+            'logo' => 'logo.jpg',
+            'homepage_image' => 'homepage_image.jpg',
+            'product_background_image' => 'custom_image.jpg'
         ];
 
         if (!$siteSettings) SiteSetting::create($data);

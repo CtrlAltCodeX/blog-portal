@@ -6,11 +6,11 @@
 <div class="main-container container-fluid">
     <!-- PAGE-HEADER -->
     <div class="page-header">
-        <h1 class="page-title">{{ __('Find Products') }}</h1>
+        <h1 class="page-title">{{ __('Find Products ( Using URL )') }}</h1>
         <div>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="javascript:void(0)">{{ __('Find Products') }}</a></li>
-                <li class="breadcrumb-item active" aria-current="page">{{ __('Find Products') }}</li>
+                <li class="breadcrumb-item"><a href="javascript:void(0)">{{ __('Find Products ( Using URL )') }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ __('Find Products ( Using URL )') }}</li>
             </ol>
         </div>
     </div>
@@ -23,18 +23,16 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">
                         <h4 class="card-title">
-                            {{ __('Search') }}
+                            {{ __('Automatic Listing ( Using URL )') }}
                         </h4>
-
-                        <button type="submit" class="btn btn-primary float-right">Find</button>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body text-end">
                         <div>
                             <div class="form-group">
-                                <input id="search" type="text" class="form-control @error('search') is-invalid @enderror" name="search" value="{{ old('search') }}" autocomplete="name" autofocus placeholder="Find Product from ASIN, URL">
+                                <input id="search" type="text" class="form-control @error('search') is-invalid @enderror" name="search" value="{{ old('search') }}" autocomplete="name" autofocus placeholder="Find Product using URL">
                             </div>
                         </div>
-
+                        <button type="submit" class="btn btn-success float-right">Search Now</button>
                     </div>
                 </div>
             </div>
