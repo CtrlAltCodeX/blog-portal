@@ -104,13 +104,14 @@ class ListingController extends Controller
         $edition = $edition_author[1];
         $bindingType = $td->item(9)->textContent ?? '';
         $page_no = $td->item(11)->textContent ?? '';
-        $author = $div->item(9)->textContent ?? '';
-        $desc = $div->item(3)->textContent ?? '';
-        $search_key = $div->item(19)->textContent ?? '';
+        $weight = $td->item(13)->textContent ?? '';
+        $author = $div->item(6)->textContent ?? '';
+        $desc = $div->item(2)->textContent ?? '';
+        $search_key = explode('-', $div->item(8)->textContent ?? '')[1];
         $price = explode('-', $td->item(1)->textContent ?? '');
         $selling = $price[0];
         $mrp = $price[1];
-        $instaUrl = $a->item(2)->getAttribute('href')??"";
+        $instaUrl = $a->item(1)->getAttribute('href')??"";
         $baseimg = $img->item(0)?->getAttribute('src');
         // $sku = $doc->getElementById('sku')->textContent??'';
         // $publication = $doc->getElementById('publication')->textContent??'';
@@ -146,7 +147,8 @@ class ListingController extends Controller
             'mrp' => $mrp,
             'multiple' => $images,
             'baseimg' => $baseimg,
-            'url' => $instaUrl
+            'url' => $instaUrl,
+            'bindingtype' => $bindingType
         ];
 
         if (!$url = $this->getSiteBaseUrl()) {

@@ -263,6 +263,9 @@ class GoogleService
 
             $existingPost = $blogger->posts->get($credential->blog_id, $postId);
 
+            $data['processed_images'] = [];
+            $data['multiple_images'] = [];
+
             if (isset($data['images'])) {
                 foreach ($data['images'] as $image) {
                     if ($image instanceof UploadedFile) {

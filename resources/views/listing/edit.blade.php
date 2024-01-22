@@ -205,7 +205,7 @@
 
                             <div class="form-group col-md-4">
                                 <label for="binding" class="form-label">{{ __('Binding Type') }}<span class="text-danger">*</span></label>
-                                <input id="binding" type="text" class="form-control @error('binding') is-invalid @enderror" name="binding" value="{{ old('binding') }}" autocomplete="binding" autofocus placeholder="Binding Type">
+                                <input id="binding" type="text" class="form-control @error('binding') is-invalid @enderror" name="binding" value="{{ old('binding') ?? $allInfo['bindingtype'] }}" autocomplete="binding" autofocus placeholder="Binding Type">
                                 <span class="error-message binding" style="color:red;"></span>
 
                                 @error('binding')
@@ -277,7 +277,7 @@
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="isbn_10" class="form-label">{{ __('ISBN 10') }}</label>
-                                <input id="isbn_10" type="number" class="form-control @error('isbn_10') is-invalid @enderror" name="isbn_10" value="{{ old('isbn_10') }}" autocomplete="isbn_10" autofocus placeholder="ISBN 10">
+                                <input id="isbn_10" type="text" class="form-control @error('isbn_10') is-invalid @enderror" name="isbn_10" value="{{ old('isbn_10') }}" autocomplete="isbn_10" autofocus placeholder="ISBN 10">
 
                                 @error('isbn_10')
                                 <span class="invalid-feedback" role="alert">
@@ -288,7 +288,7 @@
 
                             <div class="form-group col-md-6">
                                 <label for="isbn_13" class="form-label">{{ __('ISBN 13') }}</label>
-                                <input id="isbn_13" type="number" class="form-control @error('isbn_13') is-invalid @enderror" name="isbn_13" value="{{ old('isbn_13') }}" autocomplete="isbn_13" autofocus placeholder="ISBN 13">
+                                <input id="isbn_13" type="text" class="form-control @error('isbn_13') is-invalid @enderror" name="isbn_13" value="{{ old('isbn_13') }}" autocomplete="isbn_13" autofocus placeholder="ISBN 13">
 
                                 @error('isbn_13')
                                 <span class="invalid-feedback" role="alert">
@@ -323,7 +323,7 @@
                                     </span>
                                     @enderror
 
-                                    @if($allInfo['multiple'])
+                                    @if($allInfo['multiple'] && count($allInfo['multiple']) != 1)
                                     <label for="fileInput1">Additional Images<span class="text-danger">*</span></label>
                                     @foreach($allInfo['multiple'] as $key => $images)
                                     @if($key == 0) @continue; @endif
