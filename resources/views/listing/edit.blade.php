@@ -277,7 +277,7 @@
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="isbn_10" class="form-label">{{ __('ISBN 10') }}</label>
-                                <input id="isbn_10" type="number" class="form-control @error('isbn_10') is-invalid @enderror" name="isbn_10" value="{{ old('isbn_10') }}" autocomplete="isbn_10" autofocus placeholder="ISBN 10">
+                                <input id="isbn_10" type="text" class="form-control @error('isbn_10') is-invalid @enderror" name="isbn_10" value="{{ old('isbn_10') }}" autocomplete="isbn_10" autofocus placeholder="ISBN 10">
 
                                 @error('isbn_10')
                                 <span class="invalid-feedback" role="alert">
@@ -288,7 +288,7 @@
 
                             <div class="form-group col-md-6">
                                 <label for="isbn_13" class="form-label">{{ __('ISBN 13') }}</label>
-                                <input id="isbn_13" type="number" class="form-control @error('isbn_13') is-invalid @enderror" name="isbn_13" value="{{ old('isbn_13') }}" autocomplete="isbn_13" autofocus placeholder="ISBN 13">
+                                <input id="isbn_13" type="text" class="form-control @error('isbn_13') is-invalid @enderror" name="isbn_13" value="{{ old('isbn_13') }}" autocomplete="isbn_13" autofocus placeholder="ISBN 13">
 
                                 @error('isbn_13')
                                 <span class="invalid-feedback" role="alert">
