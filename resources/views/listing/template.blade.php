@@ -66,7 +66,7 @@
                         </tr>
                         <tr>
                             <td class="detailguide">Author, Edition</td>
-                            <td><span id='author_name'>{{ $data['author_name'] }}</span>, <span id='edition'>{{ $data['edition'] }}</span></td>
+                            <td><span id='author_name'>{{ $data['author_name'] }}</span>, <span id='edition'>{{ $data['edition'] }}</span>, <span id='lang'>{{ $data['language'] }}</span></td>
                         </tr>
                         <tr>
                             <td class="detailguide">Binding, Type</td>

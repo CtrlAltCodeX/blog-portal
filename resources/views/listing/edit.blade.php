@@ -134,7 +134,7 @@
 
                             <div class="form-group">
                                 <label for="about_author" class="form-label">{{ __('About Author') }}<span class="text-danger">*</span></label>
-                                <textarea id="about_author" class="form-control @error('about_author') is-invalid @enderror" name="about_author" autocomplete="about_author" autofocus placeholder="About Author Name" rows="5">{{ old('about_author') ?? $allInfo['author'] }}</textarea>
+                                <textarea id="about_author" class="form-control @error('about_author') is-invalid @enderror" name="about_author" autocomplete="about_author" autofocus placeholder="About Author Name" rows="5">{{ old('about_author') ?? $allInfo['desc'] }}</textarea>
                                 <span class="error-message about_author" style="color:red;"></span>
 
                                 @error('about_author')
@@ -193,7 +193,7 @@
 
                             <div class="form-group col-md-4">
                                 <label for="language" class="form-label">{{ __('Language') }}<span class="text-danger">*</span></label>
-                                <input id="language" type="text" class="form-control @error('language') is-invalid @enderror" name="language" value="{{ old('language') }}" autocomplete="language" autofocus placeholder="Language">
+                                <input id="language" type="text" class="form-control @error('language') is-invalid @enderror" name="language" value="{{ old('language') ?? $allInfo['lang']}}" autocomplete="language" autofocus placeholder="Language">
                                 <span class="error-message language" style="color:red;"></span>
 
                                 @error('language')
@@ -205,7 +205,7 @@
 
                             <div class="form-group col-md-4">
                                 <label for="binding" class="form-label">{{ __('Binding Type') }}<span class="text-danger">*</span></label>
-                                <input id="binding" type="text" class="form-control @error('binding') is-invalid @enderror" name="binding" value="{{ old('binding') }}" autocomplete="binding" autofocus placeholder="Binding Type">
+                                <input id="binding" type="text" class="form-control @error('binding') is-invalid @enderror" name="binding" value="{{ old('binding') ?? $allInfo['bindingtype'] }}" autocomplete="binding" autofocus placeholder="Binding Type">
                                 <span class="error-message binding" style="color:red;"></span>
 
                                 @error('binding')
@@ -323,7 +323,7 @@
                                     </span>
                                     @enderror
 
-                                    @if($allInfo['multiple'])
+                                    @if($allInfo['multiple'] && count($allInfo['multiple']) != 1)
                                     <label for="fileInput1">Additional Images<span class="text-danger">*</span></label>
                                     @foreach($allInfo['multiple'] as $key => $images)
                                     @if($key == 0) @continue; @endif

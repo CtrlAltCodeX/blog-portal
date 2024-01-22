@@ -88,7 +88,7 @@ class ListingController extends Controller
     {
         $post = $this->googleService->editPost($postId);
         $labels = $post->getLabels();
-
+        
         $images = [];
         $doc = new \DOMDocument();
         $doc->loadHTML($post->content);
@@ -96,36 +96,24 @@ class ListingController extends Controller
         $div = $doc->getElementsByTagName('div');
         $a = $doc->getElementsByTagName('a');
         $img = $doc->getElementsByTagName('img');
+        $span = $doc->getElementsByTagName('span');
 
         $sku = $td->item(3)->textContent ?? '';
         $publication = $td->item(5)->textContent ?? '';
         $edition_author = explode(',', $td->item(7)->textContent ?? '');
         $author_name = $edition_author[0];
         $edition = $edition_author[1];
+        $lang = $edition_author[2];
         $bindingType = $td->item(9)->textContent ?? '';
         $page_no = $td->item(11)->textContent ?? '';
         $author = $div->item(9)->textContent ?? '';
-        $desc = $div->item(3)->textContent ?? '';
-        $search_key = $div->item(19)->textContent ?? '';
+        $desc = $span->item(1)->textContent ?? '';
+        $search_key = $span->item(2)->textContent ?? '';
         $price = explode('-', $td->item(1)->textContent ?? '');
         $selling = $price[0];
         $mrp = $price[1];
-        $instaUrl = $a->item(2)->getAttribute('href')??"";
+        $instaUrl = $a->item(1)->getAttribute('href') ?? "";
         $baseimg = $img->item(0)?->getAttribute('src');
-        // $sku = $doc->getElementById('sku')->textContent??'';
-        // $publication = $doc->getElementById('publication')->textContent??'';
-        // $author = $doc->getElementById('author')->textContent??'';
-        // $author_name = $doc->getElementById('author_name')->textContent??'';
-        // $page_no = $doc->getElementById('page_no')->textContent??'';
-        // $edition = $doc->getElementById('edition')->textContent??'';
-
-        // $weight = $doc->getElementById('weight')->textContent??'';
-        // $search_key = $doc->getElementById('search_key')->textContent??'';
-        // $desc = $doc->getElementById('desc')->textContent??'';
-        // $selling = $doc->getElementById('selling')->textContent??'';
-        // $mrp = $doc->getElementById('mrp')->textContent??'';
-        // $instaUrl = $doc->getElementById('url')?->getAttribute('href')??"";
-        // $baseimg = $doc->getElementById('baseimg')?->getAttribute('src');
 
         for ($i = 0; $i < $doc->getElementsByTagName("img")->length; $i++) {
             $image = $doc->getElementsByTagName("img")->item($i);
@@ -138,7 +126,7 @@ class ListingController extends Controller
             'author' => $author,
             'author_name' => $author_name,
             'page_no' => $page_no,
-            'weight' => $weight??0,
+            'weight' => $weight ?? 0,
             'search_key' => $search_key,
             'desc' => $desc,
             'edition' => $edition,
@@ -146,7 +134,9 @@ class ListingController extends Controller
             'mrp' => $mrp,
             'multiple' => $images,
             'baseimg' => $baseimg,
-            'url' => $instaUrl
+            'url' => $instaUrl,
+            'bindingtype' => $bindingType,
+            'lang' => $lang
         ];
 
         if (!$url = $this->getSiteBaseUrl()) {

@@ -45,8 +45,8 @@ class DashboardController extends Controller
         $allDraftedGooglePosts = $this->googleService->posts('draft');
 
         $productStats = [];
-        
-        foreach ($allGooglePosts as $allGooglePost) {
+
+        foreach ($allGooglePosts['paginator'] as $allGooglePost) {
             if (isset($allGooglePost->labels) && in_array('Stk_o', $allGooglePost->labels)) {
                 $productStats['out_stock'][] = $allGooglePost;
             } else if (isset($allGooglePost->labels) && in_array('Stk_d', $allGooglePost->labels)) {
