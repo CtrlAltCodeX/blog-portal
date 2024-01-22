@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Log;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManagerStatic as Image;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Carbon\Carbon;
 
 class GoogleService
 {
@@ -84,37 +87,86 @@ class GoogleService
      */
     public function posts($status = null)
     {
+
         $credential = $this->getCredentails();
 
         $client = $this->createGoogleClient($credential->toArray());
         $client->setAccessToken($credential->token);
 
         $blogger = new Google_Service_Blogger($client);
-
-        $allPosts = [];
+        
+        $posts = [];
         $pageToken = null;
+        $perPage = 10;
 
-        do {
-            try {
-                // Fetch a page of posts
-                $postsResponse = $blogger->posts->listPosts($credential->blog_id, ['status' => $status, 'pageToken' => $pageToken]);
-                $posts = $postsResponse->getItems();
+        $params = [
+            'maxResults' => $perPage,
+        ];
 
-                if (!empty($posts)) {
-                    // Add the posts to the result array
-                    $allPosts = array_merge($allPosts, $posts);
+        if (request()->has('pageToken')) {
+            $params['pageToken']  = request()->query('pageToken');
+        }
 
-                    // Get the next page token
-                    $pageToken = $postsResponse->getNextPageToken();
-                }
-            } catch (\Exception $e) {
-                // Handle any errors that may occur during the API request
-                return response()->json(['error' => $e->getMessage()], 500);
+        if (request()->filled('status')) {
+            $params['status'] = request()->query('status');
+        }
+
+        if ($type = request()->has('type') && $type = 'search') {
+            if (request()->filled('q')) {
+                $params['q'] = request()->query('q');
             }
-        } while ($pageToken);
+        }
 
-        return $allPosts;
+        if (request()->filled('endDate')) {
+            $endDate = request()->query('endDate');
+            $carbonEndDate = Carbon::parse($endDate);
+            $params['endDate'] =  $carbonEndDate->format('Y-m-d\TH:i:sP');
+        }
+
+        if (request()->filled('startDate')) {
+            $startDate = request()->query('startDate');
+            $carbonstartDate = Carbon::parse($startDate);
+            $params['startDate'] =  $carbonstartDate->format('Y-m-d\TH:i:sP');
+        }
+
+        if ($type == 'search') {
+            $response = $blogger->posts->search($credential->blog_id, $params);
+        } else {
+            $response = $blogger->posts->listPosts($credential->blog_id, $params);
+        }
+
+        $posts = $response->getItems();
+        $nextPageToken = $response->getNextPageToken();
+        $prevPageToken = $response->getPrevPageToken();
+    
+        $paginator = new LengthAwarePaginator(
+            $posts,
+            count($response->items ?? []),
+            1,
+            count($response->items ?? []),
+            ['path' => route('inventory.index')]
+        );
+        
+        return [
+            'paginator' => $paginator,
+            'nextPageToken' => $nextPageToken,
+            'prevPageToken' => $prevPageToken,
+        ];
     }
+    
+    // /*
+    //  *Get Current page
+    //  */
+    // public function getCurrentPage($nextPageToken, $perPage)
+    // {
+    //     if (!$nextPageToken) {
+    //         return 1; // If there is no next page token, assume it's the first page
+    //     }
+    
+    //     parse_str(parse_url($nextPageToken, PHP_URL_QUERY), $queryParams);
+        
+    //     return isset($queryParams['pageToken']) ? $queryParams['pageToken'] / $perPage + 1 : 1;
+    // }
 
     /**
      * Create blog post in blogger

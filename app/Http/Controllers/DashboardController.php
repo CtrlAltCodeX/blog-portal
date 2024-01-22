@@ -30,15 +30,22 @@ class DashboardController extends Controller
 
         $allUser = User::count();
 
-        if ($this->tokenIsExpired($this->googleService))
-            return view('settings.authenticate');
+        // if ($this->tokenIsExpired($this->googleService))
+        //     return view('settings.authenticate');
+
+        if ($this->tokenIsExpired($this->googleService)) {
+            $url = $this->googleService->refreshToken($this->googleService->getCredentails()->toArray());
+            request()->session()->put('page_url', request()->url());
+
+            return redirect()->to($url);
+        }
 
         $allGooglePosts = $this->googleService->posts();
         
         $allDraftedGooglePosts = $this->googleService->posts('draft');
 
         $productStats = [];
-
+        
         foreach ($allGooglePosts as $allGooglePost) {
             if (isset($allGooglePost->labels) && in_array('Stk_o', $allGooglePost->labels)) {
                 $productStats['out_stock'][] = $allGooglePost;

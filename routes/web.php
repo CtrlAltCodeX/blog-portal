@@ -90,10 +90,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     Route::get('users/verified/approved', [UserController::class, 'verified'])
         ->name('verified.users');
 
-    Route::get('edit/users/status/{id}', [UserController::class, 'editStatus'])
+Route::get('edit/users/status/{id}', [UserController::class, 'editStatus'])
         ->name('edit.users.status');
 
-    Route::post('update/users/status', [UserController::class, 'updateStatus'])
+    Route::post('update/users/status/{id}', [UserController::class, 'updateStatus'])
         ->name('update.users.status');
 
     Route::group(['prefix' => 'settings'], function () {
