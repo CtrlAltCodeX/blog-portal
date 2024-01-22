@@ -42,7 +42,7 @@ class DashboardController extends Controller
 
         $allGooglePosts = $this->googleService->posts();
         
-        $allDraftedGooglePosts = $this->googleService->posts('draft');
+        $allDraftedGooglePosts = $this->googleService->posts('draft')['paginator'];
 
         $productStats = [];
 

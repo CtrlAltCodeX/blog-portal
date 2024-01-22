@@ -103,7 +103,7 @@ class ListingController extends Controller
         $edition_author = explode(',', $td->item(7)->textContent ?? '');
         $author_name = $edition_author[0];
         $edition = $edition_author[1];
-        $lang = $edition_author[2];
+        $lang = $edition_author[2]??'';
         $bindingType = $td->item(9)->textContent ?? '';
         $page_no = $td->item(11)->textContent ?? '';
         $author = $div->item(9)->textContent ?? '';
