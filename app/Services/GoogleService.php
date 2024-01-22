@@ -97,7 +97,7 @@ class GoogleService
         
         $posts = [];
         $pageToken = null;
-        $perPage = 10;
+        $perPage = 250;
 
         $params = [
             'maxResults' => $perPage,
