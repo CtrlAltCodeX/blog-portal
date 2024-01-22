@@ -97,7 +97,7 @@
                                         $doc->loadHTML($googlePost->content);
                                         $selling = $doc->getElementById('selling')->textContent??'';
                                         $mrp = $doc->getElementById('mrp')->textContent??'';
-                                        $image = $doc->getElementsByTagName("img")->item(0)->getAttribute('src');
+                                        $image = $doc->getElementsByTagName("img")?->item(0)?->getAttribute('src');
                                         @endphp
                                         <tr>
                                             <td>{{ ++$key }}</td>

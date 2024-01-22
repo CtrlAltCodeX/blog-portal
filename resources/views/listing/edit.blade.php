@@ -323,6 +323,7 @@
                                     </span>
                                     @enderror
 
+                                    @if($allInfo['multiple'])
                                     <label for="fileInput1">Additional Images<span class="text-danger">*</span></label>
                                     @foreach($allInfo['multiple'] as $key => $images)
                                     @if($key == 0) @continue; @endif
@@ -337,6 +338,7 @@
                                     </span>
                                     @enderror
                                     @endforeach
+                                    @endif
                                 </div>
                             </div>
                         </div>

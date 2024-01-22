@@ -70,7 +70,7 @@
                         </tr>
                         <tr>
                             <td class="detailguide">Binding, Type</td>
-                            <td>$data['binding']</td>
+                            <td>{{$data['binding']}}</td>
                         </tr>
 
                         <tr>
