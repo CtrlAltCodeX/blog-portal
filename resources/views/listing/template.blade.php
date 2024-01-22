@@ -20,11 +20,11 @@
     <br />
 
     @foreach ($data['multiple_images'] as $image)
-        <div class="separator" style="clear: both; text-align: center;">
-            <a href="{{ $image }}" style="margin-left: 1em; margin-right: 1em;">
-                <img class='img' border="0" data-original-height="600" data-original-width="970" height="198" src="{{ $image }}" width="320" />
-            </a>
-        </div>
+    <div class="separator" style="clear: both; text-align: center;">
+        <a href="{{ $image }}" style="margin-left: 1em; margin-right: 1em;">
+            <img class='img' border="0" data-original-height="600" data-original-width="970" height="198" src="{{ $image }}" width="320" />
+        </a>
+    </div>
     @endforeach
 
     <br />
