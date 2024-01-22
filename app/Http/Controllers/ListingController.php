@@ -91,19 +91,19 @@ class ListingController extends Controller
 
         $doc = new \DOMDocument();
         $doc->loadHTML($post->content);
-        $sku = $doc->getElementById('sku')->textContent;
-        $publication = $doc->getElementById('publication')->textContent;
-        $author = $doc->getElementById('author')->textContent;
-        $author_name = $doc->getElementById('author_name')->textContent;
-        $page_no = $doc->getElementById('page_no')->textContent;
-        $weight = $doc->getElementById('weight')->textContent;
-        $search_key = $doc->getElementById('search_key')->textContent;
-        $desc = $doc->getElementById('desc')->textContent;
-        $edition = $doc->getElementById('edition')->textContent;
-        $selling = $doc->getElementById('selling')->textContent;
-        $mrp = $doc->getElementById('mrp')->textContent;
-        $instaUrl = $doc->getElementById('url')->getAttribute('href')??"";
-        $baseimg = $doc->getElementById('baseimg')->getAttribute('src');
+        $sku = $doc->getElementById('sku')->textContent??'';
+        $publication = $doc->getElementById('publication')->textContent??'';
+        $author = $doc->getElementById('author')->textContent??'';
+        $author_name = $doc->getElementById('author_name')->textContent??'';
+        $page_no = $doc->getElementById('page_no')->textContent??'';
+        $weight = $doc->getElementById('weight')->textContent??'';
+        $search_key = $doc->getElementById('search_key')->textContent??'';
+        $desc = $doc->getElementById('desc')->textContent??'';
+        $edition = $doc->getElementById('edition')->textContent??'';
+        $selling = $doc->getElementById('selling')->textContent??'';
+        $mrp = $doc->getElementById('mrp')->textContent??'';
+        $instaUrl = $doc->getElementById('url')?->getAttribute('href')??"";
+        $baseimg = $doc->getElementById('baseimg')?->getAttribute('src');
 
         for ($i = 0; $i < $doc->getElementsByTagName("img")->length; $i++) {
             $image = $doc->getElementsByTagName("img")->item($i);
@@ -183,7 +183,7 @@ class ListingController extends Controller
             return redirect()->to($url);
         }
 
-        $googlePosts = $this->getPaginatedData(collect($this->googleService->posts()));
+        $googlePosts = $this->googleService->posts();
 
         return view('listing.inventory', compact('googlePosts'));
     }
