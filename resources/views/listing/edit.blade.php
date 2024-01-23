@@ -414,18 +414,35 @@
         $('.error-message').text('');
 
         // Flag to check if any URL is found
-        var urlFound = false;
+        var valid = true;
+        var requiredvalid = true;
 
         // Iterate over each input field with the class 'no-url-validation'
         $('input').each(function() {
             var inputValue = $(this).val();
             var urlRegex = /^(http|https):\/\/[^\s]*$/i;
 
-            if (urlRegex.test(inputValue) && inputValue != 'http://' && inputValue != 'url') {
+            if (urlRegex.test(inputValue) &&
+                inputValue != 'http://' &&
+                inputValue != 'url' &&
+                inputValue != 'isbn_10' &&
+                inputValue != 'isbn_13'
+            ) {
                 // Display error message
                 var fieldId = $(this).attr('name');
-                $('.' + fieldId).text('Please do not enter URLs.');
-                urlFound = true;
+                if (fieldId != 'images[]' && fieldId != 'multipleImages[]') {
+                    $('.' + fieldId).text('Please do not enter URLs.');
+                    valid = false;
+                }
+            }
+
+            if (inputValue == '') {
+                var fieldId = $(this).attr('name');
+                if (fieldId != 'images[]' && fieldId != 'multipleImages[]') {
+                    $('.' + fieldId).text('This field is required');
+
+                    requiredvalid = false;
+                }
             }
         });
 
@@ -436,25 +453,30 @@
             if (urlRegex.test(textareaValue)) {
                 // Display error message
                 var fieldId = $(this).attr('name');
-                console.log(fieldId);
                 $('.' + fieldId).text('Please do not enter URLs.');
-                urlFound = true;
+                valid = false;
+            }
+
+            if (textareaValue == '') {
+                var fieldId = $(this).attr('name');
+                $('.' + fieldId).text('This field is required');
+
+                requiredvalid = false;
             }
         });
 
         var url = $('#url').val();
 
         if (!url.includes('https://www.instamojo.com/EXAM360/')) {
-            console.log('asd');
             $('.url').text('Please add instamojo link');
-            urlFound = true;
+            valid = false;
         } else {
             $('.url').text('');
-            urlFound = false;
+            valid = true;
         }
 
         // Prevent form submission if a URL is found
-        if (urlFound) {
+        if (!valid && !requiredvalid) {
             event.preventDefault();
         }
     });

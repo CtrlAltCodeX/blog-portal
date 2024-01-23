@@ -126,6 +126,7 @@
                             <div class="form-group col-md-6">
                                 <label for="mrp" class="form-label">{{ __('MRP') }}<span class="text-danger">*</span><span class="text-success"> ( Maximum Retail Price)</span></label>
                                 <input id="mrp" type="number" class="form-control @error('mrp') is-invalid @enderror" name="mrp" value="{{ old('mrp') }}" autocomplete="mrp" autofocus placeholder="MRP">
+                                <span class="error-message mrp" style="color:red;"></span>
 
                                 @error('mrp')
                                 <span class="invalid-feedback" role="alert">
@@ -137,6 +138,7 @@
                             <div class="form-group col-md-6">
                                 <label for="selling_price" class="form-label">{{ __('Selling Price') }}<span class="text-danger">*</span></label>
                                 <input id="selling_price" type="number" class="form-control @error('selling_price') is-invalid @enderror" name="selling_price" value="{{ old('selling_price') }}" autocomplete="selling_price" autofocus placeholder="Selling Price">
+                                <span class="error-message selling_price" style="color:red;"></span>
 
                                 @error('selling_price')
                                 <span class="invalid-feedback" role="alert">
@@ -285,6 +287,7 @@
                             <div class="form-group col-md-4">
                                 <label for="pages" class="form-label">{{ __('No. of Pages') }}</label>
                                 <input id="pages" type="number" class="form-control @error('pages') is-invalid @enderror" name="pages" value="{{ old('pages') }}" autocomplete="pages" autofocus placeholder="No. of Pages">
+                                <span class="error-message pages" style="color:red;"></span>
 
                                 @error('pages')
                                 <span class="invalid-feedback" role="alert">
@@ -296,6 +299,7 @@
                             <div class="form-group col-md-4">
                                 <label for="weight" class="form-label">{{ __('Weight in gms') }}</label>
                                 <input id="weight" type="number" class="form-control @error('weight') is-invalid @enderror" name="weight" value="{{ old('weight') }}" autocomplete="weight" autofocus placeholder="Weight">
+                                <span class="error-message weight" style="color:red;"></span>
 
                                 @error('weight')
                                 <span class="invalid-feedback" role="alert">
@@ -355,6 +359,7 @@
                             <div class="form-group col-md-6">
                                 <label for="isbn_10" class="form-label">{{ __('ISBN 10') }}</label>
                                 <input id="isbn_10" type="text" class="form-control @error('isbn_10') is-invalid @enderror" name="isbn_10" value="{{ old('isbn_10') }}" autocomplete="isbn_10" autofocus placeholder="ISBN 10">
+                                <span class="error-message isbn_10" style="color:red;"></span>
 
                                 @error('isbn_10')
                                 <span class="invalid-feedback" role="alert">
@@ -366,6 +371,7 @@
                             <div class="form-group col-md-6">
                                 <label for="isbn_13" class="form-label">{{ __('ISBN 13') }}</label>
                                 <input id="isbn_13" type="text" class="form-control @error('isbn_13') is-invalid @enderror" name="isbn_13" value="{{ old('isbn_13') }}" autocomplete="isbn_13" autofocus placeholder="ISBN 13">
+                                <span class="error-message isbn_13" style="color:red;"></span>
 
                                 @error('isbn_13')
                                 <span class="invalid-feedback" role="alert">
@@ -445,7 +451,8 @@
             $('.error-message').text('');
 
             // Flag to check if any URL is found
-            var urlFound = false;
+            var valid = true;
+            var requiredvalid = true;
 
             // Iterate over each input field with the class 'no-url-validation'
             $('input').each(function() {
@@ -454,14 +461,25 @@
 
                 if (urlRegex.test(inputValue) &&
                     inputValue != 'http://' &&
-                    inputValue != 'url' && 
+                    inputValue != 'url' &&
                     inputValue != 'isbn_10' &&
                     inputValue != 'isbn_13'
                 ) {
                     // Display error message
                     var fieldId = $(this).attr('name');
-                    $('.' + fieldId).text('Please do not enter URLs.');
-                    urlFound = true;
+                    if (fieldId != 'images[]' && fieldId != 'multipleImages[]') {
+                        $('.' + fieldId).text('Please do not enter URLs.');
+                        valid = false;
+                    }
+                }
+
+                if (inputValue == '') {
+                    var fieldId = $(this).attr('name');
+                    if (fieldId != 'images[]' && fieldId != 'multipleImages[]') {
+                        $('.' + fieldId).text('This field is required');
+
+                        requiredvalid = false;
+                    }
                 }
             });
 
@@ -472,25 +490,30 @@
                 if (urlRegex.test(textareaValue)) {
                     // Display error message
                     var fieldId = $(this).attr('name');
-                    console.log(fieldId);
                     $('.' + fieldId).text('Please do not enter URLs.');
-                    urlFound = true;
+                    valid = false;
+                }
+
+                if (textareaValue == '') {
+                    var fieldId = $(this).attr('name');
+                    $('.' + fieldId).text('This field is required');
+
+                    requiredvalid = false;
                 }
             });
 
             var url = $('#url').val();
 
             if (!url.includes('https://www.instamojo.com/EXAM360/')) {
-                console.log('asd');
                 $('.url').text('Please add instamojo link');
-                urlFound = true;
+                valid = false;
             } else {
                 $('.url').text('');
-                urlFound = false;
+                valid = true;
             }
 
             // Prevent form submission if a URL is found
-            if (urlFound) {
+            if (!valid && !requiredvalid) {
                 event.preventDefault();
             }
         });

@@ -41,6 +41,7 @@
 </div>
 
 <div style="text-align: justify;">{!! $data['description'] !!}</div>
+
 <div>
     <div style="text-align: justify;"><br /></div>
     <div style="text-align: justify;"><b>About the Author:</b></div>
