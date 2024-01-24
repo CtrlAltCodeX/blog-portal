@@ -88,10 +88,11 @@ class ListingController extends Controller
     {
         $post = $this->googleService->editPost($postId);
         $labels = $post->getLabels();
-        
+
         $images = [];
         $doc = new \DOMDocument();
         $doc->loadHTML($post->content);
+
         $td = $doc->getElementsByTagName('td');
         $div = $doc->getElementsByTagName('div');
         $a = $doc->getElementsByTagName('a');
@@ -99,20 +100,39 @@ class ListingController extends Controller
         $span = $doc->getElementsByTagName('span');
 
         $sku = $td->item(3)->textContent ?? '';
+
         $publication = $td->item(5)->textContent ?? '';
-        $edition_author = explode(',', $td->item(7)->textContent ?? '');
-        $author_name = $edition_author[0];
-        $edition = $edition_author[1];
-        $lang = $edition_author[2]??'';
-        $bindingType = $td->item(9)->textContent ?? '';
+
+        $edition_author_lang = explode(',', $td->item(7)->textContent ?? '');
+        $author_name = $edition_author_lang[0];
+        $edition = $edition_author_lang[1] ?? '';
+        $lang = $edition_author_lang[2] ?? '';
+
+        $bindingType = explode(',', $td->item(9)->textContent ?? '');
+        $binding = $bindingType[0] ?? '';
+        $condition = $bindingType[1] ?? '';
+
         $page_no = $td->item(11)->textContent ?? '';
-        $author = $div->item(9)->textContent ?? '';
-        $desc = $span->item(1)->textContent ?? '';
-        $search_key = $span->item(2)->textContent ?? '';
+
+        $desc = '';
+        for ($i = 0; $i < $div->length; $i++) {
+            if ($div->item($i)->getAttribute('class') == 'pbl box dtmoredetail dt_content') {
+                $desc = trim($div->item($i)->textContent);
+            }
+        }
+        
         $price = explode('-', $td->item(1)->textContent ?? '');
-        $selling = $price[0];
-        $mrp = $price[1];
-        $instaUrl = $a->item(1)->getAttribute('href') ?? "";
+        $selling = $price[0] ?? 0;
+        $mrp = $price[1] ?? 0;
+
+        $instaUrl = "";
+        for ($i = 0; $i < $a->length; $i++) {
+            $item = trim($a->item($i)->textContent);
+            if ($item == 'BUY AT INSTAMOJO') {
+                $instaUrl = $a->item($i)->getAttribute('href');
+            }
+        }
+
         $baseimg = $img->item(0)?->getAttribute('src');
 
         for ($i = 0; $i < $doc->getElementsByTagName("img")->length; $i++) {
@@ -123,20 +143,18 @@ class ListingController extends Controller
         $allInfo = [
             'sku' => $sku,
             'publication' => $publication,
-            'author' => $author,
+            'edition' => $edition,
+            'lang' => $lang,
             'author_name' => $author_name,
             'page_no' => $page_no,
-            'weight' => $weight ?? 0,
-            'search_key' => $search_key,
             'desc' => $desc,
-            'edition' => $edition,
-            'selling' => $selling,
-            'mrp' => $mrp,
+            'selling' => trim($selling),
+            'mrp' => trim($mrp),
             'multiple' => $images,
             'baseimg' => $baseimg,
             'url' => $instaUrl,
-            'bindingtype' => $bindingType,
-            'lang' => $lang
+            'binding' => $binding,
+            'condition' => $condition,
         ];
 
         if (!$url = $this->getSiteBaseUrl()) {

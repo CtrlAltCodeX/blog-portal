@@ -87,7 +87,6 @@ class GoogleService
      */
     public function posts($status = null)
     {
-
         $credential = $this->getCredentails();
 
         $client = $this->createGoogleClient($credential->toArray());
@@ -153,20 +152,6 @@ class GoogleService
             'prevPageToken' => $prevPageToken,
         ];
     }
-    
-    // /*
-    //  *Get Current page
-    //  */
-    // public function getCurrentPage($nextPageToken, $perPage)
-    // {
-    //     if (!$nextPageToken) {
-    //         return 1; // If there is no next page token, assume it's the first page
-    //     }
-    
-    //     parse_str(parse_url($nextPageToken, PHP_URL_QUERY), $queryParams);
-        
-    //     return isset($queryParams['pageToken']) ? $queryParams['pageToken'] / $perPage + 1 : 1;
-    // }
 
     /**
      * Create blog post in blogger

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Services\GoogleService;
+use Illuminate\Support\Facades\Http;
 
 class DashboardController extends Controller
 {
@@ -30,9 +31,6 @@ class DashboardController extends Controller
 
         $allUser = User::count();
 
-        // if ($this->tokenIsExpired($this->googleService))
-        //     return view('settings.authenticate');
-
         if ($this->tokenIsExpired($this->googleService)) {
             $url = $this->googleService->refreshToken($this->googleService->getCredentails()->toArray());
             request()->session()->put('page_url', request()->url());
@@ -40,8 +38,19 @@ class DashboardController extends Controller
             return redirect()->to($url);
         }
 
+        if (!$url = $this->getSiteBaseUrl()) {
+            session()->flash('message', 'Please complete your Site Setting Then Continue');
+
+            return view('settings.error');
+        }
+
+        $response = Http::get($url . '/feeds/posts/default?alt=json');
+
+        $totalProducts = $response->json()['feed']['openSearch$totalResults']['$t'];
+        // dd($response->json()['feed']);
+
         $allGooglePosts = $this->googleService->posts();
-        
+
         $allDraftedGooglePosts = $this->googleService->posts('draft')['paginator'];
 
         $productStats = [];
@@ -62,6 +71,6 @@ class DashboardController extends Controller
             }
         }
 
-        return view('dashboard.index', compact('allUser', 'inactive', 'active', 'productStats', 'allDraftedGooglePosts', 'allGooglePosts'));
+        return view('dashboard.index', compact('allUser', 'inactive', 'active', 'productStats', 'allDraftedGooglePosts', 'allGooglePosts', 'totalProducts'));
     }
 }

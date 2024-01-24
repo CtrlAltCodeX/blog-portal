@@ -28,7 +28,7 @@
                                 <div class="d-flex">
                                     <div class="mt-2">
                                         <h6 class="">Total Products</h6>
-                                        <h2 class="mb-0 number-font">{{ count($allGooglePosts) + count($allDraftedGooglePosts) }}</h2>
+                                        <h2 class="mb-0 number-font">{{ ($totalProducts) }}</h2>
                                     </div>
                                 </div>
                             </a>

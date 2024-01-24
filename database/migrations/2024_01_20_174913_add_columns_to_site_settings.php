@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('site_settings', function (Blueprint $table) {
-            $table->string('homepage_image');
-            $table->string('product_background_image');
+            $table->string('homepage_image')->nullable();
+            $table->string('product_background_image')->nullable();
         });
     }
 

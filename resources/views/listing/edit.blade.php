@@ -131,30 +131,6 @@
                                 </span>
                                 @enderror
                             </div>
-
-                            <div class="form-group">
-                                <label for="about_author" class="form-label">{{ __('About Author') }}<span class="text-danger">*</span></label>
-                                <textarea id="about_author" class="form-control @error('about_author') is-invalid @enderror" name="about_author" autocomplete="about_author" autofocus placeholder="About Author Name" rows="5">{{ old('about_author') ?? $allInfo['desc'] }}</textarea>
-                                <span class="error-message about_author" style="color:red;"></span>
-
-                                @error('about_author')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="search_key" class="form-label">{{ __('Search Key') }}<span class="text-danger">*</span></label>
-                            <textarea id="search_key" class="form-control @error('search_key') is-invalid @enderror" name="search_key" autocomplete="search_key" autofocus placeholder="Search Key" rows="5">{{ old('search_key') ?? $allInfo['search_key'] }}</textarea>
-                            <span class="error-message search_key" style="color:red;"></span>
-
-                            @error('search_key')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
                         </div>
                     </div>
                 </div>
@@ -204,8 +180,20 @@
                             </div>
 
                             <div class="form-group col-md-4">
+                                <label for="pages" class="form-label">{{ __('No. of Pages') }}</label>
+                                <input id="pages" type="text" class="form-control @error('pages') is-invalid @enderror" name="pages" value="{{ old('pages') ?? $allInfo['page_no'] }}" autocomplete="pages" autofocus placeholder="No. of Pages">
+                                <span class="error-message pages" style="color:red;"></span>
+
+                                @error('pages')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+
+                            <div class="form-group col-md-4">
                                 <label for="binding" class="form-label">{{ __('Binding Type') }}<span class="text-danger">*</span></label>
-                                <input id="binding" type="text" class="form-control @error('binding') is-invalid @enderror" name="binding" value="{{ old('binding') ?? $allInfo['bindingtype'] }}" autocomplete="binding" autofocus placeholder="Binding Type">
+                                <input id="binding" type="text" class="form-control @error('binding') is-invalid @enderror" name="binding" value="{{ old('binding') ?? $allInfo['binding'] }}" autocomplete="binding" autofocus placeholder="Binding Type">
                                 <span class="error-message binding" style="color:red;"></span>
 
                                 @error('binding')
@@ -216,21 +204,11 @@
                             </div>
 
                             <div class="form-group col-md-4">
-                                <label for="pages" class="form-label">{{ __('No. of Pages') }}</label>
-                                <input id="pages" type="number" class="form-control @error('pages') is-invalid @enderror" name="pages" value="{{ old('pages') ?? $allInfo['page_no'] }}" autocomplete="pages" autofocus placeholder="No. of Pages">
+                                <label for="condition" class="form-label">{{ __('Condition') }}<span class="text-danger">*</span></label>
+                                <input id="condition" type="text" class="form-control @error('condition') is-invalid @enderror" name="condition" value="{{ old('condition') ?? $allInfo['condition'] }}" autocomplete="condition" autofocus placeholder="Condition">
+                                <span class="error-message condition" style="color:red;"></span>
 
-                                @error('pages')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="form-group col-md-4">
-                                <label for="weight" class="form-label">{{ __('Weight in gms') }}</label>
-                                <input id="weight" type="number" class="form-control @error('weight') is-invalid @enderror" name="weight" value="{{ old('weight') ?? $allInfo['weight'] }}" autocomplete="weight" autofocus placeholder="Weight">
-
-                                @error('weight')
+                                @error('condition')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -249,54 +227,7 @@
                                 @enderror
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="form-group col-md-6">
-                                <label for="country_origin" class="form-label">{{ __('Country of Origin') }}<span class="text-danger">*</span></label>
-                                <input id="country_origin" type="text" class="form-control @error('country_origin') is-invalid @enderror" name="country_origin" value="{{ old('country_origin') ?? 'India' }}" autocomplete="country_origin" autofocus placeholder="Country of Origin">
-                                <span class="error-message country_origin" style="color:red;"></span>
-
-                                @error('country_origin')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="form-group col-md-6">
-                                <label for="isbn_10" class="form-label">{{ __('ISBN 10') }}</label>
-                                <input id="isbn_10" type="text" class="form-control @error('isbn_10') is-invalid @enderror" name="isbn_10" value="{{ old('isbn_10') }}" autocomplete="isbn_10" autofocus placeholder="ISBN 10">
-
-                                @error('isbn_10')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="form-group col-md-6">
-                                <label for="isbn_13" class="form-label">{{ __('ISBN 13') }}</label>
-                                <input id="isbn_13" type="text" class="form-control @error('isbn_13') is-invalid @enderror" name="isbn_13" value="{{ old('isbn_13') }}" autocomplete="isbn_13" autofocus placeholder="ISBN 13">
-
-                                @error('isbn_13')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
                         <div style="text-align: right;">
                             <button type="submit" class="btn btn-primary float-right">Update</button>
                             <!-- <button type="submit" class="btn btn-primary float-right" id='draft'>Save as Draft</button> -->
@@ -424,9 +355,7 @@
 
             if (urlRegex.test(inputValue) &&
                 inputValue != 'http://' &&
-                inputValue != 'url' &&
-                inputValue != 'isbn_10' &&
-                inputValue != 'isbn_13'
+                inputValue != 'url'
             ) {
                 // Display error message
                 var fieldId = $(this).attr('name');

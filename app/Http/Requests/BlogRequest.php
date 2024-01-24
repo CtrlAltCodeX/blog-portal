@@ -32,15 +32,10 @@ class BlogRequest extends FormRequest
             'sku' => 'required|string|max:255',
             'publication' => 'required|string|max:255',
             'author_name' => 'required|string',
-            'about_author' => 'required|string',
-            'search_key' => 'required|string',
             'edition' => 'required|string|max:255',
             'binding' => 'required|string|max:255',
+            'condition' => 'required|string|max:255',
             'pages' => 'required|integer|min:1',
-            'isbn_10' => 'required|string|max:255',
-            'isbn_13' => 'required|string|max:255',
-            'weight' => 'required|string|max:255',
-            'country_origin' => 'required|string|max:255',
             'language' => 'required|string|max:255',
         ];
     }
