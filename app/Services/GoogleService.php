@@ -100,6 +100,8 @@ class GoogleService
 
         $params = [
             'maxResults' => $perPage,
+            'orderBy' => 'updated',
+            // 'status' => $status
         ];
 
         if (request()->has('pageToken')) {

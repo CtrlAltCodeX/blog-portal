@@ -11,7 +11,7 @@
         @endforeach
         <tr>
             <td class="tr-caption" style="text-align: center">
-                <span id="selling">{{ $data['selling_price'] }}</span>-<span id="mrp">{{ $data['mrp'] }}</span>
+                {{ $data['selling_price'] }}-{{ $data['mrp'] }}
             </td>
         </tr>
     </tbody>
@@ -53,7 +53,7 @@
                     </tr>
                     <tr>
                         <td class="detailguide">Author, Edition</td>
-                        <td><span id='author_name'>{{ $data['author_name'] }}</span>, <span id='edition'>{{ $data['edition'] }}</span>, <span id='lang'>{{ $data['language'] }}</td>
+                        <td>{{ $data['author_name'] }}, {{ $data['edition'] }}, {{ $data['language'] }}</td>
                     </tr>
                     <tr>
                         <td class="detailfrom">Binding, Type</td>

@@ -94,12 +94,13 @@
                                 @forelse ($googlePosts['paginator'] as $key => $googlePost)
                                 @php
                                 $doc = new \DOMDocument();
-                                $doc->loadHTML($googlePost->content);
+                                $data = $doc->loadHTML($googlePost->content);
                                 $td = $doc->getElementsByTagName('td');
                                 $price = explode('-', $td->item(1)->textContent ?? '');
                                 $selling = $price[0]??0;
                                 $mrp = $price[1]??0;
                                 $image = $doc->getElementsByTagName("img")?->item(0)?->getAttribute('src');
+
                                 @endphp
                                 <tr>
                                     <td>{{ ++$key }}</td>
@@ -142,7 +143,6 @@
                                     </td>
                                 </tr>
                                 @empty
-
                                 @endforelse
                             </tbody>
                         </table>

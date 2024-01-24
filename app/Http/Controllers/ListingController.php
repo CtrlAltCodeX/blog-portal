@@ -86,6 +86,13 @@ class ListingController extends Controller
      */
     public function edit($postId)
     {
+        if ($this->tokenIsExpired($this->googleService)) {
+            $url = $this->googleService->refreshToken($this->googleService->getCredentails()->toArray());
+            request()->session()->put('page_url', request()->url());
+
+            return redirect()->to($url);
+        }
+
         $post = $this->googleService->editPost($postId);
         $labels = $post->getLabels();
 
@@ -99,9 +106,9 @@ class ListingController extends Controller
         $img = $doc->getElementsByTagName('img');
         $span = $doc->getElementsByTagName('span');
 
-        $sku = $td->item(3)->textContent ?? '';
+        // $sku = $td->item(3)->textContent ?? '';
 
-        $publication = $td->item(5)->textContent ?? '';
+        // $publication = $td->item(5)->textContent ?? '';
 
         $edition_author_lang = explode(',', $td->item(7)->textContent ?? '');
         $author_name = $edition_author_lang[0];
@@ -114,16 +121,35 @@ class ListingController extends Controller
 
         $page_no = $td->item(11)->textContent ?? '';
 
+        $sku = '';
+        $publication = '';
+        for ($i = 0; $i < $td->length; $i++) {
+            if ($td->item($i)->getAttribute('itemprop') == 'sku') {
+                $sku = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'color') {
+                $publication = trim($td->item($i)->textContent);
+            }
+        }
+
         $desc = '';
         for ($i = 0; $i < $div->length; $i++) {
             if ($div->item($i)->getAttribute('class') == 'pbl box dtmoredetail dt_content') {
                 $desc = trim($div->item($i)->textContent);
             }
         }
-        
-        $price = explode('-', $td->item(1)->textContent ?? '');
-        $selling = $price[0] ?? 0;
-        $mrp = $price[1] ?? 0;
+
+        $selling = 0;
+        $mrp = 0;
+        for ($i = 0; $i < $td->length; $i++) {
+            if ($td->item($i)->getAttribute('class') == 'tr-caption') {
+                $price = explode('-', trim($td->item($i)->textContent));
+
+                $selling = $price[0];
+                $mrp = $price[1];
+            }
+        }
 
         $instaUrl = "";
         for ($i = 0; $i < $a->length; $i++) {
