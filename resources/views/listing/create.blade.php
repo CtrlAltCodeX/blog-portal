@@ -416,7 +416,7 @@
             }
 
             // Prevent form submission if a URL is found
-            if (!valid && !requiredvalid) {
+            if (!valid || !requiredvalid) {
                 event.preventDefault();
             }
         });

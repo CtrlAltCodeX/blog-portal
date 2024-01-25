@@ -254,13 +254,25 @@
                                     </span>
                                     @enderror
 
-                                    @if($allInfo['multiple'] && count($allInfo['multiple']) != 1)
-                                    <label for="fileInput1">Additional Images<span class="text-danger">*</span></label>
-                                    @foreach($allInfo['multiple'] as $key => $images)
-                                    @if($key == 0) @continue; @endif
-                                    <input type="hidden" name="multipleImages[]" value={{ $images }} />
+                                    <div id='fileInputContainer'>
+                                        @if($allInfo['multiple'] && count($allInfo['multiple']) != 1)
+                                        <label for="fileInput1" class="mt-2">Preview Images<span class="text-danger">*</span></label><br>
+                                        @foreach($allInfo['multiple'] as $key => $images)
+                                        @if($key == 0) @continue; @endif
+                                        <div class="input-group{{$key}}">
+                                            <input type="hidden" name="multipleImages[]" value={{ $images }} />
+                                            <div class="form-group mb-1" @error('multipleImages') style="border: red 2px dotted;" @enderror>
+                                                <input data-default-file={{$images}} id="demo" type="file" class="dropify @error('multipleImages') is-invalid @enderror" name="multipleImages[]" multiple>
+                                            </div>
+                                            <button class="btn btn-danger removeFileInput mb-3" id='{{$key}}'>Remove</button>
+                                        </div>
+                                        @endforeach
+                                        @endif
+                                    </div>
+
+                                    <label for="fileInput1" class="mb-0">Additional Images<span class="text-danger">*</span></label>
                                     <div class="form-group mt-2" @error('multipleImages') style="border: red 2px dotted;" @enderror>
-                                        <input data-default-file={{$images}} id="demo" type="file" class="dropify @error('multipleImages') is-invalid @enderror" name="multipleImages[]" multiple>
+                                        <input id="demo" type="file" class="dropify @error('multipleImages') is-invalid @enderror" name="multipleImages[]" multiple>
                                     </div>
 
                                     @error('multipleImages')
@@ -268,8 +280,6 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                                     @enderror
-                                    @endforeach
-                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -296,41 +306,10 @@
     $(document).ready(function() {
         $('#desc').summernote();
 
-        // Counter to keep track of the number of file input fields
-        var fileInputCounter = 2; // Start from 2 since the first one is already visible
-
-        // Function to add a new file input field
-        function addFileInput() {
-            var fileInputHtml = '<div class="form-group">' +
-                '<div class="input-group">' +
-                '<input type="file" class="form-control-file" id="fileInput' + fileInputCounter + '" name="images[]">' +
-                '<div class="input-group-append pt-2">' +
-                '<button class="btn btn-danger btn-sm removeFileInput">Remove</button>' +
-                '</div>' +
-                '</div>' +
-                '</div>';
-
-            // Append the new file input field to the container
-            $("#fileInputContainer").append(fileInputHtml);
-
-            // Enable the remove button for subsequent file input fields
-            $("#fileInputContainer .form-group:not(:first-child) .removeFileInput").prop('disabled', false);
-
-            // Increment the counter for the next file input field
-            fileInputCounter++;
-        }
-
-        // Attach a click event to the "Add File Input" button
-        $("#addFileInput").click(function() {
-            addFileInput();
-        });
-
         // Attach a click event to dynamically added "Remove" buttons
         $("#fileInputContainer").on("click", ".removeFileInput", function(e) {
             var getId = $(this).attr('id');
-            console.log(getId);
             e.preventDefault();
-            console.log($("#fileInputContainer .input-group" + getId).length);
             // Check if there's more than one file input field before removing
             if ($("#fileInputContainer .input-group" + getId).length > 0) {
                 $(this).closest('.input-group' + getId).remove();
@@ -403,9 +382,8 @@
             $('.url').text('');
             valid = true;
         }
-
-        // Prevent form submission if a URL is found
-        if (!valid && !requiredvalid) {
+        
+        if (!valid || !requiredvalid) {
             event.preventDefault();
         }
     });

@@ -245,6 +245,25 @@ class ListingController extends Controller
     }
 
     /**
+     * Inventory Listing
+     *
+     * @return void
+     */
+    public function draftedInventory()
+    {
+        if ($this->tokenIsExpired($this->googleService)) {
+            $url = $this->googleService->refreshToken($this->googleService->getCredentails()->toArray());
+            request()->session()->put('page_url', request()->url());
+
+            return redirect()->to($url);
+        }
+
+        $googlePosts = $this->googleService->posts('draft');
+
+        return view('listing.inventory', compact('googlePosts'));
+    }
+
+    /**
      * Get Paginated Data
      *
      * @param Object $googlePosts

@@ -85,7 +85,7 @@ class GoogleService
      * 
      * @return array
      */
-    public function posts($status = null)
+    public function posts($status = 'live')
     {
         $credential = $this->getCredentails();
 
@@ -93,7 +93,7 @@ class GoogleService
         $client->setAccessToken($credential->token);
 
         $blogger = new Google_Service_Blogger($client);
-        
+
         $posts = [];
         $pageToken = null;
         $perPage = 250;
@@ -101,7 +101,7 @@ class GoogleService
         $params = [
             'maxResults' => $perPage,
             'orderBy' => 'updated',
-            // 'status' => $status
+            'status' => $status
         ];
 
         if (request()->has('pageToken')) {
@@ -137,17 +137,28 @@ class GoogleService
         }
 
         $posts = $response->getItems();
+
+        $filteredPost = $response->getItems();
+        if (isset(request()->category)) {
+            $filteredPost = [];
+            foreach ($posts as $post) {
+                if (isset($post->labels) && in_array(request()->category, $post->labels)) {
+                    $filteredPost[] = $post;
+                }
+            }
+        }
+
         $nextPageToken = $response->getNextPageToken();
         $prevPageToken = $response->getPrevPageToken();
-    
+
         $paginator = new LengthAwarePaginator(
-            $posts,
+            $filteredPost,
             count($response->items ?? []),
             1,
             count($response->items ?? []),
             ['path' => route('inventory.index')]
         );
-        
+
         return [
             'paginator' => $paginator,
             'nextPageToken' => $nextPageToken,
