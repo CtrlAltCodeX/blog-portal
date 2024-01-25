@@ -41,7 +41,7 @@
                             <div class="d-flex">
                                 <div class="mt-2">
                                     <h6 class="">Total Published</h6>
-                                    <h2 class="mb-0 number-font">{{ count($allGooglePosts) }}</h2>
+                                    <h2 class="mb-0 number-font">{{ ($totalProducts) }}</h2>
                                 </div>
                             </div>
                         </div>
@@ -83,6 +83,10 @@
                         </div>
                     </div>
                 </div> -->
+
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+                    
+                </div>
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
                     <div class="card overflow-hidden">
                         <div class="card-body">

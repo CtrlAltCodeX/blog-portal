@@ -346,7 +346,11 @@
 
             if (inputValue == '') {
                 var fieldId = $(this).attr('name');
-                if (fieldId != 'images[]' && fieldId != 'multipleImages[]') {
+                if (fieldId != 'images[]' &&
+                    fieldId != 'multipleImages[]' &&
+                    fieldId != 'files' &&
+                    fieldId
+                ) {
                     $('.' + fieldId).text('This field is required');
 
                     requiredvalid = false;
@@ -367,9 +371,11 @@
 
             if (textareaValue == '') {
                 var fieldId = $(this).attr('name');
-                $('.' + fieldId).text('This field is required');
+                if (fieldId) {
+                    $('.' + fieldId).text('This field is required');
 
-                requiredvalid = false;
+                    requiredvalid = false;
+                }
             }
         });
 
@@ -382,7 +388,8 @@
             $('.url').text('');
             valid = true;
         }
-        
+        console.log(valid);
+        console.log(requiredvalid);
         if (!valid || !requiredvalid) {
             event.preventDefault();
         }

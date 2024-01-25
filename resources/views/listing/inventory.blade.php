@@ -126,7 +126,7 @@
                                     </td>
                                     <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $image }}" alt="Product Image" /></td>
                                     <td><a href="{{ $googlePost->url }}" target="_blank">{{ $googlePost->id }}</a></td>
-                                    <td>@if($googlePost->title)<a href="{{ $googlePost->url }}" target="_blank"> {{ \Illuminate\Support\Str::limit($googlePost->title, 20) }}</a>@else Edited By Dashboard @endif</td>
+                                    <td>@if($googlePost->title)<a href="{{ $googlePost->url }}" target="_blank"> {{ $googlePost->title }}</a>@else Edited By Dashboard @endif</td>
                                     <td>{{ count($googlePost->labels??[]) }}</td>
                                     <td>{{ $mrp ? '₹'.$mrp : 'Edited By Dashboard' }}</td>
                                     <td>{{ $selling ? '₹'.$selling : 'Edited By Dashboard'  }}</td>

@@ -132,7 +132,6 @@ class GoogleService
             $carbonstartDate = Carbon::parse($startDate);
             $params['startDate'] =  $carbonstartDate->format('Y-m-d\TH:i:sP');
         }
-
         $response = Http::get('https://www.googleapis.com/blogger/v3/blogs/' . $credential->blog_id . '/posts', $params);
         $response = json_decode(json_encode($response->json()));
         // if ($type == 'search') {
@@ -264,6 +263,7 @@ class GoogleService
             $blogger = new Google_Service_Blogger($client);
 
             $existingPost = $blogger->posts->get($credential->blog_id, $postId);
+            dd(get_class_methods($existingPost));
 
             $data['processed_images'] = [];
             $data['multiple_images'] = [];
@@ -291,6 +291,8 @@ class GoogleService
             $existingPost->title = $data['title'];
             $existingPost->content = view('listing.template', compact('data'))->render();
             $existingPost->setLabels($data['label']);
+            // $existingPost->setImages('Testing');
+            
 
             return $blogger->posts->update($credential->blog_id, $postId, $existingPost);
         } catch (\Google_Service_Exception $e) {
