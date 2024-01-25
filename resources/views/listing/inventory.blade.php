@@ -160,14 +160,23 @@
                     </div>
                 </div>
 
+                @if($googlePosts['nextPageToken'])
                 <div class="card-footer">
                     <nav aria-label="Page navigation example">
+                        @if(request()->route()->getName() == 'inventory.index')
                         <ul class="pagination">
                             <li class="page-item"><a class="page-link" href="{{ route('inventory.index', ['pageToken' => $googlePosts['prevPageToken']]) }}">Previous</a></li>
                             <li class="page-item"><a class="page-link" href="{{ route('inventory.index', ['pageToken' => $googlePosts['nextPageToken']]) }}">Next</a></li>
                         </ul>
+                        @elseif(request()->route()->getName() == 'inventory.drafted')
+                        <ul class="pagination">
+                            <li class="page-item"><a class="page-link" href="{{ route('inventory.drafted', ['pageToken' => $googlePosts['prevPageToken']]) }}">Previous</a></li>
+                            <li class="page-item"><a class="page-link" href="{{ route('inventory.drafted', ['pageToken' => $googlePosts['nextPageToken']]) }}">Next</a></li>
+                        </ul>
+                        @endif
                     </nav>
                 </div>
+                @endif
             </div>
         </div>
     </div>
@@ -205,11 +214,7 @@
     $(document).ready(function() {
         //______Basic Data Table
         $('#basic-datatable').DataTable({
-            language: {
-                searchPlaceholder: 'Search...',
-                sSearch: '',
-                "paging": false
-            }
+            "paging": false
         });
 
         // $("#specification").on('change', function(e) {

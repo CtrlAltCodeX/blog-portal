@@ -15,6 +15,7 @@ use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
 
 class GoogleService
 {
@@ -101,7 +102,9 @@ class GoogleService
         $params = [
             'maxResults' => $perPage,
             'orderBy' => 'updated',
-            'status' => $status
+            'status' => $status,
+            'key' => 'AIzaSyDfHMIjCrVHFh1aOToH5_1_5rvKtNXQRWY',
+            'pageToken' => $pageToken
         ];
 
         if (request()->has('pageToken')) {
@@ -130,15 +133,16 @@ class GoogleService
             $params['startDate'] =  $carbonstartDate->format('Y-m-d\TH:i:sP');
         }
 
-        if ($type == 'search') {
-            $response = $blogger->posts->search($credential->blog_id, $params);
-        } else {
-            $response = $blogger->posts->listPosts($credential->blog_id, $params);
-        }
+        $response = Http::get('https://www.googleapis.com/blogger/v3/blogs/' . $credential->blog_id . '/posts', $params);
+        $response = json_decode(json_encode($response->json()));
+        // if ($type == 'search') {
+        //     $response = $blogger->posts->search($credential->blog_id, $params);
+        // } else {
+        //     $response = $blogger->posts->listPosts($credential->blog_id, $params);
+        // }
+        $posts = $response->items ?? [];
 
-        $posts = $response->getItems();
-
-        $filteredPost = $response->getItems();
+        $filteredPost = $response->items ?? [];
         if (isset(request()->category)) {
             $filteredPost = [];
             foreach ($posts as $post) {
@@ -148,8 +152,8 @@ class GoogleService
             }
         }
 
-        $nextPageToken = $response->getNextPageToken();
-        $prevPageToken = $response->getPrevPageToken();
+        $nextPageToken = $response->nextPageToken ?? null;
+        $prevPageToken = $response->prevPageToken ?? null;
 
         $paginator = new LengthAwarePaginator(
             $filteredPost,

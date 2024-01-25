@@ -240,7 +240,7 @@ class ListingController extends Controller
         }
 
         $googlePosts = $this->googleService->posts();
-
+        
         return view('listing.inventory', compact('googlePosts'));
     }
 
