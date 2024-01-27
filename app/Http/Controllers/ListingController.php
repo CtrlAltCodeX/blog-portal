@@ -240,8 +240,8 @@ class ListingController extends Controller
         }
 
         $googlePosts = $this->googleService->posts();
-        
-        return view('listing.inventory', compact('googlePosts'));
+
+        return view('listing.live-inventory', compact('googlePosts'));
     }
 
     /**
@@ -285,5 +285,19 @@ class ListingController extends Controller
         );
 
         return $googlePosts;
+    }
+
+    /**
+     * Publish Blog
+     *
+     * @return void
+     */
+    public function publishBlog($postId)
+    {
+        $this->googleService->publish($postId);
+
+        session()->flash('success', 'Post Published successfully');
+
+        return redirect()->back();
     }
 }

@@ -72,6 +72,7 @@
                 <div class="card-header justify-content-between">
                     <h3 class="card-title">Manage Inventory</h3>
                     <form action="" method="get" id='form'>
+                        <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
                         <select class="form-control w-100" id='category' name="category">
                             <option value="">In Stock</option>
                             <option value="Stk_o" {{ request()->category == 'Stk_o' ? 'selected' : '' }}>Out of Stock</option>
@@ -80,6 +81,7 @@
                         </select>
                     </form>
                 </div>
+
                 <div class="card-body">
                     <div class="table-responsive">
                         <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">
@@ -102,48 +104,49 @@
                                 @forelse ($googlePosts['paginator'] as $key => $googlePost)
                                 @php
                                 $doc = new \DOMDocument();
-                                @$doc->loadHTML($googlePost->content);
+                                @$doc->loadHTML(((array)($googlePost->content))['$t']);
                                 $td = $doc->getElementsByTagName('td');
                                 $price = explode('-', $td->item(1)->textContent ?? '');
                                 $selling = $price[0]??0;
                                 $mrp = $price[1]??0;
                                 $image = $doc->getElementsByTagName("img")?->item(0)?->getAttribute('src');
-
+                                $productId = explode('-', ((array)$googlePosts['paginator'][$key]->id)['$t'])[2];
+                                $productTitle = ((array)$googlePosts['paginator'][$key]->title)['$t'];
+                                $published = ((array)$googlePosts['paginator'][$key]->published)['$t'];
+                                $updated = ((array)$googlePosts['paginator'][$key]->updated)['$t'];
                                 @endphp
                                 <tr>
                                     <td>{{ ++$key }}</td>
                                     <td>
-                                        @if(isset($googlePost->labels) && in_array('Stk_o', $googlePost->labels))
+                                        @if(isset($googlePost->category) && in_array('Stk_o', $googlePost->category))
                                         {{ 'Out of Stock' }}
-                                        @elseif(isset($googlePost->labels) && in_array('Stk_d', $googlePost->labels))
+                                        @elseif(isset($googlePost->category) && in_array('Stk_d', $googlePost->category))
                                         {{ 'On Demand' }}
-                                        @elseif(isset($googlePost->labels) && in_array('Stk_b', $googlePost->labels))
+                                        @elseif(isset($googlePost->category) && in_array('Stk_b', $googlePost->category))
                                         {{ 'Pre Booking' }}
-                                        @elseif(isset($googlePost->labels) && in_array('Stk_l', $googlePost->labels))
+                                        @elseif(isset($googlePost->category) && in_array('Stk_l', $googlePost->category))
                                         {{ 'Low Stock' }}
                                         @else {{ 'In Stock' }}
                                         @endif
                                     </td>
                                     <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $image }}" alt="Product Image" /></td>
-                                    <td><a href="{{ $googlePost->url }}" target="_blank">{{ $googlePost->id }}</a></td>
-                                    <td>@if($googlePost->title)<a href="{{ $googlePost->url }}" target="_blank"> {{ $googlePost->title }}</a>@else Edited By Dashboard @endif</td>
-                                    <td>{{ count($googlePost->labels??[]) }}</td>
+                                    <td><a href="{{ $googlePost->link[4]->href }}" target="_blank">{{ $productId }}</a></td>
+                                    <td>@if($productTitle)<a href="{{ $googlePost->link[4]->href }}" target="_blank"> {{ $productTitle }}</a>@else Edited By Dashboard @endif</td>
+                                    <td>{{ count($googlePost->category??[]) }}</td>
                                     <td>{{ $mrp ? '₹'.$mrp : 'Edited By Dashboard' }}</td>
                                     <td>{{ $selling ? '₹'.$selling : 'Edited By Dashboard'  }}</td>
-                                    <td>{{ date("d-m-Y h:i A", strtotime($googlePost->published)) }}</td>
-                                    <td>{{ date("d-m-Y h:i A", strtotime($googlePost->updated)) }}</td>
+                                    <td>{{ date("d-m-Y h:i A", strtotime($published)) }}</td>
+                                    <td>{{ date("d-m-Y h:i A", strtotime($updated)) }}</td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic example">
-                                            <a href="{{ route('blog.publish', $googlePost->id) }}" class="btn btn-sm btn-primary">{{ __('Publish') }}</a>
-
-                                            <!-- @if($mrp && $selling && $googlePost->title)
+                                            @if($mrp && $selling && $productTitle)
                                             @can('Inventory edit')
-                                            <a href="{{ route('listing.edit', $googlePost->id) }}" class="btn btn-sm btn-primary">{{ __('Edit') }}</a>
+                                            <a href="{{ route('listing.edit', $productId) }}" class="btn btn-sm btn-primary">{{ __('Edit') }}</a>
                                             @endcan
-                                            @endif -->
+                                            @endif
 
-                                            <!-- @can('Inventory delete')
-                                            <form action="{{ route('listing.destroy', $googlePost->id) }}" method="POST" class="ml-2">
+                                            @can('Inventory delete')
+                                            <form action="{{ route('listing.destroy', $productId) }}" method="POST" class="ml-2">
                                                 @csrf
                                                 @method('DELETE')
 
@@ -151,7 +154,7 @@
                                                     {{ __('Delete') }}
                                                 </button>
                                             </form>
-                                            @endcan -->
+                                            @endcan
                                         </div>
                                     </td>
                                 </tr>
@@ -162,13 +165,12 @@
                     </div>
                 </div>
 
-                @if($googlePosts['nextPageToken'])
                 <div class="card-footer">
                     <nav aria-label="Page navigation example">
                         @if(request()->route()->getName() == 'inventory.index')
                         <ul class="pagination">
-                            <li class="page-item"><a class="page-link" href="{{ route('inventory.index', ['pageToken' => $googlePosts['prevPageToken']]) }}">Previous</a></li>
-                            <li class="page-item"><a class="page-link" href="{{ route('inventory.index', ['pageToken' => $googlePosts['nextPageToken']]) }}">Next</a></li>
+                            @if($googlePosts['prevStartIndex'] > 0) <li class="page-item"><a class="page-link" href="{{ route('inventory.index', ['pageToken' => $googlePosts['prevPageToken'], 'startIndex' => $googlePosts['prevStartIndex'], 'category' => request()->category]) }}">Previous</a></li> @endif
+                            <li class="page-item"><a class="page-link" href="{{ route('inventory.index', ['pageToken' => $googlePosts['nextPageToken'], 'startIndex' => $googlePosts['startIndex'], 'category' => request()->category]) }}">Next</a></li>
                         </ul>
                         @elseif(request()->route()->getName() == 'inventory.drafted')
                         <ul class="pagination">
@@ -178,7 +180,6 @@
                         @endif
                     </nav>
                 </div>
-                @endif
             </div>
         </div>
     </div>

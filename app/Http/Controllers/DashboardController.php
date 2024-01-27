@@ -48,9 +48,6 @@ class DashboardController extends Controller
 
         $totalProducts = $response->json()['feed']['openSearch$totalResults']['$t'];
 
-        // $totalResponse = Http::get($url . '/feeds/posts/default?alt=json&max-result=9000');
-
-// dd($totalResponse->json());
         $allGooglePosts = $this->googleService->posts();
 
         $allDraftedGooglePosts = $this->googleService->posts('draft')['paginator'];

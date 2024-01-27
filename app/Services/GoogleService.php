@@ -88,85 +88,117 @@ class GoogleService
      */
     public function posts($status = 'live')
     {
-        $credential = $this->getCredentails();
+        try {
+            $credential = $this->getCredentails();
 
-        $client = $this->createGoogleClient($credential->toArray());
-        $client->setAccessToken($credential->token);
+            $client = $this->createGoogleClient($credential->toArray());
+            $client->setAccessToken($credential->token);
 
-        $blogger = new Google_Service_Blogger($client);
+            $blogger = new Google_Service_Blogger($client);
 
-        $posts = [];
-        $pageToken = null;
-        $perPage = 250;
+            $posts = [];
+            $pageToken = null;
+            $perPage = 250;
+            $startIndex = request()->startIndex;
 
-        $params = [
-            'maxResults' => $perPage,
-            'orderBy' => 'updated',
-            'status' => $status,
-            'key' => 'AIzaSyDfHMIjCrVHFh1aOToH5_1_5rvKtNXQRWY',
-            'pageToken' => $pageToken
-        ];
+            $params = [
+                'orderBy' => 'updated',
+                'status' => $status,
+                'pageToken' => $pageToken,
+                'alt' => 'json'
+            ];
 
-        if (request()->has('pageToken')) {
-            $params['pageToken']  = request()->query('pageToken');
-        }
-
-        if (request()->filled('status')) {
-            $params['status'] = request()->query('status');
-        }
-
-        if ($type = request()->has('type') && $type = 'search') {
-            if (request()->filled('q')) {
-                $params['q'] = request()->query('q');
+            if (request()->has('pageToken')) {
+                $params['pageToken']  = request()->query('pageToken');
             }
-        }
 
-        if (request()->filled('endDate')) {
-            $endDate = request()->query('endDate');
-            $carbonEndDate = Carbon::parse($endDate);
-            $params['endDate'] =  $carbonEndDate->format('Y-m-d\TH:i:sP');
-        }
+            if (request()->filled('status')) {
+                $params['status'] = request()->query('status');
+            }
 
-        if (request()->filled('startDate')) {
-            $startDate = request()->query('startDate');
-            $carbonstartDate = Carbon::parse($startDate);
-            $params['startDate'] =  $carbonstartDate->format('Y-m-d\TH:i:sP');
-        }
-        $response = Http::get('https://www.googleapis.com/blogger/v3/blogs/' . $credential->blog_id . '/posts', $params);
-        $response = json_decode(json_encode($response->json()));
-        // if ($type == 'search') {
-        //     $response = $blogger->posts->search($credential->blog_id, $params);
-        // } else {
-        //     $response = $blogger->posts->listPosts($credential->blog_id, $params);
-        // }
-        $posts = $response->items ?? [];
-
-        $filteredPost = $response->items ?? [];
-        if (isset(request()->category)) {
-            $filteredPost = [];
-            foreach ($posts as $post) {
-                if (isset($post->labels) && in_array(request()->category, $post->labels)) {
-                    $filteredPost[] = $post;
+            if ($type = request()->has('type') && $type = 'search') {
+                if (request()->filled('q')) {
+                    $params['q'] = request()->query('q');
                 }
             }
+
+            if (request()->filled('endDate')) {
+                $endDate = request()->query('endDate');
+                $carbonEndDate = Carbon::parse($endDate);
+                $params['endDate'] =  $carbonEndDate->format('Y-m-d\TH:i:sP');
+            }
+
+            if (request()->filled('startDate')) {
+                $startDate = request()->query('startDate');
+                $carbonstartDate = Carbon::parse($startDate);
+                $params['startDate'] =  $carbonstartDate->format('Y-m-d\TH:i:sP');
+            }
+
+            if (request()->route()->getName() == 'inventory.index') {
+                $params['key'] = 'AIzaSyDfHMIjCrVHFh1aOToH5_1_5rvKtNXQRWY';
+                $params['start-index'] = $startIndex;
+                $params['max-results'] = $perPage;
+
+                $response = Http::get('https://www.blogger.com/feeds/' . $credential->blog_id . '/posts/default', $params);
+                $response = json_decode(json_encode($response->json()))->feed;
+                $posts = $response->entry ?? [];
+                $filteredPost = $response->entry ?? [];
+
+                $allCategories = [];
+                if (isset(request()->category)) {
+                    $filteredPost = [];
+                    foreach ($posts as $key => $post) {
+                        foreach ($post->category as $category) {
+                            $allCategories[$key][] = $category->term;
+                        }
+
+                        if (in_array(request()->category, $allCategories[$key])) {
+                            $filteredPost[$key] = (array) $post;
+                            $filteredPost[$key]['category'] = $allCategories[$key];
+                        }
+                    }
+                }
+            } else if (request()->route()->getName() == 'inventory.drafted') {
+                $response = $blogger->posts->listPosts($credential->blog_id, $params);
+                $posts = $response->items ?? [];
+                $filteredPost = $response->items ?? [];
+            }
+
+            $nextPageToken = $response->nextPageToken ?? null;
+            $prevPageToken = $response->prevPageToken ?? null;
+
+            $paginator = new LengthAwarePaginator(
+                json_decode(json_encode($filteredPost)),
+                count($response->entry ?? []),
+                1,
+                count($response->entry ?? []),
+                ['path' => route('inventory.index')]
+            );
+
+            return [
+                'paginator' => $paginator,
+                'nextPageToken' => $nextPageToken,
+                'prevPageToken' => $prevPageToken,
+                'startIndex' => $startIndex + $perPage,
+                'prevStartIndex' => $startIndex - $perPage
+            ];
+        } catch (\Exception $e) {
+            $paginator = new LengthAwarePaginator(
+                [],
+                count([]),
+                1,
+                count([]),
+                ['path' => route('inventory.index')]
+            );
+
+            return [
+                'paginator' => $paginator,
+                'nextPageToken' => null,
+                'prevPageToken' => null,
+                'startIndex' => null,
+                'prevStartIndex' => null
+            ];
         }
-
-        $nextPageToken = $response->nextPageToken ?? null;
-        $prevPageToken = $response->prevPageToken ?? null;
-
-        $paginator = new LengthAwarePaginator(
-            $filteredPost,
-            count($response->items ?? []),
-            1,
-            count($response->items ?? []),
-            ['path' => route('inventory.index')]
-        );
-
-        return [
-            'paginator' => $paginator,
-            'nextPageToken' => $nextPageToken,
-            'prevPageToken' => $prevPageToken,
-        ];
     }
 
     /**
@@ -263,7 +295,6 @@ class GoogleService
             $blogger = new Google_Service_Blogger($client);
 
             $existingPost = $blogger->posts->get($credential->blog_id, $postId);
-            dd(get_class_methods($existingPost));
 
             $data['processed_images'] = [];
             $data['multiple_images'] = [];
@@ -292,7 +323,6 @@ class GoogleService
             $existingPost->content = view('listing.template', compact('data'))->render();
             $existingPost->setLabels($data['label']);
             // $existingPost->setImages('Testing');
-            
 
             return $blogger->posts->update($credential->blog_id, $postId, $existingPost);
         } catch (\Google_Service_Exception $e) {
@@ -375,5 +405,35 @@ class GoogleService
         $background->save(public_path($outputFileName));
 
         return config('app.url') . '/public/' . $outputFileName;
+    }
+
+    /**
+     * Publish Drafted Blog
+     *
+     * @param int $postId
+     * @return void
+     */
+    public function publish($postId)
+    {
+        try {
+            $credential = $this->getCredentails();
+
+            $client = new Google_Client();
+
+            $client->setScopes('https://www.googleapis.com/auth/blogger');
+
+            $client->setAccessToken(json_decode($credential->token)->access_token);
+
+            $blogger = new Google_Service_Blogger($client);
+
+            // Retrieve the existing post
+            return $blogger->posts->publish($credential->blog_id, $postId);
+        } catch (\Google_Service_Exception $e) {
+            // Log the error details for debugging
+            \Log::error('Blogger API Error: ' . $e->getMessage());
+
+            // Handle the error as needed
+            return json_decode($e->getMessage());
+        }
     }
 }

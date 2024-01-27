@@ -85,6 +85,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     Route::get('inventory/drafted', [ListingController::class, 'draftedInventory'])
         ->name('inventory.drafted');
 
+    Route::get('blog/publish/{id}', [ListingController::class, 'publishBlog'])
+        ->name('blog.publish');
+
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
