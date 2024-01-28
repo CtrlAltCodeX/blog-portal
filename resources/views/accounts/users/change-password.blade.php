@@ -58,7 +58,7 @@
 
                             <div class="form-group col-3">
                                 <label for="confirm" class="form-label">{{ __('Confirm Password') }}</label>
-                                <input id="confirm" type="number" class="form-control @error('confirm') is-invalid @enderror" name="confirm" value="{{ old('confirm') }}" autocomplete="confirm" autofocus placeholder="Confirm Password">
+                                <input id="confirm" type="password" class="form-control @error('confirm') is-invalid @enderror" name="confirm" value="{{ old('confirm') }}" autocomplete="confirm" autofocus placeholder="Confirm Password">
 
                                 @error('confirm')
                                 <span class="invalid-feedback" role="alert">

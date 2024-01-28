@@ -98,10 +98,11 @@ class ListingController extends Controller
 
         $images = [];
         $doc = new \DOMDocument();
-        $doc->loadHTML($post->content);
+        $doc->loadHTML('<meta http-equiv="Content-Type" content="text/html; charset=utf-8">' . $post->content);
 
         $td = $doc->getElementsByTagName('td');
         $div = $doc->getElementsByTagName('div');
+
         $a = $doc->getElementsByTagName('a');
         $img = $doc->getElementsByTagName('img');
         $span = $doc->getElementsByTagName('span');
@@ -133,10 +134,10 @@ class ListingController extends Controller
             }
         }
 
-        $desc = '';
+        $desc = [];
         for ($i = 0; $i < $div->length; $i++) {
             if ($div->item($i)->getAttribute('class') == 'pbl box dtmoredetail dt_content') {
-                $desc = trim($div->item($i)->textContent);
+                $desc[] = trim($div->item($i)->textContent);
             }
         }
 
@@ -165,7 +166,7 @@ class ListingController extends Controller
             $image = $doc->getElementsByTagName("img")->item($i);
             $images[] = $image->getAttribute('src');
         }
-
+        
         $allInfo = [
             'sku' => $sku,
             'publication' => $publication,
@@ -173,7 +174,7 @@ class ListingController extends Controller
             'lang' => $lang,
             'author_name' => $author_name,
             'page_no' => $page_no,
-            'desc' => $desc,
+            'desc' => $desc[0],
             'selling' => trim($selling),
             'mrp' => trim($mrp),
             'multiple' => $images,

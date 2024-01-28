@@ -56,9 +56,9 @@
                                 <textarea id="desc" class="form-control @error('description') is-invalid @enderror" name="description" placeholder="Description" rows="10">{{ old('description') ?? $allInfo['desc'] }}</textarea>
 
                                 @error('description')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
                                 @enderror
                             </div>
                         </div>
@@ -304,7 +304,12 @@
 <!-- <script src="{{ asset('assets/plugins/fancyuploder/fancy-uploader.js') }}"></script> -->
 <script>
     $(document).ready(function() {
-        $('#desc').summernote();
+        $('#desc').summernote({
+            lang: 'hi',
+            fontNames: ['Roboto Light', 'Roboto Regular', 'Roboto Bold', 'Thai Sans Neue Light', 'Thai Sans Neue Regular', 'Thai Sans Neue Bold'],
+            fontNamesIgnoreCheck: ['Roboto Light', 'Roboto Regular', 'Roboto Bold', 'Thai Sans Neue Light', 'Thai Sans Neue Regular', 'Thai Sans Neue Bold'],
+            fontNamesIgnoreCheck: ['Merriweather']
+        });
 
         // Attach a click event to dynamically added "Remove" buttons
         $("#fileInputContainer").on("click", ".removeFileInput", function(e) {

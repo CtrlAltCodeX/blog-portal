@@ -22,7 +22,7 @@ class Controller extends BaseController
         if (!$credential = $googleService->getCredentails()) return true;
 
         $data = json_decode($credential->token);
-        if ($data) {
+        if (isset($data->expires_in)) {
             $updatedTime = new Carbon($credential->updated_at);
             $currentTime = Carbon::now();
             $expirationDateTime = $updatedTime->addSeconds($data->expires_in);

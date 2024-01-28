@@ -7,6 +7,10 @@
     ul {
         justify-content: end;
     }
+
+    #basic-datatable_info {
+        display: none;
+    }
 </style>
 @endpush
 

@@ -7,6 +7,34 @@
     ul {
         justify-content: end;
     }
+
+    #basic-datatable_info {
+        display: none;
+    }
+
+    .tooltip {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black;
+    }
+
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 120px;
+        background-color: black;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+
+        /* Position the tooltip */
+        position: absolute;
+        z-index: 1;
+    }
+
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+    }
 </style>
 @endpush
 
@@ -104,7 +132,9 @@
                                 @forelse ($googlePosts['paginator'] as $key => $googlePost)
                                 @php
                                 $doc = new \DOMDocument();
+                                if(((array)($googlePost->content))['$t']){
                                 @$doc->loadHTML(((array)($googlePost->content))['$t']);
+                                }
                                 $td = $doc->getElementsByTagName('td');
                                 $price = explode('-', $td->item(1)->textContent ?? '');
                                 $selling = $price[0]??0;
@@ -116,7 +146,7 @@
                                 $updated = ((array)$googlePosts['paginator'][$key]->updated)['$t'];
                                 @endphp
                                 <tr>
-                                    <td>{{ ++$key }}</td>
+                                    <td>{{ request()->startIndex++ }}</td>
                                     <td>
                                         @if(isset($googlePost->category) && in_array('Stk_o', $googlePost->category))
                                         {{ 'Out of Stock' }}
@@ -130,9 +160,28 @@
                                         @endif
                                     </td>
                                     <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $image }}" alt="Product Image" /></td>
-                                    <td><a href="{{ $googlePost->link[4]->href }}" target="_blank">{{ $productId }}</a></td>
-                                    <td>@if($productTitle)<a href="{{ $googlePost->link[4]->href }}" target="_blank"> {{ $productTitle }}</a>@else Edited By Dashboard @endif</td>
-                                    <td>{{ count($googlePost->category??[]) }}</td>
+                                    <td>
+                                        <a href="{{ $googlePost?->link[4]->href??'' }}" target="_blank">
+                                            {{ $productId }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        @if($productTitle)
+                                        <a href="{{ $googlePost->link[4]->href??'' }}" target="_blank" style="white-space: normal;">
+                                            {{ $productTitle }}
+                                        </a>
+                                        @else
+                                        Edited By Dashboard
+                                        @endif
+                                    </td>
+                                    @php
+                                    $categories = collect($googlePost->category)->pluck('term')->toArray();
+                                    @endphp
+                                    <td>
+                                        <span data-bs-placement="top" data-bs-toggle="tooltip" title="{{ implode(", ", $categories) }}">
+                                            {{ count($categories ?? []) }}
+                                            </button>
+                                    </td>
                                     <td>{{ $mrp ? '₹'.$mrp : 'Edited By Dashboard' }}</td>
                                     <td>{{ $selling ? '₹'.$selling : 'Edited By Dashboard'  }}</td>
                                     <td>{{ date("d-m-Y h:i A", strtotime($published)) }}</td>
