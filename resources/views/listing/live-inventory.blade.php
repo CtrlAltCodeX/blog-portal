@@ -175,7 +175,7 @@
                                         @endif
                                     </td>
                                     @php
-                                    $categories = collect($googlePost->category)->pluck('term')->toArray();
+                                    $categories = collect($googlePost->category??[])->pluck('term')->toArray();
                                     @endphp
                                     <td>
                                         <span data-bs-placement="top" data-bs-toggle="tooltip" title="{{ implode(", ", $categories) }}">
