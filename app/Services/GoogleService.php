@@ -138,6 +138,7 @@ class GoogleService
                 $params['key'] = 'AIzaSyDfHMIjCrVHFh1aOToH5_1_5rvKtNXQRWY';
                 $params['start-index'] = $startIndex;
                 $params['max-results'] = $perPage;
+                $params['category'] = request()->category;
 
                 $response = Http::get('https://www.blogger.com/feeds/' . $credential->blog_id . '/posts/default', $params);
                 $response = json_decode(json_encode($response->json()))->feed;
@@ -158,7 +159,7 @@ class GoogleService
                         }
                     }
                 }
-            } else if (request()->route()->getName() == 'inventory.drafted') {
+            } else if (request()->route()->getName() == 'inventory.drafted' || $status == 'draft') {
                 $response = $blogger->posts->listPosts($credential->blog_id, $params);
                 $posts = $response->items ?? [];
                 $filteredPost = $response->items ?? [];
@@ -294,6 +295,9 @@ class GoogleService
 
             $blogger = new Google_Service_Blogger($client);
 
+            // $images = new \Google_Service_Blogger_PostImages($client);
+            // $images->setUrl('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhVYehlHNYAz6XDbe2Xcjq-SK_NCNRdPzciPp5hZMLT92lcegJO0fbAc3UKlRodkdsr3re1qir0T7JcxUZlK8_PL45hFuQ8WqPZtG80Ez7V4dx0DTr-bNmcQF-SgPBHFC7AMCYF4j6MzC89J3VPCi7MkHku2TuVFxxHuXNVbzD1MIDEEZrBZzOBHZmOR0o/s320/Background..jpg');
+
             $existingPost = $blogger->posts->get($credential->blog_id, $postId);
 
             $data['processed_images'] = [];
@@ -322,8 +326,8 @@ class GoogleService
             $existingPost->title = $data['title'];
             $existingPost->content = view('listing.template', compact('data'))->render();
             $existingPost->setLabels($data['label']);
-            // $existingPost->setImages('Testing');
-            
+            // $existingPost->setImages($images);
+
             return $blogger->posts->update($credential->blog_id, $postId, $existingPost);
         } catch (\Google_Service_Exception $e) {
             \Log::error('Blogger API Error: ' . $e->getMessage());
@@ -398,7 +402,7 @@ class GoogleService
     {
         $background = (new ImageManager())->canvas(555, 555, '#ffffff');
 
-        $background->insert(Image::make($image)->resize(300, 425), 'center');
+        $background->insert(Image::make($image)->resize(300, 512), 'center');
 
         $outputFileName = 'merged_image_' . $image->getClientOriginalName() . time() . '.' . $image->getClientOriginalExtension();
 

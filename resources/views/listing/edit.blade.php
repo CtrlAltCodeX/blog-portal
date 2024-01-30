@@ -56,9 +56,9 @@
                                 <textarea id="desc" class="form-control @error('description') is-invalid @enderror" name="description" placeholder="Description" rows="10">{{ old('description') ?? $allInfo['desc'] }}</textarea>
 
                                 @error('description')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
                                 @enderror
                             </div>
                         </div>
@@ -193,7 +193,15 @@
 
                             <div class="form-group col-md-4">
                                 <label for="binding" class="form-label">{{ __('Binding Type') }}<span class="text-danger">*</span></label>
-                                <input id="binding" type="text" class="form-control @error('binding') is-invalid @enderror" name="binding" value="{{ old('binding') ?? $allInfo['binding'] }}" autocomplete="binding" autofocus placeholder="Binding Type">
+
+                                <select class="form-control @error('binding') is-invalid @enderror" name="binding" value="{{ old('binding') }}">
+                                    <option value="">--Select--</option>
+                                    <option value="New" {{ $allInfo['binding'] == 'New' ? 'selected' : '' }}>New</option>
+                                    <option value="Like New" {{ $allInfo['binding'] == 'Like New' ? 'selected' : '' }}>Like New</option>
+                                    <option value="Old" {{ $allInfo['binding'] == 'Old' ? 'selected' : '' }}>Old</option>
+                                </select>
+
+                                <!-- <input id="binding" type="text" class="form-control @error('binding') is-invalid @enderror" name="binding" value="{{ old('binding') ?? $allInfo['binding'] }}" autocomplete="binding" autofocus placeholder="Binding Type"> -->
                                 <span class="error-message binding" style="color:red;"></span>
 
                                 @error('binding')
@@ -205,7 +213,12 @@
 
                             <div class="form-group col-md-4">
                                 <label for="condition" class="form-label">{{ __('Condition') }}<span class="text-danger">*</span></label>
-                                <input id="condition" type="text" class="form-control @error('condition') is-invalid @enderror" name="condition" value="{{ old('condition') ?? $allInfo['condition'] }}" autocomplete="condition" autofocus placeholder="Condition">
+                                <select class="form-control @error('condition') is-invalid @enderror" name="condition" value="{{ old('condition') }}">
+                                    <option value="">--Select--</option>
+                                    <option value="Hardcover" {{ $allInfo['condition'] == 'Hardcover' ? 'selected' : '' }}>Hardcover</option>
+                                    <option value="Paperback" {{ $allInfo['condition'] == 'Paperback' ? 'selected' : '' }}>Paperback</option>
+                                </select>
+                                <!-- <input id="condition" type="text" class="form-control @error('condition') is-invalid @enderror" name="condition" value="{{ old('condition') ?? $allInfo['condition'] }}" autocomplete="condition" autofocus placeholder="Condition"> -->
                                 <span class="error-message condition" style="color:red;"></span>
 
                                 @error('condition')

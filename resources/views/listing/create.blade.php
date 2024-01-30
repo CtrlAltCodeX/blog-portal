@@ -250,7 +250,13 @@
 
                             <div class="form-group col-md-4">
                                 <label for="binding" class="form-label">{{ __('Binding Type') }}<span class="text-danger">*</span></label>
-                                <input id="binding" type="text" class="form-control @error('binding') is-invalid @enderror" name="binding" value="{{ old('binding') }}" autocomplete="binding" autofocus placeholder="Binding Type">
+                                <select class="form-control @error('binding') is-invalid @enderror" name="binding" value="{{ old('binding') }}">
+                                    <option value="">--Select--</option>
+                                    <option value="New">New</option>
+                                    <option value="Like New">Like New</option>
+                                    <option value="Old">Old</option>
+                                </select>
+                                <!-- <input id="binding" type="text" class="form-control @error('binding') is-invalid @enderror" name="binding" value="{{ old('binding') }}" autocomplete="binding" autofocus placeholder="Binding Type"> -->
                                 <span class="error-message binding" style="color:red;"></span>
 
                                 @error('binding')
@@ -262,9 +268,13 @@
 
                             <div class="form-group col-md-4">
                                 <label for="condition" class="form-label">{{ __('Condition') }}<span class="text-danger">*</span></label>
-                                <input id="condition" type="text" class="form-control @error('condition') is-invalid @enderror" name="condition" value="{{ old('condition') }}" autocomplete="condition" autofocus placeholder="Condition">
+                                <select class="form-control @error('condition') is-invalid @enderror" name="condition" value="{{ old('condition') }}">
+                                    <option value="">--Select--</option>
+                                    <option value="Hardcover">Hardcover</option>
+                                    <option value="Paperback">Paperback</option>
+                                </select>
+                                <!-- <input id="condition" type="text" class="form-control @error('condition') is-invalid @enderror" name="condition" value="{{ old('condition') }}" autocomplete="condition" autofocus placeholder="Condition"> -->
                                 <span class="error-message condition" style="color:red;"></span>
-
                                 @error('condition')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>

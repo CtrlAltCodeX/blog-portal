@@ -75,14 +75,14 @@
             <div class="card">
                 <div class="card-header justify-content-between">
                     <h3 class="card-title">Manage Inventory</h3>
-                    <form action="" method="get" id='form'>
+                    <!-- <form action="" method="get" id='form'>
                         <select class="form-control w-100" id='category' name="category">
                             <option value="">In Stock</option>
                             <option value="Stk_o" {{ request()->category == 'Stk_o' ? 'selected' : '' }}>Out of Stock</option>
                             <option value="Stk_d" {{ request()->category == 'Stk_d' ? 'selected' : '' }}>On Demand Stock</option>
                             <option value="Stk_l" {{ request()->category == 'Stk_l' ? 'selected' : '' }}>Low Stock</option>
                         </select>
-                    </form>
+                    </form> -->
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

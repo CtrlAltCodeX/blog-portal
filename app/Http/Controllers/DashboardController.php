@@ -48,28 +48,23 @@ class DashboardController extends Controller
 
         $totalProducts = $response->json()['feed']['openSearch$totalResults']['$t'];
 
-        $allGooglePosts = $this->googleService->posts();
-
         $allDraftedGooglePosts = $this->googleService->posts('draft')['paginator'];
+        
+        return view('dashboard.index', compact('allUser', 'inactive', 'active', 'allDraftedGooglePosts', 'totalProducts'));
+    }
 
-        $productStats = [];
+    /**
+     * Get Statistics
+     *
+     * @param string $category
+     * @return int
+     */
+    public function getStats($category = '')
+    {
+        $url = $this->getSiteBaseUrl();
 
-        foreach ($allGooglePosts['paginator'] as $allGooglePost) {
-            if (isset($allGooglePost->labels) && in_array('Stk_o', $allGooglePost->labels)) {
-                $productStats['out_stock'][] = $allGooglePost;
-            } else if (isset($allGooglePost->labels) && in_array('Stk_d', $allGooglePost->labels)) {
-                $productStats['on_demand'][] = $allGooglePost;
-            } else if (isset($allGooglePost->labels) && in_array('Stk_b', $allGooglePost->labels)) {
-                $productStats['pre_booking'][] = $allGooglePost;
-            } else if (isset($allGooglePost->labels) && in_array('Stk_l', $allGooglePost->labels)) {
-                $productStats['low_stock'][] = $allGooglePost;
-            } else if (isset($allGooglePost->labels) && in_array('Stk_l', $allGooglePost->labels)) {
-                $productStats['low_stock'][] = $allGooglePost;
-            } else {
-                $productStats['in_stock'][] = $allGooglePost;
-            }
-        }
+        $response = Http::get($url . '/feeds/posts/default?alt=json&category=' . $category);
 
-        return view('dashboard.index', compact('allUser', 'inactive', 'active', 'productStats', 'allDraftedGooglePosts', 'allGooglePosts', 'totalProducts'));
+        return $response->json()['feed']['openSearch$totalResults']['$t'];
     }
 }

@@ -2,6 +2,10 @@
 
 @section('title', __("Dashboard"))
 
+@php
+    $getStats = app('App\Http\Controllers\DashboardController');
+@endphp
+
 @section('content')
 <!-- CONTAINER -->
 <div class="main-container container-fluid">
@@ -28,7 +32,7 @@
                                 <div class="d-flex">
                                     <div class="mt-2">
                                         <h6 class="">Total Products</h6>
-                                        <h2 class="mb-0 number-font">{{ ($totalProducts) }}</h2>
+                                        <h2 class="mb-0 number-font">{{ ($getStats->getStats() + count($allDraftedGooglePosts)) }}</h2>
                                     </div>
                                 </div>
                             </a>
@@ -41,7 +45,7 @@
                             <div class="d-flex">
                                 <div class="mt-2">
                                     <h6 class="">Total Published</h6>
-                                    <h2 class="mb-0 number-font">{{ ($totalProducts) }}</h2>
+                                    <h2 class="mb-0 number-font">{{ (($getStats->getStats() )) }}</h2>
                                 </div>
                             </div>
                         </div>
@@ -82,7 +86,7 @@
                             <div class="d-flex">
                                 <div class="mt-2">
                                     <h6 class="">Total In Stock</h6>
-                                    <h2 class="mb-0 number-font">{{ count($productStats['in_stock']??[]) }}</h2>
+                                    <h2 class="mb-0 number-font">{{ $getStats->getStats() - ($getStats->getStats('Stk_o') + $getStats->getStats('Stk_l') + $getStats->getStats('Stk_d')) }}</h2>
                                 </div>
                             </div>
                         </div>
@@ -94,7 +98,7 @@
                             <div class="d-flex">
                                 <div class="mt-2">
                                     <h6 class="">Total Out Stock</h6>
-                                    <h2 class="mb-0 number-font">{{ count($productStats['out_stock']??[]) }}</h2>
+                                    <h2 class="mb-0 number-font">{{ $getStats->getStats('Stk_o') }}</h2>
                                 </div>
                             </div>
                         </div>
@@ -106,7 +110,7 @@
                             <div class="d-flex">
                                 <div class="mt-2">
                                     <h6 class="">Total Low Stock</h6>
-                                    <h2 class="mb-0 number-font">{{ count($productStats['low_stock']??[]) }}</h2>
+                                    <h2 class="mb-0 number-font">{{ $getStats->getStats('Stk_l') }}</h2>
                                 </div>
                             </div>
                         </div>
@@ -118,7 +122,7 @@
                             <div class="d-flex">
                                 <div class="mt-2">
                                     <h6 class="">Total On Demand</h6>
-                                    <h2 class="mb-0 number-font">{{ count($productStats['on_demand']??[]) }}</h2>
+                                    <h2 class="mb-0 number-font">{{ $getStats->getStats('Stk_d') }}</h2>
                                 </div>
                             </div>
                         </div>
