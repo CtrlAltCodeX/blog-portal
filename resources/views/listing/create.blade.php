@@ -7,6 +7,7 @@
 @endpush
 
 @push('js')
+
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 <script>
     $(document).ready(function() {
@@ -62,7 +63,6 @@
 
 <!-- CONTAINER -->
 <div class="main-container container-fluid">
-
     <!-- PAGE-HEADER -->
     <div class="page-header">
         <h1 class="page-title">{{ __('Create Listing') }}</h1>
@@ -76,10 +76,11 @@
     <!-- PAGE-HEADER END -->
 
     <!-- Row -->
-    <form action="{{ route('listing.store') }}" method="POST" enctype='multipart/form-data' id='form'>
-        @csrf
-        <div class="row">
-            <div class="col-md-9 col-xl-9">
+
+    <div class="row">
+        <div class="col-md-9 col-xl-9">
+            <form action="{{ route('listing.store') }}" method="POST" enctype='multipart/form-data' id='form'>
+                @csrf
                 <div class="card">
                     <!-- <div class="card-header d-flex justify-content-between">
                         <h4 class="card-title">
@@ -301,44 +302,52 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
+        </div>
 
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="form-group">
-                            <div id="fileInputContainer">
-                                <div class="form-group">
-                                    <label for="fileInput1">Main Images<span class="text-danger">*</span></label>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group">
+                        <div id="fileInputContainer">
+                            <div class="form-group">
+                                <label for="fileInput1">Main Images<span class="text-danger">*</span></label>
 
-                                    <div class="form-group mb-0" @error('images') style="border: red 2px dotted;" @enderror>
-                                        <input type="file" class="dropify @error('images') is-invalid @enderror" data-bs-height="180" id="fileInput1" name="images[]" />
-                                    </div>
-
-                                    @error('images')
-                                    <span class="invalid-feedback mt-2" style="display:block" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-
-                                    <label for="fileInput1">Additional Images<span class="text-danger">*</span></label>
-                                    <div class="form-group mt-2" @error('multipleImages') style="border: red 2px dotted;" @enderror>
-                                        <input id="demo" type="file" class="dropify @error('multipleImages') is-invalid @enderror" name="multipleImages[]" multiple>
-                                    </div>
-
-                                    @error('multipleImages')
-                                    <span class="invalid-feedback mt-2" style="display:block" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
+                                <div class="form-group mb-0" @error('images') style="border: red 2px dotted;" @enderror>
+                                    <input type="file" class="dropify @error('images') is-invalid @enderror" data-bs-height="180" id="fileInput1" name="images[]" />
                                 </div>
+
+                                @error('images')
+                                <span class="invalid-feedback mt-2" style="display:block" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+
+                                <label for="fileInput1">Additional Images<span class="text-danger">*</span></label>
+                                <div class="form-group mt-2" @error('multipleImages') style="border: red 2px dotted;" @enderror>
+                                    <form action="{{ route('process.image') }}" method="post" enctype="multipart/form-data" id='formImage'>
+                                        @csrf
+                                        <input id="demo" type="file" class="dropify @error('multipleImages') is-invalid @enderror" name="multipleImages[]" multiple>
+                                        <a class="btn btn-primary" id='download'>Download</a>
+                                    </form>
+                                </div>
+
+                                @error('multipleImages')
+                                <span class="invalid-feedback mt-2" style="display:block" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </form>
+    </div>
+    <div id="progressBarContainer">
+        <div id="progressBar"></div>
+        <div id="progressLabel"></div>
+    </div>
 </div>
 <!-- End Row -->
 </div>
@@ -355,11 +364,92 @@
     $(document).ready(function() {
         $("#draft").click(function(e) {
             e.preventDefault();
-
             $("#form").append("<input type='hidden' name='isDraft' value=1 />");
 
             $("#form").submit();
         });
+
+        $('input').on('input', function() {
+            var inputValue = $(this).val();
+            var urlRegex = /^(http|https):\/\/[^\s]*$/i;
+
+            if ((urlRegex.test(inputValue) &&
+                    inputValue != 'http://' &&
+                    inputValue != 'url') ||
+                (inputValue == '[' ||
+                    inputValue == ']')
+            ) {
+                // Display error message
+                var fieldId = $(this).attr('name');
+                if (fieldId != 'images[]' && fieldId != 'multipleImages[]') {
+                    $('.' + fieldId).text('Please do not enter any special characters or URLs.');
+                    valid = false;
+                    $(".btn").attr('disabled', true);
+                }
+            } else {
+                var fieldId = $(this).attr('name');
+                $('.' + fieldId).text('');
+
+                valid = true;
+                $(".btn").attr('disabled', false);
+            }
+
+            if (inputValue == '') {
+                var fieldId = $(this).attr('name');
+                if (fieldId != 'images[]' &&
+                    fieldId != 'multipleImages[]' &&
+                    fieldId != 'files' &&
+                    fieldId
+                ) {
+                    $('.' + fieldId).text('This field is required');
+                    requiredvalid = false;
+                    $(".btn").attr('disabled', true);
+                }
+            } else {
+                var fieldId = $(this).attr('name');
+                $('.' + fieldId).text('');
+                requiredvalid = true;
+                $(".btn").attr('disabled', false);
+            }
+        })
+
+        $('textarea').on('input', function() {
+            var textareaValue = $(this).val();
+            var urlRegex = /^(http|https):\/\/[^\s]*$/i;
+
+            if (urlRegex.test(textareaValue)) {
+                // Display error message
+                var fieldId = $(this).attr('name');
+                $('.' + fieldId).text('Please do not enter special characters or URLs.');
+                valid = false;
+            }
+
+            if (textareaValue == '') {
+                var fieldId = $(this).attr('name');
+                if (fieldId) {
+                    $('.' + fieldId).text('This field is required');
+
+                    requiredvalid = false;
+
+                    $(".btn").attr('disabled', true);
+                }
+            } else {
+                $(".btn").attr('disabled', false);
+            }
+        })
+
+        $('#url').on('input', function() {
+            var url = $(this).val();
+            if (!url.includes('https://www.instamojo.com/EXAM360/')) {
+                $('.url').text('Please add instamojo link');
+                valid = false;
+                $(".btn").attr('disabled', true);
+            } else {
+                $('.url').text('');
+                valid = true;
+                $(".btn").attr('disabled', false);
+            }
+        })
 
         $('#form').submit(function(event) {
             // Reset previous error messages
@@ -372,11 +462,13 @@
             // Iterate over each input field with the class 'no-url-validation'
             $('input').each(function() {
                 var inputValue = $(this).val();
-                var urlRegex = /^(http|https):\/\/[^\s]*$/i;
+                var urlRegex = /^(http|https):\/\/[^\s\[\]]*$/i;
 
-                if (urlRegex.test(inputValue) &&
-                    inputValue != 'http://' &&
-                    inputValue != 'url'
+                if ((urlRegex.test(inputValue) &&
+                        inputValue != 'http://' &&
+                        inputValue != 'url') ||
+                    (inputValue == '[' ||
+                        inputValue == ']')
                 ) {
                     // Display error message
                     var fieldId = $(this).attr('name');
@@ -421,8 +513,20 @@
                 }
             });
 
-            var url = $('#url').val();
+            $('select').each(function() {
+                var textareaValue = $(this).val();
 
+                if (textareaValue == '') {
+                    var fieldId = $(this).attr('name');
+                    if (fieldId) {
+                        $('.' + fieldId).text('This field is required');
+
+                        requiredvalid = false;
+                    }
+                }
+            });
+
+            var url = $('#url').val();
             if (!url.includes('https://www.instamojo.com/EXAM360/')) {
                 $('.url').text('Please add instamojo link');
                 valid = false;
@@ -436,6 +540,52 @@
                 event.preventDefault();
             }
         });
+
+        $("input").on('input', function() {
+            var filledFields = 0;
+            var emptyFields = 0;
+            var totalFields = ($("#form input.form-control").length - $('.note-editor .form-control').length);
+
+            $("#progressLabel").html(totalFields);
+
+            $("#form input.form-control").each(function(index) {
+                var fieldValue = $(this).val();
+
+                if (fieldValue != '' && fieldValue != 'http://') {
+                    filledFields++;
+                } else {
+                    emptyFields++;
+                }
+            });
+
+            $("#progressBar").html(filledFields);
+        })
+
+        // $('#download').click(function(e) {
+        //     console.log($("#formImage").serialize());
+        //     e.preventDefault();
+        //     // $("#formImage").submit();
+        //     $.ajax({
+        //         type: "POST",
+        //         url: "{{ route('process.image') }}",
+        //         // contentType: false,
+        //         // processData: false,
+        //         data: {
+        //             otp: 'asdas ',
+        //         },
+
+        //         headers: {
+        //             'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+        //         },
+
+        //         success: function(result) {
+        //             console.log(result);
+        //         },
+        //         error: function(error) {
+        //             console.log(error.responseText);
+        //         }
+        //     });
+        // })
     })
 </script>
 @endpush

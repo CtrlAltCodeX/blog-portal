@@ -16,6 +16,8 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
 
 class GoogleService
 {
@@ -405,6 +407,36 @@ class GoogleService
         $background->save(public_path($outputFileName));
 
         return config('app.url') . '/public/' . $outputFileName;
+    }
+
+    /**
+     * Process Image
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function processImageAndDownload()
+    {
+        // dd(request()->all());
+        die;
+
+        $images = [];
+
+        if (request()->images) {
+
+        }
+
+        foreach (request()->images as $image) {
+            $background = (new ImageManager())->canvas(555, 555, '#ffffff');
+
+            $background->insert(Image::make($image)->resize(300, 512), 'center');
+
+            $outputFileName = 'merged_image_' . $image->getClientOriginalName() . time() . '.' . $image->getClientOriginalExtension();
+
+            $background->save(public_path($outputFileName));
+
+            $images[] = config('app.url') . '/public/' . $outputFileName;
+        }
     }
 
     /**
