@@ -355,11 +355,92 @@
     $(document).ready(function() {
         $("#draft").click(function(e) {
             e.preventDefault();
-
             $("#form").append("<input type='hidden' name='isDraft' value=1 />");
 
             $("#form").submit();
         });
+
+        $('input').on('input', function() {
+            var inputValue = $(this).val();
+            var urlRegex = /^(http|https):\/\/[^\s]*$/i;
+
+            if ((urlRegex.test(inputValue) &&
+                    inputValue != 'http://' &&
+                    inputValue != 'url') ||
+                (inputValue == '[' ||
+                    inputValue == ']')
+            ) {
+                // Display error message
+                var fieldId = $(this).attr('name');
+                if (fieldId != 'images[]' && fieldId != 'multipleImages[]') {
+                    $('.' + fieldId).text('Please do not enter any special characters or URLs.');
+                    valid = false;
+                    $(".btn").attr('disabled', true);
+                }
+            } else {
+                var fieldId = $(this).attr('name');
+                $('.' + fieldId).text('');
+
+                valid = true;
+                $(".btn").attr('disabled', false);
+            }
+
+            if (inputValue == '') {
+                var fieldId = $(this).attr('name');
+                if (fieldId != 'images[]' &&
+                    fieldId != 'multipleImages[]' &&
+                    fieldId != 'files' &&
+                    fieldId
+                ) {
+                    $('.' + fieldId).text('This field is required');
+                    requiredvalid = false;
+                    $(".btn").attr('disabled', true);
+                }
+            } else {
+                var fieldId = $(this).attr('name');
+                $('.' + fieldId).text('');
+                requiredvalid = true;
+                $(".btn").attr('disabled', false);
+            }
+        })
+
+        $('textarea').on('input', function() {
+            var textareaValue = $(this).val();
+            var urlRegex = /^(http|https):\/\/[^\s]*$/i;
+
+            if (urlRegex.test(textareaValue)) {
+                // Display error message
+                var fieldId = $(this).attr('name');
+                $('.' + fieldId).text('Please do not enter special characters or URLs.');
+                valid = false;
+            }
+
+            if (textareaValue == '') {
+                var fieldId = $(this).attr('name');
+                if (fieldId) {
+                    $('.' + fieldId).text('This field is required');
+
+                    requiredvalid = false;
+
+                    $(".btn").attr('disabled', true);
+                }
+            } else {
+                $(".btn").attr('disabled', false);
+            }
+        })
+
+        $('#url').on('input', function() {
+            var url = $(this).val();
+            if (!url.includes('https://www.instamojo.com/EXAM360/')) {
+                $('.url').text('Please add instamojo link');
+                valid = false;
+                $(".btn").attr('disabled', true);
+            } else {
+                $('.url').text('');
+                valid = true;
+                $(".btn").attr('disabled', false);
+            }
+        })
 
         $('#form').submit(function(event) {
             // Reset previous error messages
@@ -372,11 +453,13 @@
             // Iterate over each input field with the class 'no-url-validation'
             $('input').each(function() {
                 var inputValue = $(this).val();
-                var urlRegex = /^(http|https):\/\/[^\s]*$/i;
+                var urlRegex = /^(http|https):\/\/[^\s\[\]]*$/i;
 
-                if (urlRegex.test(inputValue) &&
-                    inputValue != 'http://' &&
-                    inputValue != 'url'
+                if ((urlRegex.test(inputValue) &&
+                        inputValue != 'http://' &&
+                        inputValue != 'url') ||
+                    (inputValue == '[' ||
+                        inputValue == ']')
                 ) {
                     // Display error message
                     var fieldId = $(this).attr('name');
@@ -421,8 +504,20 @@
                 }
             });
 
-            var url = $('#url').val();
+            $('select').each(function() {
+                var textareaValue = $(this).val();
 
+                if (textareaValue == '') {
+                    var fieldId = $(this).attr('name');
+                    if (fieldId) {
+                        $('.' + fieldId).text('This field is required');
+
+                        requiredvalid = false;
+                    }
+                }
+            });
+
+            var url = $('#url').val();
             if (!url.includes('https://www.instamojo.com/EXAM360/')) {
                 $('.url').text('Please add instamojo link');
                 valid = false;
