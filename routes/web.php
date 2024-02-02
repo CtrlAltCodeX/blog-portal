@@ -12,6 +12,7 @@ use App\Http\Controllers\FlipkartSrcappingController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TinyMCEController;
+use App\Services\GoogleService;
 
 Illuminate\Support\Facades\Auth::routes();
 
@@ -115,6 +116,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::post('tinymce/upload', [TinyMCEController::class, 'upload'])
         ->name('tinymce.upload');
+
+    Route::post('process/image', [GoogleService::class, 'processImageAndDownload'])
+        ->name('process.image');
 });
 
 Route::get('/', function () {
