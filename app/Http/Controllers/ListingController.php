@@ -168,21 +168,23 @@ class ListingController extends Controller
         }
         
         $allInfo = [
-            'sku' => $sku,
-            'publication' => $publication,
-            'edition' => $edition,
-            'lang' => $lang,
-            'author_name' => $author_name,
-            'page_no' => $page_no,
-            'desc' => $desc[0],
+            'sku' => trim($sku),
+            'publication' => trim($publication),
+            'edition' => trim($edition),
+            'lang' => trim($lang),
+            'author_name' => trim($author_name),
+            'page_no' => trim($page_no),
+            'desc' => $desc[0]??'',
             'selling' => trim($selling),
             'mrp' => trim($mrp),
             'multiple' => $images,
+            'multipleImages' => json_encode($images),
             'baseimg' => $baseimg,
-            'url' => $instaUrl,
-            'binding' => $binding,
-            'condition' => $condition,
+            'url' => trim($instaUrl),
+            'binding' => trim($binding),
+            'condition' => trim($condition),
         ];
+        // dd($allInfo);
 
         if (!$url = $this->getSiteBaseUrl()) {
             session()->flash('message', 'Please complete your Site Setting Then Continue');

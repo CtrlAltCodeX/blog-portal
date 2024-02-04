@@ -18,6 +18,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
+use ZipArchive;
 
 class GoogleService
 {
@@ -221,15 +222,25 @@ class GoogleService
             $data['multiple_images'] = [];
             $data['processed_images'] = [];
 
-            if (isset($data['images'])) {
-                foreach ($data['images'] as $image) {
-                    $data['processed_images'][] = $this->processImage($image);
-                }
-            }
+            $data['processed_images'][] = $data['images'];
+
+            // if (isset($data['images'])) {
+            //     foreach ($data['images'] as $image) {
+            //         if ($image instanceof UploadedFile) {
+            //             $data['processed_images'][] = $this->processImage($image);
+            //         } else {
+            //             $data['processed_images'][] = $image;
+            //         }
+            //     }
+            // }
 
             if (isset($data['multipleImages'])) {
                 foreach ($data['multipleImages'] as $image) {
-                    $data['multiple_images'][] = $this->processImage($image);
+                    if ($image instanceof UploadedFile) {
+                        $data['multiple_images'][] = $this->processImage($image);
+                    } else {
+                        $data['multiple_images'][] = $image;
+                    }
                 }
             }
 
@@ -301,15 +312,17 @@ class GoogleService
             $data['processed_images'] = [];
             $data['multiple_images'] = [];
 
-            if (isset($data['images'])) {
-                foreach ($data['images'] as $image) {
-                    if ($image instanceof UploadedFile) {
-                        $data['processed_images'][] = $this->processImage($image);
-                    } else {
-                        $data['processed_images'][] = $image;
-                    }
-                }
-            }
+            $data['processed_images'][] = $data['images'];
+
+            // if (isset($data['images'])) {
+            //     foreach ($data['images'] as $image) {
+            //         if ($image instanceof UploadedFile) {
+            //             $data['processed_images'][] = $this->processImage($image);
+            //         } else {
+            //             $data['processed_images'][] = $image;
+            //         }
+            //     }
+            // }
 
             if (isset($data['multipleImages'])) {
                 foreach ($data['multipleImages'] as $image) {
@@ -325,7 +338,7 @@ class GoogleService
             $existingPost->content = view('listing.template', compact('data'))->render();
             $existingPost->setLabels($data['label']);
             // $existingPost->setImages('Testing');
-            
+
             return $blogger->posts->update($credential->blog_id, $postId, $existingPost);
         } catch (\Google_Service_Exception $e) {
             \Log::error('Blogger API Error: ' . $e->getMessage());
@@ -402,7 +415,7 @@ class GoogleService
 
         $background->insert(Image::make($image)->resize(300, 425), 'center');
 
-        $outputFileName = 'merged_image_' . $image->getClientOriginalName() . time() . '.' . $image->getClientOriginalExtension();
+        $outputFileName = 'images/merged_image_' . $image->getClientOriginalName() . time() . '.' . $image->getClientOriginalExtension();
 
         $background->save(public_path($outputFileName));
 
@@ -417,25 +430,49 @@ class GoogleService
      */
     public function processImageAndDownload()
     {
-        // dd(request()->all());
-        die;
+        if ($thirdPartyUrl = request()->input('url')) {
+            $fileContents = Http::get($thirdPartyUrl)->body();
 
-        $images = [];
+            // Set the appropriate headers for download
+            $headers = [
+                'Content-Type' => 'application/octet-stream',
+                'Content-Disposition' => 'attachment; filename=' . request()->image . '',
+            ];
 
-        if (request()->images) {
-
+            // Return the file contents with headers
+            return response($fileContents, 200, $headers);
         }
+    }
 
-        foreach (request()->images as $image) {
-            $background = (new ImageManager())->canvas(555, 555, '#ffffff');
+    /**
+     * Process Image
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function downloadProcessedImage()
+    {
+        $zip = new ZipArchive;
+        $zipFileName = 'download.zip';
 
-            $background->insert(Image::make($image)->resize(300, 512), 'center');
+        if ($zip->open(public_path($zipFileName), ZipArchive::CREATE) === true) {
+            foreach (request()->multipleImages as $image) {
+                $background = (new ImageManager())->canvas(555, 555, '#ffffff');
 
-            $outputFileName = 'merged_image_' . $image->getClientOriginalName() . time() . '.' . $image->getClientOriginalExtension();
+                $background->insert(Image::make($image)->resize(300, 512), 'center');
 
-            $background->save(public_path($outputFileName));
+                $outputFileName = 'images/merged_image_' . $image->getClientOriginalName() . time() . '.' . $image->getClientOriginalExtension();
 
-            $images[] = config('app.url') . '/public/' . $outputFileName;
+                $background->save(public_path($outputFileName));
+
+                $zip->addFile($outputFileName);
+            }
+
+            // Close the zip archive
+            $zip->close();
+
+            // Return the zip file as a downloadable response
+            return response()->download(public_path($zipFileName))->deleteFileAfterSend(true);
         }
     }
 

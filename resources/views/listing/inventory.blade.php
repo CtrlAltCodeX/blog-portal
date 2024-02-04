@@ -92,11 +92,11 @@
                                     <th>{{ __('Sl') }}</th>
                                     <th>{{ __('Stock') }}</th>
                                     <th>{{ __('Image') }}</th>
-                                    <th>{{ __('Product ID') }}</th>
                                     <th>{{ __('Product name') }}</th>
-                                    <th>{{ __('Labels') }}</th>
-                                    <th>{{ __('MRP') }}</th>
                                     <th>{{ __('Sell Price') }}</th>
+                                    <th>{{ __('MRP') }}</th>
+                                    <th>{{ __('Product ID') }}</th>
+                                    <th>{{ __('Labels') }}</th>
                                     <th>{{ __('Created at') }}</th>
                                     <th>{{ __('Updated at') }}</th>
                                     <th>{{ __('Action') }}</th>
@@ -129,11 +129,11 @@
                                         @endif
                                     </td>
                                     <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $image }}" alt="Product Image" /></td>
-                                    <td><a href="{{ $googlePost->url }}" target="_blank">{{ $googlePost->id }}</a></td>
                                     <td>@if($googlePost->title)<a href="{{ $googlePost->url }}" target="_blank"> {{ $googlePost->title }}</a>@else Edited By Dashboard @endif</td>
-                                    <td>{{ count($googlePost->labels??[]) }}</td>
-                                    <td>{{ $mrp ? '₹'.$mrp : 'Edited By Dashboard' }}</td>
                                     <td>{{ $selling ? '₹'.$selling : 'Edited By Dashboard'  }}</td>
+                                    <td>{{ $mrp ? '₹'.$mrp : 'Edited By Dashboard' }}</td>
+                                    <td><a href="{{ $googlePost->url }}" target="_blank">{{ $googlePost->id }}</a></td>
+                                    <td>{{ count($googlePost->labels??[]) }}</td>
                                     <td>{{ date("d-m-Y h:i A", strtotime($googlePost->published)) }}</td>
                                     <td>{{ date("d-m-Y h:i A", strtotime($googlePost->updated)) }}</td>
                                     <td>

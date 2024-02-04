@@ -3,7 +3,8 @@
 @section('title', __("Dashboard"))
 
 @php
-    $getStats = app('App\Http\Controllers\DashboardController');
+$getStats = app('App\Http\Controllers\DashboardController');
+$getRoles = app('App\Http\Controllers\RoleController');
 @endphp
 
 @section('content')
@@ -174,6 +175,18 @@
                                 <div class="mt-2">
                                     <h6 class="">Total InActive User</h6>
                                     <h2 class="mb-0 number-font">{{ $inactive }}</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+                    <div class="card overflow-hidden">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="mt-2">
+                                    <h6 class="">Total Roles</h6>
+                                    <h2 class="mb-0 number-font">{{ $getRoles->rolesCount() }}</h2>
                                 </div>
                             </div>
                         </div>

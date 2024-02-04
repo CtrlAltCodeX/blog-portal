@@ -117,8 +117,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     Route::post('tinymce/upload', [TinyMCEController::class, 'upload'])
         ->name('tinymce.upload');
 
-    Route::post('process/image', [GoogleService::class, 'processImageAndDownload'])
+    Route::match(['get', 'post'], 'process/image', [GoogleService::class, 'processImageAndDownload'])
         ->name('process.image');
+
+    Route::post('convert/image', [GoogleService::class, 'downloadProcessedImage'])
+        ->name('convert.image');
 });
 
 Route::get('/', function () {

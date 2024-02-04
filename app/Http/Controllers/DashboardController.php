@@ -32,10 +32,13 @@ class DashboardController extends Controller
         $allUser = User::count();
 
         if ($this->tokenIsExpired($this->googleService)) {
-            $url = $this->googleService->refreshToken($this->googleService->getCredentails()->toArray());
-            request()->session()->put('page_url', request()->url());
+            session()->flash('message', 'Please authenticate with Google');
 
-            return redirect()->to($url);
+            return view('settings.error');
+            // $url = $this->googleService->refreshToken($this->googleService->getCredentails()->toArray());
+            // request()->session()->put('page_url', request()->url());
+
+            // return redirect()->to($url);
         }
 
         if (!$url = $this->getSiteBaseUrl()) {
@@ -49,10 +52,6 @@ class DashboardController extends Controller
         $totalProducts = $response->json()['feed']['openSearch$totalResults']['$t'];
 
         $allDraftedGooglePosts = $this->googleService->posts('draft')['paginator'];
-
-        // $allDraftedGooglePosts = $this->googleService->posts('scheduled')['paginator'];
-        
-        // dd($allDraftedGooglePosts);
 
         return view('dashboard.index', compact('allUser', 'inactive', 'active', 'allDraftedGooglePosts', 'totalProducts'));
     }
