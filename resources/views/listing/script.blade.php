@@ -158,7 +158,7 @@
                 ) {
                     // Display error message
                     var fieldId = $(this).attr('name');
-                    if (fieldId != 'images[]' && fieldId != 'multipleImages[]') {
+                    if (fieldId != 'images[]' && fieldId != 'multipleImages[]' && fieldId != 'url' && fieldId != 'images') {
                         $(this).css('border', '1px red solid');
 
                         $('.' + fieldId).text('Please do not enter URLs.');
@@ -227,9 +227,9 @@
             }
 
             // Prevent form submission if a URL is found
-            if (!valid || !requiredvalid) {
-                event.preventDefault();
-            }
+            // if (!valid || !requiredvalid) {
+            event.preventDefault();
+            // }
         });
 
         setTimeout(function() {

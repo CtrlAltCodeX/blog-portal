@@ -62,7 +62,9 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="description" class="form-label d-flex justify-content-between"><div>{{ __('Description') }}<span class="text-danger">*</span><span class="text-danger"> ( Enter Detail Description without using 3rd party link) </span></div><a href="https://chat.openai.com">ChatGPT</a></label>
+                                <label for="description" class="form-label d-flex justify-content-between">
+                                    <div>{{ __('Description') }}<span class="text-danger">*</span><span class="text-danger"> ( Enter Detail Description without using 3rd party link) </span></div><a href="https://chat.openai.com">ChatGPT</a>
+                                </label>
                                 <!-- <div id="summernote" id="description" class="form-control @error('description') is-invalid @enderror" name="description">
                                     {{ old('description') }}
                                 </div> -->
@@ -293,7 +295,7 @@
                                 <!-- <label for="fileInput1">Main Images<span class="text-danger">*</span>( Only 1 Image )</label>
                                 <div class="form-group mb-0" @error('images') style="border: red 2px dotted;" @enderror>
                                     <input type="file" class="dropify @error('images') is-invalid @enderror" data-bs-height="180" id="fileInput1" name="images[]" /> -->
-                                    <!-- <form action="{{ route('convert.image') }}" method="post" enctype="multipart/form-data" id='singleImageForm'>
+                                <!-- <form action="{{ route('convert.image') }}" method="post" enctype="multipart/form-data" id='singleImageForm'>
                                         @csrf
                                         <input id="fileInput1" type="file" class="dropify @error('multipleImages') is-invalid @enderror" name="multipleImages[]" accept="jpg">
                                         <div id='singleImageDownload' style="display: none;">
@@ -302,20 +304,19 @@
                                             </a>
                                         </div>
                                     </form> -->
-                                </div>
+                            </div>
 
-                                <label for="fileInput1" class="mt-2">Additional Images<span class="text-danger">*</span>( Multiple Images )</label>
-                                <div class="form-group mt-2" @error('multipleImages') style="border: red 2px dotted;" @enderror>
-                                    <form action="{{ route('convert.image') }}" method="post" enctype="multipart/form-data" id='multipleImagesform'>
-                                        @csrf
-                                        <input id="multipleFiles" type="file" class="dropify @error('multipleImages') is-invalid @enderror" name="multipleImages[]" multiple>
-                                        <div id='multiImagesDownload' style="display: none;">
-                                            <a href='#' class="w-100 d-flex justify-content-end my-4" id='downloadMultipleImage'>
-                                                <img src="/downlod-icon.png" />
-                                            </a>
-                                        </div>
-                                    </form>
-                                </div>
+                            <label for="fileInput1" class="mt-2">Images<span class="text-danger">*</span>( Multiple Images )</label>
+                            <div class="form-group mt-2" @error('multipleImages') style="border: red 2px dotted;" @enderror>
+                                <form action="{{ route('convert.image') }}" method="post" enctype="multipart/form-data" id='multipleImagesform'>
+                                    @csrf
+                                    <input id="multipleFiles" type="file" class="dropify @error('multipleImages') is-invalid @enderror" name="multipleImages[]" multiple>
+                                    <div id='multiImagesDownload' style="display: none;">
+                                        <a href='#' class="w-100 d-flex justify-content-end my-4" id='downloadMultipleImage'>
+                                            <img src="/downlod-icon.png" />
+                                        </a>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -323,6 +324,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 <!-- End Row -->
 </div>

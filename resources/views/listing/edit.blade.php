@@ -333,7 +333,7 @@
                                     @endif
                                 </div>
 
-                                <label for="fileInput1" class="mb-0">Additional Images<span class="text-danger">*</span></label>
+                                <label for="fileInput1" class="mb-0">Images<span class="text-danger">*</span>( Multiple Images )</label>
                                 <div class="form-group mt-2" @error('multipleImages') style="border: red 2px dotted;" @enderror>
                                     <!-- <input id="demo" type="file" class="dropify @error('multipleImages') is-invalid @enderror" name="multipleImages[]" multiple> -->
                                     <form action="{{ route('convert.image') }}" method="post" enctype="multipart/form-data" id='multipleImagesform'>

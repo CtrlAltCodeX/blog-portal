@@ -6,6 +6,7 @@ use Google_Client;
 use Google_Service_Blogger;
 use Google_Service_Blogger_Post;
 use App\Models\GoogleCredentail;
+use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
@@ -143,22 +144,24 @@ class GoogleService
                 $params['max-results'] = $perPage;
                 $params['category'] = request()->query('category');
 
-                $response = Http::get('https://shop.exam360.in/feeds/posts/default', $params);
-                $response = json_decode(json_encode($response->json()))->feed;
-                $posts = $response->entry ?? [];
-                $filteredPost = $response->entry ?? [];
+                if (SiteSetting::first()->url) {
+                    $response = Http::get(SiteSetting::first()->url . '/feeds/posts/default', $params);
+                    $response = json_decode(json_encode($response->json()))->feed;
+                    $posts = $response->entry ?? [];
+                    $filteredPost = $response->entry ?? [];
 
-                $allCategories = [];
-                if (isset(request()->category)) {
-                    $filteredPost = [];
-                    foreach ($posts as $key => $post) {
-                        foreach ($post->category as $category) {
-                            $allCategories[$key][] = $category->term;
-                        }
+                    $allCategories = [];
+                    if (isset(request()->category)) {
+                        $filteredPost = [];
+                        foreach ($posts as $key => $post) {
+                            foreach ($post->category as $category) {
+                                $allCategories[$key][] = $category->term;
+                            }
 
-                        if (in_array(request()->category, $allCategories[$key])) {
-                            $filteredPost[$key] = (array) $post;
-                            $filteredPost[$key]['category'] = $allCategories[$key];
+                            if (in_array(request()->category, $allCategories[$key])) {
+                                $filteredPost[$key] = (array) $post;
+                                $filteredPost[$key]['category'] = $allCategories[$key];
+                            }
                         }
                     }
                 }
@@ -312,7 +315,7 @@ class GoogleService
             $data['processed_images'] = [];
             $data['multiple_images'] = [];
 
-            $data['processed_images'] = $data['images'];
+            $data['processed_images'][] = $data['images'];
 
             // if (isset($data['images'])) {
             //     foreach ($data['images'] as $image) {
