@@ -138,11 +138,12 @@ class GoogleService
             }
 
             if (request()->route()->getName() == 'inventory.index') {
-                $params['key'] = 'AIzaSyDfHMIjCrVHFh1aOToH5_1_5rvKtNXQRWY';
+                // $params['key'] = 'AIzaSyDfHMIjCrVHFh1aOToH5_1_5rvKtNXQRWY';
                 $params['start-index'] = $startIndex;
                 $params['max-results'] = $perPage;
+                $params['category'] = request()->query('category');
 
-                $response = Http::get('https://www.blogger.com/feeds/' . $credential->blog_id . '/posts/default', $params);
+                $response = Http::get('https://shop.exam360.in/feeds/posts/default', $params);
                 $response = json_decode(json_encode($response->json()))->feed;
                 $posts = $response->entry ?? [];
                 $filteredPost = $response->entry ?? [];
@@ -161,7 +162,7 @@ class GoogleService
                         }
                     }
                 }
-            } else if (request()->route()->getName() == 'inventory.drafted') {
+            } else if (request()->route()->getName() == 'inventory.drafted' || request()->route()->getName() == 'dashboard') {
                 $response = $blogger->posts->listPosts($credential->blog_id, $params);
                 $posts = $response->items ?? [];
                 $filteredPost = $response->items ?? [];
@@ -222,8 +223,7 @@ class GoogleService
             $data['multiple_images'] = [];
             $data['processed_images'] = [];
 
-            $data['processed_images'][] = $data['images'];
-
+            $data['processed_images'] = $data['images'];
             // if (isset($data['images'])) {
             //     foreach ($data['images'] as $image) {
             //         if ($image instanceof UploadedFile) {
@@ -312,7 +312,7 @@ class GoogleService
             $data['processed_images'] = [];
             $data['multiple_images'] = [];
 
-            $data['processed_images'][] = $data['images'];
+            $data['processed_images'] = $data['images'];
 
             // if (isset($data['images'])) {
             //     foreach ($data['images'] as $image) {
@@ -463,7 +463,7 @@ class GoogleService
 
                 $outputFileName = 'images/merged_image_' . $image->getClientOriginalName() . time() . '.' . $image->getClientOriginalExtension();
 
-                $background->save(public_path($outputFileName));
+                $background->save(($outputFileName));
 
                 $zip->addFile($outputFileName);
             }

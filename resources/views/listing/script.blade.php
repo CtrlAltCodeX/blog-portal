@@ -169,7 +169,8 @@
                 if (inputValue == '') {
                     var fieldId = $(this).attr('name');
                     if (fieldId != 'multipleImages[]' &&
-                        fieldId != 'files'
+                        fieldId != 'files' &&
+                        fieldId
                     ) {
                         $(this).css('border', '1px red solid');
                         $('.' + fieldId).text('This field is required');
@@ -239,12 +240,16 @@
             calculateFields();
         });
 
+        $("textarea").on('input', function() {
+            calculateFields();
+        });
+
         $("input").on('input', function() {
             calculateFields();
         })
 
         function calculateFields() {
-            var totalFields = $(".fields input.form-control").length + $(".fields select.form-control").length;
+            var totalFields = $(".fields input.form-control").length + $(".fields select.form-control").length + $("textarea").length;
             var filledFields = 0;
             var emptyFields = 0;
             var notDefined = 0;
@@ -262,6 +267,11 @@
             });
 
             $(".fields select.form-control").each(function() {
+                var fieldValue = $(this).val();
+                if (fieldValue == '') emptyFields++;
+            });
+
+            $("textarea").each(function() {
                 var fieldValue = $(this).val();
                 if (fieldValue == '') emptyFields++;
             });

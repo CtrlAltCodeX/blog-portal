@@ -55,8 +55,11 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="description" class="form-label">{{ __('Description') }}<span class="text-danger">*</span><span class="text-danger"> ( Enter Detail Description without using 3rd party link)</span></label>
-                                <textarea id="desc" class="form-control @error('description') is-invalid @enderror" name="description" placeholder="Description" rows="10">{{ old('description') ?? $allInfo['desc'] }}</textarea>
+                                <label for="description" class="form-label d-flex justify-content-between">
+                                    <div>{{ __('Description') }}<span class="text-danger">*</span><span class="text-danger"> ( Enter Detail Description without using 3rd party link) </span></div><a href="https://chat.openai.com">ChatGPT</a>
+                                </label>
+                                <textarea class="form-control @error('description') is-invalid @enderror" name="description" placeholder="Description" rows="10">{{ old('description') ?? $allInfo['desc'] }}</textarea>
+                                <span class="error-message description" style="color:red;"></span>
 
                                 @error('description')
                                 <span class="invalid-feedback" role="alert">
@@ -257,6 +260,7 @@
                                 @enderror
                             </div>
                             @foreach($allInfo['multiple'] as $key => $images)
+                            @if($key == 0) @continue; @endif
                             <div class="form-group col-md-4">
                                 <label for="url" class="form-label">{{ __('Additional Image URL') }}</label>
                                 <div class="input-group align-items-center">

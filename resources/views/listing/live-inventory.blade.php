@@ -103,9 +103,12 @@
                         <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
                         <select class="form-control w-100" id='category' name="category">
                             <option value="">In Stock</option>
-                            <option value="Stk_o" {{ request()->category == 'Stk_o' ? 'selected' : '' }}>Out of Stock</option>
-                            <option value="Stk_d" {{ request()->category == 'Stk_d' ? 'selected' : '' }}>On Demand Stock</option>
-                            <option value="Stk_l" {{ request()->category == 'Stk_l' ? 'selected' : '' }}>Low Stock</option>
+                            <option value="Stk_o" {{ request()->category == 'Stk_o' ? 'selected' : '' }}>Out of Stock (1)</option>
+                            <option value="stock__out" {{ request()->category == 'stock__out' ? 'selected' : '' }}>Out of Stock (2)</option>
+                            <option value="Stk_d" {{ request()->category == 'Stk_d' ? 'selected' : '' }}>On Demand Stock (1)</option>
+                            <option value="stock__demand" {{ request()->category == 'stock__demand' ? 'selected' : '' }}>On Demand Stock (2)</option>
+                            <option value="Stk_l" {{ request()->category == 'Stk_l' ? 'selected' : '' }}>Low Stock (1)</option>
+                            <option value="stock__low" {{ request()->category == 'stock__low' ? 'selected' : '' }}>Low Stock (2)</option>
                         </select>
                     </form>
                 </div>
@@ -148,13 +151,13 @@
                                 <tr>
                                     <td>{{ request()->startIndex++ }}</td>
                                     <td>
-                                        @if(isset($googlePost->category) && in_array('Stk_o', $googlePost->category))
+                                        @if(isset($googlePost->category) && (in_array('Stk_o', $googlePost->category) || in_array('stock__out', $googlePost->category)))
                                         {{ 'Out of Stock' }}
-                                        @elseif(isset($googlePost->category) && in_array('Stk_d', $googlePost->category))
+                                        @elseif(isset($googlePost->category) && (in_array('Stk_d', $googlePost->category) || in_array('stock__demand', $googlePost->category)))
                                         {{ 'On Demand' }}
                                         @elseif(isset($googlePost->category) && in_array('Stk_b', $googlePost->category))
                                         {{ 'Pre Booking' }}
-                                        @elseif(isset($googlePost->category) && in_array('Stk_l', $googlePost->category))
+                                        @elseif(isset($googlePost->category) && (in_array('Stk_l', $googlePost->category) || in_array('stock__low', $googlePost->category)))
                                         {{ 'Low Stock' }}
                                         @else {{ 'In Stock' }}
                                         @endif
@@ -166,11 +169,11 @@
                                             {{ $productTitle }}
                                         </a>
                                         @else
-                                        Edited By Dashboard
+                                        <button type="button" class="btn-sm btn btn-danger">Error</button>
                                         @endif
                                     </td>
-                                    <td>{{ $selling ? '₹'.$selling : 'Edited By Dashboard'  }}</td>
-                                    <td>{{ $mrp ? '₹'.$mrp : 'Edited By Dashboard' }}</td>
+                                    <td>@if($selling) {{ $selling ? '₹'.$selling : ''  }} @else <button class="btn btn-sm btn-danger">Error</button>@endif</td>
+                                    <td>@if($mrp) {{ $mrp ? '₹'.$mrp : '' }} @else <button class="btn btn-sm btn-danger">Error</button> @endif</td>
                                     <td>
                                         <a href="{{ $googlePost?->link[4]->href??'' }}" target="_blank">
                                             {{ $productId }}

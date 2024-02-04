@@ -87,7 +87,7 @@ $getRoles = app('App\Http\Controllers\RoleController');
                             <div class="d-flex">
                                 <div class="mt-2">
                                     <h6 class="">Total In Stock</h6>
-                                    <h2 class="mb-0 number-font">{{ $getStats->getStats() - ($getStats->getStats('Stk_o') + $getStats->getStats('Stk_l') + $getStats->getStats('Stk_d')) }}</h2>
+                                    <h2 class="mb-0 number-font">{{ $getStats->getStats() - ($getStats->getStats('Stk_o') + $getStats->getStats('Stk_l') + $getStats->getStats('Stk_d') + + $getStats->getStats('stock__low') + + $getStats->getStats('stock__demand') + + $getStats->getStats('stock__out')) }}</h2>
                                 </div>
                             </div>
                         </div>
@@ -99,7 +99,7 @@ $getRoles = app('App\Http\Controllers\RoleController');
                             <div class="d-flex">
                                 <div class="mt-2">
                                     <h6 class="">Total Out Stock</h6>
-                                    <h2 class="mb-0 number-font">{{ $getStats->getStats('Stk_o') }}</h2>
+                                    <h2 class="mb-0 number-font">{{ $getStats->getStats('Stk_o') + $getStats->getStats('stock__out') }}</h2>
                                 </div>
                             </div>
                         </div>
@@ -111,7 +111,7 @@ $getRoles = app('App\Http\Controllers\RoleController');
                             <div class="d-flex">
                                 <div class="mt-2">
                                     <h6 class="">Total Low Stock</h6>
-                                    <h2 class="mb-0 number-font">{{ $getStats->getStats('Stk_l') }}</h2>
+                                    <h2 class="mb-0 number-font">{{ $getStats->getStats('Stk_l') + $getStats->getStats('stock__low') }}</h2>
                                 </div>
                             </div>
                         </div>
@@ -123,7 +123,7 @@ $getRoles = app('App\Http\Controllers\RoleController');
                             <div class="d-flex">
                                 <div class="mt-2">
                                     <h6 class="">Total On Demand</h6>
-                                    <h2 class="mb-0 number-font">{{ $getStats->getStats('Stk_d') }}</h2>
+                                    <h2 class="mb-0 number-font">{{ $getStats->getStats('Stk_d') + $getStats->getStats('stock__demand') }}</h2>
                                 </div>
                             </div>
                         </div>

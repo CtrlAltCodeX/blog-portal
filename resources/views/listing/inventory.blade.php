@@ -117,28 +117,40 @@
                                 <tr>
                                     <td>{{ ++$key }}</td>
                                     <td>
-                                        @if(isset($googlePost->labels) && in_array('Stk_o', $googlePost->labels))
+                                        @if(isset($googlePost->labels) && (in_array('Stk_o', $googlePost->labels) || in_array('stock__out', $googlePost->labels)))
                                         {{ 'Out of Stock' }}
-                                        @elseif(isset($googlePost->labels) && in_array('Stk_d', $googlePost->labels))
+                                        @elseif(isset($googlePost->labels) && (in_array('Stk_d', $googlePost->labels) || in_array('stock__demand', $googlePost->labels)))
                                         {{ 'On Demand' }}
                                         @elseif(isset($googlePost->labels) && in_array('Stk_b', $googlePost->labels))
                                         {{ 'Pre Booking' }}
-                                        @elseif(isset($googlePost->labels) && in_array('Stk_l', $googlePost->labels))
+                                        @elseif(isset($googlePost->labels) && (in_array('Stk_l', $googlePost->labels) || in_array('stock__low', $googlePost->labels)))
                                         {{ 'Low Stock' }}
                                         @else {{ 'In Stock' }}
                                         @endif
                                     </td>
                                     <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $image }}" alt="Product Image" /></td>
-                                    <td>@if($googlePost->title)<a href="{{ $googlePost->url }}" target="_blank"> {{ $googlePost->title }}</a>@else Edited By Dashboard @endif</td>
-                                    <td>{{ $selling ? '₹'.$selling : 'Edited By Dashboard'  }}</td>
-                                    <td>{{ $mrp ? '₹'.$mrp : 'Edited By Dashboard' }}</td>
+                                    <td>@if($googlePost->title)<a href="{{ $googlePost->url }}" target="_blank" style="white-space: normal;"> {{ $googlePost->title }}</a>@else <button type="button" class="btn btn-danger btn-sm">Error</button> @endif</td>
+                                    <td>@if($selling) {{ $selling ? '₹'.$selling : '' }} @else <button type="button" class="btn btn-danger btn-sm">Error</button> @endif</td>
+                                    <td>@if($mrp) {{ $mrp ? '₹'.$mrp : '' }} @else <button type="button" class="btn btn-danger btn-sm">Error</button> @endif</td>
                                     <td><a href="{{ $googlePost->url }}" target="_blank">{{ $googlePost->id }}</a></td>
-                                    <td>{{ count($googlePost->labels??[]) }}</td>
+                                    @php
+                                    $categories = collect($googlePost->labels??[])->toArray();
+                                    @endphp
+                                    <td>
+                                        <span data-bs-placement="top" data-bs-toggle="tooltip" title="{{ implode(", ", $categories) }}">
+                                            {{ count($categories ?? []) }}
+                                            </button>
+                                    </td>
+                                    <!-- <td>{{ count($googlePost->labels??[]) }}</td> -->
                                     <td>{{ date("d-m-Y h:i A", strtotime($googlePost->published)) }}</td>
                                     <td>{{ date("d-m-Y h:i A", strtotime($googlePost->updated)) }}</td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic example">
+                                            @if($mrp && $selling && $googlePost->title)
                                             <a href="{{ route('blog.publish', $googlePost->id) }}" class="btn btn-sm btn-primary">{{ __('Publish') }}</a>
+                                            @else
+                                            <button type="button" class="btn btn-danger btn-sm">Error</button>
+                                            @endif
 
                                             <!-- @if($mrp && $selling && $googlePost->title)
                                             @can('Inventory edit')

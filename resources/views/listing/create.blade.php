@@ -67,7 +67,7 @@
                                     {{ old('description') }}
                                 </div> -->
 
-                                <textarea id="desc" type="text" class="form-control @error('description') is-invalid @enderror" name="description" autocomplete="description" autofocus placeholder="Description" rows="10">{{ old('description') }}</textarea>
+                                <textarea type="text" class="form-control @error('description') is-invalid @enderror" name="description" autocomplete="description" autofocus placeholder="Description" rows="10">{{ old('description') }}</textarea>
                                 <span class="error-message description" style="color:red;"></span>
 
                                 @error('description')
@@ -209,17 +209,17 @@
                             </div>
 
                             <div class="form-group col-md-4">
-                                <label for="binding" class="form-label">{{ __('Binding Type') }}<span class="text-danger">*</span></label>
-                                <select class="form-control @error('binding') is-invalid @enderror" name="binding" value="{{ old('binding') }}">
+                                <label for="condition" class="form-label">{{ __('Condition') }}<span class="text-danger">*</span></label>
+                                <select class="form-control @error('condition') is-invalid @enderror" name="condition" value="{{ old('condition') }}">
                                     <option value="">--Select--</option>
                                     <option value="New">New</option>
                                     <option value="Like New">Like New</option>
                                     <option value="Old">Old</option>
                                 </select>
-                                <!-- <input id="binding" type="text" class="form-control @error('binding') is-invalid @enderror" name="binding" value="{{ old('binding') }}" autocomplete="binding" autofocus placeholder="Binding Type"> -->
-                                <span class="error-message binding" style="color:red;"></span>
+                                <!-- <input id="condition" type="text" class="form-control @error('condition') is-invalid @enderror" name="condition" value="{{ old('condition') }}" autocomplete="condition" autofocus placeholder="Binding Type"> -->
+                                <span class="error-message condition" style="color:red;"></span>
 
-                                @error('binding')
+                                @error('condition')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -227,15 +227,15 @@
                             </div>
 
                             <div class="form-group col-md-4">
-                                <label for="condition" class="form-label">{{ __('Condition') }}<span class="text-danger">*</span></label>
-                                <select class="form-control @error('condition') is-invalid @enderror" name="condition" value="{{ old('condition') }}">
+                                <label for="binding" class="form-label">{{ __('Binding Type') }}<span class="text-danger">*</span></label>
+                                <select class="form-control @error('binding') is-invalid @enderror" name="binding" value="{{ old('binding') }}">
                                     <option value="">--Select--</option>
                                     <option value="Hardcover">Hardcover</option>
                                     <option value="Paperback">Paperback</option>
                                 </select>
-                                <!-- <input id="condition" type="text" class="form-control @error('condition') is-invalid @enderror" name="condition" value="{{ old('condition') }}" autocomplete="condition" autofocus placeholder="Condition"> -->
-                                <span class="error-message condition" style="color:red;"></span>
-                                @error('condition')
+                                <!-- <input id="binding" type="text" class="form-control @error('binding') is-invalid @enderror" name="binding" value="{{ old('binding') }}" autocomplete="binding" autofocus placeholder="Condition"> -->
+                                <span class="error-message binding" style="color:red;"></span>
+                                @error('binding')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -290,10 +290,10 @@
                     <div class="form-group">
                         <div id="fileInputContainer">
                             <div class="form-group">
-                                <label for="fileInput1">Main Images<span class="text-danger">*</span>( Only 1 Image )</label>
+                                <!-- <label for="fileInput1">Main Images<span class="text-danger">*</span>( Only 1 Image )</label>
                                 <div class="form-group mb-0" @error('images') style="border: red 2px dotted;" @enderror>
-                                    <!-- <input type="file" class="dropify @error('images') is-invalid @enderror" data-bs-height="180" id="fileInput1" name="images[]" /> -->
-                                    <form action="{{ route('convert.image') }}" method="post" enctype="multipart/form-data" id='singleImageForm'>
+                                    <input type="file" class="dropify @error('images') is-invalid @enderror" data-bs-height="180" id="fileInput1" name="images[]" /> -->
+                                    <!-- <form action="{{ route('convert.image') }}" method="post" enctype="multipart/form-data" id='singleImageForm'>
                                         @csrf
                                         <input id="fileInput1" type="file" class="dropify @error('multipleImages') is-invalid @enderror" name="multipleImages[]" accept="jpg">
                                         <div id='singleImageDownload' style="display: none;">
@@ -301,7 +301,7 @@
                                                 <img src="/downlod-icon.png" />
                                             </a>
                                         </div>
-                                    </form>
+                                    </form> -->
                                 </div>
 
                                 <label for="fileInput1" class="mt-2">Additional Images<span class="text-danger">*</span>( Multiple Images )</label>
