@@ -213,7 +213,6 @@
                                             </a>
                                         </div> --}}
                             <!-- SIDE-MENU -->
-                            @dd(auth()->user());
                             <div class="dropdown d-flex profile-1">
                                 <a href="javascript:void(0)" data-bs-toggle="dropdown" class="nav-link leading-none d-flex">
                                     <img src="{{ auth()->user()->profile }}" alt="profile-user" class="avatar  profile-user brround cover-image">

@@ -174,7 +174,7 @@ class LoginController extends Controller
                 session()->flash('success', 'Please check your registered email for OTP');
 
                 $email = request()->email;
-
+                
                 Mail::to($email)->send(new OtpMail($otp));
             }
 

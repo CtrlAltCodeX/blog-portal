@@ -19,7 +19,7 @@
                     <label for="name" class="form-label">{{ __('Logo') }}<span class="text-danger">*</span></label>
                     <div class="row mb-5">
                         <div class="col-lg-3">
-                            <input type="file" class="dropify" data-bs-height="180" id="logo" name="logo" data-default-file="/public/storage/{{ $siteSettings->logo??"" }}" />
+                            <input type="file" class="dropify" data-bs-height="180" id="logo" name="logo" data-default-file="/storage/{{ $siteSettings->logo??"" }}" />
                         </div>
                     </div>
                 </div>
@@ -28,7 +28,7 @@
                     <label for="name" class="form-label">{{ __('Homepage Image') }}<span class="text-danger">*</span></label>
                     <div class="row mb-5">
                         <div class="col-lg-3">
-                            <input type="file" class="dropify" data-bs-height="180" id="homepage_image" name="homepage_image" data-default-file="/public/storage/{{ $siteSettings->homepage_image??"" }}" />
+                            <input type="file" class="dropify" data-bs-height="180" id="homepage_image" name="homepage_image" data-default-file="/storage/{{ $siteSettings->homepage_image??"" }}" />
                         </div>
                     </div>
                 </div>
