@@ -166,6 +166,7 @@ class GoogleService
                     }
                 }
             } else if (request()->route()->getName() == 'inventory.drafted' || request()->route()->getName() == 'dashboard') {
+                $params['maxResults'] = 500;
                 $response = $blogger->posts->listPosts($credential->blog_id, $params);
                 $posts = $response->items ?? [];
                 $filteredPost = $response->items ?? [];
@@ -462,7 +463,7 @@ class GoogleService
             foreach (request()->multipleImages as $image) {
                 $background = (new ImageManager())->canvas(555, 555, '#ffffff');
 
-                $background->insert(Image::make($image)->resize(300, 512), 'center');
+                $background->insert(Image::make($image)->resize(380, 520), 'center');
 
                 $outputFileName = 'images/merged_image_' . $image->getClientOriginalName() . time() . '.' . $image->getClientOriginalExtension();
 

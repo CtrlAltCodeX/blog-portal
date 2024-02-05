@@ -227,9 +227,9 @@
             }
 
             // Prevent form submission if a URL is found
-            // if (!valid || !requiredvalid) {
-            event.preventDefault();
-            // }
+            if (!valid || !requiredvalid) {
+                event.preventDefault();
+            }
         });
 
         setTimeout(function() {

@@ -8,10 +8,10 @@
 
         <!-- PAGE-HEADER -->
         <div class="page-header">
-            <h1 class="page-title">Users</h1>
+            <h1 class="page-title">All Users List</h1>
             <div>
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="javascript:void(0)">Users</a></li>
+                    <li class="breadcrumb-item"><a href="javascript:void(0)">All Users List</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Index</li>
                 </ol>
             </div>
@@ -24,7 +24,7 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">
                         <h4 class="card-title">
-                            Users
+                            All Users List
                         </h4>
 
                         <!-- @can('User create')
