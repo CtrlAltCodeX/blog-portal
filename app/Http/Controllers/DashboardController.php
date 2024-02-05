@@ -51,7 +51,7 @@ class DashboardController extends Controller
 
         $totalProducts = $response->json()['feed']['openSearch$totalResults']['$t'];
 
-        $allDraftedGooglePosts = $this->googleService->posts('draft')['paginator'];
+        $allDraftedGooglePosts = $this->googleService->draftedInventory();
 
         return view('dashboard.index', compact('allUser', 'inactive', 'active', 'allDraftedGooglePosts', 'totalProducts'));
     }

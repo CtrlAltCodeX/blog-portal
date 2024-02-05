@@ -5,6 +5,7 @@
 @php
 $getStats = app('App\Http\Controllers\DashboardController');
 $getRoles = app('App\Http\Controllers\RoleController');
+
 @endphp
 
 @section('content')
@@ -12,7 +13,7 @@ $getRoles = app('App\Http\Controllers\RoleController');
 <div class="main-container container-fluid">
 
     <!-- PAGE-HEADER -->
-    <div class="page-header">
+    <div class="page-header m-0">
         <h1 class="page-title">{{ __('Products') }}</h1>
         <div>
             <ol class="breadcrumb">
@@ -21,7 +22,6 @@ $getRoles = app('App\Http\Controllers\RoleController');
             </ol>
         </div>
     </div>
-    <!-- PAGE-HEADER END -->
 
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12">
@@ -66,7 +66,16 @@ $getRoles = app('App\Http\Controllers\RoleController');
                 </div>
 
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
-
+                    <div class="card overflow-hidden">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="mt-2">
+                                    <h6 class="">Coming Soon</h6>
+                                    <h2 class="mb-0 number-font">Coming Soon</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
 
@@ -74,7 +83,7 @@ $getRoles = app('App\Http\Controllers\RoleController');
         </div>
     </div>
 
-    <div class="page-header">
+    <div class="page-header m-0">
         <h1 class="page-title">{{ __('Stock') }}</h1>
     </div>
 
@@ -133,7 +142,7 @@ $getRoles = app('App\Http\Controllers\RoleController');
         </div>
     </div>
 
-    <div class="page-header">
+    <div class="page-header m-0">
         <h1 class="page-title">{{ __('Users') }}</h1>
     </div>
 

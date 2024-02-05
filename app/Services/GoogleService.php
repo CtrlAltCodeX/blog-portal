@@ -165,7 +165,7 @@ class GoogleService
                         }
                     }
                 }
-            } else if (request()->route()->getName() == 'inventory.drafted' || request()->route()->getName() == 'dashboard') {
+            } else if (request()->route()->getName() == 'inventory.drafted') {
                 $params['maxResults'] = 500;
                 $response = $blogger->posts->listPosts($credential->blog_id, $params);
                 $posts = $response->items ?? [];
@@ -206,6 +206,44 @@ class GoogleService
                 'startIndex' => null,
                 'prevStartIndex' => null
             ];
+        }
+    }
+
+    /**
+     * Get Drafted Data 
+     *
+     * @return void
+     */
+    public function draftedInventory()
+    {
+        try {
+            $credential = $this->getCredentails();
+
+            $client = $this->createGoogleClient($credential->toArray());
+            $client->setAccessToken($credential->token);
+
+            $blogger = new Google_Service_Blogger($client);
+
+            $params['maxResults'] = 500;
+            $params['status'] = 'draft';
+            $blogs = $blogger->posts->listPosts($credential->blog_id, $params);
+
+            // Array to store blogs
+            $blogData = [];
+
+            // Loop through blogs
+            while ($blogs->valid()) {
+                $blog = $blogs->next();
+                // Store blog details in array
+                $blogData[] = [
+                    'id' => 'data',
+                ];
+            }
+
+            // Return the array or do further processing
+            return $blogData;
+        } catch (\Exception $e) {
+            return [];
         }
     }
 
@@ -260,6 +298,7 @@ class GoogleService
 
             return $blogger->posts->insert($credential->blog_id, $post, $isDraft);
         } catch (\Google_Service_Exception $e) {
+            dd($e);
             return json_decode($e->getMessage());
         }
     }
