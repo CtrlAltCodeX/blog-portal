@@ -106,7 +106,9 @@
                                 @forelse ($googlePosts['paginator'] as $key => $googlePost)
                                 @php
                                 $doc = new \DOMDocument();
-                                @$doc->loadHTML($googlePost->content);
+                                if($googlePost->content){
+                                    @$doc->loadHTML($googlePost->content);
+                                }
                                 $td = $doc->getElementsByTagName('td');
                                 $price = explode('-', $td->item(1)->textContent ?? '');
                                 $selling = $price[0]??0;
