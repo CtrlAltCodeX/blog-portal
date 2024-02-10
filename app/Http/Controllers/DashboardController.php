@@ -15,7 +15,7 @@ class DashboardController extends Controller
      */
     public function __construct(protected GoogleService $googleService)
     {
-        $this->middleware('role_or_permission:Dashboard Access', ['only' => ['index']]);
+        $this->middleware('role_or_permission:Dashboard', ['only' => ['index']]);
     }
 
     /**

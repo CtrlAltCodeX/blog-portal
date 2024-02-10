@@ -15,7 +15,7 @@
 @endpush
 
 @section('content')
-@can('Inventory access')
+@can('Inventory (Main Menu)')
 <div>
     <div class="row row-sm">
         <div class="col-lg-12">

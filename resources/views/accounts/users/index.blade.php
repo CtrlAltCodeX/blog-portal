@@ -49,7 +49,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @can('User access')
+                                    @can('User Details (Main Menu)')
                                         @forelse ($users as $user)
                                             <tr>
                                                 <td>{{ $user->id }}</td>
@@ -99,7 +99,7 @@
                         </div>
                     </div>
 
-                    @can('User access')
+                    @can('User Details (Main Menu)')
                         @if (count($users))
                             <div class="card-footer">
                                 {!! $users->links() !!}

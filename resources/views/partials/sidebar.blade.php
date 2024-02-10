@@ -22,7 +22,7 @@
                 </svg></div>
             <ul class="side-menu">
           
-                @can('Dashboard Access')
+                @can('Dashboard')
                     <li class="sub-category">
                         <h3>{{ __('Main') }}</h3>
                     </li>
@@ -36,7 +36,7 @@
                     <h3>{{ __('Information') }}</h3>
                 </li>
 
-                @can('Listing access')
+                @can('Listing (Main Menu)')
                     <li class="slide {{ (request()->is('admin/listing/*') || request()->is('admin/listing') || request()->is('admin/find-products/amazon')) ? 'is-expanded' : '' }}">
                         <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-list"></i><span class="side-menu__label">{{ __('Listing') }}</span><i class="angle fe fe-chevron-right"></i></a>
                         <ul class="slide-menu">
@@ -46,14 +46,14 @@
                             @endcan
                             <!-- <li><a href="{{ route('amazon.find') }}" class="slide-item {{ (request()->is('admin/find-products/amazon')) ? 'active' : '' }}">{{ __('Create New Listing (Auto)') }}</a></li> -->
                             <!--<li><a href="{{ route('flipkart.find') }}" class="slide-item {{ (request()->is('admin/find-products/flipkart')) ? 'active' : '' }}">{{ __('Create Listing (Flipkart scrap)') }}</a></li>-->
-                            @can('Listing access')
+                            @can('Listing (Main Menu)')
                                 <!-- <li><a href="{{ route('listing.index') }}" class="slide-item {{ (request()->is('admin/listing')) ? 'active' : '' }}">{{ __('Catalogue') }}</a></li> -->
                             @endcan
                         </ul>
                     </li>
                 @endcan
 
-                @can('Inventory access')
+                @can('Inventory (Main Menu)')
                     <li class="slide {{ (request()->is('admin/inventory') || request()->is('admin/inventory/drafted')) ? 'is-expanded' : '' }}">
                         <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-box"></i><span class="side-menu__label">{{ __('Inventory') }}</span><i class="angle fe fe-chevron-right"></i></a>
                         <ul class="slide-menu">
@@ -64,7 +64,7 @@
                     </li>
                 @endcan
 
-                @can('User access')
+                @can('User Details (Main Menu)')
                     <li class="slide {{ (request()->is('admin/users/*') || request()->is('admin/users')) ? 'is-expanded' : '' }}">
                         <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-users"></i><span class="side-menu__label">{{ __('Users Details') }}</span><i class="angle fe fe-chevron-right"></i></a>
                         <ul class="slide-menu">
@@ -79,7 +79,7 @@
                                 </li>
                             @endcan
                             
-                            @can('User access')
+                            @can('User Details (Main Menu)')
                                 <li><a href="{{ route('users.index') }}" class="slide-item {{ (request()->is('admin/users') || request()->is('admin/users/*/edit')) ? 'active' : '' }}">{{ __('All Users List') }}</a>
                                 </li>
                             @endcan
