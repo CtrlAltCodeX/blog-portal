@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Services\GoogleService;
+use Illuminate\Support\Facades\Http;
 
 class DashboardController extends Controller
 {
@@ -30,31 +31,43 @@ class DashboardController extends Controller
 
         $allUser = User::count();
 
-        if ($this->tokenIsExpired($this->googleService))
-            return view('settings.authenticate');
+        if ($this->tokenIsExpired($this->googleService)) {
+            session()->flash('message', 'Please authenticate with Google');
 
-        $allGooglePosts = $this->googleService->posts();
-        
-        $allDraftedGooglePosts = $this->googleService->posts('draft');
+            return view('settings.error');
+            // $url = $this->googleService->refreshToken($this->googleService->getCredentails()->toArray());
+            // request()->session()->put('page_url', request()->url());
 
-        $productStats = [];
-
-        foreach ($allGooglePosts as $allGooglePost) {
-            if (isset($allGooglePost->labels) && in_array('Stk_o', $allGooglePost->labels)) {
-                $productStats['out_stock'][] = $allGooglePost;
-            } else if (isset($allGooglePost->labels) && in_array('Stk_d', $allGooglePost->labels)) {
-                $productStats['on_demand'][] = $allGooglePost;
-            } else if (isset($allGooglePost->labels) && in_array('Stk_b', $allGooglePost->labels)) {
-                $productStats['pre_booking'][] = $allGooglePost;
-            } else if (isset($allGooglePost->labels) && in_array('Stk_l', $allGooglePost->labels)) {
-                $productStats['low_stock'][] = $allGooglePost;
-            } else if (isset($allGooglePost->labels) && in_array('Stk_l', $allGooglePost->labels)) {
-                $productStats['low_stock'][] = $allGooglePost;
-            } else {
-                $productStats['in_stock'][] = $allGooglePost;
-            }
+            // return redirect()->to($url);
         }
 
-        return view('dashboard.index', compact('allUser', 'inactive', 'active', 'productStats', 'allDraftedGooglePosts', 'allGooglePosts'));
+        if (!$url = $this->getSiteBaseUrl()) {
+            session()->flash('message', 'Please complete your Site Setting Then Continue');
+
+            return view('settings.error');
+        }
+
+        $response = Http::get($url . '/feeds/posts/default?alt=json');
+
+        $totalProducts = $response->json()['feed']['openSearch$totalResults']['$t'];
+
+        $allDraftedGooglePosts = $this->googleService->draftedInventory();
+
+        return view('dashboard.index', compact('allUser', 'inactive', 'active', 'allDraftedGooglePosts', 'totalProducts'));
+    }
+
+    /**
+     * Get Statistics
+     *
+     * @param string $category
+     * @return int
+     */
+    public function getStats($category = '')
+    {
+        $url = $this->getSiteBaseUrl();
+
+        $response = Http::get($url . '/feeds/posts/default?alt=json&category=' . $category);
+
+        return $response->json()['feed']['openSearch$totalResults']['$t'];
     }
 }

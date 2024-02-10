@@ -19,7 +19,7 @@
     <!-- PAGE-HEADER END -->
 
     <!-- Row -->
-    <form action="{{ route('update.users.status') }}" method="POST">
+    <form action="{{ route('update.users.status', $user->id) }}" method="POST">
         @csrf
         <div class="row">
             <div class="col-md-12 col-xl-12">
@@ -38,8 +38,8 @@
                                 <label for="status" class="form-label">{{ __('Status') }}</label>
 
                                 <select id="status" class="form-control @error('status') is-invalid @enderror" name="status">
-                                    <option value=0>{{ __('Inactive') }}</option>
-                                    <option value=1>{{ __('Active') }}</option>
+                                    <option value="0" {{ ! $user->status ? 'selected' : '' }} >{{ __('Inactive') }}</option>
+                                    <option value="1" {{ $user->status ? 'selected' : '' }}>{{ __('Active') }}</option>
                                 </select>
 
                                 @error('status')
@@ -49,17 +49,18 @@
                                 @enderror
                             </div>
 
-                            <div class="form-group col-12">
-                                <label for="email" class="form-label">{{ __('Roles') }}</label>
+                            <div class="form-group">
+                                <label for="roles" class="form-label">{{ __('Roles') }}</label>
 
                                 @foreach ($roles as $role)
-                                <div class="custom-controls-stacked">
-                                    <label class="custom-control custom-checkbox-md">
-                                        <input type="checkbox" class="custom-control-input" type="checkbox" name="roles[]" id="role_{{ $role->id }}" value="{{ $role->name }}">
-                                        <label class="custom-control-label" for="role_{{ $role->id }}">
-                                            {{ $role->name }}</label>
-                                    </label>
-                                </div>
+                                    <div class="custom-controls-stacked">
+                                        <label class="custom-control custom-checkbox-md">
+                                            <input type="checkbox" class="custom-control-input" type="checkbox" name="roles[]" id="role_{{ $role->id }}" @if (count($user->roles->where('id', $role->id))) checked @endif
+                                            value="{{ $role->name }}">
+                                            <label class="custom-control-label" for="role_{{ $role->id }}">
+                                                {{ $role->name }}</label>
+                                        </label>
+                                    </div>
                                 @endforeach
                             </div>
                         </div>

@@ -86,46 +86,105 @@ class ListingController extends Controller
      */
     public function edit($postId)
     {
+        if ($this->tokenIsExpired($this->googleService)) {
+            $url = $this->googleService->refreshToken($this->googleService->getCredentails()->toArray());
+            request()->session()->put('page_url', request()->url());
+
+            return redirect()->to($url);
+        }
+
         $post = $this->googleService->editPost($postId);
         $labels = $post->getLabels();
 
+        $images = [];
         $doc = new \DOMDocument();
-        $doc->loadHTML($post->content);
-        $sku = $doc->getElementById('sku')->textContent;
-        $publication = $doc->getElementById('publication')->textContent;
-        $author = $doc->getElementById('author')->textContent;
-        $author_name = $doc->getElementById('author_name')->textContent;
-        $page_no = $doc->getElementById('page_no')->textContent;
-        $weight = $doc->getElementById('weight')->textContent;
-        $search_key = $doc->getElementById('search_key')->textContent;
-        $desc = $doc->getElementById('desc')->textContent;
-        $edition = $doc->getElementById('edition')->textContent;
-        $selling = $doc->getElementById('selling')->textContent;
-        $mrp = $doc->getElementById('mrp')->textContent;
-        $instaUrl = $doc->getElementById('url')->getAttribute('href')??"";
-        $baseimg = $doc->getElementById('baseimg')->getAttribute('src');
+        $doc->loadHTML('<meta http-equiv="Content-Type" content="text/html; charset=utf-8">' . $post->content);
+
+        $td = $doc->getElementsByTagName('td');
+        $div = $doc->getElementsByTagName('div');
+
+        $a = $doc->getElementsByTagName('a');
+        $img = $doc->getElementsByTagName('img');
+        $span = $doc->getElementsByTagName('span');
+
+        // $sku = $td->item(3)->textContent ?? '';
+
+        // $publication = $td->item(5)->textContent ?? '';
+
+        $edition_author_lang = explode(',', $td->item(7)->textContent ?? '');
+        $author_name = $edition_author_lang[0];
+        $edition = $edition_author_lang[1] ?? '';
+        $lang = $edition_author_lang[2] ?? '';
+
+        $bindingType = explode(',', $td->item(9)->textContent ?? '');
+        $binding = $bindingType[0] ?? '';
+        $condition = $bindingType[1] ?? '';
+
+        $page_no = $td->item(11)->textContent ?? '';
+
+        $sku = '';
+        $publication = '';
+        for ($i = 0; $i < $td->length; $i++) {
+            if ($td->item($i)->getAttribute('itemprop') == 'sku') {
+                $sku = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'color') {
+                $publication = trim($td->item($i)->textContent);
+            }
+        }
+
+        $desc = [];
+        for ($i = 0; $i < $div->length; $i++) {
+            if ($div->item($i)->getAttribute('class') == 'pbl box dtmoredetail dt_content') {
+                $desc[] = trim($div->item($i)->textContent);
+            }
+        }
+
+        $selling = 0;
+        $mrp = 0;
+        for ($i = 0; $i < $td->length; $i++) {
+            if ($td->item($i)->getAttribute('class') == 'tr-caption') {
+                $price = explode('-', trim($td->item($i)->textContent));
+
+                $selling = $price[0];
+                $mrp = $price[1];
+            }
+        }
+
+        $instaUrl = "";
+        for ($i = 0; $i < $a->length; $i++) {
+            $item = trim($a->item($i)->textContent);
+            if ($item == 'BUY AT INSTAMOJO') {
+                $instaUrl = $a->item($i)->getAttribute('href');
+            }
+        }
+
+        $baseimg = $img->item(0)?->getAttribute('src');
 
         for ($i = 0; $i < $doc->getElementsByTagName("img")->length; $i++) {
             $image = $doc->getElementsByTagName("img")->item($i);
             $images[] = $image->getAttribute('src');
         }
-
+        
         $allInfo = [
-            'sku' => $sku,
-            'publication' => $publication,
-            'author' => $author,
-            'author_name' => $author_name,
-            'page_no' => $page_no,
-            'weight' => $weight,
-            'search_key' => $search_key,
-            'desc' => $desc,
-            'edition' => $edition,
-            'selling' => $selling,
-            'mrp' => $mrp,
+            'sku' => trim($sku),
+            'publication' => trim($publication),
+            'edition' => trim($edition),
+            'lang' => trim($lang),
+            'author_name' => trim($author_name),
+            'page_no' => trim($page_no),
+            'desc' => $desc[0]??'',
+            'selling' => trim($selling),
+            'mrp' => trim($mrp),
             'multiple' => $images,
+            'multipleImages' => json_encode($images),
             'baseimg' => $baseimg,
-            'url' => $instaUrl
+            'url' => trim($instaUrl),
+            'binding' => trim($binding),
+            'condition' => trim($condition),
         ];
+        // dd($allInfo);
 
         if (!$url = $this->getSiteBaseUrl()) {
             session()->flash('message', 'Please complete your Site Setting Then Continue');
@@ -183,7 +242,26 @@ class ListingController extends Controller
             return redirect()->to($url);
         }
 
-        $googlePosts = $this->getPaginatedData(collect($this->googleService->posts()));
+        $googlePosts = $this->googleService->posts();
+
+        return view('listing.live-inventory', compact('googlePosts'));
+    }
+
+    /**
+     * Inventory Listing
+     *
+     * @return void
+     */
+    public function draftedInventory()
+    {
+        if ($this->tokenIsExpired($this->googleService)) {
+            $url = $this->googleService->refreshToken($this->googleService->getCredentails()->toArray());
+            request()->session()->put('page_url', request()->url());
+
+            return redirect()->to($url);
+        }
+
+        $googlePosts = $this->googleService->posts('draft');
 
         return view('listing.inventory', compact('googlePosts'));
     }
@@ -210,5 +288,19 @@ class ListingController extends Controller
         );
 
         return $googlePosts;
+    }
+
+    /**
+     * Publish Blog
+     *
+     * @return void
+     */
+    public function publishBlog($postId)
+    {
+        $this->googleService->publish($postId);
+
+        session()->flash('success', 'Post Published successfully');
+
+        return redirect()->back();
     }
 }

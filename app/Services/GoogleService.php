@@ -6,12 +6,20 @@ use Google_Client;
 use Google_Service_Blogger;
 use Google_Service_Blogger_Post;
 use App\Models\GoogleCredentail;
+use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManagerStatic as Image;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
+use ZipArchive;
 
 class GoogleService
 {
@@ -82,38 +90,161 @@ class GoogleService
      * 
      * @return array
      */
-    public function posts($status = null)
+    public function posts($status = 'live')
     {
-        $credential = $this->getCredentails();
+        try {
+            $credential = $this->getCredentails();
 
-        $client = $this->createGoogleClient($credential->toArray());
-        $client->setAccessToken($credential->token);
+            $client = $this->createGoogleClient($credential->toArray());
+            $client->setAccessToken($credential->token);
 
-        $blogger = new Google_Service_Blogger($client);
+            $blogger = new Google_Service_Blogger($client);
 
-        $allPosts = [];
-        $pageToken = null;
+            $posts = [];
+            $pageToken = null;
+            $perPage = 250;
+            $startIndex = request()->startIndex;
 
-        do {
-            try {
-                // Fetch a page of posts
-                $postsResponse = $blogger->posts->listPosts($credential->blog_id, ['status' => $status, 'pageToken' => $pageToken]);
-                $posts = $postsResponse->getItems();
+            $params = [
+                'orderBy' => 'updated',
+                'status' => $status,
+                'pageToken' => $pageToken,
+                'alt' => 'json'
+            ];
 
-                if (!empty($posts)) {
-                    // Add the posts to the result array
-                    $allPosts = array_merge($allPosts, $posts);
-
-                    // Get the next page token
-                    $pageToken = $postsResponse->getNextPageToken();
-                }
-            } catch (\Exception $e) {
-                // Handle any errors that may occur during the API request
-                return response()->json(['error' => $e->getMessage()], 500);
+            if (request()->has('pageToken')) {
+                $params['pageToken']  = request()->query('pageToken');
             }
-        } while ($pageToken);
 
-        return $allPosts;
+            if (request()->filled('status')) {
+                $params['status'] = request()->query('status');
+            }
+
+            if ($type = request()->has('type') && $type = 'search') {
+                if (request()->filled('q')) {
+                    $params['q'] = request()->query('q');
+                }
+            }
+
+            if (request()->filled('endDate')) {
+                $endDate = request()->query('endDate');
+                $carbonEndDate = Carbon::parse($endDate);
+                $params['endDate'] =  $carbonEndDate->format('Y-m-d\TH:i:sP');
+            }
+
+            if (request()->filled('startDate')) {
+                $startDate = request()->query('startDate');
+                $carbonstartDate = Carbon::parse($startDate);
+                $params['startDate'] =  $carbonstartDate->format('Y-m-d\TH:i:sP');
+            }
+
+            if (request()->route()->getName() == 'inventory.index') {
+                // $params['key'] = 'AIzaSyDfHMIjCrVHFh1aOToH5_1_5rvKtNXQRWY';
+                $params['start-index'] = $startIndex;
+                $params['max-results'] = $perPage;
+                $params['category'] = request()->query('category');
+
+                if (SiteSetting::first()->url) {
+                    $response = Http::get(SiteSetting::first()->url . '/feeds/posts/default', $params);
+                    $response = json_decode(json_encode($response->json()))->feed;
+                    $posts = $response->entry ?? [];
+                    $filteredPost = $response->entry ?? [];
+
+                    $allCategories = [];
+                    if (isset(request()->category)) {
+                        $filteredPost = [];
+                        foreach ($posts as $key => $post) {
+                            foreach ($post->category as $category) {
+                                $allCategories[$key][] = $category->term;
+                            }
+
+                            if (in_array(request()->category, $allCategories[$key])) {
+                                $filteredPost[$key] = (array) $post;
+                                $filteredPost[$key]['category'] = $allCategories[$key];
+                            }
+                        }
+                    }
+                }
+            } else if (request()->route()->getName() == 'inventory.drafted') {
+                $params['maxResults'] = 500;
+                $response = $blogger->posts->listPosts($credential->blog_id, $params);
+                $posts = $response->items ?? [];
+                $filteredPost = $response->items ?? [];
+            }
+
+            $nextPageToken = $response->nextPageToken ?? null;
+            $prevPageToken = $response->prevPageToken ?? null;
+
+            $paginator = new LengthAwarePaginator(
+                json_decode(json_encode($filteredPost)),
+                count($response->entry ?? []),
+                1,
+                count($response->entry ?? []),
+                ['path' => route('inventory.index')]
+            );
+
+            return [
+                'paginator' => $paginator,
+                'nextPageToken' => $nextPageToken,
+                'prevPageToken' => $prevPageToken,
+                'startIndex' => $startIndex + $perPage,
+                'prevStartIndex' => $startIndex - $perPage
+            ];
+        } catch (\Exception $e) {
+            $paginator = new LengthAwarePaginator(
+                [],
+                count([]),
+                1,
+                count([]),
+                ['path' => route('inventory.index')]
+            );
+
+            return [
+                'paginator' => $paginator,
+                'nextPageToken' => null,
+                'prevPageToken' => null,
+                'startIndex' => null,
+                'prevStartIndex' => null
+            ];
+        }
+    }
+
+    /**
+     * Get Drafted Data 
+     *
+     * @return void
+     */
+    public function draftedInventory()
+    {
+        try {
+            $credential = $this->getCredentails();
+
+            $client = $this->createGoogleClient($credential->toArray());
+            $client->setAccessToken($credential->token);
+
+            $blogger = new Google_Service_Blogger($client);
+
+            $params['maxResults'] = 500;
+            $params['status'] = 'draft';
+            $blogs = $blogger->posts->listPosts($credential->blog_id, $params);
+
+            // Array to store blogs
+            $blogData = [];
+
+            // Loop through blogs
+            while ($blogs->valid()) {
+                $blog = $blogs->next();
+                // Store blog details in array
+                $blogData[] = [
+                    'id' => 'data',
+                ];
+            }
+
+            // Return the array or do further processing
+            return $blogData;
+        } catch (\Exception $e) {
+            return [];
+        }
     }
 
     /**
@@ -134,15 +265,24 @@ class GoogleService
             $data['multiple_images'] = [];
             $data['processed_images'] = [];
 
-            if (isset($data['images'])) {
-                foreach ($data['images'] as $image) {
-                    $data['processed_images'][] = $this->processImage($image);
-                }
-            }
+            $data['processed_images'] = $data['images'];
+            // if (isset($data['images'])) {
+            //     foreach ($data['images'] as $image) {
+            //         if ($image instanceof UploadedFile) {
+            //             $data['processed_images'][] = $this->processImage($image);
+            //         } else {
+            //             $data['processed_images'][] = $image;
+            //         }
+            //     }
+            // }
 
             if (isset($data['multipleImages'])) {
                 foreach ($data['multipleImages'] as $image) {
-                    $data['multiple_images'][] = $this->processImage($image);
+                    if ($image instanceof UploadedFile) {
+                        $data['multiple_images'][] = $this->processImage($image);
+                    } else {
+                        $data['multiple_images'][] = $image;
+                    }
                 }
             }
 
@@ -158,6 +298,7 @@ class GoogleService
 
             return $blogger->posts->insert($credential->blog_id, $post, $isDraft);
         } catch (\Google_Service_Exception $e) {
+            dd($e);
             return json_decode($e->getMessage());
         }
     }
@@ -211,15 +352,20 @@ class GoogleService
 
             $existingPost = $blogger->posts->get($credential->blog_id, $postId);
 
-            if (isset($data['images'])) {
-                foreach ($data['images'] as $image) {
-                    if ($image instanceof UploadedFile) {
-                        $data['processed_images'][] = $this->processImage($image);
-                    } else {
-                        $data['processed_images'][] = $image;
-                    }
-                }
-            }
+            $data['processed_images'] = [];
+            $data['multiple_images'] = [];
+
+            $data['processed_images'][] = $data['images'];
+
+            // if (isset($data['images'])) {
+            //     foreach ($data['images'] as $image) {
+            //         if ($image instanceof UploadedFile) {
+            //             $data['processed_images'][] = $this->processImage($image);
+            //         } else {
+            //             $data['processed_images'][] = $image;
+            //         }
+            //     }
+            // }
 
             if (isset($data['multipleImages'])) {
                 foreach ($data['multipleImages'] as $image) {
@@ -234,6 +380,7 @@ class GoogleService
             $existingPost->title = $data['title'];
             $existingPost->content = view('listing.template', compact('data'))->render();
             $existingPost->setLabels($data['label']);
+            // $existingPost->setImages('Testing');
 
             return $blogger->posts->update($credential->blog_id, $postId, $existingPost);
         } catch (\Google_Service_Exception $e) {
@@ -311,10 +458,94 @@ class GoogleService
 
         $background->insert(Image::make($image)->resize(300, 425), 'center');
 
-        $outputFileName = 'merged_image_' . $image->getClientOriginalName() . time() . '.' . $image->getClientOriginalExtension();
+        $outputFileName = 'images/merged_image_' . $image->getClientOriginalName() . time() . '.' . $image->getClientOriginalExtension();
 
         $background->save(public_path($outputFileName));
 
         return config('app.url') . '/public/' . $outputFileName;
+    }
+
+    /**
+     * Process Image
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function processImageAndDownload()
+    {
+        if ($thirdPartyUrl = request()->input('url')) {
+            $fileContents = Http::get($thirdPartyUrl)->body();
+
+            // Set the appropriate headers for download
+            $headers = [
+                'Content-Type' => 'application/octet-stream',
+                'Content-Disposition' => 'attachment; filename=' . request()->image . '',
+            ];
+
+            // Return the file contents with headers
+            return response($fileContents, 200, $headers);
+        }
+    }
+
+    /**
+     * Process Image
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function downloadProcessedImage()
+    {
+        $zip = new ZipArchive;
+        $zipFileName = 'download.zip';
+
+        if ($zip->open(public_path($zipFileName), ZipArchive::CREATE) === true) {
+            foreach (request()->multipleImages as $image) {
+                $background = (new ImageManager())->canvas(555, 555, '#ffffff');
+
+                $background->insert(Image::make($image)->resize(380, 520), 'center');
+
+                $outputFileName = 'images/merged_image_' . $image->getClientOriginalName() . time() . '.' . $image->getClientOriginalExtension();
+
+                $background->save(($outputFileName));
+
+                $zip->addFile($outputFileName);
+            }
+
+            // Close the zip archive
+            $zip->close();
+
+            // Return the zip file as a downloadable response
+            return response()->download(public_path($zipFileName))->deleteFileAfterSend(true);
+        }
+    }
+
+    /**
+     * Publish Drafted Blog
+     *
+     * @param int $postId
+     * @return void
+     */
+    public function publish($postId)
+    {
+        try {
+            $credential = $this->getCredentails();
+
+            $client = new Google_Client();
+
+            $client->setScopes('https://www.googleapis.com/auth/blogger');
+
+            $client->setAccessToken(json_decode($credential->token)->access_token);
+
+            $blogger = new Google_Service_Blogger($client);
+
+            // Retrieve the existing post
+            return $blogger->posts->publish($credential->blog_id, $postId);
+        } catch (\Google_Service_Exception $e) {
+            // Log the error details for debugging
+            \Log::error('Blogger API Error: ' . $e->getMessage());
+
+            // Handle the error as needed
+            return json_decode($e->getMessage());
+        }
     }
 }

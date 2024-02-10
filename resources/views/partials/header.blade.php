@@ -225,7 +225,7 @@
                                         </div>
                                     </div>
                                     <div class="dropdown-divider m-0"></div>
-                                     <a class="dropdown-item" href="{{ route('profile.edit') }}">
+                                    <a class="dropdown-item" href="{{ route('profile.edit') }}">
                                         <i class="dropdown-icon fe fe-user"></i> Profile
                                     </a>
                                     <!-- <a class="dropdown-item" href="email-inbox.html">
@@ -236,7 +236,7 @@
                                         <i class="dropdown-icon fe fe-lock"></i> Lockscreen
                                     </a> -->
                                     <a class="dropdown-item" href="{{route('change.user.password')}}">
-                                    <i class="dropdown-icon fe fe-lock"></i> Change Password
+                                        <i class="dropdown-icon fe fe-lock"></i> Change Password
                                     </a>
                                     <a class="dropdown-item" href="javascript:void(0)" onclick="return confirm('{{ __('Are you sure you want logout?') }}') ? document.getElementById('logout').submit() : false;">
                                         <i class="dropdown-icon fe fe-alert-circle"></i> Sign out

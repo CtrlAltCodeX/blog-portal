@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('site_settings', function (Blueprint $table) {
-            $table->string('homepage_image')->nullable();
-            $table->string('product_background_image')->nullable();
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('profile')->nullable;
         });
     }
 
@@ -22,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('site_settings', function (Blueprint $table) {
-            //
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('profile');
         });
     }
 };

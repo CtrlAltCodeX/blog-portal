@@ -84,6 +84,10 @@ class LoginController extends Controller
 
                 return view('auth.enter-otp');
             }
+        } else {
+            session()->flash('success', 'Please Enter the OTP');
+
+            return view('auth.enter-otp');
         }
 
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
@@ -148,6 +152,12 @@ class LoginController extends Controller
         try {
             $user = User::where('email', request()->email)->first();
 
+            if (!$user) {
+                session()->flash('error', 'Please check your Email or Password');
+
+                return redirect()->route('login');
+            }
+
             if (!$user->status) {
                 session()->flash('error', 'Oops!!!! your account is not active');
 
@@ -174,7 +184,6 @@ class LoginController extends Controller
                 session()->flash('success', 'Please check your registered email for OTP');
 
                 $email = request()->email;
-
                 Mail::to($email)->send(new OtpMail($otp));
             }
 

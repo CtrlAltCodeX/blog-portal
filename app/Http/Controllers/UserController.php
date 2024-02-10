@@ -158,11 +158,13 @@ class UserController extends Controller
      *
      * @return void
      */
-    public function editStatus()
+    public function editStatus($id)
     {
         $roles = Role::get();
 
-        return view('accounts.users.update', compact('roles'));
+        $user = User::find($id);
+
+        return view('accounts.users.update', compact('roles', 'user'));
     }
 
     /**
@@ -170,8 +172,16 @@ class UserController extends Controller
      *
      * @return void
      */
-    public function updateStatus()
+    public function updateStatus($id)
     {
-        dd(request()->all());
+        $user = User::find($id);
+
+        $user->update(request()->all());
+
+        $user->syncRoles(request()->input('roles'));
+
+        session()->flash('success', __('User updated successfully.'));   
+
+        return redirect()->route('verified.users');
     }
 }

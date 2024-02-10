@@ -12,6 +12,7 @@ use App\Http\Controllers\FlipkartSrcappingController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TinyMCEController;
+use App\Services\GoogleService;
 
 Illuminate\Support\Facades\Auth::routes();
 
@@ -82,6 +83,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     Route::get('inventory', [ListingController::class, 'inventory'])
         ->name('inventory.index');
 
+    Route::get('inventory/drafted', [ListingController::class, 'draftedInventory'])
+        ->name('inventory.drafted');
+
+    Route::get('blog/publish/{id}', [ListingController::class, 'publishBlog'])
+        ->name('blog.publish');
+
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
@@ -93,7 +100,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     Route::get('edit/users/status/{id}', [UserController::class, 'editStatus'])
         ->name('edit.users.status');
 
-    Route::post('update/users/status', [UserController::class, 'updateStatus'])
+    Route::post('update/users/status/{id}', [UserController::class, 'updateStatus'])
         ->name('update.users.status');
 
     Route::group(['prefix' => 'settings'], function () {
@@ -109,6 +116,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::post('tinymce/upload', [TinyMCEController::class, 'upload'])
         ->name('tinymce.upload');
+
+    Route::match(['get', 'post'], 'process/image', [GoogleService::class, 'processImageAndDownload'])
+        ->name('process.image');
+
+    Route::post('convert/image', [GoogleService::class, 'downloadProcessedImage'])
+        ->name('convert.image');
 });
 
 Route::get('/', function () {

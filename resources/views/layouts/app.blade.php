@@ -39,7 +39,7 @@
     $homepageImage = App\Models\SiteSetting::first()->homepage_image??'';
 @endphp
 
-<body class="app sidebar-mini ltr" style='background-image:url(storage/{{$homepageImage}});background-size:cover;'>
+<body class="app sidebar-mini ltr" style='background-image:url(/public/storage/{{$homepageImage}});background-size:cover;'>
     <div class="page">
         <div class="container-login100" >
             <div class="wrap-login100 p-6  w-30">

@@ -2,12 +2,18 @@
 
 @section('title', __("Dashboard"))
 
+@php
+$getStats = app('App\Http\Controllers\DashboardController');
+$getRoles = app('App\Http\Controllers\RoleController');
+
+@endphp
+
 @section('content')
 <!-- CONTAINER -->
 <div class="main-container container-fluid">
 
     <!-- PAGE-HEADER -->
-    <div class="page-header">
+    <div class="page-header m-0">
         <h1 class="page-title">{{ __('Products') }}</h1>
         <div>
             <ol class="breadcrumb">
@@ -16,7 +22,6 @@
             </ol>
         </div>
     </div>
-    <!-- PAGE-HEADER END -->
 
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12">
@@ -28,7 +33,7 @@
                                 <div class="d-flex">
                                     <div class="mt-2">
                                         <h6 class="">Total Products</h6>
-                                        <h2 class="mb-0 number-font">{{ count($allGooglePosts) + count($allDraftedGooglePosts) }}</h2>
+                                        <h2 class="mb-0 number-font">{{ ($getStats->getStats() + count($allDraftedGooglePosts)) }}</h2>
                                     </div>
                                 </div>
                             </a>
@@ -41,7 +46,7 @@
                             <div class="d-flex">
                                 <div class="mt-2">
                                     <h6 class="">Total Published</h6>
-                                    <h2 class="mb-0 number-font">{{ count($allGooglePosts) }}</h2>
+                                    <h2 class="mb-0 number-font">{{ (($getStats->getStats() )) }}</h2>
                                 </div>
                             </div>
                         </div>
@@ -59,37 +64,39 @@
                         </div>
                     </div>
                 </div>
-                <!-- <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
                     <div class="card overflow-hidden">
                         <div class="card-body">
                             <div class="d-flex">
                                 <div class="mt-2">
-                                    <h6 class="">Total Schedule</h6>
-                                    <h2 class="mb-0 number-font">{{ $inactive }}</h2>
+                                    <h6 class="">Coming Soon</h6>
+                                    <h2 class="mb-0 number-font">Coming Soon</h2>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div> -->
-                <!-- <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
-                    <div class="card overflow-hidden">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <div class="mt-2">
-                                    <h6 class="">Total Bin</h6>
-                                    <h2 class="mb-0 number-font">{{ $inactive }}</h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="page-header m-0">
+        <h1 class="page-title">{{ __('Stock') }}</h1>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12">
+            <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
                     <div class="card overflow-hidden">
                         <div class="card-body">
                             <div class="d-flex">
                                 <div class="mt-2">
                                     <h6 class="">Total In Stock</h6>
-                                    <h2 class="mb-0 number-font">{{ count($productStats['in_stock']) }}</h2>
+                                    <h2 class="mb-0 number-font">{{ $getStats->getStats() - ($getStats->getStats('Stk_o') + $getStats->getStats('Stk_l') + $getStats->getStats('Stk_d') + + $getStats->getStats('stock__low') + + $getStats->getStats('stock__demand') + + $getStats->getStats('stock__out')) }}</h2>
                                 </div>
                             </div>
                         </div>
@@ -101,7 +108,7 @@
                             <div class="d-flex">
                                 <div class="mt-2">
                                     <h6 class="">Total Out Stock</h6>
-                                    <h2 class="mb-0 number-font">{{ count($productStats['out_stock']??[]) }}</h2>
+                                    <h2 class="mb-0 number-font">{{ $getStats->getStats('Stk_o') + $getStats->getStats('stock__out') }}</h2>
                                 </div>
                             </div>
                         </div>
@@ -113,7 +120,7 @@
                             <div class="d-flex">
                                 <div class="mt-2">
                                     <h6 class="">Total Low Stock</h6>
-                                    <h2 class="mb-0 number-font">{{ count($productStats['low_stock']??[]) }}</h2>
+                                    <h2 class="mb-0 number-font">{{ $getStats->getStats('Stk_l') + $getStats->getStats('stock__low') }}</h2>
                                 </div>
                             </div>
                         </div>
@@ -125,29 +132,17 @@
                             <div class="d-flex">
                                 <div class="mt-2">
                                     <h6 class="">Total On Demand</h6>
-                                    <h2 class="mb-0 number-font">{{ count($productStats['on_demand']??[]) }}</h2>
+                                    <h2 class="mb-0 number-font">{{ $getStats->getStats('Stk_d') + $getStats->getStats('stock__demand') }}</h2>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
-                    <div class="card overflow-hidden">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <div class="mt-2">
-                                    <h6 class="">Total Free Shipping</h6>
-                                    <h2 class="mb-0 number-font">{{ count($productStats['out_stock']??[]) }}</h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
             </div>
         </div>
     </div>
 
-    <div class="page-header">
+    <div class="page-header m-0">
         <h1 class="page-title">{{ __('Users') }}</h1>
     </div>
 
@@ -189,6 +184,18 @@
                                 <div class="mt-2">
                                     <h6 class="">Total InActive User</h6>
                                     <h2 class="mb-0 number-font">{{ $inactive }}</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+                    <div class="card overflow-hidden">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="mt-2">
+                                    <h6 class="">Total Roles</h6>
+                                    <h2 class="mb-0 number-font">{{ $getRoles->rolesCount() }}</h2>
                                 </div>
                             </div>
                         </div>

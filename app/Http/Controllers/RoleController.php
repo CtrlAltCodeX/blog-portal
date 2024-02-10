@@ -122,4 +122,16 @@ class RoleController extends Controller
 
         return view('accounts.roles.view', compact('roles'));
     }
+
+    /**
+     * Roles Count
+     *
+     * @return int
+     */
+    public function rolesCount()
+    {
+        $roles = Role::latest()->get();
+
+        return $roles->count();
+    }
 }
