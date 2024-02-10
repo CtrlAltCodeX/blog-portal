@@ -43,7 +43,7 @@
                                         <th>{{ __('Email') }}</th>
                                         <th>{{ __('Roles') }}</th>
                                         <th>{{ __('Status') }}</th>
-                                        @canany(['User edit', 'User delete'])
+                                        @canany(['User Details -> All Users List -> Edit', 'User delete'])
                                             <th>{{ __('Actions') }}</th>
                                         @endcanany
                                     </tr>
@@ -69,7 +69,7 @@
                                                 <td>
                                                     <div class="btn-group btn-group-sm" role="group"
                                                         aria-label="{{ __('Actions') }}">
-                                                        @can('User edit')
+                                                        @can('User Details -> All Users List -> Edit')
                                                             <a href="{{ route('users.edit', $user->id) }}"
                                                                 class="btn btn-primary">{{ __('EDIT') }}</a>
                                                         @endcan

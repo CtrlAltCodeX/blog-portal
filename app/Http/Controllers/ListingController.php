@@ -18,10 +18,10 @@ class ListingController extends Controller
      */
     public function __construct(protected GoogleService $googleService)
     {
-        $this->middleware('role_or_permission:Listing (Main Menu)|Listing create|Listing edit|Inventory -> Manage Inventory|Inventory (Main Menu)|Listing delete', ['only' => ['index', 'show']]);
+        $this->middleware('role_or_permission:Listing (Main Menu)|Listing create|Inventory -> Manage Inventory -> Edit|Inventory -> Manage Inventory|Inventory (Main Menu)|Inventory -> Manage Inventory -> Delete', ['only' => ['index', 'show']]);
         $this->middleware('role_or_permission:Listing create|Inventory -> Manage Inventory', ['only' => ['create', 'store']]);
-        $this->middleware('role_or_permission:Listing edit', ['only' => ['edit', 'update']]);
-        $this->middleware('role_or_permission:Listing delete|Inventory -> Manage Inventory', ['only' => ['destroy']]);
+        $this->middleware('role_or_permission:Inventory -> Manage Inventory -> Edit', ['only' => ['edit', 'update']]);
+        $this->middleware('role_or_permission:Inventory -> Manage Inventory -> Delete|Inventory -> Manage Inventory', ['only' => ['destroy']]);
     }
 
     /**

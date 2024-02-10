@@ -29,19 +29,19 @@ class DatabaseSeeder extends Seeder
 
         Permission::create(['name' => 'User Details (Main Menu)']);
         Permission::create(['name' => 'User approved']);
-        Permission::create(['name' => 'User edit']);
+        Permission::create(['name' => 'User Details -> All Users List -> Edit']);
         Permission::create(['name' => 'User create']);
         Permission::create(['name' => 'User delete']);
 
         Permission::create(['name' => 'Roles & Permissions (Main Menu)']);
-        Permission::create(['name' => 'Permission edit']);
-        Permission::create(['name' => 'Permission create']);
-        Permission::create(['name' => 'Permission delete']);
+        Permission::create(['name' => 'Roles & Permissions -> Assign Permissions to Roles -> Edit']);
+        Permission::create(['name' => 'Roles & Permissions -> Assign Permissions to Roles -> Create']);
+        Permission::create(['name' => 'Roles & Permissions -> Assign Permissions to Roles -> Delete']);
 
         Permission::create(['name' => 'Listing (Main Menu)']);
-        Permission::create(['name' => 'Listing edit']);
+        Permission::create(['name' => 'Inventory -> Manage Inventory -> Edit']);
         Permission::create(['name' => 'Listing create']);
-        Permission::create(['name' => 'Listing delete']);
+        Permission::create(['name' => 'Inventory -> Manage Inventory -> Delete']);
         Permission::create(['name' => 'Listing publish']);
 
         Permission::create(['name' => 'Inventory (Main Menu)']);

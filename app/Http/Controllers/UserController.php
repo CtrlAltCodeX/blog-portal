@@ -19,9 +19,9 @@ class UserController extends Controller
      */
     function __construct()
     {
-        $this->middleware('role_or_permission:User Details (Main Menu)|User create|User edit|User delete', ['only' => ['index', 'show']]);
+        $this->middleware('role_or_permission:User Details (Main Menu)|User create|User Details -> All Users List -> Edit|User delete', ['only' => ['index', 'show']]);
         $this->middleware('role_or_permission:User create', ['only' => ['create', 'store']]);
-        $this->middleware('role_or_permission:User edit', ['only' => ['edit', 'update']]);
+        $this->middleware('role_or_permission:User Details -> All Users List -> Edit', ['only' => ['edit', 'update']]);
         $this->middleware('role_or_permission:User delete', ['only' => ['destroy']]);
     }
 
