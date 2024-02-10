@@ -25,10 +25,7 @@ class DatabaseSeeder extends Seeder
         $adminRole = Role::create(['name' => 'Admin']);
         $writerRole = Role::create(['name' => 'Writer']);
 
-        Permission::create(['name' => 'Role access']);
-        Permission::create(['name' => 'Role edit']);
         Permission::create(['name' => 'Role create']);
-        Permission::create(['name' => 'Role delete']);
 
         Permission::create(['name' => 'User Details (Main Menu)']);
         Permission::create(['name' => 'User approved']);
@@ -48,8 +45,9 @@ class DatabaseSeeder extends Seeder
         Permission::create(['name' => 'Listing publish']);
 
         Permission::create(['name' => 'Inventory (Main Menu)']);
-        Permission::create(['name' => 'Inventory create']);
-        Permission::create(['name' => 'Inventory delete']);
+
+        
+        Permission::create(['name' => 'Inventory -> Manage Inventory']);
         
         Permission::create(['name' => 'Site Access']);
         Permission::create(['name' => 'Site Update']);

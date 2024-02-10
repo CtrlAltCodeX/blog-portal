@@ -160,7 +160,7 @@
                                             @endcan
                                             @endif -->
 
-                                            <!-- @can('Inventory delete')
+                                            <!-- @can('Inventory -> Manage Inventory')
                                             <form action="{{ route('listing.destroy', $googlePost->id) }}" method="POST" class="ml-2">
                                                 @csrf
                                                 @method('DELETE')

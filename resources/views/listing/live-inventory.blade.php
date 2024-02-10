@@ -198,7 +198,7 @@
                                             @endcan
                                             @endif
 
-                                            @can('Inventory delete')
+                                            @can('Inventory -> Manage Inventory')
                                             <form action="{{ route('listing.destroy', $productId) }}" method="POST" class="ml-2">
                                                 @csrf
                                                 @method('DELETE')

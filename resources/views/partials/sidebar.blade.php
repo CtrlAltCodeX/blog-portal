@@ -87,30 +87,24 @@
                     </li>
                 @endcan
 
-                @can('Role access')
-                    <li class="slide {{ (request()->is('admin/roles/*') || request()->is('admin/roles')) ? 'is-expanded' : '' }}">
-                        <a class="side-menu__item  {{ request()->is('admin/roles*') ? 'active is-expanded' : '' }}" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-lock"></i><span class="side-menu__label">{{ __('Roles & Permissions') }}</span><i class="angle fe fe-chevron-right"></i></a>
-                        <ul class="slide-menu">
-                            @can('Role create')
-                                <li>
-                                    <a href="{{ route('roles.create') }}" class="slide-item  {{ request()->is('admin/roles/create') ? 'active' : '' }}">{{ __('Create New Roles') }}</a>
-                                </li>
-                            @endcan
+                <li class="slide {{ (request()->is('admin/roles/*') || request()->is('admin/roles')) ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item  {{ request()->is('admin/roles*') ? 'active is-expanded' : '' }}" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-lock"></i><span class="side-menu__label">{{ __('Roles & Permissions') }}</span><i class="angle fe fe-chevron-right"></i></a>
+                    <ul class="slide-menu">
+                        @can('Role create')
+                            <li>
+                                <a href="{{ route('roles.create') }}" class="slide-item  {{ request()->is('admin/roles/create') ? 'active' : '' }}">{{ __('Create New Roles') }}</a>
+                            </li>
+                        @endcan
+                        
+                        <li>
+                            <a href="{{ route('roles.index') }}" class="slide-item  {{ (request()->is('admin/roles') || request()->is('admin/roles/edit')) ? 'active' : '' }}">{{ __('Assign Permissions to Roles') }}</a>
+                        </li>
 
-                            @can('Role access')
-                                <li>
-                                    <a href="{{ route('roles.index') }}" class="slide-item  {{ (request()->is('admin/roles') || request()->is('admin/roles/edit')) ? 'active' : '' }}">{{ __('Assign Permissions to Roles') }}</a>
-                                </li>
-                            @endcan
-
-                            @can('Role access')
-                                <li>
-                                    <a href="{{ route('view.roles') }}" class="slide-item  {{ (request()->is('admin/roles/all/view')) ? 'active' : '' }}">{{ __('View All Roles & Permissions') }}</a>
-                                </li>
-                            @endcan
-                        </ul>
-                    </li>
-                @endcan
+                        <li>
+                            <a href="{{ route('view.roles') }}" class="slide-item  {{ (request()->is('admin/roles/all/view')) ? 'active' : '' }}">{{ __('View All Roles & Permissions') }}</a>
+                        </li>
+                    </ul>
+                </li>
 
                 @if(auth()->user()->can('Site Access') || auth()->user()->can('Configure Blog'))
                     <li class="slide {{ (request()->is('admin/settings/*') || request()->is('admin/settings')) ? 'is-expanded' : '' }}">
