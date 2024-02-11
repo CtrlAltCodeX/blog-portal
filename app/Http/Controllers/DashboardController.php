@@ -47,13 +47,7 @@ class DashboardController extends Controller
             return view('settings.error');
         }
 
-        $response = Http::get($url . '/feeds/posts/default?alt=json');
-
-        $totalProducts = $response->json()['feed']['openSearch$totalResults']['$t'];
-
-        $allDraftedGooglePosts = $this->googleService->draftedInventory();
-
-        return view('dashboard.index', compact('allUser', 'inactive', 'active', 'allDraftedGooglePosts', 'totalProducts'));
+        return view('dashboard.index', compact('allUser', 'inactive', 'active'));
     }
 
     /**
@@ -62,10 +56,12 @@ class DashboardController extends Controller
      * @param string $category
      * @return int
      */
-    public function getStats($category = '')
+    public function getStats()
     {
         $url = $this->getSiteBaseUrl();
 
+        $category = request()->category;
+ 
         $response = Http::get($url . '/feeds/posts/default?alt=json&category=' . $category);
 
         return $response->json()['feed']['openSearch$totalResults']['$t'];

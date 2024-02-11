@@ -81,7 +81,7 @@ class LoginController extends Controller
 
             if (!$verifyOtp) {
                 session()->flash('success', 'Invalid OTP');
-
+            
                 return view('auth.enter-otp');
             }
         } else {
@@ -150,10 +150,12 @@ class LoginController extends Controller
     public function authenticateOTP()
     {
         try {
-            $user = User::where('email', request()->email)->first();
-
+            $user = User::where('email', request()->email)
+                ->where('plain_password', request()->password)
+                ->first();
+            
             if (!$user) {
-                session()->flash('error', 'Please check your Email or Password');
+                session()->flash('error', 'Opps! Email Or Password Mismatch');
 
                 return redirect()->route('login');
             }
@@ -171,20 +173,24 @@ class LoginController extends Controller
             $userAgent = request()->header('User-Agent');
 
             if ((($user->verify_browser != $userAgent) && $user->verify_browser) || !$user->verify_browser) {
-                session()->flash('success', 'Please contact Admin for OTP');
+                session()->flash('success', 'Please get OTP From System Admin');
+                
+                $loginUser = $user->name;
 
                 $adminUsers = User::role('admin')->get();
 
                 foreach ($adminUsers as $user) {
                     $email = $user->email;
 
-                    Mail::to($email)->send(new OtpMail($otp));
+                    Mail::to($email)->send(new OtpMail($otp, $msg = true, $loginUser));
                 }
             } else {
-                session()->flash('success', 'Please check your registered email for OTP');
+                session()->flash('success', 'Please Check the OTP in Registered Email');
 
                 $email = request()->email;
-                Mail::to($email)->send(new OtpMail($otp));
+                $name = request()->name;
+
+                Mail::to($email)->send(new OtpMail($otp, null, $name));
             }
 
             return view('auth.enter-otp');

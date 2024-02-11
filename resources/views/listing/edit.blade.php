@@ -56,7 +56,7 @@
 
                             <div class="form-group">
                                 <label for="description" class="form-label d-flex justify-content-between">
-                                    <div>{{ __('Description') }}<span class="text-danger">*</span><span class="text-danger"> ( Enter Detail Description without using 3rd party link) </span></div><a href="https://chat.openai.com">ChatGPT</a>
+                                    <div>{{ __('Description') }}<span class="text-danger">*</span><span class="text-danger"> ( Enter Detail Description without using 3rd party link) </span></div><a target='_blank' href="https://chat.openai.com">ChatGPT</a>
                                 </label>
                                 <textarea class="form-control @error('description') is-invalid @enderror" name="description" placeholder="Description" rows="10">{{ old('description') ?? $allInfo['desc'] }}</textarea>
                                 <span class="error-message description" style="color:red;"></span>
@@ -281,7 +281,7 @@
                         </div>
 
                         <div style="text-align: right;">
-                            <button type="submit" class="btn btn-primary float-right">Update</button>
+                            <button type="submit" class="btn btn-warning float-right">Update & Publish</button>
                         </div>
                     </div>
                 </div>

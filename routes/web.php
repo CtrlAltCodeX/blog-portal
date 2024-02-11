@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\AmazonSrcappingController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -35,7 +37,7 @@ Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallb
 Route::post('/auth/google/refresh', [GoogleController::class, 'refreshGoogle'])
     ->name('google.refresh.token');
 
-Route::post('/verify/otp', [LoginController::class, 'authenticateOTP'])->name('verify.otp');
+Route::match(["get", "post"], '/verify/otp', [LoginController::class, 'authenticateOTP'])->name('verify.otp');
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function () {
     Route::get('dashboard', [DashboardController::class, 'index'])
@@ -122,7 +124,23 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::post('convert/image', [GoogleService::class, 'downloadProcessedImage'])
         ->name('convert.image');
+
+    Route::post('drafted/post', [GoogleService::class, 'draftedInventory'])
+        ->name('drafted.posts');
+
+    Route::get('posts', [DashboardController::class, 'getStats'])
+        ->name('get.posts.count');
 });
+
+Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+
+Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+
+Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+
+Route::post('password/reset', [ResetPasswordController::class, 'reset']);
+
+Route::post('update/password', [ResetPasswordController::class, 'updatePassword'])->name('password.update');
 
 Route::get('/', function () {
     return redirect()->route('dashboard');

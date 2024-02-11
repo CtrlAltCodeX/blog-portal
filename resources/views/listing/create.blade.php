@@ -63,7 +63,7 @@
 
                             <div class="form-group">
                                 <label for="description" class="form-label d-flex justify-content-between">
-                                    <div>{{ __('Description') }}<span class="text-danger">*</span><span class="text-danger"> ( Enter Detail Description without using 3rd party link) </span></div><a href="https://chat.openai.com">ChatGPT</a>
+                                    <div>{{ __('Description') }}<span class="text-danger">*</span><span class="text-danger"> ( Enter Detail Description without using 3rd party link) </span></div><a target='_blank' href="https://chat.openai.com">ChatGPT</a>
                                 </label>
                                 <!-- <div id="summernote" id="description" class="form-control @error('description') is-invalid @enderror" name="description">
                                     {{ old('description') }}
@@ -260,7 +260,7 @@
                         <div class="row" id="addUrls">
                             <div class="form-group col-md-4">
                                 <label for="url" class="form-label">{{ __('Main Image URL') }}</label>
-                                <input id="url" type="text" class="form-control @error('images') is-invalid @enderror" name="images[]" value="" autocomplete="images" autofocus placeholder="Base URL">
+                                <input id="url" type="text" class="form-control @error('images') is-invalid @enderror" name="images[]" autocomplete="images" autofocus placeholder="Base URL">
                                 <span class="error-message images" style="color:red;"></span>
 
                                 @error('images')

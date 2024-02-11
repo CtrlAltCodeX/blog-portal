@@ -55,8 +55,41 @@ class DatabaseSeeder extends Seeder
         Permission::create(['name' => 'Configure Blog']);
         Permission::create(['name' => 'Configure Update']);
         
-        
         Permission::create(['name' => 'Dashboard']);
+
+        User::create([
+            'name'     => 'Admin',
+            'email'    => 'admin@example.com',
+            'password' => bcrypt('admin123'),
+            'status'   => 1,
+            'mobile'   => '123456789',
+            'account_type' => 1,
+            'aadhaar_no' => '545454654',
+            'father_name' => 'Jhon Doe',
+            'mother_name' => 'Jenny',
+            'state' => 'test',
+            'pincode' => '201009',
+            'full_address' => 'Test address',
+            'plain_password' => 'admin123',
+        ])->assignRole($adminRole)->assignRole($writerRole);
+
+        $adminRole->givePermissionTo(Permission::all());
+
+        User::create([
+            'name'     => 'Writer',
+            'email'    => 'writer@example.com',
+            'password' => bcrypt('admin123'),
+            'status'   => 1,
+            'mobile'   => '123456789',
+            'account_type' => 1,
+            'aadhaar_no' => '545454654',
+            'father_name' => 'Jhon Doe',
+            'mother_name' => 'Jenny',
+            'state' => 'test',
+            'pincode' => '201009',
+            'full_address' => 'Test address',
+            'plain_password' => 'admin123',
+        ])->assignRole($writerRole);
 
         User::find(1)->assignRole($adminRole)->assignRole($writerRole);
 

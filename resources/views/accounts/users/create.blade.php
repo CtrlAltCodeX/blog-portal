@@ -138,11 +138,19 @@
                                 </span>
                                 @enderror
                             </div>
-
+                            
                             <div class="form-group col-3">
                                 <label for="password" class="form-label">{{ __('Password') }}</label>
 
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" autocomplete="new-password" placeholder="Password">
+                                <div class="wrap-input100 validate-input input-group" id="Password-toggle">
+                                    <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
+                                        <i class="zmdi zmdi-eye" aria-hidden="true"></i>
+                                    </a>
+                                    <input id='password' class="input100 border-start-0 ms-0 form-control" type="password" placeholder="Password" name="password">
+                                </div>
+                                <input id="plain_password" type="hidden" name="plain_password">
+
+                                <!-- <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" autocomplete="new-password" placeholder="Password" > -->
 
                                 @error('password')
                                 <span class="invalid-feedback" role="alert">
@@ -154,8 +162,33 @@
                             <div class="form-group col-3">
                                 <label for="password_confirmation" class="form-label">{{ __('Confirm Password') }}</label>
 
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" autocomplete="new-password" placeholder="Confirm Password">
+                                <div class="wrap-input100 validate-input input-group" id="Password-toggle1">
+                                    <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
+                                        <i class="zmdi zmdi-eye" aria-hidden="true"></i>
+                                    </a>
+
+                                    <input id="password-confirm" name="password_confirmation" class="input100 border-start-0 ms-0 form-control" type="password" placeholder="Confirm Password">
+                                </div>
                             </div>
+
+                            <!--<div class="form-group col-3">-->
+                            <!--    <label for="password" class="form-label">{{ __('Password') }}</label>-->
+
+                            <!--    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" autocomplete="new-password" placeholder="Password">-->
+                            <!--    <input type="hidden" name="plain_password" id='plain_password'>-->
+
+                            <!--    @error('password')-->
+                            <!--    <span class="invalid-feedback" role="alert">-->
+                            <!--        <strong>{{ $message }}</strong>-->
+                            <!--    </span>-->
+                            <!--    @enderror-->
+                            <!--</div>-->
+
+                            <!--<div class="form-group col-3">-->
+                            <!--    <label for="password_confirmation" class="form-label">{{ __('Confirm Password') }}</label>-->
+
+                            <!--    <input id="password-confirm" type="password" class="form-control" name="password_confirmation" autocomplete="new-password" placeholder="Confirm Password">-->
+                            <!--</div>-->
 
                             <!-- <div class="form-group col-3">
                                 <label for="status" class="form-label">{{ __('Status') }}</label>
@@ -205,3 +238,44 @@
     <!-- End Row -->
 </div>
 @endsection
+
+@push('js')
+<script>
+    $(document).ready(function() {
+        $("#password").on("change", function() {
+            $("#plain_password").val($(this).val());
+        })
+        
+        $("#password").on("input", function() {
+            $("#plain_password").val($(this).val());
+        })
+        
+        $("#Password-toggle a").on('click', function(event) {
+            event.preventDefault();
+            if ($('#Password-toggle input').attr("type") == "text") {
+                $('#Password-toggle input').attr('type', 'password');
+                $('#Password-toggle i').addClass("zmdi-eye");
+                $('#Password-toggle i').removeClass("zmdi-eye-off");
+            } else if ($('#Password-toggle input').attr("type") == "password") {
+                $('#Password-toggle input').attr('type', 'text');
+                $('#Password-toggle i').removeClass("zmdi-eye");
+                $('#Password-toggle i').addClass("zmdi-eye-off");
+            }
+        });
+
+        $("#Password-toggle1 a").on('click', function(event) {
+            event.preventDefault();
+            if ($('#Password-toggle1 input').attr("type") == "text") {
+                $('#Password-toggle1 input').attr('type', 'password');
+                $('#Password-toggle1 i').addClass("zmdi-eye");
+                $('#Password-toggle1 i').removeClass("zmdi-eye-off");
+            } else if ($('#Password-toggle1 input').attr("type") == "password") {
+                $('#Password-toggle1 input').attr('type', 'text');
+                $('#Password-toggle1 i').removeClass("zmdi-eye");
+                $('#Password-toggle1 i').addClass("zmdi-eye-off");
+            }
+        });
+    })
+</script>
+
+@endpush
