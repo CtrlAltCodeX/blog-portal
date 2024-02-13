@@ -76,7 +76,7 @@ class ListingController extends Controller
 
         session()->flash('success', 'Post created successfully');
 
-        return redirect()->route('inventory.index');
+        return redirect()->route('listing.create');
     }
 
     /**
@@ -166,7 +166,7 @@ class ListingController extends Controller
             $image = $doc->getElementsByTagName("img")->item($i);
             $images[] = $image->getAttribute('src');
         }
-        
+
         $allInfo = [
             'sku' => trim($sku),
             'publication' => trim($publication),
@@ -174,7 +174,7 @@ class ListingController extends Controller
             'lang' => trim($lang),
             'author_name' => trim($author_name),
             'page_no' => trim($page_no),
-            'desc' => $desc[0]??'',
+            'desc' => $desc[0] ?? '',
             'selling' => trim($selling),
             'mrp' => trim($mrp),
             'multiple' => $images,

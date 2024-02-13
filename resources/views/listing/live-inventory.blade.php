@@ -188,12 +188,12 @@
                                             </button>
                                     </td>
 
-                                    <td>{{ date("d-m-Y h:i A", strtotime($published)) }}</td>
-                                    <td>{{ date("d-m-Y h:i A", strtotime($updated)) }}</td>
+                                    <td>{{ date_format(date_create($published), "d-m-Y h:i A") }}</td>
+                                    <td>{{ date_format(date_create($updated), "d-m-Y h:i A") }}</td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic example">
                                             @if($mrp && $selling && $productTitle)
-                                            @can('Inventory edit')
+                                            @can('Inventory -> Manage Inventory -> Edit')
                                             <a href="{{ route('listing.edit', $productId) }}" class="btn btn-sm btn-primary">{{ __('Edit') }}</a>
                                             @endcan
                                             @endif

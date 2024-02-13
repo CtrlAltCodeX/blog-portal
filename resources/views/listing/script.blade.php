@@ -276,7 +276,20 @@
                 if (fieldValue == '') emptyFields++;
             });
 
-            $("#progressBar").html(emptyFields + " Remaining Out of " + (totalFields - notDefined) + " Fields");
+            $(".progressBar").html(emptyFields + " Remaining Out of " + (totalFields - notDefined) + " Fields");
         }
     })
+
+    function copyLink() {
+        // Get the text field
+        var copyText = document.getElementById("url");
+
+        $("#copylink").html('Copied');
+
+        navigator.clipboard.writeText('https://www.instamojo.com/EXAM360/');
+
+        setTimeout(function() {
+            $('#copylink').html('Copy');
+        }, 500)
+    }
 </script>
