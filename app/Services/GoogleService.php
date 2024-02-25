@@ -378,9 +378,9 @@ class GoogleService
             }
 
             $existingPost->title = $data['title'];
+            $existingPost->setPublished(Carbon::now());
             $existingPost->content = view('listing.template', compact('data'))->render();
             $existingPost->setLabels($data['label']);
-            // $existingPost->setImages('Testing');
 
             return $blogger->posts->update($credential->blog_id, $postId, $existingPost);
         } catch (\Google_Service_Exception $e) {
