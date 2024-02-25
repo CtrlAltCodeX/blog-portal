@@ -1,5 +1,5 @@
 @php
-    $userInfo = app('App\Models\SiteSetting')->first();
+$userInfo = app('App\Models\SiteSetting')->first();
 
 @endphp
 
@@ -21,81 +21,80 @@
                     <path d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z" />
                 </svg></div>
             <ul class="side-menu">
-          
-                @can('Dashboard')
-                    <li class="sub-category">
-                        <h3>{{ __('Main') }}</h3>
-                    </li>
 
-                    <li class="slide">
-                        <a class="side-menu__item" data-bs-toggle="slide" href="{{ route('dashboard') }}"><i class="side-menu__icon fe fe-home"></i><span class="side-menu__label">{{ __('Dashboard') }}</span></a>
-                    </li>
+                @can('Dashboard')
+                <li class="sub-category">
+                    <h3>{{ __('Main') }}</h3>
+                </li>
+
+                <li class="slide">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="{{ route('dashboard') }}"><i class="side-menu__icon fe fe-home"></i><span class="side-menu__label">{{ __('Dashboard') }}</span></a>
+                </li>
                 @endcan
-                
+
                 <li class="sub-category">
                     <h3>{{ __('Information') }}</h3>
                 </li>
 
                 @can('Listing (Main Menu)')
-                    <li class="slide {{ (request()->is('admin/listing/*') || request()->is('admin/listing') || request()->is('admin/find-products/amazon')) ? 'is-expanded' : '' }}">
-                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-list"></i><span class="side-menu__label">{{ __('Listing') }}</span><i class="angle fe fe-chevron-right"></i></a>
-                        <ul class="slide-menu">
-                            <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
-                            @can('Listing create')
-                                <li><a href="{{ route('listing.create') }}" class="slide-item {{ (request()->is('admin/listing/create')) ? 'active' : '' }}">{{ __('Create New Listing') }}</a></li>
-                            @endcan
-                            <!-- <li><a href="{{ route('amazon.find') }}" class="slide-item {{ (request()->is('admin/find-products/amazon')) ? 'active' : '' }}">{{ __('Create New Listing (Auto)') }}</a></li> -->
-                            <!--<li><a href="{{ route('flipkart.find') }}" class="slide-item {{ (request()->is('admin/find-products/flipkart')) ? 'active' : '' }}">{{ __('Create Listing (Flipkart scrap)') }}</a></li>-->
-                            @can('Listing (Main Menu)')
-                                <!-- <li><a href="{{ route('listing.index') }}" class="slide-item {{ (request()->is('admin/listing')) ? 'active' : '' }}">{{ __('Catalogue') }}</a></li> -->
-                            @endcan
-                        </ul>
-                    </li>
+                <li class="slide {{ (request()->is('admin/listing/*') || request()->is('admin/listing') || request()->is('admin/find-products/amazon')) ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-list"></i><span class="side-menu__label">{{ __('Listing') }}</span><i class="angle fe fe-chevron-right"></i></a>
+                    <ul class="slide-menu">
+                        <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
+                        @can('Listing create')
+                        <li><a href="{{ route('listing.create') }}" class="slide-item {{ (request()->is('admin/listing/create')) ? 'active' : '' }}">{{ __('Create New Listing') }}</a></li>
+                        @endcan
+                    </ul>
+                </li>
                 @endcan
 
                 @can('Inventory (Main Menu)')
-                    <li class="slide {{ (request()->is('admin/inventory') || request()->is('admin/inventory/drafted')) ? 'is-expanded' : '' }}">
-                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-box"></i><span class="side-menu__label">{{ __('Inventory') }}</span><i class="angle fe fe-chevron-right"></i></a>
-                        <ul class="slide-menu">
-                            <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
-                            <li><a href="{{ route('inventory.index', ['startIndex' => 1, 'category' => '']) }}" class="slide-item {{ request()->is('admin/inventory') ? 'active' : '' }}">{{ __('Manage Inventory') }}</a></li>
-                            <li><a href="{{ route('inventory.drafted') }}" class="slide-item {{ request()->is('admin/inventory/drafted') ? 'active' : '' }}">{{ __('Drafted Inventory') }}</a></li>
-                        </ul>
-                    </li>
+                <li class="slide {{ (request()->is('admin/inventory') || request()->is('admin/inventory/drafted') || request()->is('admin/inventory/review')) ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-box"></i><span class="side-menu__label">{{ __('Inventory') }}</span><i class="angle fe fe-chevron-right"></i></a>
+                    <ul class="slide-menu">
+                        <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
+                        
+                        <li><a href="{{ route('inventory.index', ['startIndex' => 1, 'category' => '']) }}" class="slide-item {{ request()->is('admin/inventory') ? 'active' : '' }}">{{ __('Manage Inventory') }}</a></li>
+
+                        <li><a href="{{ route('inventory.drafted') }}" class="slide-item {{ request()->is('admin/inventory/drafted') ? 'active' : '' }}">{{ __('Drafted Inventory') }}</a></li>
+
+                        <li><a href="{{ route('inventory.review') }}" class="slide-item {{ request()->is('admin/inventory/review') ? 'active' : '' }}">{{ __('Under Review Listings') }}</a></li>
+                    </ul>
+                </li>
                 @endcan
 
                 @can('User Details (Main Menu)')
-                    <li class="slide {{ (request()->is('admin/users/*') || request()->is('admin/users')) ? 'is-expanded' : '' }}">
-                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-users"></i><span class="side-menu__label">{{ __('Users Details') }}</span><i class="angle fe fe-chevron-right"></i></a>
-                        <ul class="slide-menu">
-                            <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
-                            
-                            @can('User create')
-                             <li><a href="{{ route('users.create') }}" class="slide-item {{ request()->is('admin/users/create') ? 'active' : '' }}">{{ __('Create New Users') }}</a></li>
-                            @endcan
-                            
-                            @can('User approved')
-                                <li><a href="{{ route('verified.users') }}" class="slide-item {{ request()->is('admin/users/verified/approved') ? 'active' : '' }}">{{ __('Approved Users') }}</a>
-                                </li>
-                            @endcan
-                            
-                            @can('User Details (Main Menu)')
-                                <li><a href="{{ route('users.index') }}" class="slide-item {{ (request()->is('admin/users') || request()->is('admin/users/*/edit')) ? 'active' : '' }}">{{ __('All Users List') }}</a>
-                                </li>
-                            @endcan
-                        </ul>
-                    </li>
+                <li class="slide {{ (request()->is('admin/users/*') || request()->is('admin/users')) ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-users"></i><span class="side-menu__label">{{ __('Users Details') }}</span><i class="angle fe fe-chevron-right"></i></a>
+                    <ul class="slide-menu">
+                        <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
+
+                        @can('User create')
+                        <li><a href="{{ route('users.create') }}" class="slide-item {{ request()->is('admin/users/create') ? 'active' : '' }}">{{ __('Create New Users') }}</a></li>
+                        @endcan
+
+                        @can('User approved')
+                        <li><a href="{{ route('verified.users') }}" class="slide-item {{ request()->is('admin/users/verified/approved') ? 'active' : '' }}">{{ __('Approved Users') }}</a>
+                        </li>
+                        @endcan
+
+                        @can('User Details (Main Menu)')
+                        <li><a href="{{ route('users.index') }}" class="slide-item {{ (request()->is('admin/users') || request()->is('admin/users/*/edit')) ? 'active' : '' }}">{{ __('All Users List') }}</a>
+                        </li>
+                        @endcan
+                    </ul>
+                </li>
                 @endcan
 
                 <li class="slide {{ (request()->is('admin/roles/*') || request()->is('admin/roles')) ? 'is-expanded' : '' }}">
                     <a class="side-menu__item  {{ request()->is('admin/roles*') ? 'active is-expanded' : '' }}" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-lock"></i><span class="side-menu__label">{{ __('Roles & Permissions') }}</span><i class="angle fe fe-chevron-right"></i></a>
                     <ul class="slide-menu">
                         @can('Role create')
-                            <li>
-                                <a href="{{ route('roles.create') }}" class="slide-item  {{ request()->is('admin/roles/create') ? 'active' : '' }}">{{ __('Create New Roles') }}</a>
-                            </li>
+                        <li>
+                            <a href="{{ route('roles.create') }}" class="slide-item  {{ request()->is('admin/roles/create') ? 'active' : '' }}">{{ __('Create New Roles') }}</a>
+                        </li>
                         @endcan
-                        
+
                         <li>
                             <a href="{{ route('roles.index') }}" class="slide-item  {{ (request()->is('admin/roles') || request()->is('admin/roles/edit')) ? 'active' : '' }}">{{ __('Assign Permissions to Roles') }}</a>
                         </li>
@@ -107,20 +106,20 @@
                 </li>
 
                 @if(auth()->user()->can('Site Access') || auth()->user()->can('Configure Blog'))
-                    <li class="slide {{ (request()->is('admin/settings/*') || request()->is('admin/settings')) ? 'is-expanded' : '' }}">
-                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fa fa-gear"></i><span class="side-menu__label">{{ __('Settings') }}</span><i class="angle fe fe-chevron-right"></i></a>
-                        <ul class="slide-menu">
-                            <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
-                            
-                            @can('Site Access')
-                                <li><a href="{{ route('settings.site') }}" class="slide-item {{ request()->is('admin/settings/site') ? 'active' : '' }}">{{ __('Site Settings') }}</a></li>
-                            @endcan
+                <li class="slide {{ (request()->is('admin/settings/*') || request()->is('admin/settings')) ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fa fa-gear"></i><span class="side-menu__label">{{ __('Settings') }}</span><i class="angle fe fe-chevron-right"></i></a>
+                    <ul class="slide-menu">
+                        <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
 
-                            @can('Configure Blog')
-                                <li><a href="{{ route('settings.blog') }}" class="slide-item {{ request()->is('admin/settings/blog') ? 'active' : '' }}">{{ __('Confiure Blog') }}</a></li>
-                            @endcan
-                        </ul>
-                    </li>
+                        @can('Site Access')
+                        <li><a href="{{ route('settings.site') }}" class="slide-item {{ request()->is('admin/settings/site') ? 'active' : '' }}">{{ __('Site Settings') }}</a></li>
+                        @endcan
+
+                        @can('Configure Blog')
+                        <li><a href="{{ route('settings.blog') }}" class="slide-item {{ request()->is('admin/settings/blog') ? 'active' : '' }}">{{ __('Confiure Blog') }}</a></li>
+                        @endcan
+                    </ul>
+                </li>
                 @endif
             </ul>
         </div>

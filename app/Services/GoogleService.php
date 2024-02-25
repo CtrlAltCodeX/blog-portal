@@ -138,7 +138,7 @@ class GoogleService
                 $params['startDate'] =  $carbonstartDate->format('Y-m-d\TH:i:sP');
             }
 
-            if (request()->route()->getName() == 'inventory.index') {
+            if (request()->route()->getName() == 'inventory.index' || request()->route()->getName() == 'live.posts') {
                 // $params['key'] = 'AIzaSyDfHMIjCrVHFh1aOToH5_1_5rvKtNXQRWY';
                 $params['start-index'] = $startIndex;
                 $params['max-results'] = $perPage;

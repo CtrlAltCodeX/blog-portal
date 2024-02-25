@@ -273,22 +273,6 @@
             "paging": false
         });
 
-        // $("#specification").on('change', function(e) {
-        //     $('#field').on('input', function() {
-        //         var field = $(this).val();
-        //         var value = $('#specification').val();
-
-        //         dataTable.column(value).search(field).draw();
-        //     })
-
-        // });
-
-        // $("#status").on("change", function(e) {
-        //     var status = $(this).val();
-        //     $("#status").val(status);
-        //     dataTable.column(1).search(status).draw();
-        // });
-
         $("#category").on("change", function() {
             $("#form").submit();
         })

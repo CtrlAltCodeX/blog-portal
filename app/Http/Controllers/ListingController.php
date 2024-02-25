@@ -251,6 +251,26 @@ class ListingController extends Controller
     }
 
     /**
+     * Review Listing
+     *
+     * @return void
+     */
+    public function reviewInventory()
+    {
+        if ($this->tokenIsExpired($this->googleService)) {
+            
+            if (!$this->googleService->getCredentails()) return view('settings.authenticate');
+            
+            $url = $this->googleService->refreshToken($this->googleService->getCredentails()->toArray());
+            request()->session()->put('page_url', request()->url());
+
+            return redirect()->to($url);
+        }
+
+        return view('listing.review-inventory');
+    }
+
+    /**
      * Inventory Listing
      *
      * @return void
