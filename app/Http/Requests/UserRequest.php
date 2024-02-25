@@ -33,6 +33,7 @@ class UserRequest extends FormRequest
             'full_address' => ['required'],
             'email'        => ['required', 'string', 'email', 'max:255'],
             'password'     => ['required', 'string', 'min:8', 'confirmed'],
+            'plain_password' => ['nullable', 'string', 'min:8']
             // 'status'       => ['required', 'in:0,1'],
         ];
 

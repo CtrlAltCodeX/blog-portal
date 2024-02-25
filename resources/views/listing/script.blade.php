@@ -276,7 +276,7 @@
                 if (fieldValue == '') emptyFields++;
             });
 
-            $(".progressBar").html(emptyFields + " Remaining Out of " + (totalFields - notDefined) + " Fields");
+            $("#progressBar").html(emptyFields + " Remaining Out of " + (totalFields - notDefined) + " Fields");
         }
     })
 

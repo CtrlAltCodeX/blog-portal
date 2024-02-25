@@ -107,7 +107,7 @@
                                 @php
                                 $doc = new \DOMDocument();
                                 if($googlePost->content){
-                                @$doc->loadHTML($googlePost->content);
+                                    @$doc->loadHTML($googlePost->content);
                                 }
                                 $td = $doc->getElementsByTagName('td');
                                 $price = explode('-', $td->item(1)->textContent ?? '');
@@ -144,8 +144,8 @@
                                             </button>
                                     </td>
                                     <!-- <td>{{ count($googlePost->labels??[]) }}</td> -->
-                                    <td>{{ date_format(date_create($published), "d-m-Y h:i A") }}</td>
-                                    <td>{{ date_format(date_create($updated), "d-m-Y h:i A") }}</td>
+                                    <td>{{ date("d-m-Y h:i A", strtotime($googlePost->published)) }}</td>
+                                    <td>{{ date("d-m-Y h:i A", strtotime($googlePost->updated)) }}</td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic example">
                                             @if($mrp && $selling && $googlePost->title)

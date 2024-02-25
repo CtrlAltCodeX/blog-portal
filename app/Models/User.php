@@ -33,7 +33,8 @@ class User extends Authenticatable
         'full_address',
         'plain_password',
         'verify_browser',
-        'otp'
+        'otp',
+        'profile'
     ];
 
     /**

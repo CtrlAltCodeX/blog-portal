@@ -3,129 +3,76 @@
 @section('title', __('Create Role'))
 
 @section('content')
-<!-- CONTAINER -->
-<div class="main-container container-fluid">
+    <!-- CONTAINER -->
+    <div class="main-container container-fluid">
 
-    <!-- PAGE-HEADER -->
-    <div class="page-header">
-        <h1 class="page-title">{{ __('Create New Roles') }}</h1>
-        <div>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="javascript:void(0)">{{ __('Roles') }}</a></li>
-                <li class="breadcrumb-item active" aria-current="page">{{ __('Create New Roles') }}</li>
-            </ol>
+        <!-- PAGE-HEADER -->
+        <div class="page-header">
+            <h1 class="page-title">{{ __('Create New Roles') }}</h1>
+            <div>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="javascript:void(0)">{{ __('Roles') }}</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ __('Create New Roles') }}</li>
+                </ol>
+            </div>
         </div>
-    </div>
-    <!-- PAGE-HEADER END -->
+        <!-- PAGE-HEADER END -->
 
-    <!-- Row -->
-    <form action="{{ route('roles.store') }}" method="POST">
-        @csrf
-        <div class="row">
-            <div class="col-md-12 col-xl-12">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between">
-                        <h4 class="card-title">
-                            {{ __('Create New Roles') }}
-                        </h4>
+        <!-- Row -->
+        <form action="{{ route('roles.store') }}" method="POST">
+            @csrf
+            <div class="row">
+                <div class="col-md-12 col-xl-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between">
+                            <h4 class="card-title">
+                                {{ __('Create New Roles') }}
+                            </h4>
 
-                        <button type="submit" class="btn btn-primary float-right">Save</button>
-                    </div>
+                            <button type="submit" class="btn btn-primary float-right">Save</button>
+                        </div>
 
-                    <div class="card-body">
-                        <div>
-                            <div class="form-group">
-                                <label for="name" class="form-label">{{ __('Add New Role') }}</label>
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" autocomplete="name" autofocus placeholder="Name">
+                        <div class="card-body">
+                            <div>
+                                <div class="form-group">
+                                    <label for="name" class="form-label">{{ __('Add New Role') }}</label>
+                                    <input id="name" type="text"
+                                        class="form-control @error('name') is-invalid @enderror" name="name"
+                                        value="{{ old('name') }}" autocomplete="name" autofocus placeholder="Name">
 
-                                @error('name')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
+                                    @error('name')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
 
-                            <div class="form-group">
-                                <div class="row">
-                                    @foreach ($permissions as $permission)
-                                    @if($permission->name == 'Dashboard')
-                                    <label for="name" class="form-label">{{ __('Dashboard') }}</label>
-                                    <div class="col-md-4">
-                                        <div class="custom-controls-stacked">
-                                            <label class="custom-control custom-checkbox-md">
-                                                <input type="checkbox" class="custom-control-input" type="checkbox" name="permissions[]" id="permission_{{ $permission->id }}" value="{{ $permission->name }}">
-                                                <label class="custom-control-label" for="permission_{{ $permission->id }}">
-                                                    {{ $permission->name }}</label>
-                                            </label>
-                                        </div>
+                                <div class="form-group">
+                                    <label for="name" class="form-label">{{ __('Permissions') }}</label>
+
+                                    <div class="row">
+                                        @foreach ($permissions as $permission)
+                                            <div class="col-md-4">
+                                                <div class="custom-controls-stacked">
+                                                    <label class="custom-control custom-checkbox-md">
+                                                        <input type="checkbox" class="custom-control-input" type="checkbox"
+                                                            name="permissions[]" id="permission_{{ $permission->id }}"
+                                                            value="{{ $permission->name }}">
+                                                        <label class="custom-control-label"
+                                                            for="permission_{{ $permission->id }}">
+                                                            {{ $permission->name }}</label>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        @endforeach
                                     </div>
-                                    @endif
-                                    @endforeach
-
-                                    <label for="name" class="form-label">{{ __('Roles & Permissions') }}</label>
-                                    @foreach ($permissions as $permission)
-                                    @if(\Illuminate\Support\Str::contains($permission->name, 'Roles & Permissions'))
-                                    <div class="col-md-4">
-                                        <div class="custom-controls-stacked">
-                                            <label class="custom-control custom-checkbox-md">
-                                                <input type="checkbox" class="custom-control-input" type="checkbox" name="permissions[]" id="permission_{{ $permission->id }}" value="{{ $permission->name }}">
-                                                <label class="custom-control-label" for="permission_{{ $permission->id }}">
-                                                    {{ $permission->name }}</label>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    @endif
-                                    @endforeach
-                                    <label for="name" class="form-label">{{ __('Listing') }}</label>
-                                    @foreach ($permissions as $permission)
-                                    @if(\Illuminate\Support\Str::contains($permission->name, 'Listing') || \Illuminate\Support\Str::contains($permission->name, 'Inventory'))
-                                    <div class="col-md-4">
-                                        <div class="custom-controls-stacked">
-                                            <label class="custom-control custom-checkbox-md">
-                                                <input type="checkbox" class="custom-control-input" type="checkbox" name="permissions[]" id="permission_{{ $permission->id }}" value="{{ $permission->name }}">
-                                                <label class="custom-control-label" for="permission_{{ $permission->id }}">
-                                                    {{ $permission->name }}</label>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    @endif
-                                    @endforeach
-                                    <label for="name" class="form-label">{{ __('Settings') }}</label>
-                                    @foreach ($permissions as $permission)
-                                    @if(\Illuminate\Support\Str::contains($permission->name, 'Settings'))
-                                    <div class="col-md-4">
-                                        <div class="custom-controls-stacked">
-                                            <label class="custom-control custom-checkbox-md">
-                                                <input type="checkbox" class="custom-control-input" type="checkbox" name="permissions[]" id="permission_{{ $permission->id }}" value="{{ $permission->name }}">
-                                                <label class="custom-control-label" for="permission_{{ $permission->id }}">
-                                                    {{ $permission->name }}</label>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    @endif
-                                    @endforeach
-                                    <label for="name" class="form-label">{{ __('User') }}</label>
-                                    @foreach ($permissions as $permission)
-                                    @if(\Illuminate\Support\Str::contains($permission->name, 'User'))
-                                    <div class="col-md-4">
-                                        <div class="custom-controls-stacked">
-                                            <label class="custom-control custom-checkbox-md">
-                                                <input type="checkbox" class="custom-control-input" type="checkbox" name="permissions[]" id="permission_{{ $permission->id }}" value="{{ $permission->name }}">
-                                                <label class="custom-control-label" for="permission_{{ $permission->id }}">
-                                                    {{ $permission->name }}</label>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    @endif
-                                    @endforeach
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </form>
-    <!-- End Row -->
-</div>
+        </form>
+        <!-- End Row -->
+    </div>
 @endsection

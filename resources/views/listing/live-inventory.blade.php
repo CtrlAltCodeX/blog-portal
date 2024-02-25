@@ -39,7 +39,7 @@
 @endpush
 
 @section('content')
-@can('Inventory (Main Menu)')
+
 <div>
     <div class="row row-sm">
         <div class="col-lg-12">
@@ -188,8 +188,8 @@
                                             </button>
                                     </td>
 
-                                    <td>{{ date_format(date_create($published), "d-m-Y h:i A") }}</td>
-                                    <td>{{ date_format(date_create($updated), "d-m-Y h:i A") }}</td>
+                                    <td>{{ date("d-m-Y h:i A", strtotime($published)) }}</td>
+                                    <td>{{ date("d-m-Y h:i A", strtotime($updated)) }}</td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic example">
                                             @if($mrp && $selling && $productTitle)
@@ -198,7 +198,7 @@
                                             @endcan
                                             @endif
 
-                                            @can('Inventory -> Manage Inventory')
+                                            @can('Inventory -> Manage Inventory -> Delete')
                                             <form action="{{ route('listing.destroy', $productId) }}" method="POST" class="ml-2">
                                                 @csrf
                                                 @method('DELETE')
@@ -237,7 +237,7 @@
         </div>
     </div>
 </div>
-@endcan
+
 @endsection
 
 @push('js')

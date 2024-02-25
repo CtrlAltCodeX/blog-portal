@@ -230,6 +230,7 @@ $getRoles = app('App\Http\Controllers\RoleController');
                     $("#draftedData").html(result.length);
                     localStorage.setItem('drafted', result.length);
                     getTotalProducts();
+                    
                     setTimeout(() => {
                         getInventoryInStockData();
 
@@ -257,8 +258,8 @@ $getRoles = app('App\Http\Controllers\RoleController');
         }
 
         function getInventoryOutStockData() {
-            localStorage.setItem('outStock', 0);
-
+             localStorage.setItem('outStock', 0);
+             
             $.ajax({
                 type: "GET",
                 url: "{{ route('get.posts.count') }}",
@@ -270,9 +271,7 @@ $getRoles = app('App\Http\Controllers\RoleController');
                 },
                 success: function(result) {
                     localStorage.setItem('outStock', result);
-
                     localStorage.setItem('out_Stock', 0);
-
                     $.ajax({
                         type: "GET",
                         url: "{{ route('get.posts.count') }}",
@@ -306,9 +305,9 @@ $getRoles = app('App\Http\Controllers\RoleController');
                 success: function(result) {
                     // $("#lowStock").html(result);
                     localStorage.setItem('lowStock', result);
-
+                    
                     localStorage.setItem('low_stock', 0);
-
+                     
                     $.ajax({
                         type: "GET",
                         url: "{{ route('get.posts.count') }}",
@@ -342,9 +341,9 @@ $getRoles = app('App\Http\Controllers\RoleController');
                 success: function(result) {
                     // $("#demandStock").html(result);
                     localStorage.setItem('demandStock', result);
-
+                    
                     localStorage.setItem('out_demand', 0);
-
+                     
                     $.ajax({
                         type: "GET",
                         url: "{{ route('get.posts.count') }}",
@@ -360,6 +359,7 @@ $getRoles = app('App\Http\Controllers\RoleController');
                             $("#demandStock").html(parseInt(result) + parseInt(getCount));
                         },
                     });
+                    
                 },
             });
         }

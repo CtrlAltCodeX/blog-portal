@@ -8,7 +8,7 @@
     <div class="app-sidebar__overlay" data-bs-toggle="sidebar"></div>
     <div class="app-sidebar">
         <div class="side-header">
-            <a class="header-brand1" href="index.html">
+            <a class="header-brand1" href="/admin/dashboard">
                 <img src="/storage/{{ $userInfo->logo??'logo-3.png' }}" class="header-brand-img desktop-logo" alt="logo">
                 <img src="/storage/{{ $userInfo->logo??'logo-3.png' }}" class="header-brand-img toggle-logo" alt="logo">
                 <img src="/storage/{{ $userInfo->logo??'logo-3.png' }}" class="header-brand-img light-logo" alt="logo">
@@ -58,12 +58,8 @@
                         <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-box"></i><span class="side-menu__label">{{ __('Inventory') }}</span><i class="angle fe fe-chevron-right"></i></a>
                         <ul class="slide-menu">
                             <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
-                            @can('Inventory -> Manage Inventory')
                             <li><a href="{{ route('inventory.index', ['startIndex' => 1, 'category' => '']) }}" class="slide-item {{ request()->is('admin/inventory') ? 'active' : '' }}">{{ __('Manage Inventory') }}</a></li>
-                            @endcan
-                            @can('Inventory -> Drafted Inventory')
                             <li><a href="{{ route('inventory.drafted') }}" class="slide-item {{ request()->is('admin/inventory/drafted') ? 'active' : '' }}">{{ __('Drafted Inventory') }}</a></li>
-                            @endcan
                         </ul>
                     </li>
                 @endcan
@@ -99,17 +95,14 @@
                                 <a href="{{ route('roles.create') }}" class="slide-item  {{ request()->is('admin/roles/create') ? 'active' : '' }}">{{ __('Create New Roles') }}</a>
                             </li>
                         @endcan
-                        @can('Roles & Permissions -> Assign Permissions to Roles')
+                        
                         <li>
                             <a href="{{ route('roles.index') }}" class="slide-item  {{ (request()->is('admin/roles') || request()->is('admin/roles/edit')) ? 'active' : '' }}">{{ __('Assign Permissions to Roles') }}</a>
                         </li>
-                        @endcan
 
-                        @can('Roles & Permissions -> View All Roles & Permissions')
                         <li>
                             <a href="{{ route('view.roles') }}" class="slide-item  {{ (request()->is('admin/roles/all/view')) ? 'active' : '' }}">{{ __('View All Roles & Permissions') }}</a>
                         </li>
-                        @endcan
                     </ul>
                 </li>
 

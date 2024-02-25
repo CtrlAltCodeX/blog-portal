@@ -18,7 +18,6 @@ class ProfileController extends Controller
     public function edit()
     {
         $user = auth()->user();
-        // dd(asset($user->profile));
 
         return view('profile.edit', compact('user'));
     }
@@ -47,7 +46,7 @@ class ProfileController extends Controller
     
             $background->save(public_path($outputFileName));    
             
-            $validated['profile'] = config('app.url') . '/public/' . $outputFileName;
+            $validated['profile'] = config('app.url') . $outputFileName;
         }
 
         if ($request->filled('current_password')) {

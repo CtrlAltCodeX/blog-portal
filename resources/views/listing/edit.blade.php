@@ -39,11 +39,11 @@
                     </div>
 
                     <div class="card-body">
-                        <div class="progressBar text-end"></div>
+                        <div id="progressBar" class="text-end"></div>
 
                         <div>
                             <div class="form-group">
-                                <label for="title" class="form-label">{{ __('Title') }}<span class="text-danger">*</span> <span class="text-success">(Prduct Name | Author | Edition | Publication ( Medium ) )</span></label>
+                                <label for="title" class="form-label">{{ __('Title') }}<span class="text-danger">*</span> <span class="text-success">(Product Name | Author | Edition | Publication ( Medium ) )</span></label>
                                 <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') ?? $post->title }}" autocomplete="title" autofocus placeholder="title">
                                 <span class="error-message title" style="color:red;"></span>
 
@@ -56,13 +56,7 @@
 
                             <div class="form-group">
                                 <label for="description" class="form-label d-flex justify-content-between">
-                                    <div>{{ __('Description') }}<span class="text-danger">*</span><span class="text-success"> (Suggestion - Title + Description + Search Key) </span></div>
-                                    <div>
-                                        <a href='https://www.commontools.org/tool/replace-new-lines-with-commas-40' target='_blank'>Line Remover | </a><a target='_blank' href="https://chat.openai.com"> ChatGPT</a>
-                                    </div>
-                                </label>
-                                <label for="description" class="form-label d-flex justify-content-between text-danger" style="margin-top: -10px;">
-                                    <div>{{ __('Do not use 3rd Party Links/Website Names') }}</div>
+                                    <div>{{ __('Description') }}<span class="text-danger">*</span><span class="text-danger"> ( Enter Detail Description without using 3rd party link) </span></div><a target='_blank' href="https://chat.openai.com">ChatGPT</a>
                                 </label>
                                 <textarea class="form-control @error('description') is-invalid @enderror" name="description" placeholder="Description" rows="10">{{ old('description') ?? $allInfo['desc'] }}</textarea>
                                 <span class="error-message description" style="color:red;"></span>
@@ -241,7 +235,7 @@
                             </div>
 
                             <div class="form-group col-md-4">
-                                <label for="url" class="form-label">{{ __('Insta Mojo URL') }}<span onclick="copyLink()" id='copylink' style="cursor:pointer;">Copy</span></label>
+                                <label for="url" class="form-label">{{ __('Insta Mojo URL') }}</label>
                                 <input id="url" type="url" class="form-control @error('url') is-invalid @enderror" name="url" value="{{ old('url') ?? $allInfo['url'] }}" autocomplete="url" autofocus placeholder="Insta Mojo Url">
                                 <span class="error-message url" style="color:red;"></span>
 
@@ -287,9 +281,7 @@
                         </div>
 
                         <div style="text-align: right;">
-                            <div class="progressBar text-end mb-2"></div>
-
-                            <button type="submit" class="btn btn-warning float-right">Update & Publish</button>
+                            <button type="submit" class="btn btn-success float-right">Update & Publish</button>
                         </div>
                     </div>
                 </div>

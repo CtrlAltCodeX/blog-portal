@@ -1,9 +1,7 @@
 <?php
 
 use App\Http\Controllers\AmazonSrcappingController;
-use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -15,6 +13,8 @@ use App\Http\Controllers\ListingController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TinyMCEController;
 use App\Services\GoogleService;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 
 Illuminate\Support\Facades\Auth::routes();
 
@@ -37,7 +37,7 @@ Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallb
 Route::post('/auth/google/refresh', [GoogleController::class, 'refreshGoogle'])
     ->name('google.refresh.token');
 
-Route::match(["get", "post"], '/verify/otp', [LoginController::class, 'authenticateOTP'])->name('verify.otp');
+Route::match(['get', 'post'],'/verify/otp', [LoginController::class, 'authenticateOTP'])->name('verify.otp');
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function () {
     Route::get('dashboard', [DashboardController::class, 'index'])
@@ -124,7 +124,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::post('convert/image', [GoogleService::class, 'downloadProcessedImage'])
         ->name('convert.image');
-
+        
     Route::post('drafted/post', [GoogleService::class, 'draftedInventory'])
         ->name('drafted.posts');
 
