@@ -19,9 +19,9 @@ class UserController extends Controller
      */
     function __construct()
     {
-        $this->middleware('role_or_permission:User access|User create|User edit|User delete', ['only' => ['index', 'show']]);
+        $this->middleware('role_or_permission:User Details (Main Menu)|User create|User Details -> All Users List -> Edit|User delete', ['only' => ['index', 'show']]);
         $this->middleware('role_or_permission:User create', ['only' => ['create', 'store']]);
-        $this->middleware('role_or_permission:User edit', ['only' => ['edit', 'update']]);
+        $this->middleware('role_or_permission:User Details -> All Users List -> Edit', ['only' => ['edit', 'update']]);
         $this->middleware('role_or_permission:User delete', ['only' => ['destroy']]);
     }
 
@@ -80,7 +80,9 @@ class UserController extends Controller
 
         $user->update($request->validated());
 
-        $user->syncRoles(request()->input('roles'));
+        if (request()->input('roles')) {
+            $user->syncRoles(request()->input('roles'));
+        }
 
         session()->flash('success', __('User updated successfully.'));
 
@@ -137,7 +139,10 @@ class UserController extends Controller
 
             // Check if the entered password matches the hashed password
             if (Hash::check(request()->current, $user->password)) {
-                $user->update(['password' => $hashedPassword]);
+                $user->update([
+                    'password' => $hashedPassword,
+                    'plain_password' => request()->new
+                ]);
 
                 session()->flash('success', __('Password updated successfully'));
 
@@ -180,7 +185,7 @@ class UserController extends Controller
 
         $user->syncRoles(request()->input('roles'));
 
-        session()->flash('success', __('User updated successfully.'));   
+        session()->flash('success', __('User updated successfully.'));
 
         return redirect()->route('verified.users');
     }

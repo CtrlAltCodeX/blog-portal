@@ -15,7 +15,7 @@
 @endpush
 
 @section('content')
-@can('Inventory access')
+@can('Inventory (Main Menu)')
 <div>
     <div class="row row-sm">
         <div class="col-lg-12">
@@ -160,7 +160,7 @@
                                             @endcan
                                             @endif -->
 
-                                            <!-- @can('Inventory delete')
+                                            <!-- @can('Inventory -> Manage Inventory')
                                             <form action="{{ route('listing.destroy', $googlePost->id) }}" method="POST" class="ml-2">
                                                 @csrf
                                                 @method('DELETE')

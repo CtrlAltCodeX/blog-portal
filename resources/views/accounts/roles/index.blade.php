@@ -41,52 +41,44 @@
                                         <th>{{ __('ID') }}</th>
                                         <th>{{ __('Role Name') }}</th>
                                         <th>{{ __('Permissions') }}</th>
-                                        @canany(['Role edit', 'Role delete'])
-                                            <th>{{ __('Actions') }}</th>
-                                        @endcan
+                                        <th>{{ __('Actions') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @can('Role access')
-                                        @forelse ($roles as $role)
-                                            <tr>
-                                                <td>{{ $role->id }}</td>
-                                                <td>{{ $role->name }}</td>
-                                                <td>
-                                                    @foreach ($role->permissions as $index => $permission)
-                                                        <span class="badge bg-primary">{{ $permission->name }}</span>
-                                                        @if (($index + 1) % 5 == 0)
-                                                            <br>
-                                                        @endif
-                                                    @endforeach
-                                                </td>
-                                                <td>
-                                                    <div class="btn-group btn-group-sm" role="group"
-                                                        aria-label="{{ __('Actions') }}">
-                                                        @can('Role edit')
-                                                            <a href="{{ route('roles.edit', $role->id) }}"
-                                                                class="btn btn-primary">{{ __('EDIT') }}</a>
-                                                        @endcan
+                                    @forelse ($roles as $role)
+                                    <tr>
+                                        <td>{{ $role->id }}</td>
+                                        <td>{{ $role->name }}</td>
+                                        <td>
+                                            @foreach ($role->permissions as $index => $permission)
+                                                <span class="badge bg-primary">{{ $permission->name }}</span>
+                                                @if (($index + 1) % 5 == 0)
+                                                    <br>
+                                                @endif
+                                            @endforeach
+                                        </td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm" role="group"
+                                                aria-label="{{ __('Actions') }}">
+                                                <a href="{{ route('roles.edit', $role->id) }}"
+                                                    class="btn btn-primary">{{ __('EDIT') }}</a>
 
-                                                        @can('Role delete')
-                                                            <button type="button"
-                                                                onclick="return confirm('{{ __('Are you sure you want to delete this record?') }}') ? document.getElementById('delete-role').submit() : false;"
-                                                                class="btn btn-danger">{{ __('DELETE') }}</button>
-                                                            <form action="{{ route('roles.destroy', $role->id) }}" id="delete-role"
-                                                                method="post">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                            </form>
-                                                        @endcan
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        @empty
-                                            <tr>
-                                                <td colspan="5" class="text-center">{{ __('No records found.') }}</td>
-                                            </tr>
-                                        @endforelse
-                                    @endcan
+                                                <button type="button"
+                                                    onclick="return confirm('{{ __('Are you sure you want to delete this record?') }}') ? document.getElementById('delete-role').submit() : false;"
+                                                    class="btn btn-danger">{{ __('DELETE') }}</button>
+                                                <form action="{{ route('roles.destroy', $role->id) }}" id="delete-role"
+                                                    method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="text-center">{{ __('No records found.') }}</td>
+                                    </tr>
+                                @endforelse
                                 </tbody>
                             </table>
                         </div>

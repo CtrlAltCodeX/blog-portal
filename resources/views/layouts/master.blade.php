@@ -10,8 +10,7 @@
     <meta name="description" content="Sash – Bootstrap 5  Admin & Dashboard Template">
     <meta name="author" content="Spruko Technologies Private Limited">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="keywords"
-        content="admin,admin dashboard,admin panel,admin template,bootstrap,clean,dashboard,flat,jquery,modern,responsive,premium admin templates,responsive admin,ui,ui kit.">
+    <meta name="keywords" content="admin,admin dashboard,admin panel,admin template,bootstrap,clean,dashboard,flat,jquery,modern,responsive,premium admin templates,responsive admin,ui,ui kit.">
 
     <!-- FAVICON -->
     <link rel="shortcut icon" type="image/x-icon" href="../assets/images/brand/favicon.ico" />
@@ -32,8 +31,7 @@
     <link href="{{ asset('assets/css/icons.css') }}" rel="stylesheet" />
 
     <!-- COLOR SKIN CSS -->
-    <link id="theme" rel="stylesheet" type="text/css" media="all"
-        href="{{ asset('assets/colors/color1.css') }}" />
+    <link id="theme" rel="stylesheet" type="text/css" media="all" href="{{ asset('assets/colors/color1.css') }}" />
 
     @stack('css')
 </head>
@@ -111,6 +109,30 @@
 
     <!-- CUSTOM JS -->
     <script src="{{ asset('assets/js/custom.js') }}"></script>
+
+    <script>
+        // Check session expiration every minute (60000 milliseconds)
+        setInterval(function() {
+            $.ajax({
+                type: "GET",
+                url: "{{ route('check.session') }}",
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(result) {
+                    console.log(result);
+                    if (!result.active) {
+                        reloadPage();
+                    }
+                },
+            });
+        }, 1000); // 60000 milliseconds = 1 minute
+
+        function reloadPage() {
+            location.reload(true); // Reload the page
+        }
+    </script>
+
 
     @stack('js')
 </body>

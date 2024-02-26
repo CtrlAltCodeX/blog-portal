@@ -52,9 +52,9 @@
                                                 <div class="btn-group" role="group" aria-label="{{ __('Actions') }}">
                                                     <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary">{{ __('EDIT') }}</a>
                                                     
-                                                    <button type="button" onclick="return confirm('{{ __('Are you sure you want to delete this record?') }}') ? document.getElementById('delete-user').submit() : false;" class="btn btn-danger">{{ __('DELETE') }}</button>
+                                                    <button type="button" onclick="return confirm('{{ __('Are you sure you want to delete this record?') }}') ? document.getElementById('delete-user{{$user->id}}').submit() : false;" class="btn btn-danger">{{ __('DELETE') }}</button>
 
-                                                    <form action="{{ route('users.destroy', $user->id) }}" id="delete-user" method="post">
+                                                    <form action="{{ route('users.destroy', $user->id) }}" id="delete-user{{$user->id}}" method="post">
                                                         @csrf
                                                         @method('DELETE')
                                                     </form>

@@ -43,13 +43,13 @@
                                         <th>{{ __('Email') }}</th>
                                         <th>{{ __('Roles') }}</th>
                                         <th>{{ __('Status') }}</th>
-                                        @canany(['User edit', 'User delete'])
+                                        @canany(['User Details -> All Users List -> Edit', 'User delete'])
                                             <th>{{ __('Actions') }}</th>
                                         @endcanany
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @can('User access')
+                                    @can('User Details (Main Menu)')
                                         @forelse ($users as $user)
                                             <tr>
                                                 <td>{{ $user->id }}</td>
@@ -69,17 +69,17 @@
                                                 <td>
                                                     <div class="btn-group btn-group-sm" role="group"
                                                         aria-label="{{ __('Actions') }}">
-                                                        @can('User edit')
+                                                        @can('User Details -> All Users List -> Edit')
                                                             <a href="{{ route('users.edit', $user->id) }}"
                                                                 class="btn btn-primary">{{ __('EDIT') }}</a>
                                                         @endcan
 
                                                         @can('User delete')
                                                             <button type="button"
-                                                                onclick="return confirm('{{ __('Are you sure you want to delete this record?') }}') ? document.getElementById('delete-user').submit() : false;"
+                                                                onclick="return confirm('{{ __('Are you sure you want to delete this record?') }}') ? document.getElementById('delete-user{{$user->id}}').submit() : false;"
                                                                 class="btn btn-danger">{{ __('DELETE') }}</button>
 
-                                                            <form action="{{ route('users.destroy', $user->id) }}" id="delete-user"
+                                                            <form action="{{ route('users.destroy', $user->id) }}" id="delete-user{{$user->id}}"
                                                                 method="post">
                                                                 @csrf
                                                                 @method('DELETE')
@@ -99,7 +99,7 @@
                         </div>
                     </div>
 
-                    @can('User access')
+                    @can('User Details (Main Menu)')
                         @if (count($users))
                             <div class="card-footer">
                                 {!! $users->links() !!}

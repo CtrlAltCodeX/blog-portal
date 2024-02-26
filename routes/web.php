@@ -1,21 +1,20 @@
 <?php
 
-use App\Http\Controllers\AmazonSrcappingController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\FlipkartSrcappingController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TinyMCEController;
 use App\Services\GoogleService;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 
 Illuminate\Support\Facades\Auth::routes();
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -35,7 +34,7 @@ Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallb
 Route::post('/auth/google/refresh', [GoogleController::class, 'refreshGoogle'])
     ->name('google.refresh.token');
 
-Route::post('/verify/otp', [LoginController::class, 'authenticateOTP'])->name('verify.otp');
+Route::match(['get', 'post'], '/verify/otp', [LoginController::class, 'authenticateOTP'])->name('verify.otp');
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function () {
     Route::get('dashboard', [DashboardController::class, 'index'])
@@ -58,33 +57,18 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     Route::post('update/password', [UserController::class, 'updatePassword'])
         ->name('update.user.password');
 
-    Route::group(['prefix' => 'find-products'], function () {
-        Route::get('amazon', [AmazonSrcappingController::class, 'find'])
-            ->name('amazon.find');
-
-        Route::post('amazon', [AmazonSrcappingController::class, 'findProducts'])
-            ->name('amazon.find.products');
-
-        Route::match(['get', 'post'], 'store', [AmazonSrcappingController::class, 'StoreFindProducts'])
-            ->name('amazon.find.store');
-
-        Route::get('flipkart', [FlipkartSrcappingController::class, 'find'])
-            ->name('flipkart.find');
-
-        Route::post('flipkart', [FlipkartSrcappingController::class, 'findProducts'])
-            ->name('flipkart.find.products');
-
-        Route::match(['get', 'post'], 'store', [FlipkartSrcappingController::class, 'StoreFindProducts'])
-            ->name('flipkart.find.store');
-    });
-
     Route::resource('listing', ListingController::class);
 
-    Route::get('inventory', [ListingController::class, 'inventory'])
-        ->name('inventory.index');
+    Route::group(['prefix' => 'inventory'], function () {
+        Route::get('', [ListingController::class, 'inventory'])
+            ->name('inventory.index');
 
-    Route::get('inventory/drafted', [ListingController::class, 'draftedInventory'])
-        ->name('inventory.drafted');
+        Route::get('review', [ListingController::class, 'reviewInventory'])
+            ->name('inventory.review');
+
+        Route::get('drafted', [ListingController::class, 'draftedInventory'])
+            ->name('inventory.drafted');
+    });
 
     Route::get('blog/publish/{id}', [ListingController::class, 'publishBlog'])
         ->name('blog.publish');
@@ -122,8 +106,31 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::post('convert/image', [GoogleService::class, 'downloadProcessedImage'])
         ->name('convert.image');
+
+    Route::post('drafted/posts', [GoogleService::class, 'draftedInventory'])
+        ->name('drafted.posts');
+
+    Route::post('live/posts', [GoogleService::class, 'posts'])
+        ->name('live.posts');
+
+    Route::get('posts', [DashboardController::class, 'getStats'])
+        ->name('get.posts.count');
 });
+
+Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+
+Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+
+Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+
+Route::post('password/reset', [ResetPasswordController::class, 'reset']);
+
+Route::post('update/password', [ResetPasswordController::class, 'updatePassword'])->name('password.update');
 
 Route::get('/', function () {
     return redirect()->route('dashboard');
 });
+
+Route::get('/check-session-status', function () {
+    return response()->json(['active' => auth()->check()]);
+})->name('check.session');

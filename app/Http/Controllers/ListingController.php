@@ -18,10 +18,10 @@ class ListingController extends Controller
      */
     public function __construct(protected GoogleService $googleService)
     {
-        $this->middleware('role_or_permission:Listing access|Listing create|Listing edit|Inventory edit|Inventory delete|Inventory access|Listing delete', ['only' => ['index', 'show']]);
-        $this->middleware('role_or_permission:Listing create|Inventory create', ['only' => ['create', 'store']]);
-        $this->middleware('role_or_permission:Listing edit|Inventory edit', ['only' => ['edit', 'update']]);
-        $this->middleware('role_or_permission:Listing delete|Inventory delete', ['only' => ['destroy']]);
+        $this->middleware('role_or_permission:Listing (Main Menu)|Listing create|Inventory -> Manage Inventory -> Edit|Inventory -> Manage Inventory|Inventory (Main Menu)|Inventory -> Manage Inventory -> Delete', ['only' => ['index', 'show']]);
+        $this->middleware('role_or_permission:Listing create|Inventory -> Manage Inventory', ['only' => ['create', 'store']]);
+        $this->middleware('role_or_permission:Inventory -> Manage Inventory -> Edit', ['only' => ['edit', 'update']]);
+        $this->middleware('role_or_permission:Inventory -> Manage Inventory -> Delete|Inventory -> Manage Inventory', ['only' => ['destroy']]);
     }
 
     /**
@@ -98,7 +98,7 @@ class ListingController extends Controller
 
         $images = [];
         $doc = new \DOMDocument();
-        $doc->loadHTML('<meta http-equiv="Content-Type" content="text/html; charset=utf-8">' . $post->content);
+        @$doc->loadHTML('<meta http-equiv="Content-Type" content="text/html; charset=utf-8">' . $post->content);
 
         $td = $doc->getElementsByTagName('td');
         $div = $doc->getElementsByTagName('div');
@@ -166,7 +166,7 @@ class ListingController extends Controller
             $image = $doc->getElementsByTagName("img")->item($i);
             $images[] = $image->getAttribute('src');
         }
-        
+
         $allInfo = [
             'sku' => trim($sku),
             'publication' => trim($publication),
@@ -174,7 +174,7 @@ class ListingController extends Controller
             'lang' => trim($lang),
             'author_name' => trim($author_name),
             'page_no' => trim($page_no),
-            'desc' => $desc[0]??'',
+            'desc' => $desc[0] ?? '',
             'selling' => trim($selling),
             'mrp' => trim($mrp),
             'multiple' => $images,
@@ -236,6 +236,9 @@ class ListingController extends Controller
     public function inventory()
     {
         if ($this->tokenIsExpired($this->googleService)) {
+
+            if (!$this->googleService->getCredentails()) return view('settings.authenticate');
+
             $url = $this->googleService->refreshToken($this->googleService->getCredentails()->toArray());
             request()->session()->put('page_url', request()->url());
 
@@ -248,6 +251,28 @@ class ListingController extends Controller
     }
 
     /**
+     * Review Listing
+     *
+     * @return void
+     */
+    public function reviewInventory()
+    {
+        if ($this->tokenIsExpired($this->googleService)) {
+
+            if (!$this->googleService->getCredentails()) return view('settings.authenticate');
+
+            $url = $this->googleService->refreshToken($this->googleService->getCredentails()->toArray());
+            request()->session()->put('page_url', request()->url());
+
+            return redirect()->to($url);
+        }
+
+        $googlePosts = $this->googleService->posts();
+
+        return view('listing.review-inventory', compact('googlePosts'));
+    }
+
+    /**
      * Inventory Listing
      *
      * @return void
@@ -255,6 +280,8 @@ class ListingController extends Controller
     public function draftedInventory()
     {
         if ($this->tokenIsExpired($this->googleService)) {
+            // if (!$this->googleService->getCredentails()) return view('settings.authenticate');
+
             $url = $this->googleService->refreshToken($this->googleService->getCredentails()->toArray());
             request()->session()->put('page_url', request()->url());
 

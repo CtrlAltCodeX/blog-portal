@@ -12,13 +12,19 @@ use Illuminate\Queue\SerializesModels;
 class OtpMail extends Mailable
 {
     use Queueable, SerializesModels;
+    
+    public $msg;
+    
+    public $name;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(protected $otp)
+    public function __construct(protected $otp, $msg = null, $name)
     {
-        //
+        $this->msg = $msg;
+        
+        $this->name = $name;
     }
 
     /**
@@ -27,7 +33,7 @@ class OtpMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Otp for Verification',
+            subject: $this->msg ? $this-> name.' has tried to access Listing Portal From Non Registered PC' : 'OTP For Login Listing Portal',
         );
     }
 

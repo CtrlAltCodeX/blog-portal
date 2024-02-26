@@ -33,7 +33,7 @@ $getRoles = app('App\Http\Controllers\RoleController');
                                 <div class="d-flex">
                                     <div class="mt-2">
                                         <h6 class="">Total Products</h6>
-                                        <h2 class="mb-0 number-font">{{ ($getStats->getStats() + count($allDraftedGooglePosts)) }}</h2>
+                                        <h2 class="mb-0 number-font" id='totalProduct'>-</h2>
                                     </div>
                                 </div>
                             </a>
@@ -46,7 +46,7 @@ $getRoles = app('App\Http\Controllers\RoleController');
                             <div class="d-flex">
                                 <div class="mt-2">
                                     <h6 class="">Total Published</h6>
-                                    <h2 class="mb-0 number-font">{{ (($getStats->getStats() )) }}</h2>
+                                    <h2 class="mb-0 number-font" id='products'>-</h2>
                                 </div>
                             </div>
                         </div>
@@ -58,7 +58,7 @@ $getRoles = app('App\Http\Controllers\RoleController');
                             <div class="d-flex">
                                 <div class="mt-2">
                                     <h6 class="">Total Draft</h6>
-                                    <h2 class="mb-0 number-font">{{ count($allDraftedGooglePosts) }}</h2>
+                                    <h2 class="mb-0 number-font" id='draftedData'>-</h2>
                                 </div>
                             </div>
                         </div>
@@ -77,8 +77,6 @@ $getRoles = app('App\Http\Controllers\RoleController');
                         </div>
                     </div>
                 </div>
-
-
             </div>
         </div>
     </div>
@@ -96,7 +94,7 @@ $getRoles = app('App\Http\Controllers\RoleController');
                             <div class="d-flex">
                                 <div class="mt-2">
                                     <h6 class="">Total In Stock</h6>
-                                    <h2 class="mb-0 number-font">{{ $getStats->getStats() - ($getStats->getStats('Stk_o') + $getStats->getStats('Stk_l') + $getStats->getStats('Stk_d') + + $getStats->getStats('stock__low') + + $getStats->getStats('stock__demand') + + $getStats->getStats('stock__out')) }}</h2>
+                                    <h2 class="mb-0 number-font" id='inStock'>-</h2>
                                 </div>
                             </div>
                         </div>
@@ -108,7 +106,7 @@ $getRoles = app('App\Http\Controllers\RoleController');
                             <div class="d-flex">
                                 <div class="mt-2">
                                     <h6 class="">Total Out Stock</h6>
-                                    <h2 class="mb-0 number-font">{{ $getStats->getStats('Stk_o') + $getStats->getStats('stock__out') }}</h2>
+                                    <h2 class="mb-0 number-font" id='outStock'>-</h2>
                                 </div>
                             </div>
                         </div>
@@ -120,7 +118,7 @@ $getRoles = app('App\Http\Controllers\RoleController');
                             <div class="d-flex">
                                 <div class="mt-2">
                                     <h6 class="">Total Low Stock</h6>
-                                    <h2 class="mb-0 number-font">{{ $getStats->getStats('Stk_l') + $getStats->getStats('stock__low') }}</h2>
+                                    <h2 class="mb-0 number-font" id='lowStock'>-</h2>
                                 </div>
                             </div>
                         </div>
@@ -132,7 +130,7 @@ $getRoles = app('App\Http\Controllers\RoleController');
                             <div class="d-flex">
                                 <div class="mt-2">
                                     <h6 class="">Total On Demand</h6>
-                                    <h2 class="mb-0 number-font">{{ $getStats->getStats('Stk_d') + $getStats->getStats('stock__demand') }}</h2>
+                                    <h2 class="mb-0 number-font" id='demandStock'>-</h2>
                                 </div>
                             </div>
                         </div>
@@ -206,3 +204,177 @@ $getRoles = app('App\Http\Controllers\RoleController');
     </div>
 </div>
 @endsection
+
+@push('js')
+<script>
+    $(document).ready(function() {
+        getDraftedInventory();
+
+        getInventoryData();
+
+        getInventoryOutStockData();
+
+        getInventoryLowStockData();
+
+        getInventoryDemandStockData();
+
+        function getDraftedInventory() {
+            localStorage.setItem('drafted', 0);
+            $.ajax({
+                type: "POST",
+                url: "{{ route('drafted.posts') }}",
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(result) {
+                    $("#draftedData").html(result.length);
+                    localStorage.setItem('drafted', result.length);
+                    getTotalProducts();
+                    
+                    setTimeout(() => {
+                        getInventoryInStockData();
+
+                    }, 1000);
+                },
+            });
+        }
+
+        function getInventoryData() {
+            localStorage.setItem('totalPublished', 0);
+            $.ajax({
+                type: "GET",
+                url: "{{ route('get.posts.count') }}",
+                data: {
+                    category: ''
+                },
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(result) {
+                    $("#products").html(result);
+                    localStorage.setItem('totalPublished', result);
+                },
+            });
+        }
+
+        function getInventoryOutStockData() {
+             localStorage.setItem('outStock', 0);
+             
+            $.ajax({
+                type: "GET",
+                url: "{{ route('get.posts.count') }}",
+                data: {
+                    category: 'Stk_o'
+                },
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(result) {
+                    localStorage.setItem('outStock', result);
+                    localStorage.setItem('out_Stock', 0);
+                    $.ajax({
+                        type: "GET",
+                        url: "{{ route('get.posts.count') }}",
+                        data: {
+                            category: 'stock__out'
+                        },
+                        headers: {
+                            'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(result) {
+                            localStorage.setItem('out_Stock', result);
+                            var getCount = localStorage.getItem('outStock');
+                            $("#outStock").html(parseInt(result) + parseInt(getCount));
+                        },
+                    });
+                },
+            });
+        }
+
+        function getInventoryLowStockData() {
+            localStorage.setItem('lowStock', 0);
+            $.ajax({
+                type: "GET",
+                url: "{{ route('get.posts.count') }}",
+                data: {
+                    category: 'Stk_l'
+                },
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(result) {
+                    // $("#lowStock").html(result);
+                    localStorage.setItem('lowStock', result);
+                    
+                    localStorage.setItem('low_stock', 0);
+                     
+                    $.ajax({
+                        type: "GET",
+                        url: "{{ route('get.posts.count') }}",
+                        data: {
+                            category: 'stock__low'
+                        },
+                        headers: {
+                            'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(result) {
+                            localStorage.setItem('low_stock', result);
+                            var getCount = localStorage.getItem('low_stock');
+                            $("#lowStock").html(parseInt(result) + parseInt(getCount));
+                        },
+                    });
+                },
+            });
+        }
+
+        function getInventoryDemandStockData() {
+            localStorage.setItem('demandStock', 0);
+            $.ajax({
+                type: "GET",
+                url: "{{ route('get.posts.count') }}",
+                data: {
+                    category: 'Stk_d'
+                },
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(result) {
+                    // $("#demandStock").html(result);
+                    localStorage.setItem('demandStock', result);
+                    
+                    localStorage.setItem('out_demand', 0);
+                     
+                    $.ajax({
+                        type: "GET",
+                        url: "{{ route('get.posts.count') }}",
+                        data: {
+                            category: 'stock__demand'
+                        },
+                        headers: {
+                            'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(result) {
+                            localStorage.setItem('out_demand', result);
+                            var getCount = localStorage.getItem('demandStock');
+                            $("#demandStock").html(parseInt(result) + parseInt(getCount));
+                        },
+                    });
+                    
+                },
+            });
+        }
+
+        function getTotalProducts() {
+            $("#totalProduct").html(parseInt(localStorage.getItem('drafted')) + parseInt(localStorage.getItem('totalPublished')));
+        }
+
+        function getInventoryInStockData() {
+            var totalProducts = parseInt(localStorage.getItem('totalPublished'));
+            var otherData = parseInt(localStorage.getItem('low_stock')) + parseInt(localStorage.getItem('out_Stock')) + parseInt(localStorage.getItem('out_demand')) + parseInt(localStorage.getItem('demandStock')) + parseInt(localStorage.getItem('outStock')) + parseInt(localStorage.getItem('lowStock'));
+
+            $("#inStock").html(totalProducts - otherData);
+        }
+    })
+</script>
+
+@endpush

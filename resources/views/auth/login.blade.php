@@ -15,7 +15,7 @@
             <div class="tab-content">
                 <div class="tab-pane active" id="tab5">
                     @if(session('error'))
-                    <div class="alert alert-success" role="alert">
+                    <div class="alert alert-danger" role="alert">
                         {{ session('error') }}
                     </div>
                     @endif
@@ -30,8 +30,12 @@
                     </div>
 
                     <div class="wrap-input100 validate-input input-group mt-5" id="Password-toggle">
-                        <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="Password" autofocus>
-
+                        <div class="wrap-input100 validate-input input-group" id="Password-toggle">
+                            <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
+                                <i class="zmdi zmdi-eye" aria-hidden="true"></i>
+                            </a>
+                            <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="Password" autofocus>
+                        </div>
                         @error('password')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -40,7 +44,7 @@
 
                     </div>
                     <div class="text-end pt-4">
-                        <p class="mb-0"><a href="forgot-password.html" class="text-primary ms-1">Forgot Password?</a>
+                        <p class="mb-0"><a href="{{ route('password.request') }}" class="text-primary ms-1">Forgot Password?</a>
                         </p>
                     </div>
                     <div class="container-login100-form-btn">
@@ -48,14 +52,14 @@
                             Login
                         </button>
                     </div>
-                    <div class="container-login100-form-btn">
-                        <button type='button' class="login100-form-btn btn-primary" id='without-otp'>
-                            Login without OTP
-                        </button>
-                    </div>
-                    <div class="text-center pt-3">
-                        <p class="text-dark mb-0">Not a member?<a href="{{ route('register') }}" class="text-primary ms-1">Sign UP</a></p>
-                    </div>
+                    <!--<div class="container-login100-form-btn">-->
+                    <!--    <button type='button' class="login100-form-btn btn-primary" id='without-otp'>-->
+                    <!--        Login without OTP-->
+                    <!--    </button>-->
+                    <!--</div>-->
+                    <!--<div class="text-center pt-3">-->
+                    <!--    <p class="text-dark mb-0">Not a member?<a href="{{ route('register') }}" class="text-primary ms-1">Sign UP</a></p>-->
+                    <!--</div>-->
                 </div>
             </div>
         </div>
@@ -72,6 +76,19 @@
             $('#form').attr('action', "{{ route('login') }}");
             $('#form').submit();
         })
+
+        $("#Password-toggle a").on('click', function(event) {
+            event.preventDefault();
+            if ($('#Password-toggle input').attr("type") == "text") {
+                $('#Password-toggle input').attr('type', 'password');
+                $('#Password-toggle i').addClass("zmdi-eye");
+                $('#Password-toggle i').removeClass("zmdi-eye-off");
+            } else if ($('#Password-toggle input').attr("type") == "password") {
+                $('#Password-toggle input').attr('type', 'text');
+                $('#Password-toggle i').removeClass("zmdi-eye");
+                $('#Password-toggle i').addClass("zmdi-eye-off");
+            }
+        });
     })
 </script>
 

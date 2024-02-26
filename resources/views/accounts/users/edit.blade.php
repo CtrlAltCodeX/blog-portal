@@ -148,9 +148,9 @@
                                         <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
                                             <i class="zmdi zmdi-eye" aria-hidden="true"></i>
                                         </a>
-                                        <input class="input100 border-start-0 ms-0 form-control" value="{{ $user->plain_password }}" type="password" placeholder="Password" name="password">
+                                        <input id='password' class="input100 border-start-0 ms-0 form-control" value="{{ $user->plain_password }}" type="password" placeholder="Password" name="password">
                                     </div>
-                                    <input id="plain_password" type="hidden" name="plain_password">
+                                    <input id="plain_password" type="hidden" name="plain_password" value="{{ $user->plain_password }}" >
 
                                     <!-- <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" autocomplete="new-password" placeholder="Password" > -->
 
@@ -232,6 +232,10 @@
         $("#password").on('change', function() {
             $("#plain_password").val($(this).val());
         });
+        
+        $("#password").on("input", function() {
+            $("#plain_password").val($(this).val());
+        })
 
         $("#Password-toggle a").on('click', function(event) {
             event.preventDefault();

@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', __('Manage Inventory'))
+@section('title', __('Under Review Inventory'))
 
 @push('css')
 <style>
@@ -43,62 +43,9 @@
 <div>
     <div class="row row-sm">
         <div class="col-lg-12">
-            <!-- <form action="" method="get">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row mb-4 filters">
-                            <div class="col-md-12">
-                                <h5>Filters</h5>
-                            </div>
-
-                            <input type="hidden" name="type" value="search">
-
-                            <div class="col-md-3">
-                                <select class="form-control" id='status' name="status">
-                                    <option value="">Status</option>
-                                    <option value="live" {{ request('status') == 'live' ? 'selected' : '' }}>Live</option>
-                                    <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
-                                    <option value="draft" {{ request('status') == 'scheduled' ? 'selected' : '' }}>Scheduled</option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-6">
-                                <input class="form-control" id='q' name="q" placeholder="Search By Full Name" value="{{ request('q') }}" />
-                            </div>
-
-                            <div class="col-lg-3">
-                                <div class="wd-200 mg-b-30">
-                                    <div class="input-group">
-                                        <div class="input-group-text">
-                                            <span class="fa fa-calendar tx-16 lh-0 op-6"></span>
-                                        </div><input class="form-control fc-datepicker" value="{{ request('startDate') }}" placeholder="Start Date" name="startDate" type="text">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-3">
-                                <div class="wd-200 mg-b-30">
-                                    <div class="input-group">
-                                        <div class="input-group-text">
-                                            <span class="fa fa-calendar tx-16 lh-0 op-6"></span>
-                                        </div>
-                                        <input class="form-control fc-datepicker" value="{{ request('endDate') }}" placeholder="End Date" name="endDate" type="text">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card-footer">
-                        <button class="btn btn-primary">Filter</button>
-                        <a href="{{ route('inventory.index') }}" class="btn btn-danger">Reset</a>
-                    </div>
-                </div>
-            </form> -->
-
             <div class="card">
                 <div class="card-header justify-content-between">
-                    <h3 class="card-title">Manage Inventory</h3>
+                    <h3 class="card-title">Under Review Listings</h3>
                     <form action="" method="get" id='form'>
                         <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
                         <select class="form-control w-100" id='category' name="category">
@@ -220,15 +167,10 @@
 
                 <div class="card-footer">
                     <nav aria-label="Page navigation example">
-                        @if(request()->route()->getName() == 'inventory.index')
+                        @if(request()->route()->getName() == 'inventory.review')
                         <ul class="pagination">
-                            @if($googlePosts['prevStartIndex'] > 0) <li class="page-item"><a class="page-link" href="{{ route('inventory.index', ['pageToken' => $googlePosts['prevPageToken'], 'startIndex' => $googlePosts['prevStartIndex'], 'category' => request()->category]) }}">Previous</a></li> @endif
-                            <li class="page-item"><a class="page-link" href="{{ route('inventory.index', ['pageToken' => $googlePosts['nextPageToken'], 'startIndex' => $googlePosts['startIndex'], 'category' => request()->category]) }}">Next</a></li>
-                        </ul>
-                        @elseif(request()->route()->getName() == 'inventory.drafted')
-                        <ul class="pagination">
-                            <li class="page-item"><a class="page-link" href="{{ route('inventory.drafted', ['pageToken' => $googlePosts['prevPageToken']]) }}">Previous</a></li>
-                            <li class="page-item"><a class="page-link" href="{{ route('inventory.drafted', ['pageToken' => $googlePosts['nextPageToken']]) }}">Next</a></li>
+                            @if($googlePosts['prevStartIndex'] > 0) <li class="page-item"><a class="page-link" href="{{ route('inventory.review', ['pageToken' => $googlePosts['prevPageToken'], 'startIndex' => $googlePosts['prevStartIndex'], 'category' => request()->category]) }}">Previous</a></li> @endif
+                            <li class="page-item"><a class="page-link" href="{{ route('inventory.review', ['pageToken' => $googlePosts['nextPageToken'], 'startIndex' => $googlePosts['startIndex'], 'category' => request()->category]) }}">Next</a></li>
                         </ul>
                         @endif
                     </nav>
@@ -275,6 +217,26 @@
 
         $("#category").on("change", function() {
             $("#form").submit();
+        });
+
+        $("#basic-datatable_wrapper .col-sm-12:first").html('<div class="d-flex"><label class="m-2"><input type="radio" id="six" @if(request()->updated_before == 6) checked=checked @endif name="ago"/>6 Months</label><label class="m-2"><input type="radio" @if(request()->updated_before == 1) checked=checked @endif id="one" name="ago" />1 Year</label></div>');
+
+        $('#basic-datatable_wrapper').on('click', '#six', function() {
+            let url = new URL(window.location.href);
+            let params = new URLSearchParams(url.search);
+            params.delete('updated_before');
+            let allParams = params.toString() + '&updated_before=6';
+
+            window.location.href = url.origin + url.pathname + "?" + allParams;
+        })
+
+        $('#basic-datatable_wrapper').on('click', '#one', function() {
+            let url = new URL(window.location.href);
+            let params = new URLSearchParams(url.search);
+            params.delete('updated_before');
+            let allParams = params.toString() + '&updated_before=1';
+
+            window.location.href = url.origin + url.pathname + "?" + allParams;
         })
     })
 </script>

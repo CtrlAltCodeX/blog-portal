@@ -44,26 +44,24 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @can('Role access')
-                                        @forelse ($roles as $role)
-                                            <tr>
-                                                <td>{{ $role->id }}</td>
-                                                <td>{{ $role->name }}</td>
-                                                <td>
-                                                    @foreach ($role->permissions as $index => $permission)
-                                                        <span class="badge bg-primary">{{ $permission->name }}</span>
-                                                        @if (($index + 1) % 5 == 0)
-                                                            <br>
-                                                        @endif
-                                                    @endforeach
-                                                </td>
-                                            </tr>
-                                        @empty
-                                            <tr>
-                                                <td colspan="5" class="text-center">{{ __('No records found.') }}</td>
-                                            </tr>
-                                        @endforelse
-                                    @endcan
+                                    @forelse ($roles as $role)
+                                        <tr>
+                                            <td>{{ $role->id }}</td>
+                                            <td>{{ $role->name }}</td>
+                                            <td>
+                                                @foreach ($role->permissions as $index => $permission)
+                                                    <span class="badge bg-primary">{{ $permission->name }}</span>
+                                                    @if (($index + 1) % 5 == 0)
+                                                        <br>
+                                                    @endif
+                                                @endforeach
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="5" class="text-center">{{ __('No records found.') }}</td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
