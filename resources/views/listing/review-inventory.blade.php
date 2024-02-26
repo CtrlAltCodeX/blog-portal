@@ -46,7 +46,7 @@
             <div class="card">
                 <div class="card-header justify-content-between">
                     <h3 class="card-title">Under Review Listings</h3>
-                    <!-- <form action="" method="get" id='form'>
+                    <form action="" method="get" id='form'>
                         <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
                         <select class="form-control w-100" id='category' name="category">
                             <option value="">In Stock</option>
@@ -57,7 +57,7 @@
                             <option value="Stk_l" {{ request()->category == 'Stk_l' ? 'selected' : '' }}>Low Stock (Stk_l)</option>
                             <option value="stock__low" {{ request()->category == 'stock__low' ? 'selected' : '' }}>Low Stock (stock__low)</option>
                         </select>
-                    </form> -->
+                    </form>
                 </div>
 
                 <div class="card-body">
@@ -79,7 +79,87 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @forelse ($googlePosts['paginator'] as $key => $googlePost)
+                                @php
+                                $doc = new \DOMDocument();
+                                if(((array)($googlePost->content))['$t']){
+                                @$doc->loadHTML(((array)($googlePost->content))['$t']);
+                                }
+                                $td = $doc->getElementsByTagName('td');
+                                $price = explode('-', $td->item(1)->textContent ?? '');
+                                $selling = $price[0]??0;
+                                $mrp = $price[1]??0;
+                                $image = $doc->getElementsByTagName("img")?->item(0)?->getAttribute('src');
+                                $productId = explode('-', ((array)$googlePosts['paginator'][$key]->id)['$t'])[2];
+                                $productTitle = ((array)$googlePosts['paginator'][$key]->title)['$t'];
+                                $published = ((array)$googlePosts['paginator'][$key]->published)['$t'];
+                                $updated = ((array)$googlePosts['paginator'][$key]->updated)['$t'];
+                                @endphp
+                                <tr>
+                                    <td>{{ request()->startIndex++ }}</td>
+                                    <td>
+                                        @if(isset($googlePost->category) && (in_array('Stk_o', $googlePost->category) || in_array('stock__out', $googlePost->category)))
+                                        {{ 'Out of Stock' }}
+                                        @elseif(isset($googlePost->category) && (in_array('Stk_d', $googlePost->category) || in_array('stock__demand', $googlePost->category)))
+                                        {{ 'On Demand' }}
+                                        @elseif(isset($googlePost->category) && in_array('Stk_b', $googlePost->category))
+                                        {{ 'Pre Booking' }}
+                                        @elseif(isset($googlePost->category) && (in_array('Stk_l', $googlePost->category) || in_array('stock__low', $googlePost->category)))
+                                        {{ 'Low Stock' }}
+                                        @else {{ 'In Stock' }}
+                                        @endif
+                                    </td>
+                                    <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $image }}" alt="Product Image" /></td>
+                                    <td>
+                                        @if($productTitle)
+                                        <a href="{{ $googlePost->link[4]->href??'' }}" target="_blank" style="white-space: normal;">
+                                            {{ $productTitle }}
+                                        </a>
+                                        @else
+                                        <button type="button" class="btn-sm btn btn-danger">Error</button>
+                                        @endif
+                                    </td>
+                                    <td>@if($selling) {{ $selling ? '₹'.$selling : ''  }} @else <button class="btn btn-sm btn-danger">Error</button>@endif</td>
+                                    <td>@if($mrp) {{ $mrp ? '₹'.$mrp : '' }} @else <button class="btn btn-sm btn-danger">Error</button> @endif</td>
+                                    <td>
+                                        <a href="{{ $googlePost?->link[4]->href??'' }}" target="_blank">
+                                            {{ $productId }}
+                                        </a>
+                                    </td>
+                                    @php
+                                    $categories = collect($googlePost->category??[])->pluck('term')->toArray();
+                                    @endphp
+                                    <td>
+                                        <span data-bs-placement="top" data-bs-toggle="tooltip" title="{{ implode(", ", $categories) }}">
+                                            {{ count($categories ?? []) }}
+                                            </button>
+                                    </td>
 
+                                    <td>{{ date("d-m-Y h:i A", strtotime($published)) }}</td>
+                                    <td>{{ date("d-m-Y h:i A", strtotime($updated)) }}</td>
+                                    <td>
+                                        <div class="btn-group" role="group" aria-label="Basic example">
+                                            @if($mrp && $selling && $productTitle)
+                                            @can('Inventory -> Manage Inventory -> Edit')
+                                            <a href="{{ route('listing.edit', $productId) }}" class="btn btn-sm btn-primary">{{ __('Edit') }}</a>
+                                            @endcan
+                                            @endif
+
+                                            @can('Inventory -> Manage Inventory -> Delete')
+                                            <form action="{{ route('listing.destroy', $productId) }}" method="POST" class="ml-2">
+                                                @csrf
+                                                @method('DELETE')
+
+                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this item?')">
+                                                    {{ __('Delete') }}
+                                                </button>
+                                            </form>
+                                            @endcan
+                                        </div>
+                                    </td>
+                                </tr>
+                                @empty
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
@@ -87,15 +167,10 @@
 
                 <div class="card-footer">
                     <nav aria-label="Page navigation example">
-                        @if(request()->route()->getName() == 'inventory.index')
+                        @if(request()->route()->getName() == 'inventory.review')
                         <ul class="pagination">
-                            @if($googlePosts['prevStartIndex'] > 0) <li class="page-item"><a class="page-link" href="{{ route('inventory.index', ['pageToken' => $googlePosts['prevPageToken'], 'startIndex' => $googlePosts['prevStartIndex'], 'category' => request()->category]) }}">Previous</a></li> @endif
-                            <li class="page-item"><a class="page-link" href="{{ route('inventory.index', ['pageToken' => $googlePosts['nextPageToken'], 'startIndex' => $googlePosts['startIndex'], 'category' => request()->category]) }}">Next</a></li>
-                        </ul>
-                        @elseif(request()->route()->getName() == 'inventory.drafted')
-                        <ul class="pagination">
-                            <li class="page-item"><a class="page-link" href="{{ route('inventory.drafted', ['pageToken' => $googlePosts['prevPageToken']]) }}">Previous</a></li>
-                            <li class="page-item"><a class="page-link" href="{{ route('inventory.drafted', ['pageToken' => $googlePosts['nextPageToken']]) }}">Next</a></li>
+                            @if($googlePosts['prevStartIndex'] > 0) <li class="page-item"><a class="page-link" href="{{ route('inventory.review', ['pageToken' => $googlePosts['prevPageToken'], 'startIndex' => $googlePosts['prevStartIndex'], 'category' => request()->category]) }}">Previous</a></li> @endif
+                            <li class="page-item"><a class="page-link" href="{{ route('inventory.review', ['pageToken' => $googlePosts['nextPageToken'], 'startIndex' => $googlePosts['startIndex'], 'category' => request()->category]) }}">Next</a></li>
                         </ul>
                         @endif
                     </nav>
@@ -144,28 +219,25 @@
             $("#form").submit();
         });
 
-        $.ajax({
-            type: "POST",
-            url: "{{ route('live.posts') }}",
-            headers: {
-                'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-            },
-            data: {
-                startIndex: 1
-            },
-            success: function(result) {
-                function extractContent(s, space) {
-                    var span = document.createElement('span');
-                    span.innerHTML = s;
-                    if (space) {
-                        var children = span.querySelectorAll('p');
-                        console.log(children[0].innerHTML);
-                    }
-                };
+        $("#basic-datatable_wrapper .col-sm-12:first").html('<div class="d-flex"><label class="m-2"><input type="radio" id="six" @if(request()->updated_before == 6) checked=checked @endif name="ago"/>6 Months</label><label class="m-2"><input type="radio" @if(request()->updated_before == 1) checked=checked @endif id="one" name="ago" />1 Year</label></div>');
 
-                console.log(extractContent("<p>Hello</p><a href='http://w3c.org'>W3C</a>.  Nice to <em>see</em><strong><em>you!</em></strong>", true));
-            },
-        });
+        $('#basic-datatable_wrapper').on('click', '#six', function() {
+            let url = new URL(window.location.href);
+            let params = new URLSearchParams(url.search);
+            params.delete('updated_before');
+            let allParams = params.toString() + '&updated_before=6';
+
+            window.location.href = url.origin + url.pathname + "?" + allParams;
+        })
+
+        $('#basic-datatable_wrapper').on('click', '#one', function() {
+            let url = new URL(window.location.href);
+            let params = new URLSearchParams(url.search);
+            params.delete('updated_before');
+            let allParams = params.toString() + '&updated_before=1';
+
+            window.location.href = url.origin + url.pathname + "?" + allParams;
+        })
     })
 </script>
 

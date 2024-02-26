@@ -166,7 +166,7 @@ class ListingController extends Controller
             $image = $doc->getElementsByTagName("img")->item($i);
             $images[] = $image->getAttribute('src');
         }
-        
+
         $allInfo = [
             'sku' => trim($sku),
             'publication' => trim($publication),
@@ -174,7 +174,7 @@ class ListingController extends Controller
             'lang' => trim($lang),
             'author_name' => trim($author_name),
             'page_no' => trim($page_no),
-            'desc' => $desc[0]??'',
+            'desc' => $desc[0] ?? '',
             'selling' => trim($selling),
             'mrp' => trim($mrp),
             'multiple' => $images,
@@ -236,9 +236,9 @@ class ListingController extends Controller
     public function inventory()
     {
         if ($this->tokenIsExpired($this->googleService)) {
-            
+
             if (!$this->googleService->getCredentails()) return view('settings.authenticate');
-            
+
             $url = $this->googleService->refreshToken($this->googleService->getCredentails()->toArray());
             request()->session()->put('page_url', request()->url());
 
@@ -258,16 +258,18 @@ class ListingController extends Controller
     public function reviewInventory()
     {
         if ($this->tokenIsExpired($this->googleService)) {
-            
+
             if (!$this->googleService->getCredentails()) return view('settings.authenticate');
-            
+
             $url = $this->googleService->refreshToken($this->googleService->getCredentails()->toArray());
             request()->session()->put('page_url', request()->url());
 
             return redirect()->to($url);
         }
 
-        return view('listing.review-inventory');
+        $googlePosts = $this->googleService->posts();
+
+        return view('listing.review-inventory', compact('googlePosts'));
     }
 
     /**
@@ -279,7 +281,7 @@ class ListingController extends Controller
     {
         if ($this->tokenIsExpired($this->googleService)) {
             // if (!$this->googleService->getCredentails()) return view('settings.authenticate');
-            
+
             $url = $this->googleService->refreshToken($this->googleService->getCredentails()->toArray());
             request()->session()->put('page_url', request()->url());
 

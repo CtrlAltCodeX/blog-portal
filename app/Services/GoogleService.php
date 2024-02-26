@@ -112,37 +112,53 @@ class GoogleService
                 'alt' => 'json'
             ];
 
-            if (request()->has('pageToken')) {
-                $params['pageToken']  = request()->query('pageToken');
-            }
+            // if (request()->has('pageToken')) {
+            //     $params['pageToken']  = request()->query('pageToken');
+            // }
 
-            if (request()->filled('status')) {
-                $params['status'] = request()->query('status');
-            }
+            // if (request()->filled('status')) {
+            //     $params['status'] = request()->query('status');
+            // }
 
-            if ($type = request()->has('type') && $type = 'search') {
-                if (request()->filled('q')) {
-                    $params['q'] = request()->query('q');
+            // if ($type = request()->has('type') && $type = 'search') {
+            //     if (request()->filled('q')) {
+            //         $params['q'] = request()->query('q');
+            //     }
+            // }
+
+            // if (request()->filled('endDate')) {
+            //     $endDate = request()->query('endDate');
+            //     $carbonEndDate = Carbon::parse($endDate);
+            //     $params['endDate'] =  $carbonEndDate->format('Y-m-d\TH:i:sP');
+            // }
+
+            // if (request()->filled('startDate')) {
+            //     $startDate = request()->query('startDate');
+            //     $carbonstartDate = Carbon::parse($startDate);
+            //     $params['startDate'] =  $carbonstartDate->format('Y-m-d\TH:i:sP');
+            // }
+
+            if (request()->filled('updated_before')) {
+                // Get the current date
+                $currentDate = Carbon::now();
+
+                if (request()->query('updated_before') == 1) {
+                    $agoDate = $currentDate->subYear();
+                } else {
+                    // Subtract three months from the current date
+                    $agoDate = $currentDate->subMonths(request()->query('updated_before'));
                 }
             }
 
-            if (request()->filled('endDate')) {
-                $endDate = request()->query('endDate');
-                $carbonEndDate = Carbon::parse($endDate);
-                $params['endDate'] =  $carbonEndDate->format('Y-m-d\TH:i:sP');
-            }
-
-            if (request()->filled('startDate')) {
-                $startDate = request()->query('startDate');
-                $carbonstartDate = Carbon::parse($startDate);
-                $params['startDate'] =  $carbonstartDate->format('Y-m-d\TH:i:sP');
-            }
-
-            if (request()->route()->getName() == 'inventory.index' || request()->route()->getName() == 'live.posts') {
-                // $params['key'] = 'AIzaSyDfHMIjCrVHFh1aOToH5_1_5rvKtNXQRWY';
+            if (
+                request()->route()->getName() == 'inventory.index'
+                || request()->route()->getName() == 'inventory.review'
+            ) {
                 $params['start-index'] = $startIndex;
                 $params['max-results'] = $perPage;
                 $params['category'] = request()->query('category');
+
+                if (request()->route()->getName() == 'inventory.review') $params['updated-max'] = $agoDate->format('Y-m-d') . "T00:00:00";
 
                 if (SiteSetting::first()->url) {
                     $response = Http::get(SiteSetting::first()->url . '/feeds/posts/default', $params);
@@ -350,7 +366,7 @@ class GoogleService
             return json_decode($e->getMessage());
         }
     }
-    
+
     /**
      * Get Drafted Data 
      *

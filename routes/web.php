@@ -130,3 +130,7 @@ Route::post('update/password', [ResetPasswordController::class, 'updatePassword'
 Route::get('/', function () {
     return redirect()->route('dashboard');
 });
+
+Route::get('/check-session-status', function () {
+    return response()->json(['active' => auth()->check()]);
+})->name('check.session');

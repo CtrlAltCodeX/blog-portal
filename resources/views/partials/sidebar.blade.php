@@ -53,12 +53,12 @@ $userInfo = app('App\Models\SiteSetting')->first();
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-box"></i><span class="side-menu__label">{{ __('Inventory') }}</span><i class="angle fe fe-chevron-right"></i></a>
                     <ul class="slide-menu">
                         <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
-                        
+
                         <li><a href="{{ route('inventory.index', ['startIndex' => 1, 'category' => '']) }}" class="slide-item {{ request()->is('admin/inventory') ? 'active' : '' }}">{{ __('Manage Inventory') }}</a></li>
 
                         <li><a href="{{ route('inventory.drafted') }}" class="slide-item {{ request()->is('admin/inventory/drafted') ? 'active' : '' }}">{{ __('Drafted Inventory') }}</a></li>
 
-                        <li><a href="{{ route('inventory.review') }}" class="slide-item {{ request()->is('admin/inventory/review') ? 'active' : '' }}">{{ __('Under Review Listings') }}</a></li>
+                        <li><a href="{{ route('inventory.review', ['startIndex' => 1, 'category' => '' ,'updated_before' => 3]) }}" class="slide-item {{ request()->is('admin/inventory/review') ? 'active' : '' }}">{{ __('Under Review Listings') }}</a></li>
                     </ul>
                 </li>
                 @endcan
