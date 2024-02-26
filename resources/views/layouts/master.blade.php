@@ -120,13 +120,12 @@
                     'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(result) {
-                    console.log(result);
                     if (!result.active) {
                         reloadPage();
                     }
                 },
             });
-        }, 1000); // 60000 milliseconds = 1 minute
+        }, 2700000); // 60000 milliseconds = 1 minute
 
         function reloadPage() {
             location.reload(true); // Reload the page

@@ -33,7 +33,7 @@
                         <input id="blog_id" type="text" class="form-control @error('blog_id') is-invalid @enderror" name="blog_id" {{ isset($creds->blog_id) ? 'disabled' : '' }} value="{{ $creds->blog_id??'' }}" autofocus placeholder="Blog Id">
                     </div>
 
-                    @can('Configure Update') 
+                    @can('Configure Blog Update') 
                         <button type='submit' class="btn btn-primary mt-5">{{ !$creds ? 'Connect with Google' : 'Account Disconnect' }}</button>
 
                         <button class="btn btn-primary mt-5" id="refresh_token">Refresh Token</button>
