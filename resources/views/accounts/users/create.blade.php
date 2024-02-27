@@ -138,7 +138,7 @@
                                 </span>
                                 @enderror
                             </div>
-                            
+
                             <div class="form-group col-3">
                                 <label for="password" class="form-label">{{ __('Password') }}</label>
 
@@ -171,39 +171,15 @@
                                 </div>
                             </div>
 
-                            <!--<div class="form-group col-3">-->
-                            <!--    <label for="password" class="form-label">{{ __('Password') }}</label>-->
+                            <div class="form-group col-3">
+                                <label for="sessions" class="form-label">{{ __('Allow Sessions') }}</label>
 
-                            <!--    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" autocomplete="new-password" placeholder="Password">-->
-                            <!--    <input type="hidden" name="plain_password" id='plain_password'>-->
-
-                            <!--    @error('password')-->
-                            <!--    <span class="invalid-feedback" role="alert">-->
-                            <!--        <strong>{{ $message }}</strong>-->
-                            <!--    </span>-->
-                            <!--    @enderror-->
-                            <!--</div>-->
-
-                            <!--<div class="form-group col-3">-->
-                            <!--    <label for="password_confirmation" class="form-label">{{ __('Confirm Password') }}</label>-->
-
-                            <!--    <input id="password-confirm" type="password" class="form-control" name="password_confirmation" autocomplete="new-password" placeholder="Confirm Password">-->
-                            <!--</div>-->
-
-                            <!-- <div class="form-group col-3">
-                                <label for="status" class="form-label">{{ __('Status') }}</label>
-
-                                <select id="status" class="form-control @error('status') is-invalid @enderror" name="status">
-                                    <option value=0>{{ __('Inactive') }}</option>
-                                    <option value=1>{{ __('Active') }}</option>
+                                <select class="form-control" name="allow_sessions">
+                                    <option value="">--Select--</option>
+                                    <option value=1>Single</option>
+                                    <option value=0>Multiple</option>
                                 </select>
-
-                                @error('status')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div> -->
+                            </div>
 
                             <div class="form-group col-6">
                                 <label for="name" class="form-label">{{ __('Full Address') }}</label>
@@ -215,20 +191,6 @@
                                 </span>
                                 @enderror
                             </div>
-
-                            <!-- <div class="form-group col-12">
-                                <label for="email" class="form-label">{{ __('Roles') }}</label>
-
-                                @foreach ($roles as $role)
-                                <div class="custom-controls-stacked">
-                                    <label class="custom-control custom-checkbox-md">
-                                        <input type="checkbox" class="custom-control-input" type="checkbox" name="roles[]" id="role_{{ $role->id }}" value="{{ $role->name }}">
-                                        <label class="custom-control-label" for="role_{{ $role->id }}">
-                                            {{ $role->name }}</label>
-                                    </label>
-                                </div>
-                                @endforeach
-                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -245,11 +207,11 @@
         $("#password").on("change", function() {
             $("#plain_password").val($(this).val());
         })
-        
+
         $("#password").on("input", function() {
             $("#plain_password").val($(this).val());
         })
-        
+
         $("#Password-toggle a").on('click', function(event) {
             event.preventDefault();
             if ($('#Password-toggle input').attr("type") == "text") {

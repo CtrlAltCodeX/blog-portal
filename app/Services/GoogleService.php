@@ -112,32 +112,6 @@ class GoogleService
                 'alt' => 'json'
             ];
 
-            // if (request()->has('pageToken')) {
-            //     $params['pageToken']  = request()->query('pageToken');
-            // }
-
-            // if (request()->filled('status')) {
-            //     $params['status'] = request()->query('status');
-            // }
-
-            // if ($type = request()->has('type') && $type = 'search') {
-            //     if (request()->filled('q')) {
-            //         $params['q'] = request()->query('q');
-            //     }
-            // }
-
-            // if (request()->filled('endDate')) {
-            //     $endDate = request()->query('endDate');
-            //     $carbonEndDate = Carbon::parse($endDate);
-            //     $params['endDate'] =  $carbonEndDate->format('Y-m-d\TH:i:sP');
-            // }
-
-            // if (request()->filled('startDate')) {
-            //     $startDate = request()->query('startDate');
-            //     $carbonstartDate = Carbon::parse($startDate);
-            //     $params['startDate'] =  $carbonstartDate->format('Y-m-d\TH:i:sP');
-            // }
-
             if (request()->filled('updated_before')) {
                 // Get the current date
                 $currentDate = Carbon::now();

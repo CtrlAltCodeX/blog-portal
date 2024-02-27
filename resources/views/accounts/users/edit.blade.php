@@ -150,7 +150,7 @@
                                         </a>
                                         <input id='password' class="input100 border-start-0 ms-0 form-control" value="{{ $user->plain_password }}" type="password" placeholder="Password" name="password">
                                     </div>
-                                    <input id="plain_password" type="hidden" name="plain_password" value="{{ $user->plain_password }}" >
+                                    <input id="plain_password" type="hidden" name="plain_password" value="{{ $user->plain_password }}">
 
                                     <!-- <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" autocomplete="new-password" placeholder="Password" > -->
 
@@ -173,20 +173,15 @@
                                     </div>
                                 </div>
 
-                                <!-- <div class="form-group col-3">
-                                    <label for="status" class="form-label">{{ __('Status') }}</label>
+                                <div class="form-group col-3">
+                                    <label for="sessions" class="form-label">{{ __('Allow Sessions') }}</label>
 
-                                    <select id="status" class="form-control @error('status') is-invalid @enderror" name="status">
-                                        <option value=0 {{ $user->status == 0 ? 'selected' : '' }}>{{ __('Inactive') }}</option>
-                                        <option value=1 {{ $user->status == 1 ? 'selected' : '' }}>{{ __('Active') }}</option>
+                                    <select class="form-control" name="allow_sessions">
+                                        <option value="">--Select--</option>
+                                        <option value=1>Single</option>
+                                        <option value=0>Multiple</option>
                                     </select>
-
-                                    @error('status')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div> -->
+                                </div>
 
                                 <div class="form-group col-6">
                                     <label for="name" class="form-label">{{ __('Full Address') }}</label>
@@ -200,21 +195,6 @@
                                     </span>
                                     @enderror
                                 </div>
-
-                                <!-- <div class="form-group">
-                                    <label for="roles" class="form-label">{{ __('Roles') }}</label>
-
-                                    @foreach ($roles as $role)
-                                    <div class="custom-controls-stacked">
-                                        <label class="custom-control custom-checkbox-md">
-                                            <input type="checkbox" class="custom-control-input" type="checkbox" name="roles[]" id="role_{{ $role->id }}" @if (count($user->roles->where('id', $role->id))) checked @endif
-                                            value="{{ $role->name }}">
-                                            <label class="custom-control-label" for="role_{{ $role->id }}">
-                                                {{ $role->name }}</label>
-                                        </label>
-                                    </div>
-                                    @endforeach
-                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -232,7 +212,7 @@
         $("#password").on('change', function() {
             $("#plain_password").val($(this).val());
         });
-        
+
         $("#password").on("input", function() {
             $("#plain_password").val($(this).val());
         })

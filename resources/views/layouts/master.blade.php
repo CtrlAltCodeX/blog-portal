@@ -111,6 +111,8 @@
     <script src="{{ asset('assets/js/custom.js') }}"></script>
 
     <script>
+        var timeOut = "{{env('SESSION_LIFETIME')}}" * 60000;
+        
         // Check session expiration every minute (60000 milliseconds)
         setInterval(function() {
             $.ajax({
@@ -125,7 +127,7 @@
                     }
                 },
             });
-        }, 2700000); // 60000 milliseconds = 1 minute
+        }, timeOut); // 60000 milliseconds = 1 minute
 
         function reloadPage() {
             location.reload(true); // Reload the page

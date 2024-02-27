@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Mail\OtpMail;
 use App\Models\User;
+use App\Models\UserSession;
 use App\Providers\RouteServiceProvider;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -43,6 +45,33 @@ class LoginController extends Controller
     }
 
     /**
+     * Log the user out of the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     */
+    public function logout(Request $request)
+    {
+        if ($user = auth()->user()->sessions->where('expire_at', '<', now())->first()) {
+            $user->delete();
+        }
+
+        $this->guard()->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        if ($response = $this->loggedOut($request)) {
+            return $response;
+        }
+
+        return $request->wantsJson()
+            ? new JsonResponse([], 204)
+            : redirect('/');
+    }
+
+    /**
      * Logout the user
      */
     protected function loggedOut(Request $request)
@@ -74,6 +103,22 @@ class LoginController extends Controller
     {
         $this->validateLogin($request);
 
+        $user = User::where('email', request()->email)->first();
+
+        if (
+            $user->allow_sessions
+            && $user->sessions->where('expire_at', '>', now())->first()
+        ) {
+            session()->flash('error', 'You are already Logged in other Device');
+
+            return redirect()->route('login');
+        } else if (
+            !$user->allow_sessions
+            && $user = $user->sessions->where('expire_at', '<', now())->first()
+        ) {
+            $user->delete();
+        }
+
         if (request()->otp) {
             $verifyOtp = User::where('email', request()->email)
                 ->where('otp', request()->otp)
@@ -81,13 +126,9 @@ class LoginController extends Controller
 
             if (!$verifyOtp) {
                 session()->flash('success', 'Invalid OTP');
-            
+
                 return view('auth.enter-otp');
             }
-        } else {
-            session()->flash('success', 'Please Enter the OTP');
-
-            return view('auth.enter-otp');
         }
 
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
@@ -112,6 +153,31 @@ class LoginController extends Controller
             $userAgent = request()->header('User-Agent');
 
             if (!$user->verify_browser) $user->update(['verify_browser' => $userAgent]);
+
+            $currentDateTime = Carbon::now();
+            $sessionExpireDateTime = $currentDateTime->addMinutes(env('SESSION_LIFETIME'));
+
+            if ($user->allow_sessions) {
+                if ($userSession = UserSession::where('user_id', $user->id)->first()) {
+                    $userSession->update([
+                        'user_id' => $user->id,
+                        'session_id' => session()->getId(),
+                        'expire_at' => $sessionExpireDateTime
+                    ]);
+                } else {
+                    UserSession::create([
+                        'user_id' => $user->id,
+                        'session_id' => session()->getId(),
+                        'expire_at' => $sessionExpireDateTime
+                    ]);
+                }
+            } else if (!$user->allow_sessions) {
+                UserSession::create([
+                    'user_id' => $user->id,
+                    'session_id' => session()->getId(),
+                    'expire_at' => $sessionExpireDateTime
+                ]);
+            }
 
             return $this->sendLoginResponse($request);
         }
@@ -153,7 +219,13 @@ class LoginController extends Controller
             $user = User::where('email', request()->email)
                 ->where('plain_password', request()->password)
                 ->first();
-            
+
+            if ($user->allow_sessions && $user->sessions->where('expire_at', '>', now())->first()) {
+                session()->flash('error', 'You are already LoggedIn in other Device');
+
+                return redirect()->route('login');
+            }
+
             if (!$user) {
                 session()->flash('error', 'Opps! Email Or Password Mismatch');
 
@@ -174,7 +246,7 @@ class LoginController extends Controller
 
             if ((($user->verify_browser != $userAgent) && $user->verify_browser) || !$user->verify_browser) {
                 session()->flash('success', 'Please get OTP From System Admin');
-                
+
                 $loginUser = $user->name;
 
                 $adminUsers = User::role('admin')->get();
