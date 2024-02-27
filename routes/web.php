@@ -13,6 +13,7 @@ use App\Http\Controllers\TinyMCEController;
 use App\Services\GoogleService;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\DatabaseListingController;
 
 Illuminate\Support\Facades\Auth::routes();
 /*
@@ -58,6 +59,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         ->name('update.user.password');
 
     Route::resource('listing', ListingController::class);
+
+    Route::resource('database-listing', DatabaseListingController::class);
 
     Route::group(['prefix' => 'inventory'], function () {
         Route::get('', [ListingController::class, 'inventory'])
