@@ -118,6 +118,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::get('posts', [DashboardController::class, 'getStats'])
         ->name('get.posts.count');
+
+    Route::get('set/session/id', [UserController::class, 'setSessionId'])
+        ->name('user.session.id');
 });
 
 Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');

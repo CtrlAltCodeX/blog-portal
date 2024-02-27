@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserRequest;
 use App\Mail\UserMail;
 use App\Models\User;
+use App\Models\UserSession;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
@@ -188,5 +189,21 @@ class UserController extends Controller
         session()->flash('success', __('User updated successfully.'));
 
         return redirect()->route('verified.users');
+    }
+
+    /**
+     * Set Session
+     *
+     * @return void
+     */
+    public function setSessionId()
+    {
+        $sessionId = UserSession::where('user_id', auth()->user()->id)
+            ->orderBy('id', 'DESC')
+            ->first();
+
+        session()->put('session_id', $sessionId->session_id);
+
+        return true;
     }
 }

@@ -178,8 +178,8 @@
 
                                     <select class="form-control" name="allow_sessions">
                                         <option value="">--Select--</option>
-                                        <option value=1>Single</option>
-                                        <option value=0>Multiple</option>
+                                        <option value=1 {{ $user->allow_sessions == 1 ? 'selected' : '' }}>Single</option>
+                                        <option value=0 {{ $user->allow_sessions == 0 ? 'selected' : '' }}>Multiple</option>
                                     </select>
                                 </div>
 

@@ -112,7 +112,6 @@
 
     <script>
         var timeOut = "{{env('SESSION_LIFETIME')}}" * 60000;
-        
         // Check session expiration every minute (60000 milliseconds)
         setInterval(function() {
             $.ajax({
@@ -132,8 +131,16 @@
         function reloadPage() {
             location.reload(true); // Reload the page
         }
-    </script>
 
+        $.ajax({
+            type: "GET",
+            url: "{{ route('user.session.id') }}",
+            headers: {
+                'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(result) {},
+        });
+    </script>
 
     @stack('js')
 </body>

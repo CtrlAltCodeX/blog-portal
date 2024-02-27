@@ -52,7 +52,12 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
-        if ($user = auth()->user()->sessions->where('expire_at', '<', now())->first()) {
+        if (($user = auth()->user()->sessions->where('expire_at', '<', now())->first())
+            || (auth()->user()->allow_sessions
+                && $user = auth()->user()->sessions->first())
+            || (!auth()->user()->allow_sessions
+                && $user = auth()->user()->sessions->where('session_id', session()->get('session_id'))->first())
+        ) {
             $user->delete();
         }
 
