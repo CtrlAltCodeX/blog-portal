@@ -16,6 +16,7 @@ use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
@@ -102,7 +103,7 @@ class GoogleService
 
             $posts = [];
             $pageToken = null;
-            $perPage = 250;
+            $perPage = 150;
             $startIndex = request()->startIndex;
 
             $params = [
@@ -125,14 +126,19 @@ class GoogleService
             }
 
             if (
-                request()->route()->getName() == 'inventory.index'
-                || request()->route()->getName() == 'inventory.review'
+                (request()->route() && (request()->route()->getName() == 'inventory.index'
+                    || request()->route()->getName() == 'inventory.review'))
+                || App::runningInConsole()
             ) {
                 $params['start-index'] = $startIndex;
                 $params['max-results'] = $perPage;
                 $params['category'] = request()->query('category');
 
-                if (request()->route()->getName() == 'inventory.review') $params['updated-max'] = $agoDate->format('Y-m-d') . "T00:00:00";
+                if ((request()->route() && request()->route()->getName() == 'inventory.review')
+                    && !App::runningInConsole()
+                ) {
+                    $params['updated-max'] = $agoDate->format('Y-m-d') . "T00:00:00";
+                }
 
                 if (SiteSetting::first()->url) {
                     $response = Http::get(SiteSetting::first()->url . '/feeds/posts/default', $params);
@@ -535,6 +541,104 @@ class GoogleService
 
             // Handle the error as needed
             return json_decode($e->getMessage());
+        }
+    }
+
+    /**
+     * Take backup of data to Database
+     *
+     * @param string $status
+     * @param integer $startIndex
+     * @return void
+     */
+    public function backupToDatabse($startIndex = 1, $status = 'live')
+    {
+        try {
+            $posts = [];
+            $pageToken = null;
+            $perPage = 250;
+            $startIndex = $startIndex;
+
+            $params = [
+                'orderBy' => 'updated',
+                'status' => $status,
+                'pageToken' => $pageToken,
+                'alt' => 'json'
+            ];
+
+            if (App::runningInConsole()) {
+                $params['start-index'] = $startIndex;
+                $params['max-results'] = $perPage;
+                $params['category'] = request()->query('category');
+
+                if (SiteSetting::first()->url) {
+                    $response = Http::get(SiteSetting::first()->url . '/feeds/posts/default', $params);
+                    $response = json_decode(json_encode($response->json()))->feed;
+                    $posts = $response->entry ?? [];
+                    $filteredPost = $response->entry ?? [];
+
+                    $allCategories = [];
+                    if (isset(request()->category)) {
+                        $filteredPost = [];
+                        foreach ($posts as $key => $post) {
+                            foreach ($post->category as $category) {
+                                $allCategories[$key][] = $category->term;
+                            }
+
+                            if (in_array(request()->category, $allCategories[$key])) {
+                                $filteredPost[$key] = (array) $post;
+                                $filteredPost[$key]['category'] = $allCategories[$key];
+                            }
+                        }
+                    }
+                }
+            } else if (request()->route()->getName() == 'inventory.drafted') {
+                $params['maxResults'] = 250;
+
+                $credential = $this->getCredentails();
+                $client = $this->createGoogleClient($credential->toArray());
+                $client->setAccessToken($credential->token);
+                $blogger = new Google_Service_Blogger($client);
+
+                $response = $blogger->posts->listPosts($credential->blog_id, $params);
+                $posts = $response->items ?? [];
+                $filteredPost = $response->items ?? [];
+            }
+
+            $nextPageToken = $response->nextPageToken ?? null;
+            $prevPageToken = $response->prevPageToken ?? null;
+
+            $paginator = new LengthAwarePaginator(
+                json_decode(json_encode($filteredPost)),
+                count($response->entry ?? []),
+                1,
+                count($response->entry ?? []),
+                ['path' => route('inventory.index')]
+            );
+
+            return [
+                'paginator' => $paginator,
+                'nextPageToken' => $nextPageToken,
+                'prevPageToken' => $prevPageToken,
+                'startIndex' => $startIndex + $perPage,
+                'prevStartIndex' => $startIndex - $perPage
+            ];
+        } catch (\Exception $e) {
+            $paginator = new LengthAwarePaginator(
+                [],
+                count([]),
+                1,
+                count([]),
+                ['path' => route('inventory.index')]
+            );
+
+            return [
+                'paginator' => $paginator,
+                'nextPageToken' => null,
+                'prevPageToken' => null,
+                'startIndex' => null,
+                'prevStartIndex' => null
+            ];
         }
     }
 }

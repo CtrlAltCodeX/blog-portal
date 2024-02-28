@@ -92,7 +92,7 @@ class ListingController extends Controller
 
             return redirect()->to($url);
         }
-
+        
         $post = $this->googleService->editPost($postId);
         $labels = $post->getLabels();
 

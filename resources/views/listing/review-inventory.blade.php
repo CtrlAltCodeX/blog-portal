@@ -48,8 +48,9 @@
                     <h3 class="card-title">Under Review Listings</h3>
                     <form action="" method="get" id='form'>
                         <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
+                        <input type="hidden" value="{{ request()->updated_before ?? 3 }}" name='updated_before'>
                         <select class="form-control w-100" id='category' name="category">
-                            <option value="">In Stock</option>
+                            <option value="Product" {{ request()->category == 'Product' ? 'selected' : '' }}>In Stock</option>
                             <option value="Stk_o" {{ request()->category == 'Stk_o' ? 'selected' : '' }}>Out of Stock (Stk_o)</option>
                             <option value="stock__out" {{ request()->category == 'stock__out' ? 'selected' : '' }}>Out of Stock (stock__out)</option>
                             <option value="Stk_d" {{ request()->category == 'Stk_d' ? 'selected' : '' }}>On Demand Stock (Stk_d)</option>
@@ -127,7 +128,7 @@
                                         </a>
                                     </td>
                                     @php
-                                    $categories = collect($googlePost->category??[])->pluck('term')->toArray();
+                                    $categories = collect($googlePost->category??[])->toArray();
                                     @endphp
                                     <td>
                                         <span data-bs-placement="top" data-bs-toggle="tooltip" title="{{ implode(", ", $categories) }}">
