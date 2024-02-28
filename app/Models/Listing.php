@@ -12,6 +12,7 @@ class Listing extends Model
     protected $casts = [
         'categories'  => 'array',
         'images' => 'array',
+        'multiple_images' => 'array',
     ];
 
     protected $fillable = [
@@ -30,5 +31,7 @@ class Listing extends Model
         'binding_type',
         'insta_mojo_url',
         'images',
+        'multiple_images',
+        'base_url',
     ];
 }

@@ -30,6 +30,7 @@ return new class extends Migration
             $table->string('base_url')->nullable();
             $table->json('additional_image_url')->nullable();
             $table->json('images')->nullable();
+            $table->json('multiple_images')->nullable();
             $table->timestamps();
         });
     }

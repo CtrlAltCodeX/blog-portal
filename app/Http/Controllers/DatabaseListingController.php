@@ -4,10 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Listing;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
+use App\Services\GoogleService;
 
 class DatabaseListingController extends Controller
 {
+    public function __construct(protected GoogleService $googleService) {
+
+    }
+
     /**
      * Display the listing of the resources
      */
@@ -57,6 +63,8 @@ class DatabaseListingController extends Controller
             'binding_type' => $request->binding,
             'insta_mojo_url' => $request->url,
             'images' => $request->images,
+            'multiple_images' => $request->multipleImages,
+            'base_url' => $request->base_url
         ];
 
         $listing = Listing::create($data);
@@ -79,6 +87,7 @@ class DatabaseListingController extends Controller
     {
         $listing = Listing::find($id);
 
+        return view('database-listing.edit', compact('listing'));
     }
 
     /**
@@ -86,7 +95,38 @@ class DatabaseListingController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $data = [
+            '_token' => $request->_token,
+            'title' => $request->title,
+            'description' => $request->description,
+            'mrp' => $request->mrp,
+            'selling_price' => $request->selling_price,
+            'publisher' => $request->publication,
+            'author_name' => $request->author_name,
+            'edition' => $request->edition,
+            'categories' => $request->label,
+            'sku' => $request->sku,
+            'language' => $request->language,
+            'no_of_pages' => $request->pages,
+            'condition' => $request->condition,
+            'binding_type' => $request->binding,
+            'insta_mojo_url' => $request->url,
+            'images' => $request->images,
+            'multiple_images' => $request->multipleImages,
+            'base_url' => $request->base_url
+        ];
+
+        $listing = Listing::find($id);
+
+        if ($listing->update($data)) {
+            session()->flash('success', 'Listing Updated successfully');
+
+            return redirect()->back();
+        }
+
+        session()->flash('error', 'Someting went wrong');
+
+        return redirect()->back();
     }
 
     /**
@@ -94,6 +134,16 @@ class DatabaseListingController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $listing = Listing::find($id);
+
+        if($listing->delete()) {
+            session()->flash('success', 'Listing deleted succesfully.');
+
+            return redirect()->back();
+        }
+
+        session()->flash('error', 'Someting went wrong');
+        
+        return redirect()->back();
     }
 }

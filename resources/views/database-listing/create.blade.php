@@ -16,38 +16,27 @@
 @endpush
 
 @section('content')
-
-    <!-- CONTAINER -->
-    <div class="main-container container-fluid">
-        <!-- PAGE-HEADER -->
-        <div class="page-header">
-            <h1 class="page-title">{{ __('Create Listing') }}</h1>
-            <div>
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="javascript:void(0)">{{ __('Listing') }}</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">{{ __('Create Listing') }}</li>
-                </ol>
+    <form action="{{ route('database-listing.store') }}" method="POST" enctype='multipart/form-data' id='form'>
+        @csrf
+        <!-- CONTAINER -->
+        <div class="main-container container-fluid">
+            <!-- PAGE-HEADER -->
+            <div class="page-header">
+                <h1 class="page-title">{{ __('Create Listing') }}</h1>
+                <div>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">{{ __('Listing') }}</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ __('Create Listing') }}</li>
+                    </ol>
+                </div>
             </div>
-        </div>
-        <!-- PAGE-HEADER END -->
 
-        <!-- Row -->
+            <div class="row">
+                <div class="col-md-9 col-xl-9 fields">
 
-        <div class="row">
-            <div class="col-md-9 col-xl-9 fields">
-                <form action="{{ route('database-listing.store') }}" method="POST" enctype='multipart/form-data'
-                    id='form'>
-                    @csrf
                     <div class="card">
-                        <!-- <div class="card-header d-flex justify-content-between">
-                            <h4 class="card-title">
-                                {{ __('Create Listing') }}
-                            </h4>
-                        </div> -->
-
                         <div class="card-body">
                             <div id="progressBar" class="text-end"></div>
-
                             <div>
                                 <div class="form-group">
                                     <label for="title" class="form-label">{{ __('Title') }}<span
@@ -55,7 +44,8 @@
                                             Edition | Publication ( Medium ) )</span></label>
                                     <input id="title" type="text"
                                         class="form-control @error('title') is-invalid @enderror" name="title"
-                                        value="{{ old('title') ?? 'title' }}" autocomplete="title" autofocus placeholder="Title">
+                                        value="{{ old('title') ?? 'title' }}" autocomplete="title" autofocus
+                                        placeholder="Title">
                                     <span class="error-message title" style="color:red;"></span>
 
                                     @error('title')
@@ -96,7 +86,7 @@
                                             Price)</span></label>
                                     <input id="mrp" type="number"
                                         class="form-control @error('mrp') is-invalid @enderror" name="mrp"
-                                        value="{{ old('mrp') ?? '45'  }}" autocomplete="mrp" autofocus placeholder="MRP">
+                                        value="{{ old('mrp') ?? '45' }}" autocomplete="mrp" autofocus placeholder="MRP">
                                     <span class="error-message mrp" style="color:red;"></span>
 
                                     @error('mrp')
@@ -133,8 +123,8 @@
                                             class="text-danger">*</span></label>
                                     <input id="publication" type="text"
                                         class="form-control @error('publication') is-invalid @enderror" name="publication"
-                                        value="{{ old('publication') ?? 'publication' }}" autocomplete="publication" autofocus
-                                        placeholder="Publisher">
+                                        value="{{ old('publication') ?? 'publication' }}" autocomplete="publication"
+                                        autofocus placeholder="Publisher">
                                     <span class="error-message publication" style="color:red;"></span>
 
                                     @error('publication')
@@ -149,8 +139,8 @@
                                             class="text-danger">*</span></label>
                                     <input id="author_name" type="text"
                                         class="form-control @error('author_name') is-invalid @enderror" name="author_name"
-                                        value="{{ old('author_name') ?? 'author_name' }}" autocomplete="author_name" autofocus
-                                        placeholder="Author name">
+                                        value="{{ old('author_name') ?? 'author_name' }}" autocomplete="author_name"
+                                        autofocus placeholder="Author name">
                                     <span class="error-message author_name" style="color:red;"></span>
 
                                     @error('author_name')
@@ -208,7 +198,8 @@
                                         </span></label>
                                     <input id="sku" type="text"
                                         class="form-control @error('sku') is-invalid @enderror" name="sku"
-                                        value="{{ old('sku') ?? 'sku' }}" autocomplete="sku" autofocus placeholder="SKU">
+                                        value="{{ old('sku') ?? 'sku' }}" autocomplete="sku" autofocus
+                                        placeholder="SKU">
                                     <span class="error-message sku" style="color:red;"></span>
 
                                     @error('sku')
@@ -259,7 +250,6 @@
                                         <option value="Like New">Like New</option>
                                         <option value="Old">Old</option>
                                     </select>
-                                    <!-- <input id="condition" type="text" class="form-control @error('condition') is-invalid @enderror" name="condition" value="{{ old('condition') }}" autocomplete="condition" autofocus placeholder="Binding Type"> -->
                                     <span class="error-message condition" style="color:red;"></span>
 
                                     @error('condition')
@@ -278,7 +268,6 @@
                                         <option value="Hardcover" selected>Hardcover</option>
                                         <option value="Paperback">Paperback</option>
                                     </select>
-                                    <!-- <input id="binding" type="text" class="form-control @error('binding') is-invalid @enderror" name="binding" value="{{ old('binding') }}" autocomplete="binding" autofocus placeholder="Condition"> -->
                                     <span class="error-message binding" style="color:red;"></span>
                                     @error('binding')
                                         <span class="invalid-feedback" role="alert">
@@ -291,8 +280,8 @@
                                     <label for="url" class="form-label">{{ __('Insta Mojo URL') }}</label>
                                     <input id="url" type="url"
                                         class="form-control @error('url') is-invalid @enderror" name="url"
-                                        value="{{ old('url') ?? 'https://www.instamojo.com/EXAM360/' }}" autocomplete="url" autofocus
-                                        placeholder="Insta Mojo url">
+                                        value="{{ old('url') ?? 'https://www.instamojo.com/EXAM360/' }}"
+                                        autocomplete="url" autofocus placeholder="Insta Mojo url">
                                     <span class="error-message url" style="color:red;"></span>
 
                                     @error('url')
@@ -306,9 +295,8 @@
                             <div class="row" id="addUrls">
                                 <div class="form-group col-md-4">
                                     <label for="url" class="form-label">{{ __('Main Image URL') }}</label>
-                                    <input id="url" type="text"
-                                    value="{{ old('images') ?? 'images test' }}"
-                                        class="form-control @error('images') is-invalid @enderror" name="images[]"
+                                    <input id="url" type="text" value="{{ old('images') ?? 'images test' }}"
+                                        class="form-control @error('images') is-invalid @enderror" name="base_url"
                                         autocomplete="images" autofocus placeholder="Base URL">
                                     <span class="error-message images" style="color:red;"></span>
 
@@ -328,52 +316,36 @@
                             </div>
 
                             <div style="text-align: right;">
-                                <button type="submit" class="btn btn-warning float-right" id='draft'>Save as
-                                    Draft</button>
-                                <button type="submit" class="btn btn-success float-right">Publish</button>
+                                <button type="submit" class="btn btn-success float-right">Save</button>
                             </div>
                         </div>
                     </div>
-                </form>
-            </div>
+                </div>
 
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="form-group">
-                            <div id="fileInputContainer">
-                                <div class="form-group">
-                                    <!-- <label for="fileInput1">Main Images<span class="text-danger">*</span>( Only 1 Image )</label>
-                                    <div class="form-group mb-0" @error('images') style="border: red 2px dotted;" @enderror>
-                                        <input type="file" class="dropify @error('images') is-invalid @enderror" data-bs-height="180" id="fileInput1" name="images[]" /> -->
-                                    <!-- <form action="{{ route('convert.image') }}" method="post" enctype="multipart/form-data" id='singleImageForm'>
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <div id="fileInputContainer">
+                                    <label for="fileInput1" class="mt-2">Images<span class="text-danger">*</span>(
+                                        Multiple
+                                        Images )</label>
+                                    <div class="form-group mt-2"
+                                        @error('multipleImages') style="border: red 2px dotted;" @enderror>
+                                        <form action="{{ route('convert.image') }}" method="post"
+                                            enctype="multipart/form-data" id='multipleImagesform'>
                                             @csrf
-                                            <input id="fileInput1" type="file" class="dropify @error('multipleImages') is-invalid @enderror" name="multipleImages[]" accept="jpg">
-                                            <div id='singleImageDownload' style="display: none;">
-                                                <a href='#' class="w-100 d-flex justify-content-end my-4" id='downloadImage'>
+                                            <input id="multipleFiles" type="file"
+                                                class="dropify @error('multipleImages') is-invalid @enderror"
+                                                name="multipleImages[]" multiple>
+                                            <div id='multiImagesDownload' style="display: none;">
+                                                <a href='#' class="w-100 d-flex justify-content-end my-4"
+                                                    id='downloadMultipleImage'>
                                                     <img src="/downlod-icon.png" />
                                                 </a>
                                             </div>
-                                        </form> -->
-                                </div>
-
-                                <label for="fileInput1" class="mt-2">Images<span class="text-danger">*</span>( Multiple
-                                    Images )</label>
-                                <div class="form-group mt-2"
-                                    @error('multipleImages') style="border: red 2px dotted;" @enderror>
-                                    <form action="{{ route('convert.image') }}" method="post"
-                                        enctype="multipart/form-data" id='multipleImagesform'>
-                                        @csrf
-                                        <input id="multipleFiles" type="file"
-                                            class="dropify @error('multipleImages') is-invalid @enderror"
-                                            name="multipleImages[]" multiple>
-                                        <div id='multiImagesDownload' style="display: none;">
-                                            <a href='#' class="w-100 d-flex justify-content-end my-4"
-                                                id='downloadMultipleImage'>
-                                                <img src="/downlod-icon.png" />
-                                            </a>
-                                        </div>
-                                    </form>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -381,10 +353,10 @@
                 </div>
             </div>
         </div>
-    </div>
-    </div>
-    <!-- End Row -->
-    </div>
+        </div>
+        <!-- End Row -->
+        </div>
+    </form>
 @endsection
 
 @push('js')
