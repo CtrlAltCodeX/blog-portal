@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BackupEmail;
 use App\Models\GoogleCredentail;
 use App\Models\SiteSetting;
 
@@ -54,13 +55,13 @@ class SettingsController extends Controller
         if (request()->file('logo')) {
             $logoImage = time() . "_logo.jpg";
             request()->file('logo')
-                ->storePubliclyAs('public/'.$logoImage);
+                ->storePubliclyAs('public/' . $logoImage);
         }
 
         if (request()->file('homepage_image')) {
             $fileName = time() . "_homepage_image.jpg";
             request()->file('homepage_image')
-                ->storeAs("/public/".$fileName);
+                ->storeAs("/public/" . $fileName);
         }
 
         if (request()->file('product_background_image')) {
@@ -70,8 +71,8 @@ class SettingsController extends Controller
 
         $data = [
             'url' => request()->url,
-            'logo' => $logoImage??$siteSettings->homepage_image,
-            'homepage_image' => $fileName??$siteSettings->homepage_image,
+            'logo' => $logoImage ?? $siteSettings->homepage_image,
+            'homepage_image' => $fileName ?? $siteSettings->homepage_image,
             'product_background_image' => 'custom_image.jpg'
         ];
 
@@ -80,6 +81,38 @@ class SettingsController extends Controller
         if ($siteSettings) $siteSettings->update($data);
 
         session()->flash('success', 'Settings updated successfully');
+
+        return redirect()->back();
+    }
+
+    /**
+     * Insert email for Backup
+     *
+     * @return void
+     */
+    public function backupEmail()
+    {
+        return view('settings.backup-email');
+    }
+
+    /**
+     * Save email for Backup
+     *
+     * @return void
+     */
+    public function saveEmail()
+    {
+        foreach (request()->emails as $email) {
+            if ($existEmail = BackupEmail::where('email', $email)->first()) {
+                $existEmail->update(['email' => $email]);
+            } else {
+                BackupEmail::create([
+                    'email' => $email
+                ]);
+            }
+        }
+
+        session()->flash('success', 'Emails updated successfully');
 
         return redirect()->back();
     }

@@ -13,6 +13,7 @@ use App\Http\Controllers\TinyMCEController;
 use App\Services\GoogleService;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\BackupListingsController;
 use App\Http\Controllers\DatabaseListingController;
 
 Illuminate\Support\Facades\Auth::routes();
@@ -99,6 +100,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
         Route::post('update/site', [SettingsController::class, 'update'])
             ->name('settings.site.update');
+
+        Route::get('emails', [SettingsController::class, 'backupEmail'])
+            ->name('settings.emails');
+
+        Route::post('emails', [SettingsController::class, 'saveEmail'])
+            ->name('settings.emails.save');
     });
 
     Route::post('tinymce/upload', [TinyMCEController::class, 'upload'])
@@ -121,6 +128,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::get('set/session/id', [UserController::class, 'setSessionId'])
         ->name('user.session.id');
+
+    Route::group(['prefix' => 'backup'], function () {
+        Route::get('listings', [BackupListingsController::class, 'backupListings'])
+            ->name('backup.listings');
+    });
 });
 
 Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');

@@ -62,6 +62,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         <li><a href="{{ route('inventory.drafted') }}" class="slide-item {{ request()->is('admin/inventory/drafted') ? 'active' : '' }}">{{ __('Drafted Inventory') }}</a></li>
                         @endcan
                         <li><a href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => 3]) }}" class="slide-item {{ request()->is('admin/inventory/review') ? 'active' : '' }}">{{ __('Under Review Inventory') }}</a></li>
+                        <li><a href="{{ route('backup.listings') }}" class="slide-item {{ request()->is('admin/backup/listings') ? 'active' : '' }}">{{ __('Backup Inventory') }}</a></li>
                     </ul>
                 </li>
                 @endcan
@@ -122,6 +123,8 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         @can('Site Access')
                         <li><a href="{{ route('settings.site') }}" class="slide-item {{ request()->is('admin/settings/site') ? 'active' : '' }}">{{ __('Site Settings') }}</a></li>
                         @endcan
+
+                        <li><a href="{{ route('settings.emails') }}" class="slide-item {{ request()->is('admin/settings/emails') ? 'active' : '' }}">{{ __('Backup E-Mail') }}</a></li>
 
                         @can('Configure Blog')
                         <li><a href="{{ route('settings.blog') }}" class="slide-item {{ request()->is('admin/settings/blog') ? 'active' : '' }}">{{ __('Confiure Blog') }}</a></li>
