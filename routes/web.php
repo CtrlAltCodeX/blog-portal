@@ -133,6 +133,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         Route::get('listings', [BackupListingsController::class, 'backupListings'])
             ->name('backup.listings');
     });
+
+    Route::get('export', [BackupListingsController::class, 'export'])
+        ->name('backup.export');
 });
 
 Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');

@@ -46,18 +46,22 @@
             <div class="card">
                 <div class="card-header justify-content-between">
                     <h3 class="card-title">Manage Inventory</h3>
-                    <form action="" method="get" id='form'>
-                        <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
-                        <select class="form-control w-100" id='category' name="category">
-                            <option value="">In Stock</option>
-                            <option value="Stk_o" {{ request()->category == 'Stk_o' ? 'selected' : '' }}>Out of Stock (Stk_o)</option>
-                            <option value="stock__out" {{ request()->category == 'stock__out' ? 'selected' : '' }}>Out of Stock (stock__out)</option>
-                            <option value="Stk_d" {{ request()->category == 'Stk_d' ? 'selected' : '' }}>On Demand Stock (Stk_d)</option>
-                            <option value="stock__demand" {{ request()->category == 'stock__demand' ? 'selected' : '' }}>On Demand Stock (stock__demand)</option>
-                            <option value="Stk_l" {{ request()->category == 'Stk_l' ? 'selected' : '' }}>Low Stock (Stk_l)</option>
-                            <option value="stock__low" {{ request()->category == 'stock__low' ? 'selected' : '' }}>Low Stock (stock__low)</option>
-                        </select>
-                    </form>
+                    <div class="d-flex">
+                        <form action="" method="get" id='form' style="margin-right: 10px;">
+                            <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
+                            <select class="form-control w-100" id='category' name="category">
+                                <option value="">In Stock</option>
+                                <option value="Stk_o" {{ request()->category == 'Stk_o' ? 'selected' : '' }}>Out of Stock (Stk_o)</option>
+                                <option value="stock__out" {{ request()->category == 'stock__out' ? 'selected' : '' }}>Out of Stock (stock__out)</option>
+                                <option value="Stk_d" {{ request()->category == 'Stk_d' ? 'selected' : '' }}>On Demand Stock (Stk_d)</option>
+                                <option value="stock__demand" {{ request()->category == 'stock__demand' ? 'selected' : '' }}>On Demand Stock (stock__demand)</option>
+                                <option value="Stk_l" {{ request()->category == 'Stk_l' ? 'selected' : '' }}>Low Stock (Stk_l)</option>
+                                <option value="stock__low" {{ request()->category == 'stock__low' ? 'selected' : '' }}>Low Stock (stock__low)</option>
+                            </select>
+                        </form>
+
+                        <a href="{{ route('backup.export') }}" class="mr-2 btn btn-primary">Export</a>
+                    </div>
                 </div>
 
                 <div class="card-body">
