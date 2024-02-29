@@ -2,12 +2,17 @@
 
 namespace App\Console\Commands;
 
+use App\Exports\BackupListingsExport;
+use App\Mail\BackupMail;
+use App\Models\BackupEmail;
 use App\Models\BackupListing as ModelsBackupListing;
 use App\Models\BackupListingImage;
 use App\Models\SiteSetting;
 use App\Services\GoogleService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BackupListing extends Command
 {
@@ -31,6 +36,18 @@ class BackupListing extends Command
     public function handle()
     {
         $this->getAllProducts();
+
+        $listingData = app('App\Http\Controllers\BackupListingsController');
+
+        $fileName = 'report' . time() . '.xlsx';
+
+        Excel::store(new BackupListingsExport($listingData->exportData()), $fileName);
+
+        $allEmails = BackupEmail::all();
+
+        foreach ($allEmails as $email) {
+            Mail::to($email->email)->send(new BackupMail($fileName));
+        }
     }
 
     /**

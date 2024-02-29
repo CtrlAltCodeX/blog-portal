@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Exports\BackupListingsExport;
+use App\Mail\BackupMail;
 use App\Models\BackupListing;
+use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Excel as BaseExcel;
 
@@ -35,7 +37,7 @@ class BackupListingsController extends Controller
      *
      * @return void
      */
-    public function export()
+    public function exportData()
     {
         $getAllListings = BackupListing::all()->makeHidden(['id', 'created_at', 'updated_at'])->toArray();
 
@@ -60,11 +62,16 @@ class BackupListingsController extends Controller
 
         array_unshift($getAllListings, $mainColums);
 
-        $attachment = Excel::raw(
-            new BackupListingsExport($getAllListings),
-            BaseExcel::CSV
-        );
+        return $getAllListings;
+    }
 
-        return Excel::download(new BackupListingsExport($getAllListings), 'report.xlsx');
+    /**
+     * Download Excel
+     *
+     * @return void
+     */
+    public function downloadExcel()
+    {
+        return Excel::download(new BackupListingsExport($this->exportData()), 'report.xlsx');
     }
 }
