@@ -10,7 +10,6 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\TinyMCEController;
 use App\Services\GoogleService;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
@@ -116,9 +115,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
             ->name('settings.emails.save');
     });
 
-    Route::post('tinymce/upload', [TinyMCEController::class, 'upload'])
-        ->name('tinymce.upload');
-
     Route::match(['get', 'post'], 'process/image', [GoogleService::class, 'processImageAndDownload'])
         ->name('process.image');
 
@@ -140,9 +136,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     Route::group(['prefix' => 'backup'], function () {
         Route::get('listings', [BackupListingsController::class, 'backupListings'])
             ->name('backup.listings');
+
+        Route::get('logs', [BackupListingsController::class, 'getLoggerFile'])
+            ->name('backup.logs');
     });
 
-    Route::get('export', [BackupListingsController::class, 'export'])
+    Route::get('export', [BackupListingsController::class, 'downloadExcel'])
         ->name('backup.export');
 });
 

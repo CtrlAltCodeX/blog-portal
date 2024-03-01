@@ -445,7 +445,7 @@ class GoogleService
      * Process Image
      *
      * @param Request $request
-     * @return void
+     * @return string
      */
     public function processImage($image)
     {

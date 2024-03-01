@@ -83,7 +83,7 @@
                                     <tr>
                                         <td>{{ $googlePost->id }}</td>
                                         <td>{{ 'in stock' }}</td>
-                                        <td>{{ implode(" ", $googlePost->images) }}</td>
+                                        <td>{{ $googlePost->base_url }}</td>
                                         <td>{{ $googlePost->title }}</td>
                                         <td>{{ $googlePost->selling_price }}</td>
                                         <td>{{ $googlePost->mrp }}</td>
