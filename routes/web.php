@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\WatermarkController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\SettingsController;
@@ -74,11 +75,18 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
             ->name('inventory.drafted');
     });
 
+
     Route::get('blog/publish/{id}', [ListingController::class, 'publishBlog'])
         ->name('blog.publish');
 
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
+
+    Route::get('watermark/create', [WatermarkController::class, 'create'])->name('watermark.create');
+
+    Route::post('watermark/store', [WatermarkController::class, 'store'])->name('watermark.store');
+
+    Route::post('watermark/download', [WatermarkController::class, 'download'])->name('watermark.download');
 
     Route::resource('users', UserController::class);
 
