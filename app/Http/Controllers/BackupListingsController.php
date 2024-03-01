@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Exports\BackupListingsExport;
-use App\Mail\BackupMail;
 use App\Models\BackupListing;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
-use Maatwebsite\Excel\Excel as BaseExcel;
 
 class BackupListingsController extends Controller
 {
@@ -73,5 +71,20 @@ class BackupListingsController extends Controller
     public function downloadExcel()
     {
         return Excel::download(new BackupListingsExport($this->exportData()), 'report.xlsx');
+    }
+
+    /**
+     * Read Log and Display
+     *
+     * @return void
+     */
+    public function getLoggerFile()
+    {
+        $logFilePath = storage_path('logs/backup_activity.log');
+        $logContent = File::get($logFilePath);
+
+        $logContent = str_ireplace("local.INFO", '', $logContent);
+
+        return view('settings.backup-logs', compact('logContent'));
     }
 }

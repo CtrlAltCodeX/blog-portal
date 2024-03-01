@@ -128,6 +128,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     Route::group(['prefix' => 'backup'], function () {
         Route::get('listings', [BackupListingsController::class, 'backupListings'])
             ->name('backup.listings');
+
+        Route::get('logs', [BackupListingsController::class, 'getLoggerFile'])
+            ->name('backup.logs');
     });
 
     Route::get('export', [BackupListingsController::class, 'downloadExcel'])

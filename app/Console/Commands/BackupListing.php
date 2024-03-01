@@ -11,6 +11,7 @@ use App\Models\SiteSetting;
 use App\Services\GoogleService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -35,18 +36,28 @@ class BackupListing extends Command
      */
     public function handle()
     {
-        $this->getAllProducts();
+        try {
+            Log::channel('backup_activity_log')->info('Backup Stated - ' . now());
 
-        $listingData = app('App\Http\Controllers\BackupListingsController');
+            $this->getAllProducts();
 
-        $fileName = 'report' . time() . '.xlsx';
+            Log::channel('backup_activity_log')->info('Backup Completed - ' . now());
 
-        Excel::store(new BackupListingsExport($listingData->exportData()), $fileName);
+            $listingData = app('App\Http\Controllers\BackupListingsController');
 
-        $allEmails = BackupEmail::all();
+            $fileName = 'report' . time() . '.xlsx';
 
-        foreach ($allEmails as $email) {
-            Mail::to($email->email)->send(new BackupMail($fileName));
+            Excel::store(new BackupListingsExport($listingData->exportData()), $fileName);
+
+            $allEmails = BackupEmail::all();
+
+            foreach ($allEmails as $email) {
+                Mail::to($email->email)->send(new BackupMail($fileName));
+
+                Log::channel('backup_activity_log')->info('Email Send Successfully to ' . $email->email . " - " . now());
+            }
+        } catch (\Exception $e) {
+            Log::channel('backup_activity_log')->info('Facing some issue - ' . $e);
         }
     }
 

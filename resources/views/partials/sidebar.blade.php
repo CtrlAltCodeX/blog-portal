@@ -125,6 +125,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         @endcan
 
                         <li><a href="{{ route('settings.emails') }}" class="slide-item {{ request()->is('admin/settings/emails') ? 'active' : '' }}">{{ __('Backup E-Mail') }}</a></li>
+                        <li><a href="{{ route('backup.logs') }}" class="slide-item {{ request()->is('admin/backup/logs') ? 'active' : '' }}">{{ __('Backup Logs') }}</a></li>
 
                         @can('Configure Blog')
                         <li><a href="{{ route('settings.blog') }}" class="slide-item {{ request()->is('admin/settings/blog') ? 'active' : '' }}">{{ __('Confiure Blog') }}</a></li>
