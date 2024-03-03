@@ -34,6 +34,8 @@ class DatabaseSeeder extends Seeder
         Permission::create(['name' => 'User delete']);
 
         Permission::create(['name' => 'Roles & Permissions (Main Menu)']);
+        Permission::create(['name' => 'Roles & Permissions -> Assign Permissions to Roles']);
+        Permission::create(['name' => 'Roles & Permissions -> View All Roles & Permissions']);
         Permission::create(['name' => 'Roles & Permissions -> Assign Permissions to Roles -> Edit']);
         Permission::create(['name' => 'Roles & Permissions -> Assign Permissions to Roles -> Create']);
         Permission::create(['name' => 'Roles & Permissions -> Assign Permissions to Roles -> Delete']);
@@ -52,7 +54,7 @@ class DatabaseSeeder extends Seeder
         Permission::create(['name' => 'Site Update']);
 
         Permission::create(['name' => 'Configure Blog']);
-        Permission::create(['name' => 'Configure Update']);
+        Permission::create(['name' => 'Configure Blog Update']);
         
         Permission::create(['name' => 'Dashboard']);
 
@@ -70,6 +72,7 @@ class DatabaseSeeder extends Seeder
             'pincode' => '201009',
             'full_address' => 'Test address',
             'plain_password' => 'admin123',
+            "allow_sessions" => 0
         ])->assignRole($adminRole)->assignRole($writerRole);
 
         $adminRole->givePermissionTo(Permission::all());
@@ -88,6 +91,7 @@ class DatabaseSeeder extends Seeder
             'pincode' => '201009',
             'full_address' => 'Test address',
             'plain_password' => 'admin123',
+            "allow_sessions" => 0
         ])->assignRole($writerRole);
 
         User::find(1)->assignRole($adminRole)->assignRole($writerRole);

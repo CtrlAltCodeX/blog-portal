@@ -3,7 +3,7 @@
 @section('title', __('Settings'))
 
 @section('content')
-@can('Configure Blog') 
+@can('Configure Blog Update') 
     <div class="card mt-5">
         <div class="card-body">
             <div>
@@ -72,7 +72,6 @@
                 },
 
                 success: function(data) {
-                    console.log(data);
                     window.location.href = data;
                 },
                 error: function(error) {
