@@ -35,17 +35,24 @@ class WatermarkController extends Controller
 
         $fontSize = min($image->width(), $image->height()) / 20;
 
-        $centerX = $image->width() / 2;
-        $centerY = $image->height() / 2;
+        $numPoints = 10;
 
-        $image->text($request->input('title'), $centerX, $centerY, function ($font) use ($fontSize) {
-            $font->file(public_path('anta.ttf'));
-            $font->color([255, 255, 255, 0.5]);
-            $font->size($fontSize);
-            $font->align('center');
-            $font->valign('middle');
-            $font->angle(0);
-        });
+        $radius = min($image->width(), $image->height()) / 2;
+
+        for ($i = 0; $i < $numPoints; $i++) {
+            $angle = $i * (360 / $numPoints);
+
+            $x = $image->width() / 2 + $radius * cos(deg2rad($angle));
+
+            $y = $image->height() / 2 + $radius * sin(deg2rad($angle));
+
+            $image->text($request->input('title'), $x, $y, function ($font) use ($fontSize) {
+                $font->file(public_path('anta.ttf'));
+                $font->color([255, 255, 255, 0.5]);
+                $font->size($fontSize);
+                $font->angle(45);
+            });
+        }
 
         $image->save();
 

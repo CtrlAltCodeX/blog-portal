@@ -42,18 +42,19 @@ $userInfo = app('App\Models\SiteSetting')->first();
                     <ul class="slide-menu">
                         <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
                         @can('Listing create')
-                        <li><a href="{{ route('listing.create') }}" class="slide-item {{ (request()->is('admin/listing/create')) ? 'active' : '' }}">{{ __('Create New Listing') }}</a></li>
+                        <li><a href="{{ route('listing.create') }}" class="slide-item {{ (request()->is('admin/images/*')) ? 'active' : '' }}">{{ __('Create New Listing') }}</a></li>
                         @endcan
-                        <li><a href="{{ route('database-listing.create') }}" class="slide-item {{ (request()->is('admin/database-listing/create')) ? 'active' : '' }}">{{ __('Database Create New Listing') }}</a></li>
-                        <li><a href="{{ route('database-listing.index') }}" class="slide-item {{ (request()->is('admin/database-listing/index')) ? 'active' : '' }}">{{ __('Database Listings') }}</a></li>
+                        <li><a href="{{ route('database-listing.create') }}" class="slide-item {{ (request()->is('admin/images/watermark/create')) ? 'active' : '' }}">{{ __('Database Create New Listing') }}</a></li>
+                        <li><a href="{{ route('image.collage.create') }}" class="slide-item {{ (request()->is('admin/database-listing/index')) ? 'active' : '' }}">{{ __('Database Listings') }}</a></li>
                     </ul>
                 </li>
                 @endcan
 
-                <li class="slide {{ (request()->is('watermark/*') || request()->is('watermark/*') || request()->is('watermark/*')) ? 'is-expanded' : '' }}">
-                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-list"></i><span class="side-menu__label">{{ __('Watermark') }}</span><i class="angle fe fe-chevron-right"></i></a>
+                <li class="slide {{ (request()->is('admin/images/*') || request()->is('admin/images/*') || request()->is('admin/images/*')) ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-list"></i><span class="side-menu__label">{{ __('Images') }}</span><i class="angle fe fe-chevron-right"></i></a>
                     <ul class="slide-menu">
-                        <li><a href="{{ route('watermark.create') }}" class="slide-item {{ (request()->is('watermark.create')) ? 'active' : '' }}">{{ __('Watermark') }}</a></li>
+                        <li><a href="{{ route('image.watermark.create') }}" class="slide-item {{ (request()->is('admin/images/watermark/*')) ? 'active' : '' }}">{{ __('Watermark') }}</a></li>
+                        <li><a href="{{ route('image.collage.create') }}" class="slide-item {{ (request()->is('admin/images/collage/*')) ? 'active' : '' }}">{{ __('Collage') }}</a></li>
                     </ul>
                 </li>
 
