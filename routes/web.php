@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\WatermarkController;
+use App\Http\Controllers\CollageController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\SettingsController;
@@ -80,11 +81,15 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
-    Route::get('watermark/create', [WatermarkController::class, 'create'])->name('watermark.create');
+    Route::group(['prefix' => 'images'], function() {
+        Route::get('watermark/create', [WatermarkController::class, 'create'])->name('image.watermark.create');
 
-    Route::post('watermark/store', [WatermarkController::class, 'store'])->name('watermark.store');
+        Route::post('watermark/store', [WatermarkController::class, 'store'])->name('image.watermark.store');
 
-    Route::post('watermark/download', [WatermarkController::class, 'download'])->name('watermark.download');
+        Route::get('collage/create', [CollageController::class, 'create'])->name('image.collage.create');
+
+        Route::post('collage/store', [CollageController::class, 'store'])->name('image.collage.store');
+    });
 
     Route::resource('users', UserController::class);
 
