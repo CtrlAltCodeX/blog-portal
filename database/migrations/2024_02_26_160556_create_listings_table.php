@@ -31,6 +31,7 @@ return new class extends Migration
             $table->json('additional_image_url')->nullable();
             $table->json('images')->nullable();
             $table->json('multiple_images')->nullable();
+            $table->tinyInteger('status');
             $table->timestamps();
         });
     }

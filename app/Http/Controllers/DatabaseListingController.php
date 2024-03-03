@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BlogRequest;
 use App\Models\Listing;
 use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
 use App\Services\GoogleService;
 
@@ -44,7 +44,7 @@ class DatabaseListingController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(BlogRequest $request)
     {
         $data = [
             '_token' => $request->_token,
@@ -64,7 +64,8 @@ class DatabaseListingController extends Controller
             'insta_mojo_url' => $request->url,
             'images' => $request->images,
             'multiple_images' => $request->multipleImages,
-            'base_url' => $request->base_url
+            'base_url' => $request->base_url,
+            'status' => 0
         ];
 
         $listing = Listing::create($data);
@@ -93,7 +94,7 @@ class DatabaseListingController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(BlogRequest $request, string $id)
     {
         $data = [
             '_token' => $request->_token,

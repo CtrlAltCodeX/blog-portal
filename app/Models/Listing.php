@@ -33,5 +33,6 @@ class Listing extends Model
         'images',
         'multiple_images',
         'base_url',
+        'status'
     ];
 }

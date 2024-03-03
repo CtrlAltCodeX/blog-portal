@@ -74,7 +74,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
             ->name('inventory.drafted');
     });
 
-
     Route::get('blog/publish/{id}', [ListingController::class, 'publishBlog'])
         ->name('blog.publish');
 
@@ -107,12 +106,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
         Route::post('update/site', [SettingsController::class, 'update'])
             ->name('settings.site.update');
-
-        Route::get('emails', [SettingsController::class, 'backupEmail'])
-            ->name('settings.emails');
-
-        Route::post('emails', [SettingsController::class, 'saveEmail'])
-            ->name('settings.emails.save');
     });
 
     Route::match(['get', 'post'], 'process/image', [GoogleService::class, 'processImageAndDownload'])
@@ -139,6 +132,15 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
         Route::get('logs', [BackupListingsController::class, 'getLoggerFile'])
             ->name('backup.logs');
+
+        Route::get('emails', [BackupListingsController::class, 'backupEmail'])
+            ->name('settings.emails');
+
+        Route::post('emails', [BackupListingsController::class, 'saveEmail'])
+            ->name('settings.emails.save');
+
+        Route::get('delete/emails/{id}', [BackupListingsController::class, 'deleteEmail'])
+            ->name('backup.emails.delete');
     });
 
     Route::get('export', [BackupListingsController::class, 'downloadExcel'])

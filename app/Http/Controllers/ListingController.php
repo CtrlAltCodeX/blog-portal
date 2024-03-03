@@ -184,7 +184,6 @@ class ListingController extends Controller
             'binding' => trim($binding),
             'condition' => trim($condition),
         ];
-        // dd($allInfo);
 
         if (!$url = $this->getSiteBaseUrl()) {
             session()->flash('message', 'Please complete your Site Setting Then Continue');

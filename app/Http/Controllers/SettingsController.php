@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\BackupMail;
 use App\Models\BackupEmail;
 use App\Models\GoogleCredentail;
 use App\Models\SiteSetting;
@@ -81,38 +82,6 @@ class SettingsController extends Controller
         if ($siteSettings) $siteSettings->update($data);
 
         session()->flash('success', 'Settings updated successfully');
-
-        return redirect()->back();
-    }
-
-    /**
-     * Insert email for Backup
-     *
-     * @return void
-     */
-    public function backupEmail()
-    {
-        return view('settings.backup-email');
-    }
-
-    /**
-     * Save email for Backup
-     *
-     * @return void
-     */
-    public function saveEmail()
-    {
-        foreach (request()->emails as $email) {
-            if ($existEmail = BackupEmail::where('email', $email)->first()) {
-                $existEmail->update(['email' => $email]);
-            } else {
-                BackupEmail::create([
-                    'email' => $email
-                ]);
-            }
-        }
-
-        session()->flash('success', 'Emails updated successfully');
 
         return redirect()->back();
     }

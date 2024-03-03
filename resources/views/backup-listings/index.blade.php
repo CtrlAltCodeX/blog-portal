@@ -47,7 +47,7 @@
                 <div class="card-header justify-content-between">
                     <h3 class="card-title">Manage Inventory</h3>
                     <div class="d-flex">
-                        <form action="" method="get" id='form' style="margin-right: 10px;">
+                        <!-- <form action="" method="get" id='form' style="margin-right: 10px;">
                             <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
                             <select class="form-control w-100" id='category' name="category">
                                 <option value="">In Stock</option>
@@ -58,7 +58,7 @@
                                 <option value="Stk_l" {{ request()->category == 'Stk_l' ? 'selected' : '' }}>Low Stock (Stk_l)</option>
                                 <option value="stock__low" {{ request()->category == 'stock__low' ? 'selected' : '' }}>Low Stock (stock__low)</option>
                             </select>
-                        </form>
+                        </form> -->
 
                         <a href="{{ route('backup.export') }}" class="mr-2 btn btn-primary">Export</a>
                     </div>
