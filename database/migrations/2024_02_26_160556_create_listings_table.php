@@ -27,8 +27,6 @@ return new class extends Migration
             $table->string('condition')->nullable();
             $table->string('binding_type')->nullable();
             $table->string('insta_mojo_url')->nullable();
-            $table->string('base_url')->nullable();
-            $table->json('additional_image_url')->nullable();
             $table->json('images')->nullable();
             $table->json('multiple_images')->nullable();
             $table->tinyInteger('status');

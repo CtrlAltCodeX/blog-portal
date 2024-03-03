@@ -45,7 +45,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         <li><a href="{{ route('listing.create') }}" class="slide-item {{ (request()->is('admin/images/*')) ? 'active' : '' }}">{{ __('Create New Listing') }}</a></li>
                         @endcan
                         <li><a href="{{ route('database-listing.create') }}" class="slide-item {{ (request()->is('admin/images/watermark/create')) ? 'active' : '' }}">{{ __('Database Create New Listing') }}</a></li>
-                        <li><a href="{{ route('image.collage.create') }}" class="slide-item {{ (request()->is('admin/database-listing/index')) ? 'active' : '' }}">{{ __('Database Listings') }}</a></li>
+                        <li><a href="{{ route('database-listing.index') }}" class="slide-item {{ (request()->is('admin/database-listing/index')) ? 'active' : '' }}">{{ __('Database Listings') }}</a></li>
                     </ul>
                 </li>
                 @endcan

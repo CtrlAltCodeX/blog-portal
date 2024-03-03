@@ -65,13 +65,13 @@
                         <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">
                             <thead>
                                 <tr>
+                                    <th>{{ __('-') }}</th>
                                     <th>{{ __('Sl') }}</th>
                                     <th>{{ __('Stock') }}</th>
                                     <th>{{ __('Image') }}</th>
                                     <th>{{ __('Product name') }}</th>
                                     <th>{{ __('Sell Price') }}</th>
                                     <th>{{ __('MRP') }}</th>
-                                    <th>{{ __('Product ID') }}</th>
                                     <th>{{ __('Labels') }}</th>
                                     <th>{{ __('Created at') }}</th>
                                     <th>{{ __('Updated at') }}</th>
@@ -80,35 +80,56 @@
                             </thead>
                             <tbody>
                                 @forelse ($googlePosts as $key => $googlePost)
-                                    <tr>
-                                        <td>{{ $googlePost->id }}</td>
-                                        <td>{{ 'in stock' }}</td>
-                                        <td>{{ $googlePost->base_url }}</td>
-                                        <td>{{ $googlePost->title }}</td>
-                                        <td>{{ $googlePost->selling_price }}</td>
-                                        <td>{{ $googlePost->mrp }}</td>
-                                        <td>{{ $googlePost->id }}</td>
-                                        <td>{{ implode(" ", $googlePost->categories) }}</td>
-                                        <td>{{ $googlePost->created_at }}</td>
-                                        <td>{{ $googlePost->updated_at }}</td>
-                                        <td>
-                                            <div class="btn-group" role="group" aria-label="Basic example">
-                                                <a href="{{ route('database-listing.edit', $googlePost->id) }}" class="btn btn-sm btn-primary">{{ __('Edit') }}</a>
-                                                <form action="{{ route('database-listing.destroy', $googlePost->id) }}" method="POST" class="ml-2">
-                                                    @csrf
-                                                    @method('DELETE')
-    
-                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this item?')">
-                                                        {{ __('Delete') }}
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" name="ids" class="checkbox-update" value="{{$googlePost->id}}" />
+                                    </td>
+                                    <td>{{ $googlePost->id }}</td>
+                                    <td>@if(isset($googlePost->categories) && (in_array('Stk_o', $googlePost->categories) || in_array('stock__out', $googlePost->categories)))
+                                        {{ 'Out of Stock' }}
+                                        @elseif(isset($googlePost->categories) && (in_array('Stk_d', $googlePost->categories) || in_array('stock__demand', $googlePost->categories)))
+                                        {{ 'On Demand' }}
+                                        @elseif(isset($googlePost->categories) && in_array('Stk_b', $googlePost->categories))
+                                        {{ 'Pre Booking' }}
+                                        @elseif(isset($googlePost->categories) && (in_array('Stk_l', $googlePost->categories) || in_array('stock__low', $googlePost->categories)))
+                                        {{ 'Low Stock' }}
+                                        @else {{ 'In Stock' }}
+                                        @endif
+                                    </td>
+                                    <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $googlePost->images }}" alt="Product Image" /></td>
+                                    <td>{{ $googlePost->title }}</td>
+                                    <td>{{ $googlePost->selling_price }}</td>
+                                    <td>{{ $googlePost->mrp }}</td>
+                                    @php
+                                    $categories = collect($googlePost->categories??[])->toArray();
+                                    @endphp
+                                    <td>
+                                        <span data-bs-placement="top" data-bs-toggle="tooltip" title="{{ implode(", ", $categories) }}">
+                                            {{ count($categories ?? []) }}
+                                            </button>
+                                    </td>
+                                    <td>{{ date("d-m-Y h:i A", strtotime($googlePost->created_at)) }}</td>
+                                    <td>{{ date("d-m-Y h:i A", strtotime($googlePost->updated_at)) }}</td>
+                                    <td>
+                                        <div class="btn-group" role="group" aria-label="Basic example">
+                                            <a href="{{ route('database-listing.edit', $googlePost->id) }}" class="btn btn-sm btn-primary">{{ __('Edit') }}</a>
+                                            <form action="{{ route('database-listing.destroy', $googlePost->id) }}" method="POST" class="ml-2">
+                                                @csrf
+                                                @method('DELETE')
+
+                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this item?')">
+                                                    {{ __('Delete') }}
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
                                 @empty
                                 @endforelse
                             </tbody>
                         </table>
+
+                        {!! $googlePosts->links() !!}
                     </div>
                 </div>
             </div>
@@ -153,6 +174,34 @@
 
         $("#category").on("change", function() {
             $("#form").submit();
+        })
+
+        $("#basic-datatable_wrapper .col-sm-12:first").html('<form id="update-status" action={{route("listing.status")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status"><option>Select</option><option value=0>Pending</option><option value=1>Approved</option><option value=2>Reject</option></select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div></form>');
+
+        $("#basic-datatable_wrapper").on('click', '.update-status', function(e) {
+            e.preventDefault();
+            var formData = $('#update-status').serializeArray();
+            
+            // Create a new FormData object
+            var formDataToSend = new FormData();
+
+            // Add each serialized field to the FormData object
+            $.each(formData, function(index, field) {
+                formDataToSend.append(field.name, field.value);
+            });
+
+            // Append any additional data you want to send
+            formDataToSend.append('additionalData', ids);
+
+            formData.push(ids);
+            console.log(formDataToSend);
+
+            // $("#update-status").submit();
+        });
+
+        var ids = [];
+        $(".checkbox-update").click(function() {
+            ids.push($(this).val());
         })
     })
 </script>

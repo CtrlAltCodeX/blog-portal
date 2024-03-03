@@ -220,7 +220,7 @@
             $("#form").submit();
         });
 
-        $("#basic-datatable_wrapper .col-sm-12:first").html('<div class="d-flex"><label class="m-2"><input type="radio" id="six" @if(request()->updated_before == 6) checked=checked @endif name="ago"/>6 Months</label><label class="m-2"><input type="radio" @if(request()->updated_before == 1) checked=checked @endif id="one" name="ago" />1 Year</label></div>');
+        $("#basic-datatable_wrapper .col-sm-12:first").html('<div class="d-flex"><label class="m-2"><input type="radio" id="six" @if(request()->updated_before == 6) checked=checked @endif name="ago"/>6 Months <span id="count-six">(0)</span></label><label class="m-2"><input type="radio" @if(request()->updated_before == 1) checked=checked @endif id="one" name="ago" />1 Year <span id="count-one">(0)</span></label></div>');
 
         $('#basic-datatable_wrapper').on('click', '#six', function() {
             let url = new URL(window.location.href);
@@ -238,7 +238,50 @@
             let allParams = params.toString() + '&updated_before=1';
 
             window.location.href = url.origin + url.pathname + "?" + allParams;
-        })
+        });
+
+        getOneYearOldInventory()
+        getSixMonthOldInventory()
+
+        function getOneYearOldInventory() {
+            // localStorage.setItem('one-year-old', 0);
+
+            $.ajax({
+                type: "GET",
+                url: "{{ route('get.posts.count') }}",
+                data: {
+                    category: 'Product',
+                    updated_before: 1
+                },
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(result) {
+                    $("#count-one").html("( " + result + " )");
+                    // localStorage.setItem('one-year-old', result);
+                },
+            });
+        }
+
+        function getSixMonthOldInventory() {
+            // localStorage.setItem('six-month-old', 0);
+
+            $.ajax({
+                type: "GET",
+                url: "{{ route('get.posts.count') }}",
+                data: {
+                    category: 'Product',
+                    updated_before: 6
+                },
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(result) {
+                    $("#count-six").html("( " + result + " )");
+                    // localStorage.setItem('six-month-old', result);
+                },
+            });
+        }
     })
 </script>
 

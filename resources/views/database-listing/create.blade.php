@@ -249,7 +249,7 @@
                         <div class="row" id="addUrls">
                             <div class="form-group col-md-4">
                                 <label for="url" class="form-label">{{ __('Main Image URL') }}</label>
-                                <input id="url" type="text" value="{{ old('images') }}" class="form-control @error('images') is-invalid @enderror" name="base_url" autocomplete="images" autofocus placeholder="Base URL">
+                                <input id="url" type="text" value="{{ old('images')[0]??'' }}" class="form-control @error('images') is-invalid @enderror" name="images[]" autocomplete="images" autofocus placeholder="Base URL">
                                 <span class="error-message base_url" style="color:red;"></span>
 
                                 @error('images')

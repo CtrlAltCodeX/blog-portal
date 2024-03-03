@@ -81,7 +81,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
-    Route::group(['prefix' => 'images'], function() {
+    Route::get('update/status', [DatabaseListingController::class, 'updateStatus'])->name('listing.status');
+
+    Route::group(['prefix' => 'images'], function () {
         Route::get('watermark/create', [WatermarkController::class, 'create'])->name('image.watermark.create');
 
         Route::post('watermark/store', [WatermarkController::class, 'store'])->name('image.watermark.store');

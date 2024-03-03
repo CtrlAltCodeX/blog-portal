@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Services\GoogleService;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 
 class DashboardController extends Controller
@@ -61,8 +62,22 @@ class DashboardController extends Controller
         $url = $this->getSiteBaseUrl();
 
         $category = request()->category;
- 
-        $response = Http::get($url . '/feeds/posts/default?alt=json&category=' . $category);
+
+        $agoDate = Carbon::now();
+
+        if (request()->filled('updated_before')) {
+            // Get the current date
+            $currentDate = Carbon::now();
+
+            if (request()->query('updated_before') == 1) {
+                $agoDate = $currentDate->subYear();
+            } else {
+                // Subtract three months from the current date
+                $agoDate = $currentDate->subMonths(request()->query('updated_before'));
+            }
+        }
+
+        $response = Http::get($url . '/feeds/posts/default?alt=json&category=' . $category . "&updated-max=" . $agoDate?->format('Y-m-d') . "T00:00:00");
 
         return $response->json()['feed']['openSearch$totalResults']['$t'];
     }

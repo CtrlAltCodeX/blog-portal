@@ -35,9 +35,8 @@ class BlogRequest extends FormRequest
             'edition' => 'required|string|max:255',
             'binding' => 'required|string|max:255',
             'condition' => 'required|string|max:255',
-            'pages' => 'required|integer|min:1',
+            'pages' => 'required|string',
             'language' => 'required|string|max:255',
-            'base_url' => 'required|string',
         ];
     }
 }

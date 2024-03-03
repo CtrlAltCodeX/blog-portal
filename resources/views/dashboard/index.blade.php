@@ -52,7 +52,7 @@ $getRoles = app('App\Http\Controllers\RoleController');
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-2">
                     <div class="card overflow-hidden">
                         <div class="card-body">
                             <div class="d-flex">
@@ -65,13 +65,29 @@ $getRoles = app('App\Http\Controllers\RoleController');
                     </div>
                 </div>
 
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-2">
                     <div class="card overflow-hidden">
                         <div class="card-body">
                             <div class="d-flex">
                                 <div class="mt-2">
-                                    <h6 class="">Coming Soon</h6>
-                                    <h2 class="mb-0 number-font">Coming Soon</h2>
+                                    <h6 class="">1 Year Old</h6>
+                                    <a target="_blank" href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => 1]) }}">
+                                        <h2 class="mb-0 number-font" id='one-year-old'>-</h2>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-2">
+                    <div class="card overflow-hidden">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="mt-2">
+                                    <h6 class="">6 Months Old</h6>
+                                    <a target="_blank" href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => 6]) }}">
+                                        <h2 class="mb-0 number-font" id='six-month-old'>-</h2>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -218,6 +234,10 @@ $getRoles = app('App\Http\Controllers\RoleController');
 
         getInventoryDemandStockData();
 
+        getOneYearOldInventory();
+
+        getSixMonthOldInventory();
+
         function getDraftedInventory() {
             localStorage.setItem('drafted', 0);
             $.ajax({
@@ -230,7 +250,7 @@ $getRoles = app('App\Http\Controllers\RoleController');
                     $("#draftedData").html(result.length);
                     localStorage.setItem('drafted', result.length);
                     getTotalProducts();
-                    
+
                     setTimeout(() => {
                         getInventoryInStockData();
 
@@ -245,7 +265,7 @@ $getRoles = app('App\Http\Controllers\RoleController');
                 type: "GET",
                 url: "{{ route('get.posts.count') }}",
                 data: {
-                    category: ''
+                    category: 'Product'
                 },
                 headers: {
                     'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
@@ -258,8 +278,8 @@ $getRoles = app('App\Http\Controllers\RoleController');
         }
 
         function getInventoryOutStockData() {
-             localStorage.setItem('outStock', 0);
-             
+            localStorage.setItem('outStock', 0);
+
             $.ajax({
                 type: "GET",
                 url: "{{ route('get.posts.count') }}",
@@ -305,9 +325,9 @@ $getRoles = app('App\Http\Controllers\RoleController');
                 success: function(result) {
                     // $("#lowStock").html(result);
                     localStorage.setItem('lowStock', result);
-                    
+
                     localStorage.setItem('low_stock', 0);
-                     
+
                     $.ajax({
                         type: "GET",
                         url: "{{ route('get.posts.count') }}",
@@ -341,9 +361,9 @@ $getRoles = app('App\Http\Controllers\RoleController');
                 success: function(result) {
                     // $("#demandStock").html(result);
                     localStorage.setItem('demandStock', result);
-                    
+
                     localStorage.setItem('out_demand', 0);
-                     
+
                     $.ajax({
                         type: "GET",
                         url: "{{ route('get.posts.count') }}",
@@ -359,7 +379,7 @@ $getRoles = app('App\Http\Controllers\RoleController');
                             $("#demandStock").html(parseInt(result) + parseInt(getCount));
                         },
                     });
-                    
+
                 },
             });
         }
@@ -373,6 +393,46 @@ $getRoles = app('App\Http\Controllers\RoleController');
             var otherData = parseInt(localStorage.getItem('low_stock')) + parseInt(localStorage.getItem('out_Stock')) + parseInt(localStorage.getItem('out_demand')) + parseInt(localStorage.getItem('demandStock')) + parseInt(localStorage.getItem('outStock')) + parseInt(localStorage.getItem('lowStock'));
 
             $("#inStock").html(totalProducts - otherData);
+        }
+
+        function getOneYearOldInventory() {
+            localStorage.setItem('one-year-old', 0);
+
+            $.ajax({
+                type: "GET",
+                url: "{{ route('get.posts.count') }}",
+                data: {
+                    category: 'Product',
+                    updated_before: 1
+                },
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(result) {
+                    $("#one-year-old").html(result);
+                    localStorage.setItem('one-year-old', result);
+                },
+            });
+        }
+
+        function getSixMonthOldInventory() {
+            localStorage.setItem('six-month-old', 0);
+
+            $.ajax({
+                type: "GET",
+                url: "{{ route('get.posts.count') }}",
+                data: {
+                    category: 'Product',
+                    updated_before: 6
+                },
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(result) {
+                    $("#six-month-old").html(result);
+                    localStorage.setItem('six-month-old', result);
+                },
+            });
         }
     })
 </script>
