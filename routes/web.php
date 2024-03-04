@@ -64,6 +64,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::resource('database-listing', DatabaseListingController::class);
 
+    // Route::group(['prefix' => 'database-listing'], function () {
+    //     Route::get('pending', [DatabaseListingController::class, 'pending'])->name('listings.pending');
+
+    //     Route::get('approved', [DatabaseListingController::class, 'approved'])->name('listings.approved');
+    // });
+
     Route::group(['prefix' => 'inventory'], function () {
         Route::get('', [ListingController::class, 'inventory'])
             ->name('inventory.index');

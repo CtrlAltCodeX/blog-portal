@@ -220,7 +220,7 @@
             $("#form").submit();
         });
 
-        $("#basic-datatable_wrapper .col-sm-12:first").html('<div class="d-flex"><label class="m-2"><input type="radio" id="six" @if(request()->updated_before == 6) checked=checked @endif name="ago"/>6 Months <span id="count-six">(0)</span></label><label class="m-2"><input type="radio" @if(request()->updated_before == 1) checked=checked @endif id="one" name="ago" />1 Year <span id="count-one">(0)</span></label></div>');
+        $("#basic-datatable_wrapper .col-sm-12:first").html('<div class="d-flex"><label class="m-2"><input type="radio" id="six" @if(request()->updated_before == 6) checked=checked @endif name="ago"/>6 Months <span id="count-six">(0)</span></label><label class="m-2"><input type="radio" @if(request()->updated_before == 1) checked=checked @endif id="one" name="ago" />1 Year <span id="count-one">(0)</span></label><label class="m-2"><input type="radio" @if(request()->updated_before == 2) checked=checked @endif id="two" name="ago" />2 Year <span id="count-two">(0)</span></label><label class="m-2"><input type="radio" @if(request()->updated_before == 3) checked=checked @endif id="three" name="ago" />3 Year <span id="count-three">(0)</span></label></div>');
 
         $('#basic-datatable_wrapper').on('click', '#six', function() {
             let url = new URL(window.location.href);

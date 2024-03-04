@@ -67,6 +67,7 @@
                                 <tr>
                                     <th>{{ __('-') }}</th>
                                     <th>{{ __('Sl') }}</th>
+                                    <th>{{ __('Status') }}</th>
                                     <th>{{ __('Stock') }}</th>
                                     <th>{{ __('Image') }}</th>
                                     <th>{{ __('Product name') }}</th>
@@ -75,7 +76,9 @@
                                     <th>{{ __('Labels') }}</th>
                                     <th>{{ __('Created at') }}</th>
                                     <th>{{ __('Updated at') }}</th>
+                                    @if(request()->status != 1)
                                     <th>{{ __('Action') }}</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -85,6 +88,18 @@
                                         <input type="checkbox" name="ids" class="checkbox-update" value="{{$googlePost->id}}" />
                                     </td>
                                     <td>{{ $googlePost->id }}</td>
+                                    <td>
+                                        @switch($googlePost->status)
+                                        @case(0)
+                                        <button class="btn btn-sm btn-warning">Pending</button>
+                                        @break;
+                                        @case(1)
+                                        <button class="btn btn-sm btn-success">Approved</button>
+                                        @break;
+                                        @case(2)
+                                        <button class="btn btn-sm btn-success">Rejected</button>
+                                        @break;
+                                        @endswitch
                                     <td>@if(isset($googlePost->categories) && (in_array('Stk_o', $googlePost->categories) || in_array('stock__out', $googlePost->categories)))
                                         {{ 'Out of Stock' }}
                                         @elseif(isset($googlePost->categories) && (in_array('Stk_d', $googlePost->categories) || in_array('stock__demand', $googlePost->categories)))
@@ -110,9 +125,11 @@
                                     </td>
                                     <td>{{ date("d-m-Y h:i A", strtotime($googlePost->created_at)) }}</td>
                                     <td>{{ date("d-m-Y h:i A", strtotime($googlePost->updated_at)) }}</td>
+                                    @if(request()->status != 1)
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic example">
                                             <a href="{{ route('database-listing.edit', $googlePost->id) }}" class="btn btn-sm btn-primary">{{ __('Edit') }}</a>
+                                            
                                             <form action="{{ route('database-listing.destroy', $googlePost->id) }}" method="POST" class="ml-2">
                                                 @csrf
                                                 @method('DELETE')
@@ -123,6 +140,7 @@
                                             </form>
                                         </div>
                                     </td>
+                                    @endif
                                 </tr>
                                 @empty
                                 @endforelse
@@ -176,32 +194,43 @@
             $("#form").submit();
         })
 
-        $("#basic-datatable_wrapper .col-sm-12:first").html('<form id="update-status" action={{route("listing.status")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status"><option>Select</option><option value=0>Pending</option><option value=1>Approved</option><option value=2>Reject</option></select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div></form>');
+        $("#basic-datatable_wrapper .col-sm-12:first").html('<form id="update-status" action={{route("listing.status")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status"><option>Select</option><option value=0>Pending</option><option value=1>Approved</option><option value=2>Reject</option> @if(request()->status == 1)<option value=2>Publish to Blogger</option> @endif </select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div></form>');
 
         $("#basic-datatable_wrapper").on('click', '.update-status', function(e) {
             e.preventDefault();
             var formData = $('#update-status').serializeArray();
-            
-            // Create a new FormData object
-            var formDataToSend = new FormData();
-
-            // Add each serialized field to the FormData object
-            $.each(formData, function(index, field) {
-                formDataToSend.append(field.name, field.value);
-            });
-
-            // Append any additional data you want to send
-            formDataToSend.append('additionalData', ids);
-
             formData.push(ids);
-            console.log(formDataToSend);
 
-            // $("#update-status").submit();
+            if (ids.length <= 0) {
+                alert('Please select the listing')
+                return true;
+            }
+
+            $.ajax({
+                type: "GET",
+                url: "{{ route('listing.status') }}",
+                data: {
+                    formData: formData
+                },
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(result) {
+                    window.location.href = location.href;
+                },
+            });
         });
 
         var ids = [];
         $(".checkbox-update").click(function() {
-            ids.push($(this).val());
+            if ($(this).prop('checked')) {
+                ids.push($(this).val());
+            } else {
+                var index = ids.indexOf($(this).val());
+                if (index !== -1) {
+                    ids.splice(index, 1);
+                }
+            }
         })
     })
 </script>

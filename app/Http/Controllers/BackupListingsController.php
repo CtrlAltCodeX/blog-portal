@@ -112,16 +112,22 @@ class BackupListingsController extends Controller
     {
         try {
             $email = request()->email;
+            $name = request()->name;
             $update = request()->update;
 
             if ((isset($update) && $existEmail = BackupEmail::find($update))) {
-                $existEmail->update(['email' => $email]);
+                $existEmail->update([
+                    'email' => $email,
+                    'name' => $name
+                ]);
             } else {
                 $this->validate(request(), [
+                    'name' => 'required',
                     'email' => 'required|email|unique:backup_emails,email',
                 ]);
 
                 BackupEmail::create([
+                    'name' => $name,
                     'email' => $email
                 ]);
             }

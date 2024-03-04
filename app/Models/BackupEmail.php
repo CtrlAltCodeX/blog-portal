@@ -10,6 +10,7 @@ class BackupEmail extends Model
     use HasFactory;
 
     protected $fillable = [
+        'name',
         'email'
     ];
 }

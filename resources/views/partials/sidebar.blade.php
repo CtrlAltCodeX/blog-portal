@@ -44,8 +44,9 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         @can('Listing create')
                         <li><a href="{{ route('listing.create') }}" class="slide-item {{ (request()->is('admin/images/*')) ? 'active' : '' }}">{{ __('Create New Listing') }}</a></li>
                         @endcan
-                        <li><a href="{{ route('database-listing.create') }}" class="slide-item {{ (request()->is('admin/images/watermark/create')) ? 'active' : '' }}">{{ __('Database Create New Listing') }}</a></li>
-                        <li><a href="{{ route('database-listing.index') }}" class="slide-item {{ (request()->is('admin/database-listing/index')) ? 'active' : '' }}">{{ __('Database Listings') }}</a></li>
+                        <li><a href="{{ route('database-listing.create') }}" class="slide-item {{ (request()->is('admin/database-listing/create')) ? 'active' : '' }}">{{ __('Database Create New Listing') }}</a></li>
+                        <li><a href="{{ route('database-listing.index', ['status' => 0]) }}" class="slide-item {{ (request()->is('admin/listing/pending')) ? 'active' : '' }}">{{ __('Pending Listings') }}</a></li>
+                        <li><a href="{{ route('database-listing.index', ['status' => 1]) }}" class="slide-item {{ (request()->is('admin/listing/approved')) ? 'active' : '' }}">{{ __('Approved Listings') }}</a></li>
                     </ul>
                 </li>
                 @endcan

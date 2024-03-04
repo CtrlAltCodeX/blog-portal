@@ -24,7 +24,8 @@ class DatabaseListingController extends Controller
      */
     public function index()
     {
-        $googlePosts = Listing::paginate(150);
+        $googlePosts = Listing::where('status', request()->status)
+            ->paginate(150);
         if (request()->category) {
         }
 
@@ -159,11 +160,22 @@ class DatabaseListingController extends Controller
         return redirect()->back();
     }
 
+    /**
+     * Update Status of Listing
+     *
+     * @return void
+     */
     public function updateStatus()
     {
-        $ids = request()->ids;
-        $status = request()->status;
+        $listing = Listing::whereIn('id', request()->formData[1])
+            ->get();
 
-        dd(request()->all());
+        $status = request()->formData[0]['value'];
+
+        $listing->map(function ($list) use ($status) {
+            $list->update(['status' => $status]);
+        });
+
+        return true;
     }
 }
