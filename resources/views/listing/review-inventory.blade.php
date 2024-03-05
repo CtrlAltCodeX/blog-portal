@@ -170,8 +170,8 @@
                     <nav aria-label="Page navigation example">
                         @if(request()->route()->getName() == 'inventory.review')
                         <ul class="pagination">
-                            @if($googlePosts['prevStartIndex'] > 0) <li class="page-item"><a class="page-link" href="{{ route('inventory.review', ['pageToken' => $googlePosts['prevPageToken'], 'startIndex' => $googlePosts['prevStartIndex'], 'category' => request()->category]) }}">Previous</a></li> @endif
-                            <li class="page-item"><a class="page-link" href="{{ route('inventory.review', ['pageToken' => $googlePosts['nextPageToken'], 'startIndex' => $googlePosts['startIndex'], 'category' => request()->category]) }}">Next</a></li>
+                            @if($googlePosts['prevStartIndex'] > 0) <li class="page-item"><a class="page-link" href="{{ route('inventory.review', ['pageToken' => $googlePosts['prevPageToken'], 'startIndex' => $googlePosts['prevStartIndex'], 'category' => request()->category, 'updated_before' => request()->updated_before]) }}">Previous</a></li> @endif
+                            <li class="page-item"><a class="page-link" href="{{ route('inventory.review', ['pageToken' => $googlePosts['nextPageToken'], 'startIndex' => $googlePosts['startIndex'], 'category' => request()->category, 'updated_before' => request()->updated_before]) }}">Next</a></li>
                         </ul>
                         @endif
                     </nav>
@@ -220,7 +220,7 @@
             $("#form").submit();
         });
 
-        $("#basic-datatable_wrapper .col-sm-12:first").html('<div class="d-flex"><label class="m-2"><input type="radio" id="six" @if(request()->updated_before == 6) checked=checked @endif name="ago"/>6 Months <span id="count-six">(0)</span></label><label class="m-2"><input type="radio" @if(request()->updated_before == 1) checked=checked @endif id="one" name="ago" />1 Year <span id="count-one">(0)</span></label><label class="m-2"><input type="radio" @if(request()->updated_before == 2) checked=checked @endif id="two" name="ago" />2 Year <span id="count-two">(0)</span></label><label class="m-2"><input type="radio" @if(request()->updated_before == 3) checked=checked @endif id="three" name="ago" />3 Year <span id="count-three">(0)</span></label></div>');
+        $("#basic-datatable_wrapper .col-sm-12:first").html('<div class="d-flex"><label class="m-1"><input type="radio" id="six" @if(request()->updated_before == 6) checked=checked @endif name="ago"/>6 Months <span id="count-six">(0)</span></label><label class="m-1"><input type="radio" @if(request()->updated_before == 1) checked=checked @endif id="one" name="ago" />1 Year <span id="count-one">(0)</span></label><label class="m-1"><input type="radio" @if(request()->updated_before == 2) checked=checked @endif id="two" name="ago" />2 Year <span id="count-two">(0)</span></label><label class="m-1"><input type="radio" @if(request()->updated_before == "3Y") checked=checked @endif id="three" name="ago" />3 Year <span id="count-three">(0)</span></label></div>');
 
         $('#basic-datatable_wrapper').on('click', '#six', function() {
             let url = new URL(window.location.href);
@@ -240,8 +240,45 @@
             window.location.href = url.origin + url.pathname + "?" + allParams;
         });
 
-        getOneYearOldInventory()
-        getSixMonthOldInventory()
+        $('#basic-datatable_wrapper').on('click', '#two', function() {
+            let url = new URL(window.location.href);
+            let params = new URLSearchParams(url.search);
+            params.delete('updated_before');
+            let allParams = params.toString() + '&updated_before=2';
+
+            window.location.href = url.origin + url.pathname + "?" + allParams;
+        });
+
+        $('#basic-datatable_wrapper').on('click', '#three', function() {
+            let url = new URL(window.location.href);
+            let params = new URLSearchParams(url.search);
+            params.delete('updated_before');
+            let allParams = params.toString() + '&updated_before=3Y';
+
+            window.location.href = url.origin + url.pathname + "?" + allParams;
+        });
+
+        getOneYearOldInventory();
+        getSixMonthOldInventory();
+        getTwoYearOldInventory();
+        get3YearOldInventory();
+
+        function getTwoYearOldInventory() {
+            $.ajax({
+                type: "GET",
+                url: "{{ route('get.posts.count') }}",
+                data: {
+                    category: "{{request()->category}}",
+                    updated_before: 2
+                },
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(result) {
+                    $("#count-two").html("(" + result + ")");
+                },
+            });
+        }
 
         function getOneYearOldInventory() {
             // localStorage.setItem('one-year-old', 0);
@@ -250,14 +287,14 @@
                 type: "GET",
                 url: "{{ route('get.posts.count') }}",
                 data: {
-                    category: 'Product',
+                    category: "{{request()->category}}",
                     updated_before: 1
                 },
                 headers: {
                     'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(result) {
-                    $("#count-one").html("( " + result + " )");
+                    $("#count-one").html("(" + result + ")");
                     // localStorage.setItem('one-year-old', result);
                 },
             });
@@ -270,15 +307,32 @@
                 type: "GET",
                 url: "{{ route('get.posts.count') }}",
                 data: {
-                    category: 'Product',
+                    category: "{{request()->category}}",
                     updated_before: 6
                 },
                 headers: {
                     'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(result) {
-                    $("#count-six").html("( " + result + " )");
+                    $("#count-six").html("(" + result + ")");
                     // localStorage.setItem('six-month-old', result);
+                },
+            });
+        }
+
+        function get3YearOldInventory() {
+            $.ajax({
+                type: "GET",
+                url: "{{ route('get.posts.count') }}",
+                data: {
+                    category: "{{request()->category}}",
+                    updated_before: "3Y"
+                },
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(result) {
+                    $("#count-three").html("(" + result + ")");
                 },
             });
         }

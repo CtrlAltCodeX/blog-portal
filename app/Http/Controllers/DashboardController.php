@@ -69,8 +69,14 @@ class DashboardController extends Controller
             // Get the current date
             $currentDate = Carbon::now();
 
-            if (request()->query('updated_before') == 1) {
-                $agoDate = $currentDate->subYear();
+            if (
+                request()->query('updated_before') == 1
+                || request()->query('updated_before') == 2
+                || request()->query('updated_before') == "3Y"
+            ) {
+                $updateBefore = request()->query('updated_before');
+                if (request()->query('updated_before') == "3Y") $updateBefore = 3;
+                $agoDate = $currentDate->subYear($updateBefore);
             } else {
                 // Subtract three months from the current date
                 $agoDate = $currentDate->subMonths(request()->query('updated_before'));
