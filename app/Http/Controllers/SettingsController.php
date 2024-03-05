@@ -27,9 +27,11 @@ class SettingsController extends Controller
      */
     public function blog()
     {
-        $creds = GoogleCredentail::latest()->first();
+        $bloggerCreds = GoogleCredentail::where('scope', 'Blogger')->first();
 
-        return view('settings.index', compact('creds'));
+        $merchantCreds = GoogleCredentail::where('scope', 'Merchant')->first();
+
+        return view('settings.index', compact('bloggerCreds', 'merchantCreds'));
     }
 
     /**

@@ -64,12 +64,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::resource('database-listing', DatabaseListingController::class);
 
-    // Route::group(['prefix' => 'database-listing'], function () {
-    //     Route::get('pending', [DatabaseListingController::class, 'pending'])->name('listings.pending');
-
-    //     Route::get('approved', [DatabaseListingController::class, 'approved'])->name('listings.approved');
-    // });
-
     Route::group(['prefix' => 'inventory'], function () {
         Route::get('', [ListingController::class, 'inventory'])
             ->name('inventory.index');
@@ -154,6 +148,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
         Route::get('delete/emails/{id}', [BackupListingsController::class, 'deleteEmail'])
             ->name('backup.emails.delete');
+    });
+
+    Route::group(['prefix' => 'google/products'], function () {
+        Route::get('list', [GoogleController::class, 'listProducts'])
+            ->name('google.products.list');
     });
 
     Route::get('export', [BackupListingsController::class, 'downloadExcel'])

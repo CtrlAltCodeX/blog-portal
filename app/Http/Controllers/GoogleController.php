@@ -25,9 +25,12 @@ class GoogleController extends Controller
      */
     public function redirectToGoogle()
     {
-        $credExists = GoogleCredentail::latest()->first();
+        $credExists = GoogleCredentail::where('scope', request()->scope)
+            ->first();
+
         if ($credExists) {
-            GoogleCredentail::latest()->delete();
+            GoogleCredentail::where('scope', request()->scope)
+                ->delete();
 
             return redirect()->route('settings.blog')->with('success', 'Removed successfully');
         } else {
@@ -64,5 +67,17 @@ class GoogleController extends Controller
         $url = $this->googleService->refreshToken(request()->all());
 
         return response()->json($url, 200);
+    }
+
+    /**
+     * List Products from Google
+     *
+     * @return void
+     */
+    public function listProducts()
+    {
+        $products = $this->googleService->googleMerchantCenter();
+
+        dd($products);
     }
 }

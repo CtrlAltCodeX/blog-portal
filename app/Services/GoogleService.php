@@ -11,15 +11,12 @@ use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManagerStatic as Image;
-use Illuminate\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Carbon\Carbon;
+use Google\Service\ShoppingContent;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Storage;
 use ZipArchive;
 
 class GoogleService
@@ -32,11 +29,11 @@ class GoogleService
     public function redirectToGoogle(array $data)
     {
         try {
-            $client = $this->createGoogleClient($data);
-
+            $client = $this->createGoogleClient($data, [ShoppingContent::CONTENT]);
+            
             $authUrl = $client->createAuthUrl();
 
-            $credExists = $this->getCredentails();
+            $credExists = $this->getCredentails($data['scope']);
 
             if (!$credExists) {
                 GoogleCredentail::create(request()->all());
@@ -53,13 +50,13 @@ class GoogleService
      * 
      * @return \Google\Client
      */
-    private function createGoogleClient(array $data)
+    private function createGoogleClient(array $data, $scope = "https://www.googleapis.com/auth/blogger")
     {
         $client = new Google_Client();
         $client->setClientId($data['client_id']);
         $client->setClientSecret($data['client_secret']);
         $client->setRedirectUri($data['redirect_uri']);
-        $client->addScope('https://www.googleapis.com/auth/blogger');
+        $client->addScope($scope);
 
         return $client;
     }
@@ -72,7 +69,9 @@ class GoogleService
     public function handleGoogleCallback(array $data)
     {
         try {
-            $credential = $this->getCredentails();
+            $data['scope'] == 'https://www.googleapis.com/auth/blogger' ? $scope = 'Blogger' : $scope = 'Merchant';
+            
+            $credential = $this->getCredentails($scope);
 
             $client = $this->createGoogleClient($credential->toArray());
 
@@ -442,9 +441,9 @@ class GoogleService
      *
      * @return void
      */
-    public function getCredentails()
+    public function getCredentails($scope)
     {
-        return  GoogleCredentail::latest()->first();
+        return  GoogleCredentail::where('scope', $scope)->first();
     }
 
     /**
@@ -648,12 +647,22 @@ class GoogleService
         }
     }
 
-
+    /**
+     * Google Merchant Center Data
+     *
+     * @return void
+     */
     public function googleMerchantCenter()
     {
-        [ShoppingContent::CONTENT]
+        $credential = $this->getCredentails();
+
+        $client = $this->createGoogleClient($credential->toArray(), [ShoppingContent::CONTENT]);
+        $client->setAccessToken($credential->token);
+
         $service = new ShoppingContent($client);
         $response = $service->products->listProducts('5339221334');
         $products = $response->getResources();
+
+        return $products;
     }
 }
