@@ -26,12 +26,6 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $active = User::where('status', 1)->count();
-
-        $inactive = User::where('status', 0)->count();
-
-        $allUser = User::count();
-
         if ($this->tokenIsExpired($this->googleService)) {
             session()->flash('message', 'Please authenticate with Google');
 
@@ -48,7 +42,7 @@ class DashboardController extends Controller
             return view('settings.error');
         }
 
-        return view('dashboard.index', compact('allUser', 'inactive', 'active'));
+        return view('dashboard.index');
     }
 
     /**

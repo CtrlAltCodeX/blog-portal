@@ -33,7 +33,13 @@ class UserController extends Controller
     {
         $users = User::orderBy('id', 'asc')->paginate(10);
 
-        return view('accounts.users.index', compact('users'));
+        $allUser = User::count();
+
+        $active = User::where('status', 1)->count();
+
+        $inactive = User::where('status', 0)->count();
+
+        return view('accounts.users.index', compact('users', 'allUser', 'active', 'inactive'));
     }
 
     /**

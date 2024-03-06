@@ -37,7 +37,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                 </li>
 
                 @can('Listing (Main Menu)')
-                <li class="slide {{ (request()->is('admin/listing/*') || request()->is('admin/listing') || request()->is('admin/find-products/amazon') || request()->is('admin/database-listing')) ? 'is-expanded' : '' }}">
+                <li class="slide {{ (request()->is('aadmin/listing/*') || request()->is('admin/listing') || request()->is('admin/database-listing') || request()->is('admin/database-listing/*')) ? 'is-expanded' : '' }}">
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-list"></i><span class="side-menu__label">{{ __('Listing') }}</span><i class="angle fe fe-chevron-right"></i></a>
                     <ul class="slide-menu">
                         <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>

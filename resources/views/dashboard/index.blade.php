@@ -4,7 +4,6 @@
 
 @php
 $getStats = app('App\Http\Controllers\DashboardController');
-$getRoles = app('App\Http\Controllers\RoleController');
 
 @endphp
 
@@ -52,7 +51,7 @@ $getRoles = app('App\Http\Controllers\RoleController');
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-2">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
                     <div class="card overflow-hidden">
                         <div class="card-body">
                             <div class="d-flex">
@@ -64,8 +63,35 @@ $getRoles = app('App\Http\Controllers\RoleController');
                         </div>
                     </div>
                 </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+                    <div class="card overflow-hidden">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="mt-2">
+                                    <h6 class="">Coming Soon</h6>
+                                    <h2 class="mb-0 number-font">Coming Soon</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-2">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+                    <div class="card overflow-hidden">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="mt-2">
+                                    <h6 class="">6 Months Old</h6>
+                                    <a target="_blank" href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => 6]) }}">
+                                        <h2 class="mb-0 number-font" id='six-month-old'>-</h2>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
                     <div class="card overflow-hidden">
                         <div class="card-body">
                             <div class="d-flex">
@@ -79,14 +105,30 @@ $getRoles = app('App\Http\Controllers\RoleController');
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-2">
+
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
                     <div class="card overflow-hidden">
                         <div class="card-body">
                             <div class="d-flex">
                                 <div class="mt-2">
-                                    <h6 class="">6 Months Old</h6>
-                                    <a target="_blank" href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => 6]) }}">
-                                        <h2 class="mb-0 number-font" id='six-month-old'>-</h2>
+                                    <h6 class="">2 Year Old</h6>
+                                    <a target="_blank" href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => 2]) }}">
+                                        <h2 class="mb-0 number-font" id='two-year-old'>-</h2>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+                    <div class="card overflow-hidden">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="mt-2">
+                                    <h6 class="">3 Year Old</h6>
+                                    <a target="_blank" href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => '3Y']) }}">
+                                        <h2 class="mb-0 number-font" id='three-year-old'>-</h2>
                                     </a>
                                 </div>
                             </div>
@@ -155,69 +197,6 @@ $getRoles = app('App\Http\Controllers\RoleController');
             </div>
         </div>
     </div>
-
-    <div class="page-header m-0">
-        <h1 class="page-title">{{ __('Users') }}</h1>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12">
-            <div class="row">
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
-                    <div class="card overflow-hidden">
-                        <div class="card-body">
-                            <a href="{{ route('users.index') }}">
-                                <div class="d-flex">
-                                    <div class="mt-2">
-                                        <h6 class="">Total Users</h6>
-                                        <h2 class="mb-0 number-font">{{ $allUser }}</h2>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
-                    <div class="card overflow-hidden">
-                        <div class="card-body">
-                            <a href="{{ route('verified.users') }}">
-                                <div class="d-flex">
-                                    <div class="mt-2">
-                                        <h6 class="">Total Active User</h6>
-                                        <h2 class="mb-0 number-font">{{ $active }}</h2>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
-                    <div class="card overflow-hidden">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <div class="mt-2">
-                                    <h6 class="">Total InActive User</h6>
-                                    <h2 class="mb-0 number-font">{{ $inactive }}</h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
-                    <div class="card overflow-hidden">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <div class="mt-2">
-                                    <h6 class="">Total Roles</h6>
-                                    <h2 class="mb-0 number-font">{{ $getRoles->rolesCount() }}</h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 @endsection
 
@@ -237,6 +216,10 @@ $getRoles = app('App\Http\Controllers\RoleController');
         getOneYearOldInventory();
 
         getSixMonthOldInventory();
+
+        getTwoYearOldInventory();
+
+        getThreeYearOldInventory();
 
         function getDraftedInventory() {
             localStorage.setItem('drafted', 0);
@@ -411,6 +394,46 @@ $getRoles = app('App\Http\Controllers\RoleController');
                 success: function(result) {
                     $("#one-year-old").html(result);
                     localStorage.setItem('one-year-old', result);
+                },
+            });
+        }
+
+        function getTwoYearOldInventory() {
+            localStorage.setItem('two-year-old', 0);
+
+            $.ajax({
+                type: "GET",
+                url: "{{ route('get.posts.count') }}",
+                data: {
+                    category: 'Product',
+                    updated_before: 2
+                },
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(result) {
+                    $("#two-year-old").html(result);
+                    localStorage.setItem('two-year-old', result);
+                },
+            });
+        }
+
+        function getThreeYearOldInventory() {
+            localStorage.setItem('three-year-old', 0);
+
+            $.ajax({
+                type: "GET",
+                url: "{{ route('get.posts.count') }}",
+                data: {
+                    category: 'Product',
+                    updated_before: "3Y"
+                },
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(result) {
+                    $("#three-year-old").html(result);
+                    localStorage.setItem('three-year-old', result);
                 },
             });
         }
