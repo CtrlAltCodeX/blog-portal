@@ -17,9 +17,9 @@ class Controller extends BaseController
      *
      * @return void
      */
-    public function tokenIsExpired($googleService)
+    public function tokenIsExpired($googleService, $scope = 'Blogger')
     {
-        if (!$credential = $googleService->getCredentails()) return true;
+        if (!$credential = $googleService->getCredentails($scope)) return true;
 
         $data = json_decode($credential->token);
         if (isset($data->expires_in)) {

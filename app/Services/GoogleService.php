@@ -29,14 +29,22 @@ class GoogleService
     public function redirectToGoogle(array $data)
     {
         try {
-            $client = $this->createGoogleClient($data, [ShoppingContent::CONTENT]);
-            
+            if ($data['scope'] == 'Blogger') {
+                $info = request()->except('merchant_id');
+                $scope = 'https://www.googleapis.com/auth/blogger';
+            } else {
+                $info = request()->except('blog_id');
+                $scope = 'https://www.googleapis.com/auth/content';
+            }
+
+            $client = $this->createGoogleClient($data, $scope);
+
             $authUrl = $client->createAuthUrl();
 
             $credExists = $this->getCredentails($data['scope']);
 
             if (!$credExists) {
-                GoogleCredentail::create(request()->all());
+                GoogleCredentail::create($info);
             }
 
             return $authUrl;
@@ -70,7 +78,7 @@ class GoogleService
     {
         try {
             $data['scope'] == 'https://www.googleapis.com/auth/blogger' ? $scope = 'Blogger' : $scope = 'Merchant';
-            
+
             $credential = $this->getCredentails($scope);
 
             $client = $this->createGoogleClient($credential->toArray());
@@ -229,16 +237,7 @@ class GoogleService
             $data['processed_images'] = [];
 
             $data['processed_images'] = $data['images'];
-            // if (isset($data['images'])) {
-            //     foreach ($data['images'] as $image) {
-            //         if ($image instanceof UploadedFile) {
-            //             $data['processed_images'][] = $this->processImage($image);
-            //         } else {
-            //             $data['processed_images'][] = $image;
-            //         }
-            //     }
-            // }
-
+            
             if (isset($data['multipleImages'])) {
                 foreach ($data['multipleImages'] as $image) {
                     if ($image instanceof UploadedFile) {
@@ -441,7 +440,7 @@ class GoogleService
      *
      * @return void
      */
-    public function getCredentails($scope)
+    public function getCredentails($scope = 'Blogger')
     {
         return  GoogleCredentail::where('scope', $scope)->first();
     }
@@ -654,13 +653,13 @@ class GoogleService
      */
     public function googleMerchantCenter()
     {
-        $credential = $this->getCredentails();
+        $credential = $this->getCredentails('Merchant');
 
         $client = $this->createGoogleClient($credential->toArray(), [ShoppingContent::CONTENT]);
         $client->setAccessToken($credential->token);
 
         $service = new ShoppingContent($client);
-        $response = $service->products->listProducts('5339221334');
+        $response = $service->products->listProducts($credential->merchant_id);
         $products = $response->getResources();
 
         return $products;

@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::table('google_credentails', function (Blueprint $table) {
             $table->string('scope');
+            $table->string('merchant_id')->nullable();
+            $table->string('blog_id')->nullable()->change();
         });
     }
 

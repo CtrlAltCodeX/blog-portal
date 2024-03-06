@@ -52,15 +52,15 @@ $userInfo = app('App\Models\SiteSetting')->first();
                 @endcan
 
                 <li class="slide {{ (request()->is('admin/images/*') || request()->is('admin/images/*') || request()->is('admin/images/*')) ? 'is-expanded' : '' }}">
-                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-list"></i><span class="side-menu__label">{{ __('Images') }}</span><i class="angle fe fe-chevron-right"></i></a>
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-list"></i><span class="side-menu__label">{{ __('Images Creation') }}</span><i class="angle fe fe-chevron-right"></i></a>
                     <ul class="slide-menu">
-                        <li><a href="{{ route('image.watermark.create') }}" class="slide-item {{ (request()->is('admin/images/watermark/*')) ? 'active' : '' }}">{{ __('Watermark') }}</a></li>
-                        <li><a href="{{ route('image.collage.create') }}" class="slide-item {{ (request()->is('admin/images/collage/*')) ? 'active' : '' }}">{{ __('Collage') }}</a></li>
+                        <li><a href="{{ route('image.watermark.create') }}" class="slide-item {{ (request()->is('admin/images/watermark/*')) ? 'active' : '' }}">{{ __('Watermark Image Maker') }}</a></li>
+                        <li><a href="{{ route('image.collage.create') }}" class="slide-item {{ (request()->is('admin/images/collage/*')) ? 'active' : '' }}">{{ __('Combo Image Maker') }}</a></li>
                     </ul>
                 </li>
 
                 @can('Inventory (Main Menu)')
-                <li class="slide {{ (request()->is('admin/inventory') || request()->is('admin/inventory/drafted') || request()->is('admin/inventory/review')) ? 'is-expanded' : '' }}">
+                <li class="slide {{ (request()->is('admin/inventory') || request()->is('admin/inventory/drafted') || request()->is('admin/inventory/review') || request()->is('admin/google/products/list')) ? 'is-expanded' : '' }}">
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-box"></i><span class="side-menu__label">{{ __('Inventory') }}</span><i class="angle fe fe-chevron-right"></i></a>
                     <ul class="slide-menu">
                         <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
@@ -72,6 +72,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         @endcan
                         <li><a href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => 3]) }}" class="slide-item {{ request()->is('admin/inventory/review') ? 'active' : '' }}">{{ __('Under Review Inventory') }}</a></li>
                         <li><a href="{{ route('backup.listings') }}" class="slide-item {{ request()->is('admin/backup/listings') ? 'active' : '' }}">{{ __('Backup Inventory') }}</a></li>
+                        <li><a href="{{ route('google.products.list') }}" class="slide-item {{ request()->is('admin/google/products/list') ? 'active' : '' }}">{{ __('Merchant Inventory') }}</a></li>
                     </ul>
                 </li>
                 @endcan

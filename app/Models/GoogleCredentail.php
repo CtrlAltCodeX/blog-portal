@@ -16,5 +16,6 @@ class GoogleCredentail extends Model
         'blog_id',
         'token',
         'scope',
+        'merchant_id',
     ];
 }

@@ -76,8 +76,20 @@ class GoogleController extends Controller
      */
     public function listProducts()
     {
-        $products = $this->googleService->googleMerchantCenter();
+        $scope = 'Merchant';
 
-        dd($products);
+        if ($this->tokenIsExpired($this->googleService, $scope)) {
+
+            if (!$this->googleService->getCredentails($scope)) return view('settings.authenticate');
+
+            $url = $this->googleService->refreshToken($this->googleService->getCredentails($scope)->toArray());
+            request()->session()->put('page_url', request()->url());
+
+            return redirect()->to($url);
+        }
+
+        $products = collect($this->googleService->googleMerchantCenter());
+
+        return view('google.index', compact('products'));
     }
 }

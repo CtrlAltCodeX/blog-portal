@@ -1,18 +1,18 @@
 @extends('layouts.master')
 
-@section('title', __('Collage'))
+@section('title', __('Combo Image Maker'))
 
 @section('content')
     <!-- CONTAINER -->
     <div class="main-container container-fluid">
         <!-- PAGE-HEADER -->
         <div class="page-header">
-            <h1 class="page-title">{{ __('Collage') }}</h1>
+            <h1 class="page-title">{{ __('Combo Image Maker') }}</h1>
 
             <div>
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="javascript:void(0)">{{ __('Collage') }}</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">{{ __('Collage') }}</li>
+                    <li class="breadcrumb-item"><a href="javascript:void(0)">{{ __('Combo Image Maker') }}</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ __('Combo Image Maker') }}</li>
                 </ol>
             </div>
         </div>
@@ -25,7 +25,7 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between">
                             <h4 class="card-title">
-                                {{ __('Collage') }}
+                                {{ __('Combo Image Maker') }}
                             </h4>
 
                             <button type="submit" class="btn btn-primary float-right">Convert</button>

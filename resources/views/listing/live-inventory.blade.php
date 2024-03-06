@@ -43,58 +43,6 @@
 <div>
     <div class="row row-sm">
         <div class="col-lg-12">
-            <!-- <form action="" method="get">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row mb-4 filters">
-                            <div class="col-md-12">
-                                <h5>Filters</h5>
-                            </div>
-
-                            <input type="hidden" name="type" value="search">
-
-                            <div class="col-md-3">
-                                <select class="form-control" id='status' name="status">
-                                    <option value="">Status</option>
-                                    <option value="live" {{ request('status') == 'live' ? 'selected' : '' }}>Live</option>
-                                    <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
-                                    <option value="draft" {{ request('status') == 'scheduled' ? 'selected' : '' }}>Scheduled</option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-6">
-                                <input class="form-control" id='q' name="q" placeholder="Search By Full Name" value="{{ request('q') }}" />
-                            </div>
-
-                            <div class="col-lg-3">
-                                <div class="wd-200 mg-b-30">
-                                    <div class="input-group">
-                                        <div class="input-group-text">
-                                            <span class="fa fa-calendar tx-16 lh-0 op-6"></span>
-                                        </div><input class="form-control fc-datepicker" value="{{ request('startDate') }}" placeholder="Start Date" name="startDate" type="text">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-3">
-                                <div class="wd-200 mg-b-30">
-                                    <div class="input-group">
-                                        <div class="input-group-text">
-                                            <span class="fa fa-calendar tx-16 lh-0 op-6"></span>
-                                        </div>
-                                        <input class="form-control fc-datepicker" value="{{ request('endDate') }}" placeholder="End Date" name="endDate" type="text">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card-footer">
-                        <button class="btn btn-primary">Filter</button>
-                        <a href="{{ route('inventory.index') }}" class="btn btn-danger">Reset</a>
-                    </div>
-                </div>
-            </form> -->
 
             <div class="card">
                 <div class="card-header justify-content-between">
