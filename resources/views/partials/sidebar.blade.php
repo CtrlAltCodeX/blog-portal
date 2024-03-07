@@ -46,7 +46,6 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         @endcan
                         <li><a href="{{ route('database-listing.create') }}" class="slide-item {{ (request()->is('admin/database-listing/create')) ? 'active' : '' }}">{{ __('Create New Listing ( Database )') }}</a></li>
                         <li><a href="{{ route('database-listing.index', ['status' => 0]) }}" class="slide-item {{ (request()->is('admin/database-listing')) ? 'active' : '' }}">{{ __('Pending Listings') }}</a></li>
-                        <li><a href="{{ route('database-listing.index', ['status' => 1]) }}" class="slide-item {{ (request()->is('admin/database-listing')) ? 'active' : '' }}">{{ __('Approved Listings') }}</a></li>
                     </ul>
                 </li>
                 @endcan

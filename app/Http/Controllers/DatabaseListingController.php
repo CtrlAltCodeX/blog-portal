@@ -24,9 +24,11 @@ class DatabaseListingController extends Controller
      */
     public function index()
     {
-        $googlePosts = Listing::where('status', request()->status)
-            ->paginate(150);
-        if (request()->category) {
+        $googlePosts = Listing::paginate(150);
+
+        if (request()->status == "0" || request()->status == "2") {
+            $googlePosts = Listing::where('status', request()->status)
+                ->paginate(150);
         }
 
         return view('database-listing.index', compact('googlePosts'));
@@ -124,9 +126,9 @@ class DatabaseListingController extends Controller
             'condition' => $request->condition,
             'binding_type' => $request->binding,
             'insta_mojo_url' => $request->url,
-            'images' => $request->images,
+            'images' => $request->images[0],
             'multiple_images' => $request->multipleImages,
-            'base_url' => $request->base_url
+            // 'base_url' => $request->base_url
         ];
 
         $listing = Listing::find($id);

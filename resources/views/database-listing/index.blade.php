@@ -46,18 +46,27 @@
             <div class="card">
                 <div class="card-header justify-content-between">
                     <h3 class="card-title">Manage Inventory</h3>
-                    <form action="" method="get" id='form'>
-                        <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
-                        <select class="form-control w-100" id='category' name="category">
-                            <option value="">In Stock</option>
-                            <option value="Stk_o" {{ request()->category == 'Stk_o' ? 'selected' : '' }}>Out of Stock (Stk_o)</option>
-                            <option value="stock__out" {{ request()->category == 'stock__out' ? 'selected' : '' }}>Out of Stock (stock__out)</option>
-                            <option value="Stk_d" {{ request()->category == 'Stk_d' ? 'selected' : '' }}>On Demand Stock (Stk_d)</option>
-                            <option value="stock__demand" {{ request()->category == 'stock__demand' ? 'selected' : '' }}>On Demand Stock (stock__demand)</option>
-                            <option value="Stk_l" {{ request()->category == 'Stk_l' ? 'selected' : '' }}>Low Stock (Stk_l)</option>
-                            <option value="stock__low" {{ request()->category == 'stock__low' ? 'selected' : '' }}>Low Stock (stock__low)</option>
-                        </select>
-                    </form>
+
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <a href="{{ route('database-listing.index', ['status' => '']) }}" class="btn btn-sm btn-light">All</a>
+                            <a href="{{ route('database-listing.index', ['status' => 0]) }}" class="btn btn-sm btn-warning">Pending</a>
+                            <a href="{{ route('database-listing.index', ['status' => 2]) }}" class="btn btn-sm btn-danger">Rejected</a>
+                        </div>
+
+                        <form action="" method="get" id='form' style="margin-left: 10px;">
+                            <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
+                            <select class="form-control w-100" id='category' name="category">
+                                <option value="">In Stock</option>
+                                <option value="Stk_o" {{ request()->category == 'Stk_o' ? 'selected' : '' }}>Out of Stock (Stk_o)</option>
+                                <option value="stock__out" {{ request()->category == 'stock__out' ? 'selected' : '' }}>Out of Stock (stock__out)</option>
+                                <option value="Stk_d" {{ request()->category == 'Stk_d' ? 'selected' : '' }}>On Demand Stock (Stk_d)</option>
+                                <option value="stock__demand" {{ request()->category == 'stock__demand' ? 'selected' : '' }}>On Demand Stock (stock__demand)</option>
+                                <option value="Stk_l" {{ request()->category == 'Stk_l' ? 'selected' : '' }}>Low Stock (Stk_l)</option>
+                                <option value="stock__low" {{ request()->category == 'stock__low' ? 'selected' : '' }}>Low Stock (stock__low)</option>
+                            </select>
+                        </form>
+                    </div>
                 </div>
 
                 <div class="card-body">
@@ -93,11 +102,8 @@
                                         @case(0)
                                         <button class="btn btn-sm btn-warning">Pending</button>
                                         @break;
-                                        @case(1)
-                                        <button class="btn btn-sm btn-success">Approved</button>
-                                        @break;
                                         @case(2)
-                                        <button class="btn btn-sm btn-success">Rejected</button>
+                                        <button class="btn btn-sm btn-danger">Rejected</button>
                                         @break;
                                         @endswitch
                                     <td>@if(isset($googlePost->categories) && (in_array('Stk_o', $googlePost->categories) || in_array('stock__out', $googlePost->categories)))
@@ -113,8 +119,8 @@
                                     </td>
                                     <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $googlePost->images }}" alt="Product Image" /></td>
                                     <td>{{ $googlePost->title }}</td>
-                                    <td>{{ $googlePost->selling_price }}</td>
-                                    <td>{{ $googlePost->mrp }}</td>
+                                    <td>{{ '₹'.$googlePost->selling_price }}</td>
+                                    <td>{{ '₹'.$googlePost->mrp }}</td>
                                     @php
                                     $categories = collect($googlePost->categories??[])->toArray();
                                     @endphp
@@ -129,7 +135,6 @@
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic example">
                                             <a href="{{ route('database-listing.edit', $googlePost->id) }}" class="btn btn-sm btn-primary">{{ __('Edit') }}</a>
-                                            
                                             <form action="{{ route('database-listing.destroy', $googlePost->id) }}" method="POST" class="ml-2">
                                                 @csrf
                                                 @method('DELETE')
@@ -194,7 +199,11 @@
             $("#form").submit();
         })
 
-        $("#basic-datatable_wrapper .col-sm-12:first").html('<form id="update-status" action={{route("listing.status")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status"><option>Select</option><option value=0>Pending</option><option value=1>Approved</option><option value=2>Reject</option> @if(request()->status == 1)<option value=2>Publish to Blogger</option> @endif </select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div></form>');
+        $("#status").change(function() {
+            $("#formStatus").submit();
+        })
+
+        $("#basic-datatable_wrapper .col-sm-12:first").html('<form id="update-status" action={{route("listing.status")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status"><option>Select</option><option value=0>Pending</option><option value=2>Reject</option> </select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div></form>');
 
         $("#basic-datatable_wrapper").on('click', '.update-status', function(e) {
             e.preventDefault();

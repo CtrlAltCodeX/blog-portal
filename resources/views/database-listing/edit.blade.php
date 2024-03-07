@@ -26,7 +26,7 @@
 
     <div class="row">
         <div class="col-md-9 col-xl-9 fields">
-            <form action="{{ route('database-listing.update', $listing->id) }}" method="POST" enctype='multipart/form-data' id='form'>
+            <form action="" method="POST" enctype='multipart/form-data' id='formTest'>
                 @csrf
                 @method('PUT')
                 <div class="card">
@@ -289,7 +289,9 @@
                         </div>
 
                         <div style="text-align: right;">
-                            <button type="submit" class="btn btn-success float-right">Update & Publish</button>
+                            <button class="btn btn-warning float-right" id='draft'>Save as Draft</button>
+                            <button class="btn btn-success float-right" id='publish'>Publish</button>
+                            <button class="btn btn-success float-right" id='update'>Update</button>
                         </div>
                     </div>
                 </div>
@@ -391,7 +393,29 @@
 
         $("#downloadMultipleImage").click(function() {
             $("#multipleImagesform").submit();
-        })
+        });
+
+        $("#draft").click(function(e) {
+            e.preventDefault();
+            $("#formTest").append("<input type='hidden' name='isDraft' value=1 />");
+            $("#formTest").attr("action", "{{ route('listing.store') }}");
+            $('[name="_method"]').remove();
+
+            $("#formTest").submit();
+        });
+
+        $("#publish").click(function(e) {
+            e.preventDefault();
+            $("#formTest").attr("action", "{{ route('listing.store') }}");
+            $('[name="_method"]').remove();
+            $("#formTest").submit();
+        });
+
+        $("#update").click(function(e) {
+            e.preventDefault();
+            $("#formTest").attr("action", "{{ route('database-listing.update', $listing->id) }}");
+            $("#formTest").submit();
+        });
     });
 </script>
 
