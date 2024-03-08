@@ -23,12 +23,13 @@
     <!-- PAGE-HEADER END -->
 
     <!-- Row -->
-
     <div class="row">
         <div class="col-md-9 col-xl-9 fields">
             <form action="" method="POST" enctype='multipart/form-data' id='formTest'>
                 @csrf
                 @method('PUT')
+                <input type="hidden" name="created_by" value="{{ $listing->created_by }}"/>
+                <input type="hidden" name="created_on" value='{{ date("Y-m-d", strtotime($listing->updated_at)) }}'/>
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">
                         <h4 class="card-title">
@@ -292,6 +293,7 @@
                             <button class="btn btn-warning float-right" id='draft'>Save as Draft</button>
                             <button class="btn btn-success float-right" id='publish'>Publish</button>
                             <button class="btn btn-success float-right" id='update'>Update</button>
+                            <button class="btn btn-danger float-right" id='reject'>Reject</button>
                         </div>
                     </div>
                 </div>
@@ -407,6 +409,7 @@
         $("#publish").click(function(e) {
             e.preventDefault();
             $("#formTest").attr("action", "{{ route('listing.store') }}");
+            $("#formTest").append("<input type='hidden' name='database' value={{$listing->id}} />");
             $('[name="_method"]').remove();
             $("#formTest").submit();
         });
@@ -414,6 +417,13 @@
         $("#update").click(function(e) {
             e.preventDefault();
             $("#formTest").attr("action", "{{ route('database-listing.update', $listing->id) }}");
+            $("#formTest").submit();
+        });
+
+        $("#reject").click(function(e) {
+            e.preventDefault();
+            $("#formTest").attr("action", "{{ route('database-listing.update', $listing->id) }}");
+            $("#formTest").append("<input type='hidden' name='status' value=2 />");
             $("#formTest").submit();
         });
     });

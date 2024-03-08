@@ -29,8 +29,11 @@ return new class extends Migration
             $table->string('insta_mojo_url')->nullable();
             $table->json('images')->nullable();
             $table->json('multiple_images')->nullable();
+            $table->integer('created_by');
             $table->tinyInteger('status');
             $table->timestamps();
+
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

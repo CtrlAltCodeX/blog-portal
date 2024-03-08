@@ -33,6 +33,12 @@ class Listing extends Model
         'images',
         'multiple_images',
         'base_url',
-        'status'
+        'status',
+        'created_by'
     ];
+
+    public function created_by_user()
+    {
+        return $this->hasOne(User::class, 'id', 'created_by');
+    }
 }

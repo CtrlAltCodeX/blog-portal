@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\GoogleService;
 use App\Http\Requests\BlogRequest;
+use App\Models\Listing;
 use App\Models\SiteSetting;
+use App\Models\UserListingCount;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -74,6 +76,31 @@ class ListingController extends Controller
             return redirect()->route('inventory.index');
         }
 
+        if (
+            $request->database
+            && $request->created_by
+            && $request->created_on
+        ) {
+            $count = UserListingCount::where('user_id', $request->created_by)
+                ->whereDate('date', $request->created_on)
+                ->first();
+
+            if (!$count) {
+                UserListingCount::create([
+                    'user_id' => $request->created_by,
+                    'date' => $request->created_on,
+                    'approved_count' => 1,
+                    'reject_count' => 0,
+                ]);
+            } else {
+                $count->update([
+                    'approved_count' => ++$count->approved_count,
+                ]);
+            }
+
+            Listing::find($request->database)->delete();
+        }
+
         session()->flash('success', 'Post created successfully');
 
         return redirect()->route('inventory.index');
@@ -92,7 +119,7 @@ class ListingController extends Controller
 
             return redirect()->to($url);
         }
-        
+
         $post = $this->googleService->editPost($postId);
         $labels = $post->getLabels();
 

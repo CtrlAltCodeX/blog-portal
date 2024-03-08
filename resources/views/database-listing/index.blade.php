@@ -83,9 +83,10 @@
                                     <th>{{ __('Sell Price') }}</th>
                                     <th>{{ __('MRP') }}</th>
                                     <th>{{ __('Labels') }}</th>
+                                    <th>{{ __('Created By') }}</th>
                                     <th>{{ __('Created at') }}</th>
                                     <th>{{ __('Updated at') }}</th>
-                                    @if(request()->status != 1)
+                                    @if(request()->status != 2)
                                     <th>{{ __('Action') }}</th>
                                     @endif
                                 </tr>
@@ -129,9 +130,10 @@
                                             {{ count($categories ?? []) }}
                                             </button>
                                     </td>
+                                    <td>{{ $googlePost->created_by_user->name }}</td>
                                     <td>{{ date("d-m-Y h:i A", strtotime($googlePost->created_at)) }}</td>
                                     <td>{{ date("d-m-Y h:i A", strtotime($googlePost->updated_at)) }}</td>
-                                    @if(request()->status != 1)
+                                    @if(request()->status != 2)
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic example">
                                             <a href="{{ route('database-listing.edit', $googlePost->id) }}" class="btn btn-sm btn-primary">{{ __('Edit') }}</a>

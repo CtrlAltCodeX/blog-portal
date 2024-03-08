@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BlogRequest;
 use App\Models\Listing;
+use App\Models\UserListingCount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Services\GoogleService;
@@ -24,10 +25,11 @@ class DatabaseListingController extends Controller
      */
     public function index()
     {
-        $googlePosts = Listing::paginate(150);
+        $googlePosts = Listing::with('created_by_user')->paginate(150);
 
         if (request()->status == "0" || request()->status == "2") {
-            $googlePosts = Listing::where('status', request()->status)
+            $googlePosts = Listing::with('created_by_user')
+                ->where('status', request()->status)
                 ->paginate(150);
         }
 
@@ -76,7 +78,8 @@ class DatabaseListingController extends Controller
                 'insta_mojo_url' => $request->url,
                 'images' => $request->images[0],
                 'multiple_images' => $request->multipleImages,
-                'status' => 0
+                'status' => 0,
+                'created_by' => auth()->user()->id
             ];
 
             $listing = Listing::create($data);
@@ -128,10 +131,31 @@ class DatabaseListingController extends Controller
             'insta_mojo_url' => $request->url,
             'images' => $request->images[0],
             'multiple_images' => $request->multipleImages,
-            // 'base_url' => $request->base_url
+            'created_by' => auth()->user()->id
         ];
 
         $listing = Listing::find($id);
+
+        if ($request->status) {
+            $count = UserListingCount::where('user_id', $request->created_by)
+                ->where('date', $request->created_on)
+                ->first();
+
+            if ($count) {
+                $count->update([
+                    'reject_count' => $count->reject_count++,
+                ]);
+            } else {
+                UserListingCount::create([
+                    'user_id' => $request->created_by,
+                    'date' => $request->created_on,
+                    'approved_count' => 0,
+                    'reject_count' => 1,
+                ]);
+            }
+
+            $data['status'] = request()->status;
+        }
 
         if ($listing->update($data)) {
             session()->flash('success', 'Listing Updated successfully');
