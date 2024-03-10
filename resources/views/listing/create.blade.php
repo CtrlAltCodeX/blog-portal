@@ -291,21 +291,7 @@
                 <div class="card-body">
                     <div class="form-group">
                         <div id="fileInputContainer">
-                            <div class="form-group">
-                                <!-- <label for="fileInput1">Main Images<span class="text-danger">*</span>( Only 1 Image )</label>
-                                <div class="form-group mb-0" @error('images') style="border: red 2px dotted;" @enderror>
-                                    <input type="file" class="dropify @error('images') is-invalid @enderror" data-bs-height="180" id="fileInput1" name="images[]" /> -->
-                                <!-- <form action="{{ route('convert.image') }}" method="post" enctype="multipart/form-data" id='singleImageForm'>
-                                        @csrf
-                                        <input id="fileInput1" type="file" class="dropify @error('multipleImages') is-invalid @enderror" name="multipleImages[]" accept="jpg">
-                                        <div id='singleImageDownload' style="display: none;">
-                                            <a href='#' class="w-100 d-flex justify-content-end my-4" id='downloadImage'>
-                                                <img src="/downlod-icon.png" />
-                                            </a>
-                                        </div>
-                                    </form> -->
-                            </div>
-
+                            <div class="form-group"></div>
                             <label for="fileInput1" class="mt-2">Images<span class="text-danger">*</span>( Multiple Images )</label>
                             <div class="form-group mt-2" @error('multipleImages') style="border: red 2px dotted;" @enderror>
                                 <form action="{{ route('convert.image') }}" method="post" enctype="multipart/form-data" id='multipleImagesform'>

@@ -55,9 +55,9 @@ class CollageController extends Controller
 
         $filename = 'collage_' . time() . '.png';
 
-        $image->save(public_path('storage/' . $filename));
+        $image->save(public_path('storage/uploads/' . $filename));
 
-        return Response::make(file_get_contents(public_path('storage/' . $filename)), 200, [
+        return Response::make(file_get_contents(public_path('storage/uploads/' . $filename)), 200, [
             'Content-Type'        => 'image/png',
             'Content-Disposition' => 'attachment; filename=' . $filename,
         ]);

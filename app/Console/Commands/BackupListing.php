@@ -29,35 +29,44 @@ class BackupListing extends Command
      *
      * @var string
      */
-    protected $description = 'This Command will insert the blogger data to Database';
+    protected $description = 'This Command will insert the blogger data to Database and export file';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
+        // $listingData = app('App\Http\Controllers\BackupListingsController');
+
+        // $googleMerchantfileName = 'report2.xlsx';
+        // Excel::store(new BackupListingsExport($listingData->getMerchantExportFile()), "/public/" . $googleMerchantfileName);
+        // Log::channel('backup_activity_log')->info('Google Merchant File Downloaded - ' . now());
+        // die;
+
         try {
             Log::channel('backup_activity_log')->info('Backup Stated - ' . now());
-
             $this->getAllProducts();
-
             Log::channel('backup_activity_log')->info('Backup Completed - ' . now());
 
             $listingData = app('App\Http\Controllers\BackupListingsController');
 
-            $fileName = 'report' . time() . '.xlsx';
+            $fileName = 'report.xlsx';
+            Excel::store(new BackupListingsExport($listingData->exportData()), "/public/" . $fileName);
+            Log::channel('backup_activity_log')->info('Export File Downloaded - ' . now());
 
-            Excel::store(new BackupListingsExport($listingData->exportData()), $fileName);
+            $googleMerchantfileName = 'report2.xlsx';
+            Excel::store(new BackupListingsExport($listingData->getMerchantExportFile()), "/public/" . $googleMerchantfileName);
+            Log::channel('backup_activity_log')->info('Google Merchant File Downloaded - ' . now());
 
             $allEmails = BackupEmail::all();
-
             foreach ($allEmails as $email) {
                 Mail::to($email->email)->send(new BackupMail($fileName));
-
                 Log::channel('backup_activity_log')->info('Email Send Successfully to ' . $email->email . " - " . now());
             }
         } catch (\Exception $e) {
-            Log::channel('backup_activity_log')->info('Facing some issue - ' . $e);
+            Log::channel('backup_activity_log')->info('Facing some issues');
+
+            Log::info($e);
         }
     }
 
@@ -74,8 +83,8 @@ class BackupListing extends Command
         $totalProducts =  $response->json()['feed']['openSearch$totalResults']['$t'];
 
         $paginate = 1;
-        // for ($i = 0; $i < (int) $totalProducts / 150; $i++) {
-        for ($i = 0; $i <= 2; $i++) {
+        for ($j = 0; $j < (int) ($totalProducts/150); $j++) {
+            // for ($i = 0; $i <= 2; $i++) {
             $allProducts = app('App\Services\GoogleService')->backupToDatabse($paginate);
 
             foreach ($allProducts['paginator'] as $key => $products) {
@@ -165,12 +174,12 @@ class BackupListing extends Command
                 if ($product = ModelsBackupListing::where("product_id", $productId)->first()) {
                     $product->update($allInfo);
 
-                    $additionalImage = BackupListingImage::find($product->id);
-
-                    foreach ($allInfo['multiple'] as $imageUrl) {
-                        $additionalImage->update([
-                            'image_url' => $imageUrl,
-                        ]);
+                    if ($additionalImage = BackupListingImage::find($product->id)) {
+                        foreach ($allInfo['multiple'] as $imageUrl) {
+                            $additionalImage->update([
+                                'image_url' => $imageUrl,
+                            ]);
+                        }
                     }
                 } else {
                     $listing = ModelsBackupListing::create($allInfo);

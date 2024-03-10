@@ -50,11 +50,11 @@ $userInfo = app('App\Models\SiteSetting')->first();
                 </li>
                 @endcan
 
-                <li class="slide {{ (request()->is('admin/images/*') || request()->is('admin/images/*') || request()->is('admin/images/*')) ? 'is-expanded' : '' }}">
+                <li class="slide {{ (request()->is('admin/images/single/create') || request()->is('admin/images/combo/create')) ? 'is-expanded' : '' }}">
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-list"></i><span class="side-menu__label">{{ __('Images Creation') }}</span><i class="angle fe fe-chevron-right"></i></a>
                     <ul class="slide-menu">
-                        <li><a href="{{ route('image.watermark.create') }}" class="slide-item {{ (request()->is('admin/images/watermark/*')) ? 'active' : '' }}">{{ __('Watermark Image Maker') }}</a></li>
-                        <li><a href="{{ route('image.collage.create') }}" class="slide-item {{ (request()->is('admin/images/collage/*')) ? 'active' : '' }}">{{ __('Combo Image Maker') }}</a></li>
+                        <li><a href="{{ route('image.single.create') }}" class="slide-item {{ (request()->is('admin/images/single/create')) ? 'active' : '' }}">{{ __('Single Image Maker') }}</a></li>
+                        <li><a href="{{ route('image.combo.create') }}" class="slide-item {{ (request()->is('admin/images/combo/create')) ? 'active' : '' }}">{{ __('Combo Image Maker') }}</a></li>
                     </ul>
                 </li>
 
@@ -70,8 +70,8 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         <li><a href="{{ route('inventory.drafted') }}" class="slide-item {{ request()->is('admin/inventory/drafted') ? 'active' : '' }}">{{ __('Drafted Inventory') }}</a></li>
                         @endcan
                         <li><a href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => 3]) }}" class="slide-item {{ request()->is('admin/inventory/review') ? 'active' : '' }}">{{ __('Under Review Inventory') }}</a></li>
-                        <li><a href="{{ route('backup.listings') }}" class="slide-item {{ request()->is('admin/backup/listings') ? 'active' : '' }}">{{ __('Backup Inventory') }}</a></li>
-                        <li><a href="{{ route('google.products.list') }}" class="slide-item {{ request()->is('admin/google/products/list') ? 'active' : '' }}">{{ __('Merchant Inventory') }}</a></li>
+                        <!-- <li><a href="{{ route('backup.listings') }}" class="slide-item {{ request()->is('admin/backup/listings') ? 'active' : '' }}">{{ __('Backup Inventory') }}</a></li> -->
+                        <!-- <li><a href="{{ route('google.products.list') }}" class="slide-item {{ request()->is('admin/google/products/list') ? 'active' : '' }}">{{ __('Merchant Inventory') }}</a></li> -->
                     </ul>
                 </li>
                 @endcan
@@ -124,7 +124,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                 @endif
 
                 @if(auth()->user()->can('Site Access') || auth()->user()->can('Configure Blog'))
-                <li class="slide {{ (request()->is('admin/settings/*') || request()->is('admin/settings')) ? 'is-expanded' : '' }}">
+                <li class="slide {{ (request()->is('admin/settings/*') || request()->is('admin/settings') || request()->is('admin/backup/emails')) ? 'is-expanded' : '' }}">
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fa fa-gear"></i><span class="side-menu__label">{{ __('Settings') }}</span><i class="angle fe fe-chevron-right"></i></a>
                     <ul class="slide-menu">
                         <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
@@ -133,7 +133,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         <li><a href="{{ route('settings.site') }}" class="slide-item {{ request()->is('admin/settings/site') ? 'active' : '' }}">{{ __('Site Settings') }}</a></li>
                         @endcan
 
-                        <li><a href="{{ route('settings.emails') }}" class="slide-item {{ request()->is('admin/settings/emails') ? 'active' : '' }}">{{ __('Backup E-Mail') }}</a></li>
+                        <li><a href="{{ route('settings.emails') }}" class="slide-item {{ request()->is('admin/backup/emails') ? 'active' : '' }}">{{ __('Backup E-Mail') }}</a></li>
                         <li><a href="{{ route('backup.logs') }}" class="slide-item {{ request()->is('admin/backup/logs') ? 'active' : '' }}">{{ __('Backup Logs') }}</a></li>
 
                         @can('Configure Blog')

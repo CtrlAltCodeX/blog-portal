@@ -111,14 +111,16 @@ class LoginController extends Controller
         $user = User::where('email', request()->email)->first();
 
         if (
-            $user->allow_sessions
+            $user
+            && $user->allow_sessions
             && $user->sessions->where('expire_at', '>', now())->first()
         ) {
             session()->flash('error', 'You are already Logged in other Device');
 
             return redirect()->route('login');
         } else if (
-            !$user->allow_sessions
+            $user
+            && !$user->allow_sessions
             && $user = $user->sessions->where('expire_at', '<', now())->first()
         ) {
             $user->delete();

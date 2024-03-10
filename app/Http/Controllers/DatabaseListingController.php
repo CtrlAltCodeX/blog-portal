@@ -94,7 +94,9 @@ class DatabaseListingController extends Controller
 
             return redirect()->back();
         } catch (\Exception $e) {
-            dd($e);
+            session()->flash('error', 'Something went Wrong!!');
+
+            return redirect()->back();
         }
     }
 

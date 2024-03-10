@@ -16,6 +16,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\BackupListingsController;
 use App\Http\Controllers\DatabaseListingController;
+use App\Http\Controllers\ImageMakerController;
 
 Illuminate\Support\Facades\Auth::routes();
 /*
@@ -84,6 +85,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     Route::get('update/status', [DatabaseListingController::class, 'updateStatus'])->name('listing.status');
 
     Route::group(['prefix' => 'images'], function () {
+        Route::get('single/create', [ImageMakerController::class, 'singleImage'])->name('image.single.create');
+
+        Route::get('combo/create', [ImageMakerController::class, 'comboImage'])->name('image.combo.create');
+
         Route::get('watermark/create', [WatermarkController::class, 'create'])->name('image.watermark.create');
 
         Route::post('watermark/store', [WatermarkController::class, 'store'])->name('image.watermark.store');

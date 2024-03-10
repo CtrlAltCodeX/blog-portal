@@ -24,14 +24,14 @@ class WatermarkController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'file'  => 'required|file|mimes:jpeg,png,jpg,gif,webp',
+            'file' => 'required|file|mimes:jpeg,png,jpg,gif',
         ]);
 
         $file = $request->file('file');
         $filename = time() . '_' . $file->getClientOriginalName();
-        $file->storeAs('uploads', $filename);
+        $file->storeAs('public/uploads/', $filename);
 
-        $image = Image::make(storage_path('app/uploads/' . $filename));
+        $image = Image::make(storage_path('app/public/uploads/' . $filename));
 
         $fontSize = min($image->width(), $image->height()) / 20;
 
@@ -47,7 +47,6 @@ class WatermarkController extends Controller
             $y = $image->height() / 2 + $radius * sin(deg2rad($angle));
 
             $image->text($request->input('title'), $x, $y, function ($font) use ($fontSize) {
-                $font->align('center');
                 $font->file(public_path('anta.ttf'));
                 $font->color([255, 255, 255, 0.5]);
                 $font->size($fontSize);
@@ -57,10 +56,10 @@ class WatermarkController extends Controller
 
         $image->save();
 
-        $imageContent = Storage::get("uploads/{$filename}");
+        $imageContent = Storage::get("public/uploads/{$filename}");
 
         return Response::make($imageContent, 200, [
-            'Content-Type'        => 'image/jpeg',
+            'Content-Type' => 'image/jpeg',
             'Content-Disposition' => 'attachment; filename=' . $filename,
         ]);
     }

@@ -64,6 +64,57 @@ class BackupListingsController extends Controller
         return $getAllListings;
     }
 
+    public function getMerchantExportFile()
+    {
+        $getAllListings = [];
+
+        $getAllListingsFromDatabase = BackupListing::all()->makeHidden(['id', 'created_at', 'updated_at'])
+            ->toArray();
+
+        foreach ($getAllListingsFromDatabase as $key => $listing) {
+            $getAllListings[$key][] = $listing['title'];
+            $getAllListings[$key][] = $listing['product_id'];
+            $getAllListings[$key][] = $listing['selling_price'];
+            $getAllListings[$key][] = '0';
+            $getAllListings[$key][] = '0';
+            $getAllListings[$key][] = $listing['condition'];
+            $getAllListings[$key][] = 'In Stock';
+            $getAllListings[$key][] = '';
+            $getAllListings[$key][] = '';
+            $getAllListings[$key][] = '';
+            $getAllListings[$key][] = 'en';
+            $getAllListings[$key][] = 'Exam360';
+            $getAllListings[$key][] = $listing['description'];
+            $getAllListings[$key][] = '';
+            $getAllListings[$key][] = $listing['base_url'];
+            $getAllListings[$key][] = '';
+            $getAllListings[$key][] = 'IN';
+        }
+
+        $mainColums = [
+            'title',
+            'id',
+            'price',
+            'clicks',
+            'unpaid clicks',
+            'condition',
+            'availability',
+            'Free listings - disapproved or invalid',
+            'channel',
+            'feed label',
+            'language',
+            'brand',
+            'description',
+            'identifier exists',
+            'image link',
+            'pause',
+            'shipping(country)',
+        ];
+
+        array_unshift($getAllListings, $mainColums);
+
+        return $getAllListings;
+    }
     /**
      * Download Excel
      *
@@ -136,7 +187,7 @@ class BackupListingsController extends Controller
 
             return redirect()->back();
         } catch (\Exception $e) {
-            session()->flash('error', $e->getMessage());
+            session()->flash('error', 'Something went Wrong!!');
 
             return redirect()->back();
         }

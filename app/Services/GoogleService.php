@@ -560,7 +560,7 @@ class GoogleService
         try {
             $posts = [];
             $pageToken = null;
-            $perPage = 250;
+            $perPage = 150;
             $startIndex = $startIndex;
 
             $params = [
