@@ -22,29 +22,26 @@ class CollageController extends Controller
 
     public function store()
     {
-        $this->validate(request(), [
+        $validated = $this->validate(request(), [
             'file'   => 'required|array',
             'file.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $files = request()->except('_token');
-
         $processedImages = [];
 
-        foreach ($files['file'] as $file) {
-            $image = Image::make($file);
-
-            $processedImages[] = $image;
+        foreach ($validated['file'] as $file) {
+            $processedImages[] = Image::make($file);
         }
 
-        $collage = new MakeCollage();
-
-        $image = $collage->with([
+        $image = (new MakeCollage())->with([
             1 => OneImage::class,
             2 => TwoImage::class,
             3 => CustomThreeImage::class,
             4 => FourImage::class,
-        ])->make(400, 400)->padding(10)->background('#fff')->from($processedImages, function($alignment) use($processedImages) {
+        ])
+            ->make(400, 400)->padding(10)
+            ->background('#fff')
+            ->from($processedImages, function($alignment) use($processedImages) {
             $imageCount = count($processedImages);
 
             if ($imageCount == 2) {
@@ -60,10 +57,8 @@ class CollageController extends Controller
 
         $image->save(public_path('storage/' . $filename));
 
-        $imageContent = file_get_contents(public_path('storage/' . $filename));
-
-        return Response::make($imageContent, 200, [
-            'Content-Type' => 'image/png',
+        return Response::make(file_get_contents(public_path('storage/' . $filename)), 200, [
+            'Content-Type'        => 'image/png',
             'Content-Disposition' => 'attachment; filename=' . $filename,
         ]);
     }
