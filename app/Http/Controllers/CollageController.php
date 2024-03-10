@@ -44,7 +44,7 @@ class CollageController extends Controller
             2 => TwoImage::class,
             3 => CustomThreeImage::class,
             4 => FourImage::class,
-        ])->make(400, 400)->padding(10)->from($processedImages, function($alignment) use($processedImages) {
+        ])->make(400, 400)->padding(10)->background('#fff')->from($processedImages, function($alignment) use($processedImages) {
             $imageCount = count($processedImages);
 
             if ($imageCount == 2) {
