@@ -111,38 +111,39 @@ width="320"
     <div class="dt_header">Easy Return and Delivery Policy</div>
     <div class="box dtreturns dt_content">
         <div>
-            Since EXAM360 SHOP (Open Store) is capable to deliver all Indian
-            Pin-codes which covers 1.55 Lakhs Pin-codes throughout India. While
-            Adding any item to cart / Purchasing anything through this website,
-            users are requested to enter valid address with Name, C/O, House
-            Name/No., Area / Locality, City, District, Landmark, State, Pincode,
-            Mobile No, Email. If any issues occurred due to invalid / incomplete
-            address in such cases Exam360 will not take any responsibility.
+            Since EXAM360 SHOP (Open Store) is capable to deliver all Indian Pin-codes
+            which covers 1.55 Lakhs Pin-codes throughout India. While adding any item to
+            cart / purchasing anything through this website, users are requested to
+            enter the valid address with Name, C/O, House Name/No., Area / Locality,
+            City, District, Landmark, State, Pin-code, Mobile No, Email carefully. If
+            any issues occurred due to invalid / incomplete address in such cases
+            EXAM360 will not take any responsibility for the losses or damages. <br />
             <br />
-            <br />
-            We practice Easy Return/Exchange policy for Buyer Protection, So if
-            you experience any difficulties like (Wrong Item delivered ) with
-            any of the product received, you can raise request under Return /
-            Exchange Policy through written E-mail at exam360.in@gmail.com with
-            valid Footage. Once we validate the case in details we will initiate
-            as per the Policy Standard &amp; we will be more than happy to help
-            you to solve your issues ASAP.<br />
+            We practice Easy Return / Exchange / Refund policy for Buyer Protection, So
+            if you experience any difficulties like (Wrong Item delivered) with any of
+            the product received, you can raise request under Return / Exchange Policy
+            through the EXAM360 Customer support Portal i.e. https://support.exam360.in/
+            with valid details. Once our executive validate the case properly, we will
+            take necessary steps as per the Policy Standard & we will be more than happy
+            to help you to solve your issues ASAP.<br />
             <br />
             While receiving the item from any of our courier partner, users are
-            requested to check the packaging item properly, If you feel any
-            tampering we request not to accept the packet &amp; instantly make a
-            call to the below mentioned HELPLINE with your Order Details. And,
-            If you purchased an item that was not Satisfactory, in such cases we
-            will issue Return/ Refund if case is genuine!
+            requested to check the packaging item properly, If you feel the item is
+            delivering by the logistic partners in tampering conditions, we request our
+            buyers not to accept the product & instantly make a call to the below
+            mentioned HELPLINE Numbers. And, If you purchased an item that was not
+            satisfactory, in such cases we will issue Return / Refund as per the current
+            policy guidelines.
             <br /><br />
-            <strong>Selling Price &amp; Shipping Fee:</strong> In Product
-            details we have clearly mentioned the Selling Price &amp; Shipping
-            fees seperately, So, when you "BUY NOW" You will be charges
-            S.P+Shipping Fees. The Shipping fees may different for each products
-            depends on the weight of the Product. Sometimes the Total Payable
-            Amount may be diiferent from Instamojo also. Buyers are requested to
-            check before purchasing the books. After purchasing we maynot allow
-            users to modify.
+            <strong>Selling Price & Shipping Fee:</strong> In Product details page we
+            have clearly mentioned the Selling Price & Shipping Fees separately, So,
+            when you click on "BUY NOW" You will be charges Selling Price + Shipping
+            Fees. The Shipping fees may different for each products depends on the
+            weight of the Product. The shipping cost includes the courier charges,
+            packaging charges, transport charges, fuel charges and other charges.
+            Sometimes the total payable amount may be different for Instamojo Payment
+            Gateway. Buyers are requested to check before purchasing the products. After
+            making the purchase we may not allow or consider users to modify.
             <br />
             - For more information about return policy
             <a
@@ -152,11 +153,9 @@ width="320"
                 <strong>CLICK HERE</strong>
             </a>
             <br />
-            - If you have questions about the product, please contact Customer
-            Care at
-            <a href="https://publication.exam360.in/p/contact.html"
-                >Exam360.in@gmail.com</a
-            >.
+            - If you have questions about the product, please contact our dedicated
+            Customer Support Team at
+            <a href="https://support.exam360.in/">ECG Portal</a>.
         </div>
     </div>
 
@@ -164,24 +163,20 @@ width="320"
     <div class="deliveryInfo box dt_content">
         <div></div>
         <div>
-            EXAM360 SHOP is capable to deliver ALL INDIAN PINCODES by the best
-            courier partners with full security. <br />
-            We only support delivery during business hours (9:00-20:00) Mon -
-            Sat by renowned courier partners like: Fedex, Trackon, Gati,
-            Delhivery, Indian Post.<br />
+            EXAM360 SHOP is capable to deliver All India Pin-codes by the govt.
+            recognised courier partners with full security. <br />
+            Generally the courier partner support delivery during business hours (9:00 -
+            20:00) Mon - Sat: Fedex, Trackon, Gati, Delhivery, Indian Post.<br />
             <br />
-            <a
-                href="https://publication.exam360.in/p/delivery-policy.html"
-                target="_blank"
-                >For more information on delivery time and shipping charges,
-                please refer to <strong>Click Here</strong>.</a
+            <a href="https://support.exam360.in/" target="_blank"
+            >The actual delivery time may differ from the given Estimated timeline.
+            For more information on delivery time and shipping charges, please refer
+            to our dedicated support team through <strong>ECG Portal</strong>.</a
             >
             <br />
             <br />
-            <strong
-                >**Note: Expected Delivery time does not include
-                Holidays.**</strong
-            >
+            <strong>Note:</strong> Expected Delivery time may differ from the Estimated 
+            or Projected delivery time & it does not include holidays.
         </div>
     </div>
 </div>
