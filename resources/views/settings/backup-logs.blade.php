@@ -3,11 +3,43 @@
 @section('title', __('Backup Logs'))
 
 @section('content')
-
-<div class="card mt-5">
-    <div class="card-body">
-        {!! nl2br($logContent) !!}
+<div class="main-container container-fluid">
+    <!-- PAGE-HEADER -->
+    <div class="page-header">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="d-flex align-items-center" style="grid-gap:15px;">
+                            <input type="text" disabled class="form-control" value="{{ url('/') }}/storage/merchant-file.xlsx" />
+                            <img src="/copy.png" width="25" title="Copy URL" class="copy" id="{{ url('/') }}/storage/merchant-file.xlsx" />
+                            <a href="{{ route('backup.export', ['file' => 1]) }}" class="btn btn-primary w-50">Download (Merchant File)</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="{{ route('backup.export') }}" class="mr-2 btn btn-primary">Export File (DB)</a>
+                        <!-- <a href="{{ route('manually.backup') }}" class="mr-2 btn btn-primary">Manual Backup</a> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card mt-5">
+        <div class="card-body">
+            {!! nl2br($logContent) !!}
+        </div>
     </div>
 </div>
 
 @endsection
+
+@push('js')
+<script>
+    $(document).ready(function() {
+        $(".copy").click(function() {
+            navigator.clipboard.writeText($(this).attr('id'));
+            alert('Copied');
+        })
+    })
+</script>
+@endpush

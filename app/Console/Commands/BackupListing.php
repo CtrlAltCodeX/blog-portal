@@ -37,31 +37,30 @@ class BackupListing extends Command
     public function handle()
     {
         // $listingData = app('App\Http\Controllers\BackupListingsController');
-
         // $googleMerchantfileName = 'report2.xlsx';
         // Excel::store(new BackupListingsExport($listingData->getMerchantExportFile()), "/public/" . $googleMerchantfileName);
         // Log::channel('backup_activity_log')->info('Google Merchant File Downloaded - ' . now());
         // die;
 
         try {
-            Log::channel('backup_activity_log')->info('Backup Stated - ' . now());
+            Log::channel('backup_activity_log')->info('Backup Stated - ');
             $this->getAllProducts();
-            Log::channel('backup_activity_log')->info('Backup Completed - ' . now());
+            Log::channel('backup_activity_log')->info('Backup Completed - ');
 
             $listingData = app('App\Http\Controllers\BackupListingsController');
 
             $fileName = 'report.xlsx';
             Excel::store(new BackupListingsExport($listingData->exportData()), "/public/" . $fileName);
-            Log::channel('backup_activity_log')->info('Export File Downloaded - ' . now());
+            Log::channel('backup_activity_log')->info('Export File Downloaded - ');
 
-            $googleMerchantfileName = 'report2.xlsx';
+            $googleMerchantfileName = 'merchant-file.xlsx';
             Excel::store(new BackupListingsExport($listingData->getMerchantExportFile()), "/public/" . $googleMerchantfileName);
-            Log::channel('backup_activity_log')->info('Google Merchant File Downloaded - ' . now());
+            Log::channel('backup_activity_log')->info('Google Merchant File Downloaded - ');
 
             $allEmails = BackupEmail::all();
             foreach ($allEmails as $email) {
-                Mail::to($email->email)->send(new BackupMail($fileName));
-                Log::channel('backup_activity_log')->info('Email Send Successfully to ' . $email->email . " - " . now());
+                Mail::to($email->email)->send(new BackupMail('/public/' . $fileName));
+                Log::channel('backup_activity_log')->info('Email Send Successfully to ' . $email->email . " - ");
             }
         } catch (\Exception $e) {
             Log::channel('backup_activity_log')->info('Facing some issues');
@@ -83,8 +82,8 @@ class BackupListing extends Command
         $totalProducts =  $response->json()['feed']['openSearch$totalResults']['$t'];
 
         $paginate = 1;
-        for ($j = 0; $j < (int) ($totalProducts/150); $j++) {
-            // for ($i = 0; $i <= 2; $i++) {
+        // for ($j = 0; $j < (int) ($totalProducts / 150); $j++) {
+        for ($i = 0; $i <= 2; $i++) {
             $allProducts = app('App\Services\GoogleService')->backupToDatabse($paginate);
 
             foreach ($allProducts['paginator'] as $key => $products) {

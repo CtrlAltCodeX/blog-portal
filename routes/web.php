@@ -153,6 +153,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
         Route::get('delete/emails/{id}', [BackupListingsController::class, 'deleteEmail'])
             ->name('backup.emails.delete');
+
+        Route::get('manually', [BackupListingsController::class, 'manuallyRunBackup'])
+            ->name('manually.backup');
     });
 
     Route::group(['prefix' => 'google/products'], function () {

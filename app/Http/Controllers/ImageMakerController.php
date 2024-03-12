@@ -11,7 +11,17 @@ class ImageMakerController extends Controller
      */
     public function singleImage()
     {
-        return view('image-creation.single');
+        $images = [];
+        foreach (File::glob(public_path('images') . '/*') as $path) {
+            $filepath = explode('/', $path);
+            foreach ($filepath as $name) {
+                if (strpos($name, '.jpg') !== false || strpos($name, '.png') !== false) {
+                    $images[] = $name;
+                }
+            }
+        }
+
+        return view('image-creation.single', compact('images'));
     }
 
     /**
@@ -21,7 +31,12 @@ class ImageMakerController extends Controller
     {
         $images = [];
         foreach (File::glob(storage_path('app/public/uploads') . '/*') as $path) {
-            $images[] = explode('/', $path)[3];
+            $filepath = explode('/', $path);
+            foreach ($filepath as $name) {
+                if (str_contains($name, '.jpg')) {
+                    $images[] = $name;
+                }
+            }
         }
 
         return view('image-creation.combo', compact('images'));

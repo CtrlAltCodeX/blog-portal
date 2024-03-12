@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\BackupListingsExport;
 use App\Models\BackupEmail;
 use App\Models\BackupListing;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -83,7 +84,7 @@ class BackupListingsController extends Controller
             $getAllListings[$key][] = '';
             $getAllListings[$key][] = '';
             $getAllListings[$key][] = 'en';
-            $getAllListings[$key][] = 'Exam360';
+            $getAllListings[$key][] = $listing['publisher'];
             $getAllListings[$key][] = $listing['description'];
             $getAllListings[$key][] = '';
             $getAllListings[$key][] = $listing['base_url'];
@@ -122,6 +123,10 @@ class BackupListingsController extends Controller
      */
     public function downloadExcel()
     {
+        if (request()->file) {
+            return Excel::download(new BackupListingsExport($this->getMerchantExportFile()), 'merchant-file.xlsx');
+        }
+
         return Excel::download(new BackupListingsExport($this->exportData()), 'report.xlsx');
     }
 
@@ -206,5 +211,26 @@ class BackupListingsController extends Controller
         session()->flash('success', 'Emails delete successfully');
 
         return redirect()->back();
+    }
+
+    /**
+     * Manually Run Backup
+     *
+     * @return void
+     */
+    public function manuallyRunBackup()
+    {
+        try {
+            Artisan::call('backup:listing'); // Replace 'command:name' with your actual command signature
+            $output = Artisan::output(); // Get the output of the command if needed
+
+            session()->flash('success', 'Backup Done Successfully');
+
+            return redirect()->back();
+        } catch (\Exception $e) {
+            session()->flash('error', $e->getMessage());
+
+            return redirect()->back();
+        }
     }
 }

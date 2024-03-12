@@ -22,16 +22,15 @@
                     <div class="col-md-8">
                         <div class="d-flex align-items-center overflow-scroll">
                             @foreach($images as $key => $image)
-                            @if($key <= 5) 
-                            <div class='d-flex flex-column m-2' style="width: 50%;">
+                            @if($key <= 5) <div class='d-flex flex-column m-2'>
                                 <img src="/storage/uploads/{{$image}}" width="100" />
                                 <div class="mt-2 d-flex justify-content-between">
-                                    <img src="/downlod-icon.png" title="Copy URL" />
-                                    <img src="/downlod-icon.png" title="Download" />
+                                    <img src="/copy.png" width="25" title="Copy URL" class="copy" id="{{url('/')}}/storage/uploads/{{$image}}" />
+                                    <a href="{{url('/')}}/storage/uploads/{{$image}}" download="image.jpg"><img src="/downlod-icon.png" title="Download" /></a>
                                 </div>
-                            </div>
-                            @endif
-                            @endforeach
+                        </div>
+                        @endif
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -129,20 +128,5 @@
 <script src="{{ asset('assets/plugins/fancyuploder/jquery.fileupload.js') }}"></script>
 <script src="{{ asset('assets/plugins/fancyuploder/jquery.fancy-fileupload.js') }}"></script>
 
-<script>
-    $(document).ready(function() {
-        $("#multipleFiles").change(function() {
-            $('#multiImagesDownload').show();
-        });
-
-        $("#downloadMultipleImage").click(function() {
-            $("#multipleImagesform").submit();
-        });
-
-        $("#method").change(function() {
-            $("#form").submit();
-        })
-
-    })
-</script>
+@include('image-creation.script')
 @endpush
