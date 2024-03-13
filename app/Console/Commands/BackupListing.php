@@ -53,9 +53,13 @@ class BackupListing extends Command
             Excel::store(new BackupListingsExport($listingData->exportData()), "/public/" . $fileName);
             Log::channel('backup_activity_log')->info('Export File Downloaded - ');
 
-            $googleMerchantfileName = 'merchant-file.xlsx';
-            Excel::store(new BackupListingsExport($listingData->getMerchantExportFile()), "/public/" . $googleMerchantfileName);
-            Log::channel('backup_activity_log')->info('Google Merchant File Downloaded - ');
+            // $googleMerchantfileName = 'merchant-file.tsv';
+            // Excel::store(new BackupListingsExport($listingData->getMerchantExportFile()), "/public/" . $googleMerchantfileName, \Maatwebsite\Excel\Excel::TSV);
+            // Log::channel('backup_activity_log')->info('Google Merchant File Downloaded - ');
+
+            $facebookPixelfileName = 'facebook-file.xlsx';
+            Excel::store(new BackupListingsExport($listingData->getFacebookExportFile()), "/public/" . $facebookPixelfileName);
+            Log::channel('backup_activity_log')->info('Facebook Pixel File Downloaded - ');
 
             $allEmails = BackupEmail::all();
             foreach ($allEmails as $email) {

@@ -65,6 +65,11 @@ class BackupListingsController extends Controller
         return $getAllListings;
     }
 
+    /**
+     * Generate Merchant File
+     *
+     * @return array
+     */
     public function getMerchantExportFile()
     {
         $getAllListings = [];
@@ -116,6 +121,77 @@ class BackupListingsController extends Controller
 
         return $getAllListings;
     }
+
+    /**
+     * Generate Facebook Pixel File
+     *
+     * @return array
+     */
+    public function getFacebookExportFile()
+    {
+        $getAllListings = [];
+
+        $getAllListingsFromDatabase = BackupListing::all()->makeHidden(['id', 'created_at', 'updated_at'])
+            ->toArray();
+
+        foreach ($getAllListingsFromDatabase as $key => $listing) {
+            $getAllListings[$key][] = $listing['product_id'];
+            $getAllListings[$key][] = $listing['title'];
+            $getAllListings[$key][] = $listing['description'];
+            $getAllListings[$key][] = '';
+            $getAllListings[$key][] = $listing['condition'];
+            $getAllListings[$key][] = $listing['mrp'];
+            $getAllListings[$key][] = '';
+            $getAllListings[$key][] = $listing['base_url'];
+            $getAllListings[$key][] = $listing['publisher'];
+            $getAllListings[$key][] = '';
+            $getAllListings[$key][] = '';
+            $getAllListings[$key][] = '';
+            $getAllListings[$key][] = $listing['selling_price'];
+            $getAllListings[$key][] = '';
+            $getAllListings[$key][] = '';
+            $getAllListings[$key][] = '';
+            $getAllListings[$key][] = '';
+            $getAllListings[$key][] = '';
+            $getAllListings[$key][] = '';
+            $getAllListings[$key][] = '';
+            $getAllListings[$key][] = '';
+            $getAllListings[$key][] = '';
+            $getAllListings[$key][] = '';
+        }
+
+        $mainColums = [
+            'id',
+            'title',
+            'description',
+            'availability',
+            'condition',
+            'price',
+            'link',
+            'image link',
+            'brand',
+            'google_product_category',
+            'fb_product_category',
+            'quantity_to_sell_on_facebook',
+            'sale_price',
+            'sale_price_effective_date',
+            'item_group_id',
+            'gender',
+            'color',
+            'size',
+            'age_group',
+            'material',
+            'pattern',
+            'shipping',
+            'shipping_weight',
+            'style[0]'
+        ];
+
+        array_unshift($getAllListings, $mainColums);
+
+        return $getAllListings;
+    }
+
     /**
      * Download Excel
      *
@@ -123,11 +199,13 @@ class BackupListingsController extends Controller
      */
     public function downloadExcel()
     {
-        if (request()->file) {
-            return Excel::download(new BackupListingsExport($this->getMerchantExportFile()), 'merchant-file.xlsx');
+        if (request()->file && request()->type == 'google') {
+            return Excel::download(new BackupListingsExport($this->getMerchantExportFile()), 'merchant-file.tsv', \Maatwebsite\Excel\Excel::TSV);
+        } else if (request()->file && request()->type == 'facebook') {
+            return Excel::download(new BackupListingsExport($this->getFacebookExportFile()), 'facebook-file.xlsx');
+        } else if (request()->file && request()->type == 'report') {
+            return Excel::download(new BackupListingsExport($this->exportData()), 'report.xlsx');
         }
-
-        return Excel::download(new BackupListingsExport($this->exportData()), 'report.xlsx');
     }
 
     /**
