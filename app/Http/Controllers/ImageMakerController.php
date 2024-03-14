@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\File;
 
 class ImageMakerController extends Controller
@@ -40,5 +41,30 @@ class ImageMakerController extends Controller
         }
 
         return view('image-creation.combo', compact('images'));
+    }
+
+    /**
+     * Image Gallery
+     *
+     * @return void
+     */
+    public function imageGallery()
+    {
+        $files = [];
+        foreach (File::glob(storage_path('app/public/uploads') . '/*') as $key => $path) {
+            $filepath = explode('/', $path);
+
+            foreach ($filepath as $name) {
+                if (strpos($name, '.jpg') !== false) {
+                    $files[$key]['name'] = $name;
+
+                    $filePath = exif_read_data(storage_path('/app/public/uploads/' . $name))['FileDateTime'];
+                    $dateTime = Carbon::createFromTimestamp($filePath);
+                    $files[$key]['datetime'] = $dateTime->toDateTimeString();
+                }
+            }
+        }
+
+        return view('image-creation.image-gallery', compact('files'));
     }
 }

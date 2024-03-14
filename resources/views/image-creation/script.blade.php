@@ -12,9 +12,13 @@
             $("#form").submit();
         })
 
+        $('input[name="maker"]').change(function() {
+            $("#form").submit();
+        })
+
         $(".copy").click(function() {
             navigator.clipboard.writeText($(this).attr('id'));
             alert('Copied');
-        })
+        });
     })
 </script>
