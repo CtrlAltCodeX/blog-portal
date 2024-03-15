@@ -65,6 +65,11 @@ class ImageMakerController extends Controller
             }
         }
 
+        // Custom sorting function for descending order
+        usort($files, function ($a, $b) {
+            return strtotime($b['datetime']) - strtotime($a['datetime']);
+        });
+        
         return view('image-creation.image-gallery', compact('files'));
     }
 }

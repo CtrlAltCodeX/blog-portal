@@ -88,7 +88,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         Route::get('single/create', [ImageMakerController::class, 'singleImage'])->name('image.single.create');
 
         Route::get('combo/create', [ImageMakerController::class, 'comboImage'])->name('image.combo.create');
-        
+
         Route::get('gallery', [ImageMakerController::class, 'imageGallery'])->name('image.gallery');
 
         Route::get('watermark/create', [WatermarkController::class, 'create'])->name('image.watermark.create');
@@ -158,6 +158,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
         Route::get('manually', [BackupListingsController::class, 'manuallyRunBackup'])
             ->name('manually.backup');
+
+        Route::get('export/sql', [BackupListingsController::class, 'exportDataToSql'])
+            ->name('export.sql');
     });
 
     Route::group(['prefix' => 'google/products'], function () {

@@ -7,6 +7,7 @@ use App\Mail\BackupMail;
 use App\Models\BackupEmail;
 use App\Models\BackupListing as ModelsBackupListing;
 use App\Models\BackupListingImage;
+use App\Models\BackupLogs;
 use App\Models\SiteSetting;
 use App\Services\GoogleService;
 use Illuminate\Console\Command;
@@ -36,36 +37,52 @@ class BackupListing extends Command
      */
     public function handle()
     {
-        // $listingData = app('App\Http\Controllers\BackupListingsController');
-        // $googleMerchantfileName = 'report2.xlsx';
-        // Excel::store(new BackupListingsExport($listingData->getMerchantExportFile()), "/public/" . $googleMerchantfileName);
-        // Log::channel('backup_activity_log')->info('Google Merchant File Downloaded - ' . now());
-        // die;
-
         try {
+            $batchId = 0000001;
+            if ($lastLog = BackupLogs::latest()->first()) {
+                $batchId = str_pad(++$lastLog->batch_id, 7, '0', STR_PAD_LEFT);
+            }
+
             Log::channel('backup_activity_log')->info('Backup Stated - ');
+            $started = now();
             $this->getAllProducts();
             Log::channel('backup_activity_log')->info('Backup Completed - ');
+            $completed = now();
 
             $listingData = app('App\Http\Controllers\BackupListingsController');
 
-            $fileName = 'report.xlsx';
+            $reportFileTime = now();
+            $fileName = 'report-' . $reportFileTime . '.xlsx';
             Excel::store(new BackupListingsExport($listingData->exportData()), "/public/" . $fileName);
             Log::channel('backup_activity_log')->info('Export File Downloaded - ');
 
-            // $googleMerchantfileName = 'merchant-file.tsv';
+            $merchantFileTime = now();
+            // $googleMerchantfileName = 'merchant-file' . $merchantFileTime . '.tsv';
             // Excel::store(new BackupListingsExport($listingData->getMerchantExportFile()), "/public/" . $googleMerchantfileName, \Maatwebsite\Excel\Excel::TSV);
             // Log::channel('backup_activity_log')->info('Google Merchant File Downloaded - ');
 
-            $facebookPixelfileName = 'facebook-file.xlsx';
+            $facebookFileTime = now();
+            $facebookPixelfileName = 'facebook-file' . $facebookFileTime . '.xlsx';
             Excel::store(new BackupListingsExport($listingData->getFacebookExportFile()), "/public/" . $facebookPixelfileName);
             Log::channel('backup_activity_log')->info('Facebook Pixel File Downloaded - ');
 
             $allEmails = BackupEmail::all();
+            $emailTo = [];
             foreach ($allEmails as $email) {
                 Mail::to($email->email)->send(new BackupMail('/public/' . $fileName));
                 Log::channel('backup_activity_log')->info('Email Send Successfully to ' . $email->email . " - ");
+                $emailTo[] = $email->email;
             }
+
+            BackupLogs::create([
+                'batch_id' => $batchId,
+                'started' => $started,
+                'completed' => $completed,
+                'export_file' => $reportFileTime,
+                'merchant_file' => $merchantFileTime,
+                'facebook_file' => $facebookFileTime,
+                'email_to' => implode(",", $emailTo),
+            ]);
         } catch (\Exception $e) {
             Log::channel('backup_activity_log')->info('Facing some issues');
 
