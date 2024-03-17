@@ -65,7 +65,7 @@ class CollageController extends Controller
         $imageContent = file_get_contents($path);
 
         if (request()->input('is_with_watermark')) {
-            $imageContent = $this->addWaterMark($image->encoded, request()->input('title'));   
+            $imageContent = $this->addWaterMark($image, request()->input('title'));   
         }
 
         return Response::make($imageContent, 200, [
@@ -101,6 +101,6 @@ class CollageController extends Controller
 
         $image->save();
 
-        return $image;
+        return $image->encoded;
     }
 }
