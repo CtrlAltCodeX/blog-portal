@@ -227,6 +227,15 @@ class LoginController extends Controller
                 ->where('plain_password', request()->password)
                 ->first();
 
+            // $sessionExists = UserSession::where('user_id', $user->id)
+            //     ->get();
+
+            // if ($sessionExists) {
+            //     session()->flash('error', 'Session already Running wants to <a id="continue" href="">Continue</a>');
+
+            //     return redirect()->route('login');
+            // }
+
             if ($user->allow_sessions && $user->sessions->where('expire_at', '>', now())->first()) {
                 session()->flash('error', 'You are already LoggedIn in other Device');
 

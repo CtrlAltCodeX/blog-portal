@@ -91,11 +91,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
         Route::get('gallery', [ImageMakerController::class, 'imageGallery'])->name('image.gallery');
 
-        Route::get('watermark/create', [WatermarkController::class, 'create'])->name('image.watermark.create');
+        Route::get('refresh', [ImageMakerController::class, 'refreshURL'])->name('image.url.refresh');
+
+        // Route::get('watermark/create', [WatermarkController::class, 'create'])->name('image.watermark.create');
 
         Route::post('watermark/store', [WatermarkController::class, 'store'])->name('image.watermark.store');
 
-        Route::get('collage/create', [CollageController::class, 'create'])->name('image.collage.create');
+        // Route::get('collage/create', [CollageController::class, 'create'])->name('image.collage.create');
 
         Route::post('collage/store', [CollageController::class, 'store'])->name('image.collage.store');
     });
@@ -110,6 +112,15 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::post('update/users/status/{id}', [UserController::class, 'updateStatus'])
         ->name('update.users.status');
+
+    Route::get('set/session/id', [UserController::class, 'setSessionId'])
+        ->name('user.session.id');
+
+    Route::get('delete/session/{id}', [UserController::class, 'deleteSessionId'])
+        ->name('user.session.delete');
+
+    Route::get('check/session', [UserController::class, 'checkSessions'])
+        ->name('user.check.session');
 
     Route::group(['prefix' => 'settings'], function () {
         Route::get('blog', [SettingsController::class, 'blog'])
@@ -145,9 +156,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::get('posts', [DashboardController::class, 'getStats'])
         ->name('get.posts.count');
-
-    Route::get('set/session/id', [UserController::class, 'setSessionId'])
-        ->name('user.session.id');
 
     Route::group(['prefix' => 'backup'], function () {
         Route::get('listings', [BackupListingsController::class, 'backupListings'])

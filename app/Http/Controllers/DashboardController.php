@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\UserSession;
 use App\Services\GoogleService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
@@ -42,7 +43,10 @@ class DashboardController extends Controller
             return view('settings.error');
         }
 
-        return view('dashboard.index');
+        $userSessionsCount = UserSession::where("user_id", auth()->user()->id)
+            ->get();
+
+        return view('dashboard.index', compact('userSessionsCount'));
     }
 
     /**

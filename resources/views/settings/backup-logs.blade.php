@@ -77,10 +77,18 @@
                                     </button>
                             </td>
                             <td>
-                                <a target="_blank" href='{{url("/")}}/storage/merchant-file{{$log->merchant_file}}.tsv' class="btn btn-sm btn-primary">Merchant</a>
-                                <a target="_blank" href='{{url("/")}}/storage/facebook-file{{$log->facebook_file}}.xlsx' class="btn btn-sm btn-primary">Facebook</a>
-                                <a target="_blank" href='{{url("/")}}/storage/report-file{{$log->export_file}}.xlsx' class="btn btn-sm btn-primary">Export</a>
-                                <a target="_blank" href='{{url("/")}}' class="btn btn-sm btn-primary">SQL</a>
+                                <a target="_blank" href='{{url("/")}}/storage/merchant-file{{$log->merchant_file}}.tsv' class="ml-2">
+                                    <img src="/google.png" width="25" />
+                                </a>
+                                <a target="_blank" href='{{url("/")}}/storage/facebook-file{{$log->facebook_file}}.xlsx' class="ml-2">
+                                    <img src="/facebook.png" width="25" />
+                                </a>
+                                <a target="_blank" href='{{url("/")}}/storage/report-file{{$log->export_file}}.xlsx' class="ml-2">
+                                    <img src="/excel.png" width="25" />
+                                </a>
+                                <a target="_blank" href='{{url("/")}}' class="ml-2">
+                                    <img src="/sql.png" width="25" />
+                                </a>
                             </td>
                         </tr>
                         @empty

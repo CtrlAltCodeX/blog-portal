@@ -33,7 +33,11 @@ class DatabaseListingController extends Controller
                 ->paginate(150);
         }
 
-        return view('database-listing.index', compact('googlePosts'));
+        $allCounts = Listing::count();
+        $pendingCounts = Listing::where('status', 0)->count();
+        $rejectedCounts = Listing::where('status', 2)->count();
+
+        return view('database-listing.index', compact('googlePosts', 'allCounts', 'pendingCounts', 'rejectedCounts'));
     }
 
     /**

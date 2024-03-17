@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Google\Service\Dataproc\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Session as FacadesSession;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 
@@ -57,6 +59,8 @@ class WatermarkController extends Controller
         $image->save();
 
         $imageContent = Storage::get("public/uploads/{$filename}");
+
+        session()->put('watermarkFileUrl', $filename);
 
         return Response::make($imageContent, 200, [
             'Content-Type' => 'image/jpeg',

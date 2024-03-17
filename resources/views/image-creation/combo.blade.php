@@ -25,65 +25,76 @@
 
                         <div class="form-group mt-2" @error('multipleImages') style="border: red 2px dotted;" @enderror>
                             @if(request()->maker == 'wo-watermark')
-                                <form action="{{ route('image.collage.store') }}" method="POST" enctype='multipart/form-data'>
-                                    @csrf
-                                    <div class="form-group">
-                                        <div class="d-flex justify-content-between mb-2 align-items-center">
-                                            <label for="fileInput1">Multiple Images<span class="text-danger">*</span></label>
-                                            <button class="btn btn-primary" type="submit">Convert</button>
-                                        </div>
-
-                                        <div class="form-group mb-0 @error('file') is-invalid @enderror" @error('file') style="border: red 2px dotted;" @enderror>
-                                            <input type="file" class="dropify @error('images') is-invalid @enderror" data-bs-height="180" id="file" name="file[]" multiple />
-                                        </div>
-                                        @error('file')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
+                            <form action="{{ route('image.collage.store') }}" method="POST" enctype='multipart/form-data' id='form'>
+                                @csrf
+                                <div class="form-group">
+                                    <div class="d-flex justify-content-between mb-2 align-items-center">
+                                        <label for="fileInput1">Multiple Images<span class="text-danger">*</span></label>
+                                        <button class="btn btn-primary" type="submit" id='convert'>Convert</button>
                                     </div>
-                                </form>
+
+                                    <div class="form-group mb-0 @error('file') is-invalid @enderror" @error('file') style="border: red 2px dotted;" @enderror>
+                                        <input type="file" class="dropify @error('images') is-invalid @enderror" data-bs-height="180" id="file" name="file[]" multiple />
+                                    </div>
+                                    @error('file')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </form>
                             @endif
 
                             @if(request()->maker == 'w-watermark')
-                                <form action="{{ route('image.collage.store') }}" method="POST" enctype='multipart/form-data'>
-                                    @csrf
-                                    <div class="form-group">
-                                        <div class="d-flex justify-content-end mb-2">
-                                            <button class="btn btn-primary" type="submit">Convert</button>
-                                        </div>
+                            <form action="{{ route('image.collage.store') }}" method="POST" enctype='multipart/form-data'>
+                                @csrf
+                                <div class="form-group">
+                                    <div class="d-flex justify-content-end mb-2">
+                                        <button class="btn btn-primary" type="submit">Convert</button>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="title" class="form-label">{{ __('Title') }}<span class="text-danger">*</span></label>
+
+                                    <input id="title" type="text" name="title" class="form-control @error('title') is-invalid @enderror" title="title" autocomplete="title" autofocus placeholder="Title">
+
+                                    <input type="hidden" name="is_with_watermark" value="1">
+
+                                    @error('title')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="fileInput1">Watermark Image<span class="text-danger">*</span></label>
+
+                                    <div class="form-group mb-0 @error('file') is-invalid @enderror" @error('file') style="border: red 2px dotted;" @enderror>
+                                        <input type="file" class="dropify @error('images') is-invalid @enderror" data-bs-height="180" id="file" name="file[]" multiple />
                                     </div>
 
-                                    <div class="form-group">
-                                        <label for="title" class="form-label">{{ __('Title') }}<span class="text-danger">*</span></label>
-
-                                        <input id="title" type="text" name="title" class="form-control @error('title') is-invalid @enderror" title="title" autocomplete="title" autofocus placeholder="Title">
-
-                                        <input type="hidden" name="is_with_watermark" value="1">
-
-                                        @error('title')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="fileInput1">Watermark Image<span class="text-danger">*</span></label>
-
-                                        <div class="form-group mb-0 @error('file') is-invalid @enderror" @error('file') style="border: red 2px dotted;" @enderror>
-                                            <input type="file" class="dropify @error('images') is-invalid @enderror" data-bs-height="180" id="file" name="file[]" multiple />
-                                        </div>
-
-                                        @error('file')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                </form>
+                                    @error('file')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </form>
                             @endif
                         </div>
+                        <div class="w-50 d-flex align-items-center justify-content-end" style="grid-gap: 10px;">
+                            <input type="text" class="form-control image-url" disabled />
+                            <img src="/copy.png" width="25" class="copy" id="{{ url('/') }}/storage/uploads/{{session()->get('fileurl')}}" />
+                            <a href="{{ url('/') }}/storage/uploads/{{session()->get('fileurl')}}" download class="btn btn-primary btn-sm" id='download' style="width: 100px;;">Download</a>
+                            <img src="/refresh.png" width="25" style="cursor:pointer;" id="refresh" data-session='fileurl' />
+                        </div>
+                        <!-- <div class="w-50 d-flex align-items-center justify-content-end" style="grid-gap: 10px;">
+                            <input type="text" class="form-control" disabled value="{{ url('/') }}/storage/uploads/{{session()->get('fileurl')}}" />
+                            <img src="/copy.png" width="25" class="copy" id="{{ url('/') }}/storage/uploads/{{session()->get('fileurl')}}" />
+                            <a href="{{ url('/') }}/storage/uploads/{{session()->get('fileurl')}}" download class="btn btn-primary btn-sm" style="width: 100px;;">Download</a>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -101,4 +112,14 @@
 <script src="{{ asset('assets/plugins/fancyuploder/jquery.fancy-fileupload.js') }}"></script>
 
 @include('image-creation.script')
+
+<script>
+    //     $(document).ready(function() {
+    //         $("#convert").click(function(e) {
+    //             e.preventDefault();
+    // // alert('asd');
+    //             $("#form").submit();
+    //         });
+    //     })
+</script>
 @endpush

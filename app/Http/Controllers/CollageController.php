@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Generators\CustomThreeImage;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Session;
 use Intervention\Image\Facades\Image;
 use Tzsk\Collage\Generators\FourImage;
 use Tzsk\Collage\Generators\OneImage;
@@ -44,17 +45,17 @@ class CollageController extends Controller
         ])
             ->make(400, 400)->padding(10)
             ->background('#fff')
-            ->from($processedImages, function($alignment) use($processedImages) {
-            $imageCount = count($processedImages);
+            ->from($processedImages, function ($alignment) use ($processedImages) {
+                $imageCount = count($processedImages);
 
-            if ($imageCount == 2) {
-                $alignment->vertical();
-            } else if ($imageCount == 3) {
-                $alignment->twoTopOneBottom();
-            } else if ($imageCount == 4) {
-                $alignment->grid();
-            }
-        });
+                if ($imageCount == 2) {
+                    $alignment->vertical();
+                } else if ($imageCount == 3) {
+                    $alignment->twoTopOneBottom();
+                } else if ($imageCount == 4) {
+                    $alignment->grid();
+                }
+            });
 
         $filename = 'collage_' . time() . '.png';
 
@@ -65,8 +66,10 @@ class CollageController extends Controller
         $imageContent = file_get_contents($path);
 
         if (request()->input('is_with_watermark')) {
-            $imageContent = $this->addWaterMark($image, request()->input('title'));   
+            $imageContent = $this->addWaterMark($image, request()->input('title'));
         }
+
+        Session::put('fileurl', $filename);
 
         return Response::make($imageContent, 200, [
             'Content-Type'        => 'image/png',

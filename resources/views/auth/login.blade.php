@@ -16,7 +16,7 @@
                 <div class="tab-pane active" id="tab5">
                     @if(session('error'))
                     <div class="alert alert-danger" role="alert">
-                        {{ session('error') }}
+                        {!! session('error') !!}
                     </div>
                     @endif
                     <div class="wrap-input100 validate-input input-group is-invalid">
@@ -89,6 +89,15 @@
                 $('#Password-toggle i').addClass("zmdi-eye-off");
             }
         });
+
+        // $('#continue').click(function() {
+        //     alert('ad');
+        //     e.preventDefault();
+
+        //     $('#form').attr('action', "{{ route('verify.otp') }}");
+        //     $('#form').submit();
+        //     // $("#form").submit();
+        // });
     })
 </script>
 

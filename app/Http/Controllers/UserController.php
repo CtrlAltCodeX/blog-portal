@@ -6,6 +6,7 @@ use App\Http\Requests\UserRequest;
 use App\Mail\UserMail;
 use App\Models\User;
 use App\Models\UserSession;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
@@ -208,8 +209,27 @@ class UserController extends Controller
             ->orderBy('id', 'DESC')
             ->first();
 
+        $currentDateTime = Carbon::now();
+        $sessionExpireDateTime = $currentDateTime->addMinutes(env('SESSION_LIFETIME'));
+
+        $sessionId->update([
+            'expire_at' => $sessionExpireDateTime
+        ]);
+
         session()->put('session_id', $sessionId->session_id);
 
         return true;
+    }
+
+    /**
+     * Sessions Delete
+     */
+    public function deleteSessionId($id)
+    {
+        UserSession::where('session_id', $id)->delete();
+
+        session()->flash('success', __('Session Deleted successfully.'));
+
+        return redirect()->back();
     }
 }

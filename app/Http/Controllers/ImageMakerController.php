@@ -69,7 +69,16 @@ class ImageMakerController extends Controller
         usort($files, function ($a, $b) {
             return strtotime($b['datetime']) - strtotime($a['datetime']);
         });
-        
+
         return view('image-creation.image-gallery', compact('files'));
+    }
+
+    /**
+     * Refresh the URLs
+     */
+    public function refreshURL()
+    {
+        if (request()->session)
+            return session()->get(request()->session);
     }
 }

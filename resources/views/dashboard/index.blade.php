@@ -13,13 +13,48 @@ $getStats = app('App\Http\Controllers\DashboardController');
 
     <!-- PAGE-HEADER -->
     <div class="page-header m-0">
-        <h1 class="page-title">{{ __('Products') }}</h1>
+        <div class="page-header m-0">
+            <h1 class="page-title">{{ __('Your Sessions') }}</h1>
+        </div>
         <div>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="javascript:void(0)">{{ __('Dashboard') }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ __('Dashboard') }}</li>
             </ol>
         </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">
+                        <thead>
+                            <tr>
+                                <th>{{ __('Sl') }}</th>
+                                <th>{{ __('Session Id') }}</th>
+                                <th>{{ __('Expire at') }}</th>
+                                <th>{{ __('Action') }}</th>
+                            </tr>
+                        </thead>
+                        @foreach($userSessionsCount as $key => $session)
+                        <tr>
+                            <td>{{ ++$key }}</td>
+                            <td>{{ $session->session_id }}</td>
+                            <td>{{date("d-m-Y h:i A", strtotime( $session->expire_at)) }}</td>
+                            <td>
+                                <a href="{{ route('user.session.delete', $session->session_id) }}" class="btn btn-primary btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-header m-0">
+        <h1 class="page-title">{{ __('Products') }}</h1>
     </div>
 
     <div class="row">
