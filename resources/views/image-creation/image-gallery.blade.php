@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', __('Image Gallery'))
+@section('title', __('Gallery ( DB )'))
 
 @push('css')
 <style>
@@ -45,7 +45,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header justify-content-between">
-                    <h3 class="card-title">Image Gallery</h3>
+                    <h3 class="card-title">Gallery ( DB )</h3>
                 </div>
 
                 <div class="card-body">
@@ -57,6 +57,7 @@
                                     <th>{{ __('Image') }}</th>
                                     <th>{{ __('Title') }}</th>
                                     <th>{{ __('Created On') }}</th>
+                                    <th>{{ __('Created By') }}</th>
                                     <th>{{ __('Action') }}</th>
                                 </tr>
                             </thead>
@@ -66,6 +67,7 @@
                                     <td>{{++$key}}</td>
                                     <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="/storage/uploads/{{ $file['name'] }}" alt="Product Image" width="100" /></td>
                                     <td>{{ $file['name'] }}</td>
+                                    <td>{{ date("d-m-Y h:i A", strtotime($file['datetime'])) }}</td>
                                     <td>{{ date("d-m-Y h:i A", strtotime($file['datetime'])) }}</td>
                                     <td>
                                         <div class="d-flex justify-content-between">

@@ -44,8 +44,8 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         @can('Listing create')
                         <li><a href="{{ route('listing.create') }}" class="slide-item {{ (request()->is('admin/images/*')) ? 'active' : '' }}">{{ __('Create New Listing') }}</a></li>
                         @endcan
-                        <li><a href="{{ route('database-listing.create') }}" class="slide-item {{ (request()->is('admin/database-listing/create')) ? 'active' : '' }}">{{ __('Create New Listing ( Database )') }}</a></li>
-                        <li><a href="{{ route('database-listing.index', ['status' => 0]) }}" class="slide-item {{ (request()->is('admin/database-listing')) ? 'active' : '' }}">{{ __('Pending Listings') }}</a></li>
+                        <li><a href="{{ route('database-listing.create') }}" class="slide-item {{ (request()->is('admin/database-listing/create')) ? 'active' : '' }}">{{ __('Create New Listing ( DB )') }}</a></li>
+                        <li><a href="{{ route('database-listing.index', ['status' => 0]) }}" class="slide-item {{ (request()->is('admin/database-listing')) ? 'active' : '' }}">{{ __('Pending Listings ( DB )') }}</a></li>
                     </ul>
                 </li>
                 @endcan
@@ -55,7 +55,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                     <ul class="slide-menu">
                         <li><a href="{{ route('image.single.create', ['maker' => 'w-watermark']) }}" class="slide-item {{ (request()->is('admin/images/single/create')) ? 'active' : '' }}">{{ __('Single Image Maker') }}</a></li>
                         <li><a href="{{ route('image.combo.create', ['maker' => 'w-watermark']) }}" class="slide-item {{ (request()->is('admin/images/combo/create')) ? 'active' : '' }}">{{ __('Combo Image Maker') }}</a></li>
-                        <li><a href="{{ route('image.gallery') }}" class="slide-item {{ (request()->is('admin/images/gallery')) ? 'active' : '' }}">{{ __('Image Gallery') }}</a></li>
+                        <li><a href="{{ route('image.gallery') }}" class="slide-item {{ (request()->is('admin/images/gallery')) ? 'active' : '' }}">{{ __('Gallery ( DB )') }}</a></li>
                     </ul>
                 </li>
 
@@ -136,6 +136,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
 
                         <li><a href="{{ route('settings.emails') }}" class="slide-item {{ request()->is('admin/backup/emails') ? 'active' : '' }}">{{ __('Backup E-Mail') }}</a></li>
                         <li><a href="{{ route('backup.logs') }}" class="slide-item {{ request()->is('admin/backup/logs') ? 'active' : '' }}">{{ __('Backup Logs & Links') }}</a></li>
+                        <li><a href="{{ route('settings.keywords.valid') }}" class="slide-item {{ request()->is('admin/names/validations') ? 'active' : '' }}">{{ __('Validations') }}</a></li>
 
                         @can('Configure Blog')
                         <li><a href="{{ route('settings.blog') }}" class="slide-item {{ request()->is('admin/settings/blog') ? 'active' : '' }}">{{ __('Confiure Blog') }}</a></li>

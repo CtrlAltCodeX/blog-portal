@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\BackupMail;
 use App\Models\BackupEmail;
+use App\Models\FieldValidation;
 use App\Models\GoogleCredentail;
 use App\Models\SiteSetting;
 
@@ -84,6 +85,53 @@ class SettingsController extends Controller
         if ($siteSettings) $siteSettings->update($data);
 
         session()->flash('success', 'Settings updated successfully');
+
+        return redirect()->back();
+    }
+
+    /**
+     * Fields Validation View
+     */
+    public function fieldsValidations()
+    {
+        $notAllowedNames = FieldValidation::where('name', "!=", '')
+            ->get();
+
+        $notAllowedlinks = FieldValidation::where('links', "!=", '')
+            ->get();
+
+        return view('settings.fields-validations', compact('notAllowedNames', 'notAllowedlinks'));
+    }
+
+    /**
+     * Save Keywords and Links 
+     */
+    public function keywordsNotAllowed()
+    {
+        if (request()->name) {
+            FieldValidation::create([
+                'name' => request()->name,
+            ]);
+        } else if (request()->link) {
+            FieldValidation::create([
+                'links' => request()->link,
+                'allowed' => request()->allow ? 1 : 0,
+            ]);
+        }
+
+        session()->flash('success', 'Updated successfully');
+
+        return redirect()->back();
+    }
+
+    /**
+     * Delete Keywords and Links 
+     */
+    public function keywordsDelete($id)
+    {
+        FieldValidation::find($id)->delete();
+
+        session()->flash('success', 'Deleted successfully');
 
         return redirect()->back();
     }

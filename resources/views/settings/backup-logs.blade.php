@@ -10,23 +10,28 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
+                        <h5>Google Merchant Center</h5>
                         <div class="d-flex align-items-center" style="grid-gap:15px;">
                             <input type="text" disabled class="form-control" value="{{ url('/') }}/storage/merchant-file.xlsx" />
                             <img src="/copy.png" width="25" title="Copy URL" class="copy" id="{{ url('/') }}/storage/merchant-file.xlsx" />
                         </div>
-                        <div class="d-flex justify-content-between">
-                            <a href="{{ route('backup.export', ['file' => 1, 'type' => 'google']) }}" class="btn btn-primary w-25 mt-2">Merchant File</a>
-                            <a href="{{ route('backup.export', ['file' => 1, 'type' => 'google']) }}" class="btn btn-primary w-25 mt-2">Export File</a>
+                        <h5 class="mb-0 mt-2">Social Media Files</h5>
+                        <div class="d-flex" style="grid-gap: 10px;">
+                            <a href="{{ route('backup.export', ['file' => 1, 'type' => 'google']) }}" class="btn btn-primary mt-2">Download Merchant File</a>
+                            <a href="{{ route('backup.export', ['file' => 1, 'type' => 'facebook']) }}" class="btn btn-primary mt-2">Download Facebook File</a>
                         </div>
                     </div>
+
                     <div class="col-md-6">
+                        <h5>Facebook Commerce Manager</h5>
                         <div class="d-flex align-items-center" style="grid-gap:15px;">
                             <input type="text" disabled class="form-control" value="{{ url('/') }}/storage/facebook-file.xlsx" />
                             <img src="/copy.png" width="25" title="Copy URL" class="copy" id="{{ url('/') }}/storage/facebook-file.xlsx" />
                         </div>
-                        <div class="d-flex justify-content-between">
-                            <a href="{{ route('backup.export', ['file' => 1, 'type' => 'facebook']) }}" class="btn btn-primary w-25 mt-2">Facebook File</a>
-                            <a href="{{ route('backup.export', ['file' => 1, 'type' => 'facebook']) }}" class="btn btn-primary w-25 mt-2">SQL File</a>
+                        <h5 class="mb-0 mt-2">Export DB Files</h5>
+                        <div class="d-flex" style="grid-gap: 10px;">
+                            <a href="{{ route('backup.export', ['file' => 1, 'type' => 'google']) }}" class="btn btn-primary mt-2">Download DB File ( XSL )</a>
+                            <a href="{{ route('backup.export', ['file' => 1, 'type' => 'facebook']) }}" class="btn btn-primary mt-2">Download DB File ( SQL )</a>
                         </div>
 
                         <!-- <a href="{{ route('backup.export', ['file' => 1, 'type' => 'facebook']) }}" class="mr-2 btn btn-primary">Export File (DB)</a> -->
@@ -38,13 +43,14 @@
     </div>
     <div class="card mt-5">
         <div class="card-body">
+            <h3 class="card-title">Logs History</h3>
             <div class="table-responsive">
                 <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">
                     <thead>
                         <tr>
                             <th>{{ __('Sl') }}</th>
                             <th>{{ __('Batch id') }}</th>
-                            <th>{{ __('Date') }}</th>
+                            <th>{{ __('Backup Date') }}</th>
                             <th>{{ __('Started') }}</th>
                             <th>{{ __('Completed') }}</th>
                             <th>{{ __('Export File') }}</th>

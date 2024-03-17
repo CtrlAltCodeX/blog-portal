@@ -120,6 +120,15 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
         Route::post('update/site', [SettingsController::class, 'update'])
             ->name('settings.site.update');
+
+        Route::get('keywords/validations', [SettingsController::class, 'fieldsValidations'])
+            ->name('settings.keywords.valid');
+
+        Route::post('keywords/validations', [SettingsController::class, 'keywordsNotAllowed'])
+            ->name('settings.keywords.notallowed');
+
+        Route::get('delete/keywords/{id}', [SettingsController::class, 'keywordsDelete'])
+            ->name('settings.keywords.delete');
     });
 
     Route::match(['get', 'post'], 'process/image', [GoogleService::class, 'processImageAndDownload'])
@@ -161,6 +170,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
         Route::get('export/sql', [BackupListingsController::class, 'exportDataToSql'])
             ->name('export.sql');
+
+        Route::get('dropbox', [BackupListingsController::class, 'dropBox']);
+        Route::post('dropbox/submit', [BackupListingsController::class, 'uploadfile'])->name('upload.file');
     });
 
     Route::group(['prefix' => 'google/products'], function () {

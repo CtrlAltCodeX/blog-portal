@@ -45,13 +45,25 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header justify-content-between">
-                    <h3 class="card-title">Manage Inventory</h3>
+                    <h3 class="card-title">Pending Listings ( DB )</h3>
 
                     <div class="d-flex align-items-center">
                         <div>
-                            <a href="{{ route('database-listing.index', ['status' => '']) }}" class="btn btn-sm btn-light">All</a>
-                            <a href="{{ route('database-listing.index', ['status' => 0]) }}" class="btn btn-sm btn-warning">Pending</a>
-                            <a href="{{ route('database-listing.index', ['status' => 2]) }}" class="btn btn-sm btn-danger">Rejected</a>
+                            <a href="{{ route('database-listing.index', ['status' => '']) }}" class="btn btn-light position-relative me-2 mb-2"> All
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{$allCounts}}
+                                    <span class="visually-hidden">unread messages</span>
+                                </span>
+                            </a>
+                            <a href="{{ route('database-listing.index', ['status' => 0]) }}" class="btn btn-warning position-relative me-2 mb-2"> Pending
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{$pendingCounts}}
+                                    <span class="visually-hidden">unread messages</span>
+                                </span>
+                            </a>
+                            <a href="{{ route('database-listing.index', ['status' => 2]) }}" class="btn btn-danger position-relative mb-2"> Rejected
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{$rejectedCounts}}
+                                    <span class="visually-hidden">unread messages</span>
+                                </span>
+                            </a>
                         </div>
 
                         <form action="" method="get" id='form' style="margin-left: 10px;">
@@ -101,10 +113,10 @@
                                     <td>
                                         @switch($googlePost->status)
                                         @case(0)
-                                        <button class="btn btn-sm btn-warning">Pending</button>
+                                        <span class="text-success" ><b>Pending</b></span>
                                         @break;
                                         @case(2)
-                                        <button class="btn btn-sm btn-danger">Rejected</button>
+                                        <span class="text-danger"><b>Rejected</b></span>
                                         @break;
                                         @endswitch
                                     <td>@if(isset($googlePost->categories) && (in_array('Stk_o', $googlePost->categories) || in_array('stock__out', $googlePost->categories)))

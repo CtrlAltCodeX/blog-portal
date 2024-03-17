@@ -35,13 +35,13 @@
                             <input id="blog_id" type="text" class="form-control @error('blog_id') is-invalid @enderror" name="blog_id" {{ isset($bloggerCreds->blog_id) ? 'readonly' : '' }} value="{{ $bloggerCreds->blog_id??'' }}" autofocus placeholder="Blog Id">
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <!-- <div class="col-md-6">
                         <div class="form-group">
                             <label for="name" class="form-label">Merchant Id<span class="text-danger">*</span></label>
 
                             <input id="merchant_id" type="text" class="form-control @error('merchant_id') is-invalid @enderror" name="merchant_id" {{ isset($merchantCreds->merchant_id) ? 'readonly' : '' }} value="{{ $merchantCreds->merchant_id??'' }}" autofocus placeholder="Merchant Id">
                         </div>
-                    </div>
+                    </div> -->
                 </div>
 
                 <input type="hidden" name="scope" value="Blogger" id='scope' />
@@ -53,10 +53,10 @@
 
                         <button class="btn btn-primary mt-5 refresh_token" id='Blogger'>Refresh Token</button>
                     </div>
-                    <div class="col-md-6 text-end">
+                    <!-- <div class="col-md-6 text-end">
                         <button type='button' class="btn btn-primary mt-5 connect" id='Merchant'>{{ !$merchantCreds ? 'Connect with Google Merchant Center' : 'Account Disconnect Google Merchant Center' }}</button>
                         <button class="btn btn-primary mt-5 refresh_token" id='Merchant'>Refresh Token</button>
-                    </div>
+                    </div> -->
                 </div>
 
                 @endcan

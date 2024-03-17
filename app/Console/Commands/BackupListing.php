@@ -38,7 +38,7 @@ class BackupListing extends Command
     public function handle()
     {
         try {
-            $batchId = 0000001;
+            $batchId = str_pad(0000001, 7, '0', STR_PAD_LEFT);
             if ($lastLog = BackupLogs::latest()->first()) {
                 $batchId = str_pad(++$lastLog->batch_id, 7, '0', STR_PAD_LEFT);
             }

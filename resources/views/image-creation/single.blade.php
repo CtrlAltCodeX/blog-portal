@@ -40,7 +40,10 @@
                             <form action="{{ route('image.watermark.store') }}" method="POST" enctype='multipart/form-data'>
                                 @csrf
                                 <div class="form-group">
-                                    <label for="title" class="form-label">{{ __('Title') }}<span class="text-danger">*</span></label>
+                                    <div class="d-flex justify-content-between">
+                                        <label for="title" class="form-label">{{ __('Title') }}<span class="text-danger">*</span></label>
+                                        <button class="btn btn-primary mb-2">Convert</button>
+                                    </div>
                                     <input id="title" type="text" name="title" class="form-control @error('title') is-invalid @enderror" title="title" autocomplete="title" autofocus placeholder="Title">
 
                                     @error('title')

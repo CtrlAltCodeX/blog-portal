@@ -11,15 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('backup_logs', function (Blueprint $table) {
+        Schema::create('field_validations', function (Blueprint $table) {
             $table->id();
-            $table->string('batch_id');
-            $table->dateTime('started');
-            $table->dateTime('completed');
-            $table->dateTime('export_file');
-            $table->dateTime('merchant_file');
-            $table->dateTime('facebook_file');
-            $table->string('email_to');
+            $table->string('name')->nullable();
+            $table->string('links')->nullable();
+            $table->integer('allowed')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('backup_logs');
+        Schema::dropIfExists('field_validations');
     }
 };
