@@ -47,6 +47,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     Route::get('profile', [ProfileController::class, 'edit'])
         ->name('profile.edit');
 
+    Route::get('profile/listings', [ProfileController::class, 'listings'])
+        ->name('profile.listing');
+
     Route::post('profile', [ProfileController::class, 'update'])
         ->name('profile.update');
 
@@ -176,9 +179,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         Route::get('manually', [BackupListingsController::class, 'manuallyRunBackup'])
             ->name('manually.backup');
 
-        Route::get('export/sql', [BackupListingsController::class, 'exportDataToSql'])
-            ->name('export.sql');
-
         Route::get('dropbox', [BackupListingsController::class, 'dropBox']);
         Route::post('dropbox/submit', [BackupListingsController::class, 'uploadfile'])->name('upload.file');
     });
@@ -188,7 +188,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
             ->name('google.products.list');
     });
 
-    Route::get('export', [BackupListingsController::class, 'downloadExcel'])
+    Route::get('export', [BackupListingsController::class, 'export'])
         ->name('backup.export');
 });
 

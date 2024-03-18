@@ -64,4 +64,14 @@ class ProfileController extends Controller
 
         return redirect()->route('profile.edit');
     }
+
+    /**
+     * Listing
+     *
+     * @return void
+     */
+    public function listings()
+    {
+        dd((auth()->user()->hasRole('Admin')));
+    }
 }

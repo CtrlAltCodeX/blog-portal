@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Exports\BackupListingsExport;
+use App\Exports\GoogleMerchantExport;
+use App\Exports\ListingsExport;
 use App\Mail\BackupMail;
 use App\Models\BackupEmail;
 use App\Models\BackupListing as ModelsBackupListing;
@@ -14,6 +16,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Excel as ExcelExcel;
 use Maatwebsite\Excel\Facades\Excel;
 
 class BackupListing extends Command
@@ -57,9 +60,9 @@ class BackupListing extends Command
             Log::channel('backup_activity_log')->info('Export File Downloaded - ');
 
             $merchantFileTime = now();
-            // $googleMerchantfileName = 'merchant-file' . $merchantFileTime . '.tsv';
-            // Excel::store(new BackupListingsExport($listingData->getMerchantExportFile()), "/public/" . $googleMerchantfileName, \Maatwebsite\Excel\Excel::TSV);
-            // Log::channel('backup_activity_log')->info('Google Merchant File Downloaded - ');
+            $googleMerchantfileName = 'merchant-file' . $merchantFileTime . '.tsv';
+            Excel::store(new ListingsExport($listingData->getMerchantExportFile()), "/public/" . $googleMerchantfileName);
+            Log::channel('backup_activity_log')->info('Google Merchant File Downloaded - ');
 
             $facebookFileTime = now();
             $facebookPixelfileName = 'facebook-file' . $facebookFileTime . '.xlsx';
@@ -160,7 +163,7 @@ class BackupListing extends Command
                 $desc = [];
                 for ($i = 0; $i < $div->length; $i++) {
                     if ($div->item($i)->getAttribute('class') == 'pbl box dtmoredetail dt_content') {
-                        $desc[] = trim($div->item($i)->textContent);
+                        $desc[] = str_replace("'", "", trim($div->item($i)->textContent));
                     }
                 }
 
@@ -171,6 +174,7 @@ class BackupListing extends Command
                     }
                 }
 
+                $productTitle = str_replace("'", "", trim($productTitle));
                 $allInfo = [
                     'product_id' => trim($productId),
                     'title' => trim($productTitle),

@@ -30,12 +30,9 @@
                         </div>
                         <h5 class="mb-0 mt-2">Export DB Files</h5>
                         <div class="d-flex" style="grid-gap: 10px;">
-                            <a href="{{ route('backup.export', ['file' => 1, 'type' => 'google']) }}" class="btn btn-primary mt-2">Download DB File ( XSL )</a>
-                            <a href="{{ route('backup.export', ['file' => 1, 'type' => 'facebook']) }}" class="btn btn-primary mt-2">Download DB File ( SQL )</a>
+                            <a href="{{ route('backup.export', ['file' => 1, 'type' => 'report']) }}" class="btn btn-primary mt-2">Download DB File ( XSL )</a>
+                            <a href="{{ route('backup.export', ['file' => 1, 'type' => 'sql']) }}" class="btn btn-primary mt-2">Download DB File ( SQL )</a>
                         </div>
-
-                        <!-- <a href="{{ route('backup.export', ['file' => 1, 'type' => 'facebook']) }}" class="mr-2 btn btn-primary">Export File (DB)</a> -->
-                        <!-- <a href="{{ route('manually.backup') }}" class="mr-2 btn btn-primary">Manual Backup</a> -->
                     </div>
                 </div>
             </div>
