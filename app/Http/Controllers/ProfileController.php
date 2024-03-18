@@ -28,7 +28,7 @@ class ProfileController extends Controller
 
         if (
             $request->filled('current_password')
-            && ! Hash::check($request->current_password, $user->password)
+            && !Hash::check($request->current_password, $user->password)
         ) {
             return redirect()->back()->withErrors(['password' => 'The current password is incorrect'])->withInput();
         }
@@ -37,15 +37,15 @@ class ProfileController extends Controller
 
         if ($request->hasFile('profile')) {
             $image = $request->file('profile');
-            
+
             $background = (new ImageManager())->canvas(555, 555, '#ffffff');
 
             $background->insert(Image::make($image), 'center');
-    
+
             $outputFileName = 'profiles_' . $image->getClientOriginalName() . time() . '.' . $image->getClientOriginalExtension();
-    
-            $background->save(public_path($outputFileName));    
-            
+
+            $background->save(public_path($outputFileName));
+
             $validated['profile'] = config('app.url') . $outputFileName;
         }
 
@@ -58,5 +58,15 @@ class ProfileController extends Controller
         session()->flash('success', __('Profile updated successfully.'));
 
         return redirect()->route('profile.edit');
+    }
+
+    /**
+     * Listing
+     *
+     * @return void
+     */
+    public function listings()
+    {
+        dd((auth()->user()->hasRole('Admin')));
     }
 }

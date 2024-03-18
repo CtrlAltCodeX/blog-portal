@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\BackupListingsExport;
+use App\Exports\ListingsExport;
 use App\Models\BackupEmail;
 use App\Models\BackupListing;
 use App\Models\BackupLogs;
@@ -199,14 +200,64 @@ class BackupListingsController extends Controller
      *
      * @return void
      */
-    public function downloadExcel()
+    public function export()
     {
         if (request()->file && request()->type == 'google') {
-            return Excel::download(new BackupListingsExport($this->getMerchantExportFile()), 'merchant-file.tsv', \Maatwebsite\Excel\Excel::TSV);
+            return Excel::download(new ListingsExport($this->getMerchantExportFile()), 'merchant-file.tsv', \Maatwebsite\Excel\Excel::TSV);
         } else if (request()->file && request()->type == 'facebook') {
             return Excel::download(new BackupListingsExport($this->getFacebookExportFile()), 'facebook-file.xlsx');
         } else if (request()->file && request()->type == 'report') {
             return Excel::download(new BackupListingsExport($this->exportData()), 'report.xlsx');
+        } else if (request()->file && request()->type == 'sql') {
+            // Retrieve data from the database
+            $data = DB::table('backup_listings')->get();
+
+            // Generate SQL insert statements
+            $sql = 'CREATE TABLE `backup_listings` (
+            `id` bigint(20) UNSIGNED NOT NULL,
+            `product_id` bigint(20) NOT NULL,
+            `title` text NOT NULL,
+            `description` longtext NOT NULL,
+            `mrp` double NOT NULL,
+            `selling_price` double NOT NULL,
+            `publisher` text NOT NULL,
+            `author_name` varchar(191) NOT NULL,
+            `edition` varchar(191) NOT NULL,
+            `categories` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`categories`)),
+            `sku` varchar(191) NOT NULL,
+            `language` varchar(191) NOT NULL,
+            `no_of_pages` varchar(191) NOT NULL,
+            `condition` varchar(191) NOT NULL,
+            `binding_type` varchar(191) NOT NULL,
+            `insta_mojo_url` varchar(191) NOT NULL,
+            `base_url` text NOT NULL,
+            `created_at` timestamp NULL DEFAULT NULL,
+            `updated_at` timestamp NULL DEFAULT NULL
+          ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;';
+
+            foreach ($data as $row) {
+                $columns = [];
+                $values = [];
+
+                foreach ((array) $row as $key => $value) {
+                    $columns[] = "`$key`";
+                    $values[] = str_replace("'s", "\'s", "'$value'");
+                }
+
+                $sql .= "INSERT INTO backup_listings (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $values) . ");" . PHP_EOL;
+            }
+
+            // Set file path
+            $filePath = storage_path('app/export.sql');
+
+            // Save SQL content to file
+            file_put_contents($filePath, $sql);
+
+            // Return data as a downloadable file
+            return response()->download($filePath, 'export.sql', [
+                'Content-Type' => 'text/plain',
+                'Content-Disposition' => 'attachment',
+            ])->deleteFileAfterSend();
         }
     }
 
