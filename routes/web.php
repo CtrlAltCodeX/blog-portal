@@ -135,6 +135,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         Route::post('update/site', [SettingsController::class, 'update'])
             ->name('settings.site.update');
 
+        Route::get('keywords/validate', [SettingsController::class, 'FieldsValidate'])
+            ->name('settings.keywords.validate');
+
         Route::get('keywords/validations', [SettingsController::class, 'fieldsValidations'])
             ->name('settings.keywords.valid');
 

@@ -7,6 +7,7 @@ use App\Models\BackupEmail;
 use App\Models\FieldValidation;
 use App\Models\GoogleCredentail;
 use App\Models\SiteSetting;
+use Illuminate\Http\Request;
 
 class SettingsController extends Controller
 {
@@ -134,5 +135,10 @@ class SettingsController extends Controller
         session()->flash('success', 'Deleted successfully');
 
         return redirect()->back();
+    }
+
+    public function FieldsValidate()
+    {
+        $fields = FieldValidation::all();
     }
 }

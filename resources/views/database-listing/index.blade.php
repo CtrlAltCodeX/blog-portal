@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', __('Manage Inventory'))
+@section('title', __('Pending Listings ( DB )'))
 
 @push('css')
 <style>
@@ -39,7 +39,6 @@
 @endpush
 
 @section('content')
-
 <div>
     <div class="row row-sm">
         <div class="col-lg-12">
@@ -68,6 +67,7 @@
 
                         <form action="" method="get" id='form' style="margin-left: 10px;">
                             <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
+                            <input type="hidden" value="{{ request()->status ?? 0 }}" name='status'>
                             <select class="form-control w-100" id='category' name="category">
                                 <option value="">In Stock</option>
                                 <option value="Stk_o" {{ request()->category == 'Stk_o' ? 'selected' : '' }}>Out of Stock (Stk_o)</option>
@@ -113,13 +113,14 @@
                                     <td>
                                         @switch($googlePost->status)
                                         @case(0)
-                                        <span class="text-success" ><b>Pending</b></span>
+                                        <span class="text-success"><b>Pending</b></span>
                                         @break;
                                         @case(2)
                                         <span class="text-danger"><b>Rejected</b></span>
                                         @break;
                                         @endswitch
-                                    <td>@if(isset($googlePost->categories) && (in_array('Stk_o', $googlePost->categories) || in_array('stock__out', $googlePost->categories)))
+                                    <td>
+                                        @if(isset($googlePost->categories) && (in_array('Stk_o', $googlePost->categories) || in_array('stock__out', $googlePost->categories)))
                                         {{ 'Out of Stock' }}
                                         @elseif(isset($googlePost->categories) && (in_array('Stk_d', $googlePost->categories) || in_array('stock__demand', $googlePost->categories)))
                                         {{ 'On Demand' }}

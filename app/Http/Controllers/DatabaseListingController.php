@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BlogRequest;
 use App\Models\Listing;
 use App\Models\UserListingCount;
+use App\Models\UserListingInfo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Services\GoogleService;
@@ -25,16 +26,21 @@ class DatabaseListingController extends Controller
      */
     public function index()
     {
-        $googlePosts = Listing::with('created_by_user')->paginate(150);
+        $googlePosts = Listing::with('created_by_user')
+            ->orderBy('created_at', 'desc')
+            ->where('status', request()->status)
+            ->where('categories', 'LIKE', '%' . request()->category . '%');
 
-        if (request()->status == "0" || request()->status == "2") {
-            $googlePosts = Listing::with('created_by_user')
-                ->where('status', request()->status)
-                ->paginate(150);
+        if (!auth()->user()->hasRole('Admin')) {
+            $googlePosts = $googlePosts->where('created_by', auth()->user()->id);
         }
 
+        $googlePosts = $googlePosts->paginate(150);
+
         $allCounts = Listing::count();
+
         $pendingCounts = Listing::where('status', 0)->count();
+
         $rejectedCounts = Listing::where('status', 2)->count();
 
         return view('database-listing.index', compact('googlePosts', 'allCounts', 'pendingCounts', 'rejectedCounts'));
@@ -87,6 +93,15 @@ class DatabaseListingController extends Controller
             ];
 
             $listing = Listing::create($data);
+
+            UserListingInfo::create([
+                'image' => $request->images[0],
+                'title' => $request->title,
+                'created_by' => auth()->user()->id,
+                'approved_by' => null,
+                'approved_at' => null,
+                'status' => 0,
+            ]);
 
             if ($listing) {
                 session()->flash('success', 'Listing created successfully');
@@ -142,7 +157,7 @@ class DatabaseListingController extends Controller
 
         $listing = Listing::find($id);
 
-        if ($request->status) {
+        if ($request->status == 2) {
             $count = UserListingCount::where('user_id', $request->created_by)
                 ->where('date', $request->created_on)
                 ->first();
@@ -161,6 +176,22 @@ class DatabaseListingController extends Controller
             }
 
             $data['status'] = request()->status;
+
+            $additionalInfo = UserListingInfo::where('image', $request->images[0])
+                ->where('title', request()->title)
+                ->first();
+
+            $additionalInfo->update([
+                'status' => request()->status
+            ]);
+        } else if ($request->status == 1) {
+            $additionalInfo = UserListingInfo::where('image', $request->images[0])
+                ->where('title', request()->title)
+                ->first();
+
+            $additionalInfo->update([
+                'status' => request()->status
+            ]);
         }
 
         if ($listing->update($data)) {
@@ -205,6 +236,14 @@ class DatabaseListingController extends Controller
         $status = request()->formData[0]['value'];
 
         $listing->map(function ($list) use ($status) {
+            $additionalInfo = UserListingInfo::where("image", $list->images)
+                ->where('title', $list->title)
+                ->first();
+
+            $additionalInfo->update([
+                'status' => $status
+            ]);
+
             $list->update(['status' => $status]);
         });
 

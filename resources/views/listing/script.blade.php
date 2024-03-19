@@ -91,6 +91,23 @@
                 requiredvalid = true;
                 $(".fields .btn").attr('disabled', false);
             }
+
+            $.ajax({
+                type: "GET",
+                url: "{{ route('settings.keywords.validate') }}",
+                data: {
+                    val: inputValue
+                },
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(result) {
+                    ("#publish").attr('disabled', true);
+                    ("#update").attr('disabled', true);
+                    ("#reject").attr('disabled', true);
+                    ("#draft").attr('disabled', true);
+                },
+            });
         })
 
         $('textarea').on('input', function() {
