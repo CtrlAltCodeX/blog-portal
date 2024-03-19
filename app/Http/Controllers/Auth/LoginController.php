@@ -109,7 +109,6 @@ class LoginController extends Controller
         $this->validateLogin($request);
 
         $user = User::where('email', request()->email)->first();
-
         if (
             $user
             && $user->allow_sessions
@@ -163,27 +162,30 @@ class LoginController extends Controller
 
             $currentDateTime = Carbon::now();
             $sessionExpireDateTime = $currentDateTime->addMinutes(env('SESSION_LIFETIME'));
+            $sessionId = session()->getId();
 
             if ($user->allow_sessions) {
                 if ($userSession = UserSession::where('user_id', $user->id)->first()) {
                     $userSession->update([
                         'user_id' => $user->id,
-                        'session_id' => session()->getId(),
+                        'session_id' => $sessionId,
                         'expire_at' => $sessionExpireDateTime
                     ]);
                 } else {
                     UserSession::create([
                         'user_id' => $user->id,
-                        'session_id' => session()->getId(),
+                        'session_id' => $sessionId,
                         'expire_at' => $sessionExpireDateTime
                     ]);
                 }
             } else if (!$user->allow_sessions) {
-                UserSession::create([
+                $data = [
                     'user_id' => $user->id,
-                    'session_id' => session()->getId(),
+                    'session_id' => $sessionId,
                     'expire_at' => $sessionExpireDateTime
-                ]);
+                ];
+
+                UserSession::create($data);
             }
 
             return $this->sendLoginResponse($request);
@@ -227,14 +229,19 @@ class LoginController extends Controller
                 ->where('plain_password', request()->password)
                 ->first();
 
-            // $sessionExists = UserSession::where('user_id', $user->id)
-            //     ->get();
+            if ($user->allow_sessions) {
+                $sessionExists = UserSession::where('user_id', $user->id)
+                    ->first();
 
-            // if ($sessionExists) {
-            //     session()->flash('error', 'Session already Running wants to <a id="continue" href="">Continue</a>');
+                if ($sessionExists) {
+                    session()->flash('error', 'Session already Running wants to <a id="continue" href="" >Continue</a>');
+                    session()->put('session_id', $sessionExists->session_id);
+                    session()->put('session_email', request()->email);
+                    session()->put('session_password', request()->password);
 
-            //     return redirect()->route('login');
-            // }
+                    return redirect()->route('login');
+                }
+            }
 
             if ($user->allow_sessions && $user->sessions->where('expire_at', '>', now())->first()) {
                 session()->flash('error', 'You are already LoggedIn in other Device');

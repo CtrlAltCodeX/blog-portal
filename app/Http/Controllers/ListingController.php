@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Services\GoogleService;
 use App\Http\Requests\BlogRequest;
 use App\Models\Listing;
-use App\Models\SiteSetting;
 use App\Models\UserListingCount;
 use App\Models\UserListingInfo;
 use Illuminate\Support\Facades\Http;
@@ -107,13 +106,15 @@ class ListingController extends Controller
                 ->first();
 
             $additionalInfo->update([
-                'status' => request()->status
+                'status' => request()->status,
+                'approved_by' => auth()->user()->id,
+                'approved_at' => now()
             ]);
         }
 
         session()->flash('success', 'Post created successfully');
 
-        return redirect()->route('inventory.index');
+        return redirect()->route('inventory.index', ['startIndex' => 1, 'category' => 'Product']);
     }
 
     /**

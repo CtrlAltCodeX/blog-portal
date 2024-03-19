@@ -119,9 +119,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     Route::get('set/session/id', [UserController::class, 'setSessionId'])
         ->name('user.session.id');
 
-    Route::get('delete/session/{id}', [UserController::class, 'deleteSessionId'])
-        ->name('user.session.delete');
-
     Route::get('check/session', [UserController::class, 'checkSessions'])
         ->name('user.check.session');
 
@@ -135,7 +132,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         Route::post('update/site', [SettingsController::class, 'update'])
             ->name('settings.site.update');
 
-        Route::get('keywords/validate', [SettingsController::class, 'FieldsValidate'])
+        Route::get('keywords/validate', [SettingsController::class, 'fieldsValidate'])
             ->name('settings.keywords.validate');
 
         Route::get('keywords/validations', [SettingsController::class, 'fieldsValidations'])
@@ -212,3 +209,6 @@ Route::get('/', function () {
 Route::get('/check-session-status', function () {
     return response()->json(['active' => auth()->check()]);
 })->name('check.session');
+
+Route::get('delete/session/{id}', [UserController::class, 'deleteSessionId'])
+    ->name('user.session.delete');

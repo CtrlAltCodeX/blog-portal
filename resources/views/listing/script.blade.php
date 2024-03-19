@@ -92,32 +92,23 @@
                 $(".fields .btn").attr('disabled', false);
             }
 
-            $.ajax({
-                type: "GET",
-                url: "{{ route('settings.keywords.validate') }}",
-                data: {
-                    val: inputValue
-                },
-                headers: {
-                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(result) {
-                    ("#publish").attr('disabled', true);
-                    ("#update").attr('disabled', true);
-                    ("#reject").attr('disabled', true);
-                    ("#draft").attr('disabled', true);
-                },
-            });
+            var validateFields = JSON.parse(localStorage.getItem('validate'));
+            for (var i = 0; i < validateFields.length; i++) {
+                if ($(this).val().includes(validateFields[i].name)) {
+                    $('.' + fieldId).text('Words not allowed');
+                    $(".btn").attr('disabled', true);
+                }
+            }
         })
 
         $('textarea').on('input', function() {
             var textareaValue = $(this).val();
             var urlRegex = /^(http|https):\/\/[^\s]*$/i;
+            var fieldId = $(this).attr('name');
 
             if (urlRegex.test(textareaValue)) {
                 $(this).css('border', '1px red solid');
                 // Display error message
-                var fieldId = $(this).attr('name');
                 $('.' + fieldId).text('Please do not enter special characters or URLs.');
                 valid = false;
             }
@@ -136,6 +127,14 @@
 
                 $(".btn").attr('disabled', false);
             }
+
+            var validateFields = JSON.parse(localStorage.getItem('validate'));
+            for (var i = 0; i < validateFields.length; i++) {
+                if ($(this).val().includes(validateFields[i].name)) {
+                    $('.' + fieldId).text('Words not allowed');
+                    $(".btn").attr('disabled', true);
+                }
+            }
         })
 
         $('#url').on('input', function() {
@@ -152,7 +151,18 @@
                 valid = true;
                 $(".btn").attr('disabled', false);
             }
-        })
+        });
+
+        $.ajax({
+            type: "GET",
+            url: "{{ route('settings.keywords.validate') }}",
+            headers: {
+                'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: (result) => {
+                localStorage.setItem('validate', JSON.stringify(result));
+            },
+        });
 
         $('#form').submit(function(event) {
             // Reset previous error messages

@@ -30,9 +30,9 @@
                                 @forelse($userListings as $key => $userListing)
                                 <tr>
                                     <td>{{ ++$key }}</td>
-                                    <td>{{ $userListing->image }}</td>
+                                    <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $userListing->image }}" alt="Product Image"  width="100"/></td>
                                     <td>{{ $userListing->title }}</td>
-                                    <td>{{ $userListing->create->name }}</td>
+                                    <td>{{ $userListing->create_user->name }}</td>
                                     <td>{{ date("d-m-Y h:i A", strtotime($userListing->created_at)) }}</td>
                                     <td>
                                         @if($userListing->approved_by)

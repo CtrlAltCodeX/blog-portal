@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\ProfileRequest;
+use App\Models\UserListingCount;
 use App\Models\UserListingInfo;
 use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManagerStatic as Image;
 
 class ProfileController extends Controller
@@ -79,7 +77,7 @@ class ProfileController extends Controller
     public function listings()
     {
         if (auth()->user()->hasRole('Admin')) {
-            $userListings = UserListingInfo::with('create', 'approve')
+            $userListings = UserListingInfo::with('create_user', 'approve')
                 ->orderBy('created_at', 'desc')
                 ->get();
 
@@ -87,7 +85,7 @@ class ProfileController extends Controller
         } else {
             $userListings = UserListingInfo::where('created_by', auth()->user()->id)
                 ->orderBy('created_at', 'desc')
-                ->with('create', 'approve')
+                ->with('create_user', 'approve')
                 ->get();
 
             return view('profile.listing', compact('userListings'));

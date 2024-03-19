@@ -20,7 +20,7 @@
                     </div>
                     @endif
                     <div class="wrap-input100 validate-input input-group is-invalid">
-                        <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" placeholder="Email" value="{{ old('email') }}" autocomplete="email" autofocus>
+                        <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" placeholder="Email" @if(session()->get('session_email')) value="{{ session()->get('session_email') }}" @else value="{{ old('email') }}" @endif autocomplete="email" autofocus>
 
                         @error('email')
                         <span class="invalid-feedback" role="alert">
@@ -34,7 +34,7 @@
                             <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
                                 <i class="zmdi zmdi-eye" aria-hidden="true"></i>
                             </a>
-                            <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="Password" autofocus>
+                            <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="Password" autofocus @if(session()->get('session_password')) value="{{ session()->get('session_password') }}" @endif>
                         </div>
                         @error('password')
                         <span class="invalid-feedback" role="alert">
@@ -90,14 +90,21 @@
             }
         });
 
-        // $('#continue').click(function() {
-        //     alert('ad');
-        //     e.preventDefault();
+        $('#continue').click(function(e) {
+            e.preventDefault();
 
-        //     $('#form').attr('action', "{{ route('verify.otp') }}");
-        //     $('#form').submit();
-        //     // $("#form").submit();
-        // });
+            $.ajax({
+                type: "GET",
+                url: "{{ route('user.session.delete', session()->get('session_id')??'') }}",
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(result) {},
+            });
+
+            $('#form').attr('action', "{{ route('verify.otp') }}");
+            $('#form').submit();
+        });
     })
 </script>
 

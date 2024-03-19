@@ -228,8 +228,6 @@ class UserController extends Controller
     {
         UserSession::where('session_id', $id)->delete();
 
-        session()->flash('success', __('Session Deleted successfully.'));
-
-        return redirect()->back();
+        return true;
     }
 }

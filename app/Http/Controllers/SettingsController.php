@@ -137,8 +137,11 @@ class SettingsController extends Controller
         return redirect()->back();
     }
 
-    public function FieldsValidate()
+    /**
+     * Validate Fields
+     */
+    public function fieldsValidate()
     {
-        $fields = FieldValidation::all();
+        return FieldValidation::select('name', 'links', 'allowed')->get();
     }
 }

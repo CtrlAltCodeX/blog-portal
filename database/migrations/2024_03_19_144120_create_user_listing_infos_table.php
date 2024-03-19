@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('user_listing_infos', function (Blueprint $table) {
             $table->id();
-            $table->string('image');
+            $table->text('image');
             $table->string('title');
-            $table->unsignedBigInteger('created_by');
-            $table->unsignedBigInteger('approved_by')->nullable();
+            $table->unsignedInteger('created_by');
+            $table->unsignedInteger('approved_by')->nullable();
             $table->dateTime('approved_at')->nullable();
             $table->integer('status');
             $table->timestamps();

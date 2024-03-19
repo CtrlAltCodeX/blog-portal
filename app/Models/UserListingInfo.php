@@ -19,7 +19,7 @@ class UserListingInfo extends Model
         'status',
     ];
 
-    public function create()
+    public function create_user()
     {
         return $this->hasOne(User::class, 'id', 'created_by');
     }
