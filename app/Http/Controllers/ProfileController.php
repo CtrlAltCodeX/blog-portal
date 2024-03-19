@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\ProfileRequest;
+use App\Models\UserListingInfo;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManagerStatic as Image;
@@ -22,6 +23,12 @@ class ProfileController extends Controller
         return view('profile.edit', compact('user'));
     }
 
+    /**
+     * Update Profile
+     *
+     * @param ProfileRequest $request
+     * @return void
+     */
     public function update(ProfileRequest $request)
     {
         $user = auth()->user();
@@ -67,6 +74,19 @@ class ProfileController extends Controller
      */
     public function listings()
     {
-        dd((auth()->user()->hasRole('Admin')));
+        if (auth()->user()->hasRole('Admin')) {
+            $userListings = UserListingInfo::with('create', 'approve')
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            return view('profile.listing', compact('userListings'));
+        } else {
+            $userListings = UserListingInfo::where('created_by', auth()->user()->id)
+                ->orderBy('created_at', 'desc')
+                ->with('create', 'approve')
+                ->get();
+
+            return view('profile.listing', compact('userListings'));
+        }
     }
 }

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('user_listing_counts', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('user_id');
+            $table->unsignedBigInteger('user_id');
             $table->integer('approved_count');
             $table->integer('reject_count');
             $table->date('date');

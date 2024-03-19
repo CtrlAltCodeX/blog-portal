@@ -8,6 +8,7 @@ use App\Http\Requests\BlogRequest;
 use App\Models\Listing;
 use App\Models\SiteSetting;
 use App\Models\UserListingCount;
+use App\Models\UserListingInfo;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -80,6 +81,7 @@ class ListingController extends Controller
             $request->database
             && $request->created_by
             && $request->created_on
+            && $request->status
         ) {
             $count = UserListingCount::where('user_id', $request->created_by)
                 ->whereDate('date', $request->created_on)
@@ -99,6 +101,14 @@ class ListingController extends Controller
             }
 
             Listing::find($request->database)->delete();
+
+            $additionalInfo = UserListingInfo::where('image', $request->images[0])
+                ->where('title', request()->title)
+                ->first();
+
+            $additionalInfo->update([
+                'status' => request()->status
+            ]);
         }
 
         session()->flash('success', 'Post created successfully');

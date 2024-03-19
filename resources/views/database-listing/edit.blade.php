@@ -410,6 +410,7 @@
             e.preventDefault();
             $("#formTest").attr("action", "{{ route('listing.store') }}");
             $("#formTest").append("<input type='hidden' name='database' value={{$listing->id}} />");
+            $("#formTest").append("<input type='hidden' name='status' value=1 />");
             $('[name="_method"]').remove();
             $("#formTest").submit();
         });

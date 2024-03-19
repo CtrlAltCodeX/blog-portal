@@ -27,7 +27,39 @@
                                 </tr>
                             </thead>
                             <tbody>
-
+                                @forelse($userListings as $key => $userListing)
+                                <tr>
+                                    <td>{{ ++$key }}</td>
+                                    <td>{{ $userListing->image }}</td>
+                                    <td>{{ $userListing->title }}</td>
+                                    <td>{{ $userListing->create->name }}</td>
+                                    <td>{{ date("d-m-Y h:i A", strtotime($userListing->created_at)) }}</td>
+                                    <td>
+                                        @if($userListing->approved_by)
+                                        {{ $userListing?->approve?->name }}
+                                        @else
+                                        -
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($userListing->approved_at)
+                                        {{ date("d-m-Y h:i A", strtotime($userListing->approved_at)) }}
+                                        @else
+                                        -
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($userListing->status == "0")
+                                        Pending
+                                        @elseif($userListing->status == 1)
+                                        Approved
+                                        @elseif($userListing->status == 2)
+                                        Rejected
+                                        @endif
+                                    </td>
+                                </tr>
+                                @empty
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
