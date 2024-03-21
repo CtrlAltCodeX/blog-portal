@@ -38,14 +38,14 @@ $userInfo = app('App\Models\SiteSetting')->first();
 
                 @can('Listing (Main Menu)')
                 <li class="slide {{ (request()->is('aadmin/listing/*') || request()->is('admin/listing') || request()->is('admin/database-listing') || request()->is('admin/database-listing/*')) ? 'is-expanded' : '' }}">
-                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-list"></i><span class="side-menu__label">{{ __('Listing') }}</span><i class="angle fe fe-chevron-right"></i></a>
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-list"></i><span class="side-menu__label">{{ __('Product Listing') }}</span><i class="angle fe fe-chevron-right"></i></a>
                     <ul class="slide-menu">
                         <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
                         @can('Listing create')
                         <li><a href="{{ route('listing.create') }}" class="slide-item {{ (request()->is('admin/images/*')) ? 'active' : '' }}">{{ __('Create New Listing') }}</a></li>
                         @endcan
                         <li><a href="{{ route('database-listing.create') }}" class="slide-item {{ (request()->is('admin/database-listing/create')) ? 'active' : '' }}">{{ __('Create New Listing ( DB )') }}</a></li>
-                        <li><a href="{{ route('database-listing.index', ['status' => 0]) }}" class="slide-item {{ (request()->is('admin/database-listing')) ? 'active' : '' }}">{{ __('Pending Listings ( DB )') }}</a></li>
+                        <li><a href="{{ route('database-listing.index', ['status' => 0]) }}" class="slide-item {{ (request()->is('admin/database-listing')) ? 'active' : '' }}">{{ __('Pending Listing ( DB )') }}</a></li>
                     </ul>
                 </li>
                 @endcan

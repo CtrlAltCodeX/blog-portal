@@ -43,7 +43,7 @@
 
                         <div>
                             <div class="form-group">
-                                <label for="title" class="form-label">{{ __('Title') }}<span class="text-danger">*</span> <span class="text-success">(Product Name | Author | Edition | Publication ( Medium ) )</span></label>
+                                <label for="title" class="form-label">{{ __('Product Title') }}<span class="text-danger">*</span> <span class="text-success">(Product Name | Author | Edition | Publication ( Medium ) )</span></label>
                                 <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') ?? $post->title }}" autocomplete="title" autofocus placeholder="title">
                                 <span class="error-message title" style="color:red;"></span>
 
@@ -56,7 +56,7 @@
 
                             <div class="form-group">
                                 <label for="description" class="form-label d-flex justify-content-between">
-                                    <div>{{ __('Description') }}<span class="text-danger">*</span><span class="text-danger"> ( Enter Detail Description without using 3rd party link) </span></div><a target='_blank' href="https://chat.openai.com">ChatGPT</a>
+                                    <div>{{ __('Product Description') }}<span class="text-danger">*</span><span class="text-danger"> ( Enter Detail Description without using 3rd party link) </span></div><a target='_blank' href="https://chat.openai.com">ChatGPT</a>
                                 </label>
                                 <textarea class="form-control @error('description') is-invalid @enderror" name="description" placeholder="Description" rows="10">{{ old('description') ?? $allInfo['desc'] }}</textarea>
                                 <span class="error-message description" style="color:red;"></span>

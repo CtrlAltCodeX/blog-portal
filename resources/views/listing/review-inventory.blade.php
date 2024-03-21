@@ -45,7 +45,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header justify-content-between">
-                    <h3 class="card-title">Under Review Listings</h3>
+                    <h3 class="card-title">Under Review Inventory</h3>
                     <form action="" method="get" id='form'>
                         <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
                         <input type="hidden" value="{{ request()->updated_before ?? 3 }}" name='updated_before'>

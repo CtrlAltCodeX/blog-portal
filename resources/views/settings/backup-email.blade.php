@@ -19,24 +19,31 @@
 
 @section('content')
 <div class="card mt-5">
+    <div class="card">
+        <div class="card-header justify-content-between">
+            <h3 class="card-title">Backup Emails</h3>
+        </div>
+    </div>
     <div class="card-body">
         <div>
             <form action="{{ route('settings.emails.save') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group">
                     <div class="row">
+                        <h5><b>Add New Backup Emails</b></h5>
                         <div class="col-md-6">
-                            <label for="name" class="form-label">{{ __('Name') }}<span class="text-danger">*</span></label>
+                            <label for="name" class="form-label">{{ __('Employee Name') }}<span class="text-danger">*</span></label>
 
-                            <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name"  autofocus placeholder="Name">
+                            <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" autofocus placeholder="Name">
                         </div>
                         <div class="col-md-6">
-                            <label for="email" class="form-label">{{ __('Emails') }}<span class="text-danger">*</span></label>
+                            <label for="email" class="form-label">{{ __('Employee Email') }}<span class="text-danger">*</span></label>
 
                             <input type="hidden" name="new" id='status' />
                             <input id="email" type="text" class="form-control @error('email') is-invalid @enderror" name="email" autofocus placeholder="Emails">
                         </div>
-                        <div class="col-md-6 mt-5">
+                        <div class="col-md-12 mt-5">
+                            <h5><b>List of Backup Emails</b></h5>
                             <div class="emails">
                                 <table class="table table-bordered text-nowrap border-bottom">
                                     <thead>

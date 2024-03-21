@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', __('Create Listing'))
+@section('title', __('Create New Listing'))
 
 @push('css')
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
@@ -22,11 +22,11 @@
     <div class="main-container container-fluid">
         <!-- PAGE-HEADER -->
         <div class="page-header">
-            <h1 class="page-title">{{ __('Create Listing (DB)') }}</h1>
+            <h1 class="page-title">{{ __('Create New Listing (DB)') }}</h1>
             <div>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="javascript:void(0)">{{ __('Listing') }}</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">{{ __('Create Listing') }}</li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ __('Create New Listing') }}</li>
                 </ol>
             </div>
         </div>
@@ -39,7 +39,7 @@
                         <div id="progressBar" class="text-end"></div>
                         <div>
                             <div class="form-group">
-                                <label for="title" class="form-label">{{ __('Title') }}<span class="text-danger">*</span> <span class="text-success">(Product Name | Author |
+                                <label for="title" class="form-label">{{ __('Product Title') }}<span class="text-danger">*</span> <span class="text-success">(Product Name | Author |
                                         Edition | Publication ( Medium ) )</span></label>
                                 <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') }}" autocomplete="title" autofocus placeholder="Title">
                                 <span class="error-message title" style="color:red;"></span>
@@ -53,7 +53,7 @@
 
                             <div class="form-group">
                                 <label for="description" class="form-label d-flex justify-content-between">
-                                    <div>{{ __('Description') }}<span class="text-danger">*</span><span class="text-danger"> ( Enter Detail Description without using 3rd party
+                                    <div>{{ __('Product Description') }}<span class="text-danger">*</span><span class="text-danger"> ( Enter Detail Description without using 3rd party
                                             link) </span></div><a target='_blank' href="https://chat.openai.com">ChatGPT</a>
                                 </label>
 
@@ -262,13 +262,12 @@
 
                         <div class="row">
                             <div class="col-md-4">
-                                <button type='button' id='addFileInput' class="btn btn-primary">Add More
-                                    Images</button>
+                                <button type='button' id='addFileInput' class="btn btn-primary">Add More Images</button>
                             </div>
                         </div>
 
                         <div style="text-align: right;">
-                            <button type="submit" class="btn btn-success float-right">Save</button>
+                            <button type="submit" class="btn btn-success float-right">Confirm & Save ( DB )</button>
                         </div>
                     </div>
                 </div>

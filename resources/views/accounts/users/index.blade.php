@@ -105,6 +105,7 @@ $getRoles = app('App\Http\Controllers\RoleController');
                                     <th>{{ __('Name') }}</th>
                                     <th>{{ __('Email') }}</th>
                                     <th>{{ __('Roles') }}</th>
+                                    <th>{{ __('Session Type') }}</th>
                                     <th>{{ __('Status') }}</th>
                                     @canany(['User Details -> All Users List -> Edit', 'User delete'])
                                     <th>{{ __('Actions') }}</th>
@@ -126,6 +127,7 @@ $getRoles = app('App\Http\Controllers\RoleController');
                                         @endif
                                         @endforeach
                                     </td>
+                                    <td>{{ $user->allow_session ? 'Single' : 'Multiple' }}</td>
                                     <td><span class="badge bg-{{ $user->status ? 'success' : 'danger' }}">{{ $user->status ? 'Active' : 'Inactive' }}</span>
                                     </td>
                                     <td>

@@ -40,7 +40,7 @@
     </div>
     <div class="card mt-5">
         <div class="card-body">
-            <h3 class="card-title">Logs History</h3>
+            <h3 class="card-title">Backup Logs History</h3>
             <div class="table-responsive">
                 <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">
                     <thead>

@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', __('Update Listing'))
+@section('title', __('Update New Listing ( DB )'))
 
 @push('css')
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
@@ -12,11 +12,11 @@
 
     <!-- PAGE-HEADER -->
     <div class="page-header">
-        <h1 class="page-title">{{ __('Update Listing') }}</h1>
+        <h1 class="page-title">{{ __('Update New Listing ( DB )') }}</h1>
         <div>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="javascript:void(0)">{{ __('Listing') }}</a></li>
-                <li class="breadcrumb-item active" aria-current="page">{{ __('Update Listing') }}</li>
+                <li class="breadcrumb-item active" aria-current="page">{{ __('Update New Listing ( DB )') }}</li>
             </ol>
         </div>
     </div>
@@ -33,7 +33,7 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">
                         <h4 class="card-title">
-                            {{ __('Update Listing') }}
+                            {{ __('Update New Listing ( DB )') }}
                         </h4>
 
                         <!-- <button type="submit" class="btn btn-primary float-right">Save</button> -->
@@ -44,7 +44,7 @@
 
                         <div>
                             <div class="form-group">
-                                <label for="title" class="form-label">{{ __('Title') }}<span class="text-danger">*</span> <span class="text-success">(Product Name | Author |
+                                <label for="title" class="form-label">{{ __('Product Title') }}<span class="text-danger">*</span> <span class="text-success">(Product Name | Author |
                                         Edition | Publication ( Medium ) )</span></label>
                                 <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') ?? $listing->title }}" autocomplete="title" autofocus placeholder="title">
                                 <span class="error-message title" style="color:red;"></span>
@@ -58,7 +58,7 @@
 
                             <div class="form-group">
                                 <label for="description" class="form-label d-flex justify-content-between">
-                                    <div>{{ __('Description') }}<span class="text-danger">*</span><span class="text-danger"> ( Enter Detail Description without using 3rd party
+                                    <div>{{ __('Product Description') }}<span class="text-danger">*</span><span class="text-danger"> ( Enter Detail Description without using 3rd party
                                             link) </span></div><a target='_blank' href="https://chat.openai.com">ChatGPT</a>
                                 </label>
                                 <textarea class="form-control @error('description') is-invalid @enderror" name="description" placeholder="Description" rows="10">{{ old('description') ?? $listing->description }}</textarea>
@@ -290,10 +290,10 @@
                         </div>
 
                         <div style="text-align: right;">
-                            <button class="btn btn-warning float-right" id='draft'>Save as Draft</button>
-                            <button class="btn btn-success float-right" id='publish'>Publish</button>
-                            <button class="btn btn-success float-right" id='update'>Update</button>
-                            <button class="btn btn-danger float-right" id='reject'>Reject</button>
+                            <button class="btn btn-danger float-right" id='reject'>Reject ( DB )</button>
+                            <button class="btn btn-warning float-right" id='update'>Update ( DB )</button>
+                            <button class="btn btn-dark float-right" id='draft'>Save as Draft</button>
+                            <button class="btn btn-success float-right" id='publish'>Publish to Website</button>
                         </div>
                     </div>
                 </div>

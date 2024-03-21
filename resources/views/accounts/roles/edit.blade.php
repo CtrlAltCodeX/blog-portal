@@ -2,6 +2,18 @@
 
 @section('title', __('Update Role'))
 
+@push('css')
+<style>
+    .heading-design {
+        width: 100%;
+        text-align: center;
+        background-color: grey;
+        padding: 5px;
+        color: white;
+    }
+</style>
+@endpush
+
 @section('content')
 <!-- CONTAINER -->
 <div class="main-container container-fluid">
@@ -36,8 +48,10 @@
                     <div class="card-body">
                         <div>
                             <div class="form-group">
-                                <label for="name" class="form-label">{{ __('Role Name') }}</label>
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') ?? $role->name }}" autocomplete="name" autofocus placeholder="Name">
+                                <div class="d-flex align-items-center">
+                                    <label for="name">{{ __('Role Name') }}</label>
+                                    <input id="name" type="text" class="m-2 w-50 form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') ?? $role->name }}" autocomplete="name" autofocus placeholder="Name">
+                                </div>
 
                                 @error('name')
                                 <span class="invalid-feedback" role="alert">
@@ -50,7 +64,7 @@
                                 <!-- <label for="name" class="form-label">{{ __('Permissions') }}</label> -->
 
                                 <div class="row">
-                                    <label for="name" class="form-label">{{ __('Dashboard') }}</label>
+                                    <label for="name" class="form-label heading-design">{{ __('Dashboard') }}</label>
                                     @foreach ($permissionsInCategory['Dashboard'] as $permission)
                                     <div class="col-md-4">
                                         <div class="custom-controls-stacked">
@@ -64,7 +78,7 @@
                                     </div>
                                     @endforeach
 
-                                    <label for="name" class="form-label">{{ __('Listing') }}</label>
+                                    <label for="name" class="form-label heading-design">{{ __('Listing') }}</label>
                                     @foreach ($permissionsInCategory['Listing'] as $permission)
                                     <div class="col-md-4">
                                         <div class="custom-controls-stacked">
@@ -78,7 +92,7 @@
                                     </div>
                                     @endforeach
 
-                                    <label for="name" class="form-label">{{ __('Listing') }}</label>
+                                    <label for="name" class="form-label heading-design">{{ __('Listing') }}</label>
                                     @foreach ($permissionsInCategory['Inventory'] as $permission)
                                     <div class="col-md-4">
                                         <div class="custom-controls-stacked">
@@ -92,7 +106,7 @@
                                     </div>
                                     @endforeach
 
-                                    <label for="name" class="form-label">{{ __('User') }}</label>
+                                    <label for="name" class="form-label heading-design">{{ __('User') }}</label>
                                     @foreach ($permissionsInCategory['User'] as $permission)
                                     <div class="col-md-4">
                                         <div class="custom-controls-stacked">
@@ -106,7 +120,7 @@
                                     </div>
                                     @endforeach
 
-                                    <label for="name" class="form-label">{{ __('Role & Permissions') }}</label>
+                                    <label for="name" class="form-label heading-design">{{ __('Role & Permissions') }}</label>
                                     @foreach ($permissionsInCategory['Role'] as $permission)
                                     <div class="col-md-4">
                                         <div class="custom-controls-stacked">
@@ -120,7 +134,7 @@
                                     </div>
                                     @endforeach
 
-                                    <label for="name" class="form-label">{{ __('Settings') }}</label>
+                                    <label for="name" class="form-label heading-design">{{ __('Settings') }}</label>
                                     @foreach ($permissionsInCategory['Setting'] as $permission)
                                     <div class="col-md-4">
                                         <div class="custom-controls-stacked">

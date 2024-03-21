@@ -19,6 +19,11 @@
 
 @section('content')
 <div class="card mt-5">
+    <div class="card">
+        <div class="card-header justify-content-between">
+            <h3 class="card-title">Fields Validation</h3>
+        </div>
+    </div>
     <div class="card-body">
         <div>
             <div class="row">
@@ -26,10 +31,11 @@
                     <form action="{{ route('settings.keywords.notallowed') }}" method="POST" enctype="multipart/form-data" id='name-validation'>
                         @csrf
                         <div class="d-flex flex-column" style="grid-gap: 10px;">
-                            <label for="name" class="form-label">{{ __('Name') }}<span class="text-danger">*</span></label>
-                            <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" autofocus placeholder="Name">
+                            <label for="name" class="form-label">{{ __('Disallowed Name') }}<span class="text-danger">*</span></label>
+                            <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" autofocus placeholder="Disallowed Name">
 
                             <div class="emails">
+                                <h5><b>List of Disallowed Names</b></h5>
                                 <table class="table table-bordered text-nowrap border-bottom">
                                     <thead>
                                         <tr>
@@ -64,8 +70,8 @@
                     <form action="{{ route('settings.keywords.notallowed') }}" method="POST" enctype="multipart/form-data" id='link-validation'>
                         @csrf
                         <div class="d-flex flex-column" style="grid-gap: 10px;">
-                            <label for="name" class="form-label">{{ __('Link') }}<span class="text-danger">*</span></label>
-                            <input id="link" type="text" class="form-control @error('link') is-invalid @enderror mb-2" name="link" autofocus placeholder="Link">
+                            <label for="name" class="form-label">{{ __('Allowed Links') }}<span class="text-danger">*</span></label>
+                            <input id="link" type="text" class="form-control @error('link') is-invalid @enderror mb-2" name="link" autofocus placeholder="Allowed Links">
 
                             <!-- <label class="custom-control custom-checkbox">
                                 <input type="checkbox" class="custom-control-input" name="allow">
@@ -73,10 +79,11 @@
                             </label> -->
 
                             <div class="emails">
+                                <h5><b>List of Allowed Links</b></h5>
                                 <table class="table table-bordered text-nowrap border-bottom">
                                     <thead>
                                         <tr>
-                                            <td>Name</td>
+                                            <td>Link</td>
                                             <td>Action</td>
                                         </tr>
                                     </thead>
@@ -100,7 +107,7 @@
                                 </table>
                             </div>
                         </div>
-                        <button class="btn btn-primary button" >Save</button>
+                        <button class="btn btn-primary button">Save</button>
                     </form>
                 </div>
             </div>

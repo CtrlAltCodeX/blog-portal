@@ -42,7 +42,7 @@
                                 <div class="form-group">
                                     <div class="d-flex justify-content-between">
                                         <label for="title" class="form-label">{{ __('Title') }}<span class="text-danger">*</span></label>
-                                        <button class="btn btn-primary mb-2">Convert</button>
+                                        <!-- <button class="btn btn-primary mb-2">Convert</button> -->
                                     </div>
                                     <input id="title" type="text" name="title" class="form-control @error('title') is-invalid @enderror" title="title" autocomplete="title" autofocus placeholder="Title">
 
@@ -68,11 +68,16 @@
                             </form>
                             @endif
                         </div>
-                        <div class="w-50 d-flex align-items-center justify-content-end" style="grid-gap: 10px;">
-                            <input type="text" class="form-control image-url" disabled  />
-                            <img src="/copy.png" width="25" class="copy" id="{{ url('/') }}/storage/uploads/{{session()->get('watermarkFileUrl')}}" />
-                            <a href="{{ url('/') }}/storage/uploads/{{session()->get('watermarkFileUrl')}}" download class="btn btn-primary btn-sm" id='download' style="width: 100px;;">Download</a>
-                            <img src="/refresh.png" width="25" style="cursor:pointer;" id="refresh" data-session='watermarkFileUrl' />
+                        <div class="w-100 d-flex flex-column align-items-center" style="grid-gap: 10px;">
+                            <div class="d-flex w-100 align-items-center" style="grid-gap:10px;">
+                                <input type="text" class="form-control image-url" disabled placeholder="Click button to Generate URL" />
+                                <button class="btn btn-primary btn-sm" id="refresh" data-session='watermarkFileUrl'>Generate URL</button>
+                                <button class="btn btn-primary btn-sm">Copy URL</button>
+                                <!-- <img src="/copy.png" width="25" class="copy" id="{{ url('/') }}/storage/uploads/{{session()->get('watermarkFileUrl')}}" /> -->
+                                <a href="{{ url('/') }}/storage/uploads/{{session()->get('watermarkFileUrl')}}" download class="btn btn-primary btn-sm" id='download' style="width: 100px;;">Download</a>
+                                <!-- <img src="/refresh.png" width="25" style="cursor:pointer;"  ' /> -->
+                            </div>
+                            <button class="btn btn-primary mb-2">Convert & Download</button>
                         </div>
                     </div>
                 </div>
