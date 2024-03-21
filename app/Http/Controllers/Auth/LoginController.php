@@ -163,25 +163,27 @@ class LoginController extends Controller
 
             $currentDateTime = Carbon::now();
             $sessionExpireDateTime = $currentDateTime->addMinutes(env('SESSION_LIFETIME'));
+            $sessionId = session()->getId();
+            session()->put('sessionId', $sessionId);
 
             if ($user->allow_sessions) {
                 if ($userSession = UserSession::where('user_id', $user->id)->first()) {
                     $userSession->update([
                         'user_id' => $user->id,
-                        'session_id' => session()->getId(),
+                        'session_id' => $sessionId,
                         'expire_at' => $sessionExpireDateTime
                     ]);
                 } else {
                     UserSession::create([
                         'user_id' => $user->id,
-                        'session_id' => session()->getId(),
+                        'session_id' => $sessionId,
                         'expire_at' => $sessionExpireDateTime
                     ]);
                 }
             } else if (!$user->allow_sessions) {
                 UserSession::create([
                     'user_id' => $user->id,
-                    'session_id' => session()->getId(),
+                    'session_id' => $sessionId,
                     'expire_at' => $sessionExpireDateTime
                 ]);
             }

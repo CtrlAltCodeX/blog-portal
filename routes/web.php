@@ -44,29 +44,16 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
-    Route::get('profile', [ProfileController::class, 'edit'])
-        ->name('profile.edit');
+    Route::group(['prefix' => 'profile'], function () {
+        Route::get('', [ProfileController::class, 'edit'])
+            ->name('profile.edit');
 
-    Route::get('profile/listings', [ProfileController::class, 'listings'])
-        ->name('profile.listing');
+        Route::get('listings', [ProfileController::class, 'listings'])
+            ->name('profile.listing');
 
-    Route::post('profile', [ProfileController::class, 'update'])
-        ->name('profile.update');
-
-    Route::resource('roles', RoleController::class);
-
-    Route::get('roles/all/view', [RoleController::class, 'view'])
-        ->name('view.roles');
-
-    Route::get('change/password', [UserController::class, 'updatePassword'])
-        ->name('change.user.password');
-
-    Route::post('update/password', [UserController::class, 'updatePassword'])
-        ->name('update.user.password');
-
-    Route::resource('listing', ListingController::class);
-
-    Route::resource('database-listing', DatabaseListingController::class);
+        Route::post('', [ProfileController::class, 'update'])
+            ->name('profile.update');
+    });
 
     Route::group(['prefix' => 'inventory'], function () {
         Route::get('', [ListingController::class, 'inventory'])
@@ -78,14 +65,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         Route::get('drafted', [ListingController::class, 'draftedInventory'])
             ->name('inventory.drafted');
     });
-
-    Route::get('blog/publish/{id}', [ListingController::class, 'publishBlog'])
-        ->name('blog.publish');
-
-    Route::get('dashboard', [DashboardController::class, 'index'])
-        ->name('dashboard');
-
-    Route::get('update/status', [DatabaseListingController::class, 'updateStatus'])->name('listing.status');
 
     Route::group(['prefix' => 'images'], function () {
         Route::get('single/create', [ImageMakerController::class, 'singleImage'])->name('image.single.create');
@@ -103,17 +82,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         Route::post('collage/store', [CollageController::class, 'store'])->name('image.collage.store');
     });
 
-    Route::resource('users', UserController::class);
-
-    Route::get('users/verified/approved', [UserController::class, 'verified'])
-        ->name('verified.users');
-
-    Route::get('edit/users/status/{id}', [UserController::class, 'editStatus'])
-        ->name('edit.users.status');
-
-    Route::post('update/users/status/{id}', [UserController::class, 'updateStatus'])
-        ->name('update.users.status');
-
     Route::group(['prefix' => 'settings'], function () {
         Route::get('blog', [SettingsController::class, 'blog'])
             ->name('settings.blog');
@@ -124,36 +92,23 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         Route::post('update/site', [SettingsController::class, 'update'])
             ->name('settings.site.update');
 
-        Route::get('keywords/validate', [SettingsController::class, 'FieldsValidate'])
-            ->name('settings.keywords.validate');
+        Route::group(['prefix' => 'keywords'], function () {
+            Route::get('validate', [SettingsController::class, 'FieldsValidate'])
+                ->name('settings.keywords.validate');
 
-        Route::get('keywords/validations', [SettingsController::class, 'fieldsValidations'])
-            ->name('settings.keywords.valid');
+            Route::get('validations', [SettingsController::class, 'fieldsValidations'])
+                ->name('settings.keywords.valid');
 
-        Route::post('keywords/validations', [SettingsController::class, 'keywordsNotAllowed'])
-            ->name('settings.keywords.notallowed');
+            Route::post('validations', [SettingsController::class, 'keywordsNotAllowed'])
+                ->name('settings.keywords.notallowed');
 
-        Route::get('delete/keywords/{id}', [SettingsController::class, 'keywordsDelete'])
-            ->name('settings.keywords.delete');
+            Route::get('delete/{id}', [SettingsController::class, 'keywordsDelete'])
+                ->name('settings.keywords.delete');
+
+            Route::get('update/{id}', [SettingsController::class, 'updateKeywords'])
+                ->name('settings.keywords.update');
+        });
     });
-
-    Route::match(['get', 'post'], 'process/image', [GoogleService::class, 'processImageAndDownload'])
-        ->name('process.image');
-
-    Route::post('convert/image', [GoogleService::class, 'downloadProcessedImage'])
-        ->name('convert.image');
-
-    Route::post('drafted/posts', [GoogleService::class, 'draftedInventory'])
-        ->name('drafted.posts');
-
-    Route::post('live/posts', [GoogleService::class, 'posts'])
-        ->name('live.posts');
-
-    Route::get('posts', [DashboardController::class, 'getStats'])
-        ->name('get.posts.count');
-
-    Route::get('set/session/id', [UserController::class, 'setSessionId'])
-        ->name('user.session.id');
 
     Route::group(['prefix' => 'backup'], function () {
         Route::get('listings', [BackupListingsController::class, 'backupListings'])
@@ -183,19 +138,74 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
             ->name('google.products.list');
     });
 
+    Route::resource('roles', RoleController::class);
+
+    Route::get('roles/all/view', [RoleController::class, 'view'])
+        ->name('view.roles');
+
+    Route::get('change/password', [UserController::class, 'updatePassword'])
+        ->name('change.user.password');
+
+    Route::post('update/password', [UserController::class, 'updatePassword'])
+        ->name('update.user.password');
+
+    Route::resource('listing', ListingController::class);
+
+    Route::resource('database-listing', DatabaseListingController::class);
+
+    Route::get('blog/publish/{id}', [ListingController::class, 'publishBlog'])
+        ->name('blog.publish');
+
+    Route::get('dashboard', [DashboardController::class, 'index'])
+        ->name('dashboard');
+
+    Route::get('update/status', [DatabaseListingController::class, 'updateStatus'])->name('listing.status');
+
+    Route::resource('users', UserController::class);
+
+    Route::get('users/verified/approved', [UserController::class, 'verified'])
+        ->name('verified.users');
+
+    Route::get('edit/users/status/{id}', [UserController::class, 'editStatus'])
+        ->name('edit.users.status');
+
+    Route::post('update/users/status/{id}', [UserController::class, 'updateStatus'])
+        ->name('update.users.status');
+
+    Route::match(['get', 'post'], 'process/image', [GoogleService::class, 'processImageAndDownload'])
+        ->name('process.image');
+
+    Route::post('convert/image', [GoogleService::class, 'downloadProcessedImage'])
+        ->name('convert.image');
+
+    Route::post('drafted/posts', [GoogleService::class, 'draftedInventory'])
+        ->name('drafted.posts');
+
+    Route::post('live/posts', [GoogleService::class, 'posts'])
+        ->name('live.posts');
+
+    Route::get('posts', [DashboardController::class, 'getStats'])
+        ->name('get.posts.count');
+
+    Route::get('set/session/id', [UserController::class, 'setSessionId'])
+        ->name('user.session.id');
+
     Route::get('export', [BackupListingsController::class, 'export'])
         ->name('backup.export');
 });
 
-Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::group(['prefix' => 'password'], function () {
+    Route::get('reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
 
-Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+    Route::post('email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 
-Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::get('reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 
-Route::post('password/reset', [ResetPasswordController::class, 'reset']);
+    Route::post('reset', [ResetPasswordController::class, 'reset']);
 
-Route::post('update/password', [ResetPasswordController::class, 'updatePassword'])->name('password.update');
+    Route::post('update', [ResetPasswordController::class, 'updatePassword'])->name('password.update');
+});
+
 
 Route::get('/', function () {
     return redirect()->route('dashboard');

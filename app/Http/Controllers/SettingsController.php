@@ -126,6 +126,23 @@ class SettingsController extends Controller
     }
 
     /**
+     * Update Keywords 
+     */
+    public function updateKeywords($id)
+    {
+        $row = FieldValidation::find($id);
+
+        $row->update([
+            'name' => request()->name,
+            'links' => request()->link,
+        ]);
+
+        session()->flash('success', 'Updated successfully');
+
+        return redirect()->back();
+    }
+
+    /**
      * Delete Keywords and Links 
      */
     public function keywordsDelete($id)
