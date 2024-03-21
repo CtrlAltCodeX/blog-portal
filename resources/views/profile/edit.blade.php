@@ -218,7 +218,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card-body">
+                    <!-- <div class="card-body">
                         Date - {{date('d-m-Y')}}
                         <div class="form-group">
                             <div class="d-flex mb-4 mt-3 align-items-center">
@@ -244,7 +244,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('links')->nullable();
             $table->integer('allowed')->nullable();
+            $table->integer('status')->nullable();
             $table->timestamps();
         });
     }

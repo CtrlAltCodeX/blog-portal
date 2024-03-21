@@ -13,5 +13,6 @@ class FieldValidation extends Model
         'name',
         'links',
         'allowed',
+        'status',
     ];
 }

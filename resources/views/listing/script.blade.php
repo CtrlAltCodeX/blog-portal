@@ -47,109 +47,30 @@
 
         $('input').on('input', function() {
             var inputValue = $(this).val();
-            var fieldId = $(this).attr('name');
-            var urlRegex = /^(http|https):\/\/[^\s]*$/i;
 
-            if ((urlRegex.test(inputValue) &&
-                    inputValue != 'http://' &&
-                    fieldId != 'images' &&
-                    inputValue != 'url') ||
-                (inputValue.includes('[') ||
-                    inputValue.includes(']'))
-            ) {
-                // Display error message
-                var fieldId = $(this).attr('name');
-                if (fieldId != 'images[]' && fieldId != 'multipleImages[]') {
-                    $(this).css('border', '1px red solid');
-                    $('.' + fieldId).text('Please do not enter any special characters or URLs.');
-                    valid = false;
-                    $(".fields .btn").attr('disabled', true);
-                }
-            } else {
-                var fieldId = $(this).attr('name');
-                $(this).css('border', '1px solid #e9edf4');
+            requiredFields(inputValue, this);
 
-                $('.' + fieldId).text('');
-                valid = true;
-                $(".fields .btn").attr('disabled', false);
-            }
+            nameValidate(inputValue, this);
 
-            if (inputValue == '') {
-                var fieldId = $(this).attr('name');
-
-                if (fieldId != 'multipleImages[]' && fieldId != 'files') {
-                    $(this).css('border', '1px red solid');
-                    $('.' + fieldId).text('This field is required');
-                    requiredvalid = false;
-                    $(".fields .btn").attr('disabled', true);
-                }
-            } else {
-                var fieldId = $(this).attr('name');
-                // $(this).css('border', '1px solid #e9edf4');
-
-                // $('.' + fieldId).text('');
-                requiredvalid = true;
-                $(".fields .btn").attr('disabled', false);
-            }
-
-            var validateFields = JSON.parse(localStorage.getItem('validate'));
-            for (var i = 0; i < validateFields.length; i++) {
-                if ($(this).val().includes(validateFields[i].name)) {
-                    $('.' + fieldId).text('Words not allowed');
-                    $(".btn").attr('disabled', true);
-                }
-            }
+            emailValidate(inputValue, this);
         })
 
         $('textarea').on('input', function() {
             var textareaValue = $(this).val();
-            var urlRegex = /^(http|https):\/\/[^\s]*$/i;
-            var fieldId = $(this).attr('name');
 
-            if (urlRegex.test(textareaValue)) {
-                $(this).css('border', '1px red solid');
-                // Display error message
-                $('.' + fieldId).text('Please do not enter special characters or URLs.');
-                valid = false;
-            }
+            requiredFields(textareaValue, this);
 
-            if (textareaValue == '') {
-                var fieldId = $(this).attr('name');
-                if (fieldId) {
-                    $(this).css('border', '1px red solid');
-                    $('.' + fieldId).text('This field is required');
-                    requiredvalid = false;
+            nameValidate(textareaValue, this);
 
-                    $(".btn").attr('disabled', true);
-                }
-            } else {
-                $(this).css('border', '1px solid #e9edf4');
-
-                $(".btn").attr('disabled', false);
-            }
-
-            var validateFields = JSON.parse(localStorage.getItem('validate'));
-            for (var i = 0; i < validateFields.length; i++) {
-                if ($(this).val().includes(validateFields[i].name)) {
-                    $('.' + fieldId).text('Words not allowed');
-                    $(".btn").attr('disabled', true);
-                }
-            }
+            emailValidate(textareaValue, this);
         })
 
         $('#url').on('input', function() {
             var url = $(this).val();
             if (!url.includes('https://www.instamojo.com/EXAM360/')) {
-                $(this).css('border', '1px red solid');
-
-                $('.url').text('Please add instamojo link');
-                valid = false;
-                $(".btn").attr('disabled', true);
+                errorHandling('url', 'Please add instamojo link', false, this);
             } else {
-                $('.url').text('');
-                $(this).css('border', '1px solid #e9edf4');
-                valid = true;
-                $(".btn").attr('disabled', false);
+                errorHandling(fieldId, '', false, this);
             }
         });
 
@@ -304,6 +225,64 @@
             });
 
             $("#progressBar").html(emptyFields + " Remaining Out of " + (totalFields - notDefined) + " Fields");
+        }
+
+        function requiredFields(val, currentElement) {
+            var fieldId = $(currentElement).attr('name');
+            if (val == '') {
+                if (fieldId != 'multipleImages[]' && fieldId != 'files') {
+                    errorHandling(fieldId, 'This field is required', false, currentElement);
+                }
+            } else {
+                errorHandling(fieldId, '', true, currentElement);
+            }
+        }
+
+        function nameValidate(val, currentElement) {
+            var fieldId = $(currentElement).attr('name');
+
+            var validateFields = JSON.parse(localStorage.getItem('validate'));
+            for (var i = 0; i < validateFields.length; i++) {
+                if (val.includes(validateFields[i].name)) {
+                    errorHandling(fieldId, 'Words not allowed', false, currentElement)
+                }
+            }
+        }
+
+        function emailValidate(val, currentElement) {
+            var fieldId = $(currentElement).attr('name');
+            var validateFields = JSON.parse(localStorage.getItem('validate'));
+
+            if (fieldId != 'url') {
+                var urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
+                if (urlRegex.test(val)) {
+                    var data = [];
+                    for (var i = 0; i < validateFields.length; i++) {
+                        if (validateFields[i].links) {
+                            data.push(validateFields[i].links);
+                        }
+                    }
+
+                    var allowedURLsRegex = new RegExp("^(" + data.join('|') + ")$", "i");
+                    if (!allowedURLsRegex.test(val)) {
+                        errorHandling(fieldId, 'This URL not allowed', false, currentElement)
+                    } else {
+                        errorHandling(fieldId, '', true, currentElement)
+                    }
+                }
+            }
+        }
+
+        function errorHandling(element, msg, valid, currentElement) {
+            if (!valid) {
+                $(currentElement).css('border', '1px red solid');
+                $('.' + element).text(msg);
+                $(".fields .btn").attr('disabled', true);
+            } else {
+                $(currentElement).css('border', '1px solid #e9edf4');
+                $('.' + element).text(msg);
+                $(".fields .btn").attr('disabled', false);
+            }
         }
     })
 

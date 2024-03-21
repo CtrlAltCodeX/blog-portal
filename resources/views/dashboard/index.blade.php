@@ -34,7 +34,7 @@ $getStats = app('App\Http\Controllers\DashboardController');
                                 <th>{{ __('Sl') }}</th>
                                 <th>{{ __('Session Id') }}</th>
                                 <th>{{ __('Expire at') }}</th>
-                                <th>{{ __('Action') }}</th>
+                                <!-- <th>{{ __('Action') }}</th> -->
                             </tr>
                         </thead>
                         @foreach($userSessionsCount as $key => $session)
@@ -42,9 +42,9 @@ $getStats = app('App\Http\Controllers\DashboardController');
                             <td>{{ ++$key }}</td>
                             <td>{{ $session->session_id }}</td>
                             <td>{{date("d-m-Y h:i A", strtotime( $session->expire_at)) }}</td>
-                            <td>
+                            <!-- <td>
                                 <a href="{{ route('user.session.delete', $session->session_id) }}" class="btn btn-primary btn-sm">Delete</a>
-                            </td>
+                            </td> -->
                         </tr>
                         @endforeach
                     </table>

@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->text('image');
             $table->string('title');
-            $table->unsignedInteger('created_by');
-            $table->unsignedInteger('approved_by')->nullable();
+            $table->unsignedBigInteger('created_by');
+            $table->unsignedBigInteger('approved_by')->nullable();
             $table->dateTime('approved_at')->nullable();
             $table->integer('status');
             $table->timestamps();

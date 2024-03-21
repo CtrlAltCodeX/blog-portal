@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string('insta_mojo_url')->nullable();
             $table->json('images')->nullable();
             $table->json('multiple_images')->nullable();
-            $table->unsignedInteger('created_by');
+            $table->unsignedBigInteger('created_by');
             $table->tinyInteger('status');
             $table->timestamps();
 

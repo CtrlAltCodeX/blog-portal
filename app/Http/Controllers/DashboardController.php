@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\UserSession;
 use App\Services\GoogleService;
 use Carbon\Carbon;
@@ -31,10 +30,6 @@ class DashboardController extends Controller
             session()->flash('message', 'Please authenticate with Google');
 
             return view('settings.error');
-            // $url = $this->googleService->refreshToken($this->googleService->getCredentails()->toArray());
-            // request()->session()->put('page_url', request()->url());
-
-            // return redirect()->to($url);
         }
 
         if (!$url = $this->getSiteBaseUrl()) {

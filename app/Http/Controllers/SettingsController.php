@@ -96,9 +96,11 @@ class SettingsController extends Controller
     public function fieldsValidations()
     {
         $notAllowedNames = FieldValidation::where('name', "!=", '')
+            ->where('status', 1)
             ->get();
 
         $notAllowedlinks = FieldValidation::where('links', "!=", '')
+            ->where('status', 1)
             ->get();
 
         return view('settings.fields-validations', compact('notAllowedNames', 'notAllowedlinks'));
@@ -112,13 +114,32 @@ class SettingsController extends Controller
         if (request()->name) {
             FieldValidation::create([
                 'name' => request()->name,
+                'status' => 1
             ]);
         } else if (request()->link) {
             FieldValidation::create([
                 'links' => request()->link,
                 'allowed' => request()->allow ? 1 : 0,
+                'status' => 1
             ]);
         }
+
+        session()->flash('success', 'Updated successfully');
+
+        return redirect()->back();
+    }
+
+    /**
+     * Update Keywords 
+     */
+    public function updateKeywords($id)
+    {
+        $row = FieldValidation::find($id);
+
+        $row->update([
+            'name' => request()->name,
+            'links' => request()->link,
+        ]);
 
         session()->flash('success', 'Updated successfully');
 
