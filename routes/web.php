@@ -212,5 +212,7 @@ Route::get('/', function () {
 });
 
 Route::get('/check-session-status', function () {
+    session()->flash('error', 'Your session has expired. Please log in again.');
+
     return response()->json(['active' => auth()->check()]);
 })->name('check.session');

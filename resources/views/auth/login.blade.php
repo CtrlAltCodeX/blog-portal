@@ -89,6 +89,10 @@
                 $('#Password-toggle i').addClass("zmdi-eye-off");
             }
         });
+
+        setTimeout(() => {
+            location.reload();
+        }, 300000);
     })
 </script>
 

@@ -13,6 +13,7 @@ class SiteSetting extends Model
         'url',
         'logo',
         'product_background_image',
-        'homepage_image'
+        'homepage_image',
+        'watermark_text'
     ];
 }

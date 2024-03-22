@@ -2,11 +2,6 @@
 
 @section('title', __("Dashboard"))
 
-@php
-$getStats = app('App\Http\Controllers\DashboardController');
-
-@endphp
-
 @section('content')
 <!-- CONTAINER -->
 <div class="main-container container-fluid">

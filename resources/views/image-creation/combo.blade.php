@@ -55,9 +55,9 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="title" class="form-label">{{ __('Title') }}<span class="text-danger">*</span></label>
+                                        <!-- <label for="title" class="form-label">{{ __('Title') }}<span class="text-danger">*</span></label>
 
-                                        <input id="title" type="text" name="title" class="form-control @error('title') is-invalid @enderror" title="title" autocomplete="title" autofocus placeholder="Title">
+                                        <input id="title" type="text" name="title" class="form-control @error('title') is-invalid @enderror" title="title" autocomplete="title" autofocus placeholder="Title"> -->
 
                                         <input type="hidden" name="is_with_watermark" value="1">
 
