@@ -105,6 +105,10 @@
             $('#form').attr('action', "{{ route('verify.otp') }}");
             $('#form').submit();
         });
+
+        setTimeout(() => {
+            location.reload();
+        }, 300000);
     })
 </script>
 

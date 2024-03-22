@@ -78,7 +78,8 @@ class SettingsController extends Controller
             'url' => request()->url,
             'logo' => $logoImage ?? $siteSettings->homepage_image ?? '',
             'homepage_image' => $fileName ?? $siteSettings->homepage_image ?? '',
-            'product_background_image' => 'custom_image.jpg'
+            'product_background_image' => 'custom_image.jpg',
+            'watermark_text' => request()->watermark_text
         ];
 
         if (!$siteSettings) SiteSetting::create($data);

@@ -43,18 +43,27 @@ class DatabaseSeeder extends Seeder
         Permission::create(['name' => 'Listing (Main Menu)']);
         Permission::create(['name' => 'Inventory -> Manage Inventory -> Edit']);
         Permission::create(['name' => 'Listing create']);
+        Permission::create(['name' => 'Listing create ( DB )']);
+        Permission::create(['name' => 'Pending Listing ( DB )']);
         Permission::create(['name' => 'Inventory -> Manage Inventory -> Delete']);
         Permission::create(['name' => 'Listing publish']);
 
-        Permission::create(['name' => 'Inventory (Main Menu)']);
-        
-        Permission::create(['name' => 'Inventory -> Manage Inventory']);
-        
-        Permission::create(['name' => 'Site Access']);
-        Permission::create(['name' => 'Site Update']);
+        Permission::create(['name' => 'Image Creation (Main Menu)']);
+        Permission::create(['name' => 'Image Creation -> Single Image Maker']);
+        Permission::create(['name' => 'Image Creation -> Combo Image Maker']);
+        Permission::create(['name' => 'Image Creation -> Gallery ( DB )']);
 
-        Permission::create(['name' => 'Configure Blog']);
-        Permission::create(['name' => 'Configure Blog Update']);
+        Permission::create(['name' => 'Inventory (Main Menu)']);
+        Permission::create(['name' => 'Inventory -> Manage Inventory']);
+        Permission::create(['name' => 'Inventory -> Under Review Inventory']);
+        
+        Permission::create(['name' => 'Settings -> Site Access']);
+        Permission::create(['name' => 'Settings -> Site Update']);
+        Permission::create(['name' => 'Settings -> Configure Blog']);
+        Permission::create(['name' => 'Settings -> Configure Blog Update']);
+        Permission::create(['name' => 'Settings -> Backup E-Mail']);
+        Permission::create(['name' => 'Settings -> Backup Logs & Links']);
+        Permission::create(['name' => 'Settings -> Validations']);
         
         Permission::create(['name' => 'Dashboard']);
 

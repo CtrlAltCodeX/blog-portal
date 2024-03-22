@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Google\Service\Dataproc\Session;
+use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Session as FacadesSession;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 
@@ -25,9 +24,11 @@ class WatermarkController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
+            // 'title' => 'required|string|max:255',
             'file' => 'required|file|mimes:jpeg,png,jpg,gif',
         ]);
+
+        $siteSettings = SiteSetting::first();
 
         $file = $request->file('file');
         $filename = time() . '_' . $file->getClientOriginalName();
@@ -48,7 +49,7 @@ class WatermarkController extends Controller
 
             $y = $image->height() / 2 + $radius * sin(deg2rad($angle));
 
-            $image->text($request->input('title'), $x, $y, function ($font) use ($fontSize) {
+            $image->text($siteSettings->watermark_text, $x, $y, function ($font) use ($fontSize) {
                 $font->file(public_path('anta.ttf'));
                 $font->color([255, 255, 255, 0.5]);
                 $font->size($fontSize);

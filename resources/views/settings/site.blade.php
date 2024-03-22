@@ -16,6 +16,12 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="name" class="form-label">{{ __('Watermark text') }}<span class="text-danger">*</span></label>
+
+                    <input id="watermark_text" type="text" class="form-control @error('watermark_text') is-invalid @enderror" name="watermark_text" value="{{ $siteSettings->watermark_text??"" }}" autofocus placeholder="Watermark Text">
+                </div>
+
+                <div class="form-group">
                     <label for="name" class="form-label">{{ __('Logo') }}<span class="text-danger">*</span></label>
                     <div class="row mb-5">
                         <div class="col-lg-3">
