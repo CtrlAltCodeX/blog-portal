@@ -431,7 +431,6 @@ class BackupListingsController extends Controller
         try {
             $file = request()->file('file');
 
-            $this->client = new Client('sl.BxiDjvjF3oToboM6QR5PL1_Zc0kM6QnE46ZGDfwV-gLIsgY7wSocike_IMR4GgFn07PioTWC_eGYVNFkxGBsYbxhFIGfHWtwsZ6VsXMQcuMbJ-r6PakOBCoQkXAVm1tmYZnTYKRV_cxb');
 
             $fileContents = file_get_contents($file->getRealPath());
             $fileName = $file->getClientOriginalName();
