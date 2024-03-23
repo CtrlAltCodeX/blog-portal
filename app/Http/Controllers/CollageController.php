@@ -43,7 +43,7 @@ class CollageController extends Controller
             3 => CustomThreeImage::class,
             4 => FourImage::class,
         ])
-            ->make(400, 400)->padding(10)
+            ->make(555, 555)->padding(10)
             ->background('#fff')
             ->from($processedImages, function ($alignment) use ($processedImages) {
                 $imageCount = count($processedImages);
@@ -81,27 +81,39 @@ class CollageController extends Controller
     {
         $fontSize = min($image->width(), $image->height()) / 20;
 
-        $numPoints = 10;
+        $centerX = $image->width() / 2;
+        $centerY = $image->height() / 2;
+
+        $watermarkLength = strlen($title);
+        $numPoints = max($watermarkLength, 10);
 
         $radius = min($image->width(), $image->height()) / 2;
-
+    
         for ($i = 0; $i < $numPoints; $i++) {
             $angle = $i * (360 / $numPoints);
-
-            $x = $image->width() / 2 + $radius * cos(deg2rad($angle));
-
-            $y = $image->height() / 2 + $radius * sin(deg2rad($angle));
-
+    
+            $x = $centerX + $radius * cos(deg2rad($angle));
+            $y = $centerY + $radius * sin(deg2rad($angle));
+    
             $image->text($title, $x, $y, function ($font) use ($fontSize) {
                 $font->file(public_path('anta.ttf'));
-                $font->color([255, 255, 255, 0.5]);
+                $font->color([128, 128, 128, 0.5]);
                 $font->size($fontSize);
                 $font->angle(45);
                 $font->align('center');
                 $font->valign('center');
             });
         }
-
+    
+        $image->text($title, $centerX, $centerY, function ($font) use ($fontSize) {
+            $font->file(public_path('anta.ttf'));
+            $font->color([128, 128, 128, 0.5]);
+            $font->size($fontSize);
+            $font->angle(45);
+            $font->align('center');
+            $font->valign('center');
+        });
+    
         $image->save();
 
         return $image->encoded;
