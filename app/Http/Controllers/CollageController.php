@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Generators\CustomThreeImage;
+use App\Models\SiteSetting;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
 use Intervention\Image\Facades\Image;
@@ -26,7 +27,7 @@ class CollageController extends Controller
         $validated = $this->validate(request(), [
             'file'              => 'required|array',
             'file.*'            => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'title'             => 'required_if:is_with_watermark,1',
+            // 'title'             => 'required_if:is_with_watermark,1',
         ], [
             'title.required_if' => 'The title field is required when adding a watermark.',
         ]);
@@ -34,7 +35,7 @@ class CollageController extends Controller
         $processedImages = [];
 
         foreach ($validated['file'] as $file) {
-            $processedImages[] = Image::make($file);
+            $processedImages[] = Image::make($file)->fit(555,555);
         }
 
         $image = (new MakeCollage())->with([
@@ -66,7 +67,9 @@ class CollageController extends Controller
         $imageContent = file_get_contents($path);
 
         if (request()->input('is_with_watermark')) {
-            $imageContent = $this->addWaterMark($image, request()->input('title'));
+            $siteSettings = SiteSetting::first();
+
+            $imageContent = $this->addWaterMark($image, $siteSettings->watermark_text);
         }
 
         Session::put('fileurl', $filename);
@@ -88,13 +91,13 @@ class CollageController extends Controller
         $numPoints = max($watermarkLength, 10);
 
         $radius = min($image->width(), $image->height()) / 2;
-    
+
         for ($i = 0; $i < $numPoints; $i++) {
             $angle = $i * (360 / $numPoints);
-    
+
             $x = $centerX + $radius * cos(deg2rad($angle));
             $y = $centerY + $radius * sin(deg2rad($angle));
-    
+
             $image->text($title, $x, $y, function ($font) use ($fontSize) {
                 $font->file(public_path('anta.ttf'));
                 $font->color([128, 128, 128, 0.5]);
@@ -104,7 +107,7 @@ class CollageController extends Controller
                 $font->valign('center');
             });
         }
-    
+
         $image->text($title, $centerX, $centerY, function ($font) use ($fontSize) {
             $font->file(public_path('anta.ttf'));
             $font->color([128, 128, 128, 0.5]);
@@ -113,7 +116,7 @@ class CollageController extends Controller
             $font->align('center');
             $font->valign('center');
         });
-    
+
         $image->save();
 
         return $image->encoded;

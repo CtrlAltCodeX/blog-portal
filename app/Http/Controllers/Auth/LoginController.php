@@ -109,21 +109,22 @@ class LoginController extends Controller
         $this->validateLogin($request);
 
         $user = User::where('email', request()->email)->first();
-        if (
-            $user
-            && $user->allow_sessions
-            && $user->sessions->where('expire_at', '>', now())->first()
-        ) {
-            session()->flash('error', 'You are already Logged in other Device');
 
-            return redirect()->route('login');
-        } else if (
-            $user
-            && !$user->allow_sessions
-            && $user = $user->sessions->where('expire_at', '<', now())->first()
-        ) {
-            $user->delete();
-        }
+        // if (
+        //     $user
+        //     && $user->allow_sessions
+        //     && $user->sessions->where('expire_at', '>', now())->first()
+        // ) {
+        //     session()->flash('error', 'You are already Logged in other Device');
+
+        //     return redirect()->route('login');
+        // } else if (
+        //     $user
+        //     && !$user->allow_sessions
+        //     && $user = $user->sessions->where('expire_at', '<', now())->first()
+        // ) {
+        //     $user->delete();
+        // }
 
         if (request()->otp) {
             $verifyOtp = User::where('email', request()->email)

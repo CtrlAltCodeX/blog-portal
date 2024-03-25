@@ -263,8 +263,12 @@
                         }
                     }
 
-                    var allowedURLsRegex = new RegExp("^(" + data.join('|') + ")$", "i");
-                    if (!allowedURLsRegex.test(val)) {
+                    var validDomain = data.some(function(domain) {
+                        return val.startsWith(domain);
+                    });
+                    // var domainPattern = new RegExp("^(" + data.join('|').replace(/\./g, "\\.") + ")(\/.*)?$", "i");
+                    // var allowedURLsRegex = new RegExp("^(https?:\\/\\/)?((" + data.join('|') + ")(\\/|$))", "i");
+                    if (!validDomain) {
                         errorHandling(fieldId, 'This URL not allowed', false, currentElement)
                     } else {
                         errorHandling(fieldId, '', true, currentElement)

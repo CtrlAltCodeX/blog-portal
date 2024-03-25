@@ -2,6 +2,14 @@
 
 @section('title', __('Single Image Creation'))
 
+@php
+if(request()->maker == 'wo-watermark'){
+$formRoute = "/admin/convert/image";
+} elseif(request()->maker == 'wo-watermark'){
+$formRoute = "/admin/images/watermark/store";
+}
+@endphp
+
 @section('content')
 <div class="row">
     <div class="col-md-12">
@@ -23,29 +31,20 @@
                             </form>
                         </div>
 
-                        <div class="form-group mt-2" @error('multipleImages') style="border: red 2px dotted;" @enderror>
-                            @if(request()->maker == 'wo-watermark')
-                            <form action="{{ route('convert.image') }}" method="post" enctype="multipart/form-data" id='multipleImagesform'>
-                                @csrf
+                        <form action="{{ request()->maker == 'w-watermark' ? route('image.watermark.store') : route('convert.image')  }}" method="post" enctype="multipart/form-data" id="{{ request()->maker == 'wo-watermark' ? 'multipleImagesform': '' }}">
+                            @csrf
+                            <div class="form-group mt-2" @error('multipleImages') style="border: red 2px dotted;" @enderror>
+                                @if(request()->maker == 'wo-watermark')
                                 <input id="multipleFiles" type="file" class="dropify @error('multipleImages') is-invalid @enderror" name="multipleImages[]" multiple>
                                 <div id='multiImagesDownload' style="display: none;">
                                     <a href='#' class="w-100 d-flex justify-content-end my-4" id='downloadMultipleImage'>
                                         <img src="/downlod-icon.png" />
                                     </a>
                                 </div>
-                            </form>
-                            @endif
+                                @endif
 
-                            @if(request()->maker == 'w-watermark')
-                            <form action="{{ route('image.watermark.store') }}" method="POST" enctype='multipart/form-data'>
-                                @csrf
+                                @if(request()->maker == 'w-watermark')
                                 <div class="form-group">
-                                    <div class="d-flex justify-content-between">
-                                        <label for="title" class="form-label">{{ __('Title') }}<span class="text-danger">*</span></label>
-                                        <!-- <button class="btn btn-primary mb-2">Convert</button> -->
-                                    </div>
-                                    <input id="title" type="text" name="title" class="form-control @error('title') is-invalid @enderror" title="title" autocomplete="title" autofocus placeholder="Title">
-
                                     @error('title')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -65,20 +64,20 @@
                                     </span>
                                     @enderror
                                 </div>
-                            </form>
-                            @endif
-                        </div>
-                        <div class="w-100 d-flex flex-column align-items-center" style="grid-gap: 10px;">
-                            <div class="d-flex w-100 align-items-center" style="grid-gap:10px;">
-                                <input type="text" class="form-control image-url" disabled placeholder="Click button to Generate URL" />
-                                <button class="btn btn-primary btn-sm" id="refresh" data-session='watermarkFileUrl'>Generate URL</button>
-                                <button class="btn btn-primary btn-sm">Copy URL</button>
-                                <!-- <img src="/copy.png" width="25" class="copy" id="{{ url('/') }}/storage/uploads/{{session()->get('watermarkFileUrl')}}" /> -->
-                                <a href="{{ url('/') }}/storage/uploads/{{session()->get('watermarkFileUrl')}}" download class="btn btn-primary btn-sm" id='download' style="width: 100px;;">Download</a>
-                                <!-- <img src="/refresh.png" width="25" style="cursor:pointer;"  ' /> -->
+                                @endif
                             </div>
-                            <button class="btn btn-primary mb-2">Convert & Download</button>
-                        </div>
+                            <div class="w-100 d-flex flex-column align-items-center" style="grid-gap: 10px;">
+                                <div class="d-flex w-100 align-items-center" style="grid-gap:10px;">
+                                    <input type="text" class="form-control image-url" disabled placeholder="Click button to Generate URL" />
+                                    <div class="d-flex" style="grid-gap: 10px;">
+                                        <button type="button" class="btn btn-primary btn-sm" id="refresh" data-session='watermarkFileUrl'>Generate URL</button>
+                                        <button type="button" class="btn btn-primary btn-sm copy">Copy URL</button>
+                                        <a href="{{ url('/') }}/storage/uploads/{{session()->get('watermarkFileUrl')}}" download class="btn btn-primary btn-sm" id='download' style="width: 100px;;">Download</a>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary mb-2">Convert & Download</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

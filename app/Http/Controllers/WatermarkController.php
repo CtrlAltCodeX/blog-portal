@@ -34,7 +34,7 @@ class WatermarkController extends Controller
         $filename = time() . '_' . $file->getClientOriginalName();
         $file->storeAs('public/uploads/', $filename);
     
-        $image = Image::make(storage_path('app/public/uploads/' . $filename));
+        $image = Image::make(storage_path('app/public/uploads/' . $filename))->fit(555,555);
     
         $fontSize = min($image->width(), $image->height()) / 20;
     

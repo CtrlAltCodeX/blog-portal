@@ -29,7 +29,7 @@
                                 <th>{{ __('Sl') }}</th>
                                 <th>{{ __('Session Id') }}</th>
                                 <th>{{ __('Expire at') }}</th>
-                                <!-- <th>{{ __('Action') }}</th> -->
+                                <th>{{ __('Action') }}</th>
                             </tr>
                         </thead>
                         @foreach($userSessionsCount as $key => $session)
@@ -37,9 +37,11 @@
                             <td>{{ ++$key }}</td>
                             <td>{{ $session->session_id }}</td>
                             <td>{{date("d-m-Y h:i A", strtotime( $session->expire_at)) }}</td>
-                            <!-- <td>
+                            @if(session()->get('sessionId') != $session->session_id))
+                            <td>
                                 <a href="{{ route('user.session.delete', $session->session_id) }}" class="btn btn-primary btn-sm">Delete</a>
-                            </td> -->
+                            </td>
+                            @endif
                         </tr>
                         @endforeach
                     </table>

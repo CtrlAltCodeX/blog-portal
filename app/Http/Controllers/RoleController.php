@@ -39,9 +39,45 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $permissions = Permission::get();
+        $permissions = Permission::get()->toArray();
 
-        return view('accounts.roles.create', compact('permissions'));
+        foreach ($permissions as $permission) {
+            // Check if the user has the current permission
+            if (stripos($permission['name'], 'Role') !== false) {
+                // Add the permission to the array for the current category
+                $permissionsInCategory['Role'][] = $permission;
+            }
+
+            if (stripos($permission['name'], 'User') !== false) {
+                // Add the permission to the array for the current category
+                $permissionsInCategory['User'][] = $permission;
+            }
+
+            if (stripos($permission['name'], 'Listing') !== false) {
+                // Add the permission to the array for the current category
+                $permissionsInCategory['Listing'][] = $permission;
+            }
+
+            if (
+                stripos($permission['name'], 'Site') !== false
+                || stripos($permission['name'], 'Configure') !== false
+            ) {
+                // Add the permission to the array for the current category
+                $permissionsInCategory['Setting'][] = $permission;
+            }
+
+            if (stripos($permission['name'], 'Dashboard') !== false) {
+                // Add the permission to the array for the current category
+                $permissionsInCategory['Dashboard'][] = $permission;
+            }
+
+            if (stripos($permission['name'], 'Inventory') !== false) {
+                // Add the permission to the array for the current category
+                $permissionsInCategory['Inventory'][] = $permission;
+            }
+        }
+
+        return view('accounts.roles.create', compact('permissions', 'permissionsInCategory'));
     }
 
     /**

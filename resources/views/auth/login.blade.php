@@ -99,11 +99,13 @@
                 headers: {
                     'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
                 },
-                success: function(result) {},
+                success: function(result) {
+                    if (result.status) {
+                        $('#form').attr('action', "{{ route('verify.otp') }}");
+                        $('#form').submit();
+                    }
+                },
             });
-
-            $('#form').attr('action', "{{ route('verify.otp') }}");
-            $('#form').submit();
         });
 
         setTimeout(() => {
