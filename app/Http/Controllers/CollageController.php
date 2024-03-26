@@ -36,7 +36,7 @@ class CollageController extends Controller
         $processedImages = [];
 
         foreach ($validated['file'] as $file) {
-            $processedImages[] = Image::make($file)->resize(380, 520);
+            $processedImages[] = Image::make($file);
         }
 
         $image = (new MakeCollage())->with([

@@ -236,7 +236,7 @@ class LoginController extends Controller
                     ->first();
 
                 if ($sessionExists) {
-                    session()->flash('error', 'Session already Running wants to <a id="continue" href="" >Continue</a>');
+                    session()->flash('error', 'Already 1 Session is Running <br> Do you want to close the previous session and <a id="continue" href="" >Click to Continue</a> new session?');
                     session()->put('session_id', $sessionExists->session_id);
                     session()->put('session_email', request()->email);
                     session()->put('session_password', request()->password);

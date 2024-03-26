@@ -57,7 +57,7 @@ class WatermarkController extends Controller
         $centerY = $image->height() / 2;
 
         // Calculate watermark position based on the image size
-        $watermarkText = $siteSettings->watermark_text ?? 'Exam 360';
+        $watermarkText = $siteSettings->watermark_text ?? 'shop.Exam360.in';
         $watermarkLength = strlen($watermarkText);
         $numPoints = max($watermarkLength, 10); // Ensure we have at least as many points as characters in the watermark text
 
