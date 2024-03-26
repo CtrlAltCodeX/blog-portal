@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Generators\CustomThreeImage;
 use App\Models\SiteSetting;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
 use Intervention\Image\Facades\Image;
@@ -35,7 +36,7 @@ class CollageController extends Controller
         $processedImages = [];
 
         foreach ($validated['file'] as $file) {
-            $processedImages[] = Image::make($file)->fit(555,555);
+            $processedImages[] = Image::make($file)->resize(380, 520);
         }
 
         $image = (new MakeCollage())->with([
@@ -44,11 +45,10 @@ class CollageController extends Controller
             3 => CustomThreeImage::class,
             4 => FourImage::class,
         ])
-            ->make(555, 555)->padding(10)
+            ->make(555, 555)->padding(80)
             ->background('#fff')
             ->from($processedImages, function ($alignment) use ($processedImages) {
                 $imageCount = count($processedImages);
-
                 if ($imageCount == 2) {
                     $alignment->vertical();
                 } else if ($imageCount == 3) {
@@ -58,7 +58,20 @@ class CollageController extends Controller
                 }
             });
 
-        $filename = 'collage_' . time() . '.png';
+        $files = [];
+        foreach (File::glob(storage_path('app/public/uploads') . '/*') as $key => $path) {
+            $filepath = explode('/', $path);
+
+            foreach ($filepath as $name) {
+                if (strpos($name, '.jpg') !== false || strpos($name, '.png') !== false) {
+                    $files[$key]['name'] = $name;
+                }
+            }
+        }
+
+        $countIncrease = count($files) + 1;
+
+        $filename = $countIncrease . '.png';
 
         $path = 'storage/uploads/' . $filename;
 

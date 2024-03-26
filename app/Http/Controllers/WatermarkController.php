@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SiteSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
@@ -27,35 +28,48 @@ class WatermarkController extends Controller
             // 'title' => 'required|string|max:255',
             'file' => 'required|file|mimes:jpeg,png,jpg,gif',
         ]);
-    
+
         $siteSettings = SiteSetting::first();
-    
+
         $file = $request->file('file');
-        $filename = time() . '_' . $file->getClientOriginalName();
+        $files = [];
+        foreach (File::glob(storage_path('app/public/uploads') . '/*') as $key => $path) {
+            $filepath = explode('/', $path);
+
+            foreach ($filepath as $name) {
+                if (strpos($name, '.jpg') !== false || strpos($name, '.png') !== false) {
+                    $files[$key]['name'] = $name;
+                }
+            }
+        }
+
+        $countIncrease = count($files) + 1;
+        $filename = $countIncrease . "." . $file->getClientOriginalExtension();
+        // $filename = time() . '_' . $file->getClientOriginalName();
         $file->storeAs('public/uploads/', $filename);
-    
-        $image = Image::make(storage_path('app/public/uploads/' . $filename))->fit(555,555);
-    
+
+        $image = Image::make(storage_path('app/public/uploads/' . $filename))->fit(555, 555);
+
         $fontSize = min($image->width(), $image->height()) / 20;
-    
+
         // Calculate center coordinates of the image
         $centerX = $image->width() / 2;
         $centerY = $image->height() / 2;
-    
+
         // Calculate watermark position based on the image size
         $watermarkText = $siteSettings->watermark_text ?? 'Exam 360';
         $watermarkLength = strlen($watermarkText);
         $numPoints = max($watermarkLength, 10); // Ensure we have at least as many points as characters in the watermark text
-    
+
         $radius = min($image->width(), $image->height()) / 2;
-    
+
         for ($i = 0; $i < $numPoints; $i++) {
             $angle = $i * (360 / $numPoints);
-    
+
             // Calculate the position for the watermark text on the circle
             $x = $centerX + $radius * cos(deg2rad($angle));
             $y = $centerY + $radius * sin(deg2rad($angle));
-    
+
             // Add watermark text
             $image->text($watermarkText, $x, $y, function ($font) use ($fontSize) {
                 $font->file(public_path('anta.ttf'));
@@ -66,7 +80,7 @@ class WatermarkController extends Controller
                 $font->valign('center');
             });
         }
-    
+
         // Add watermark text at the center of the image
         $image->text($watermarkText, $centerX, $centerY, function ($font) use ($fontSize) {
             $font->file(public_path('anta.ttf'));
@@ -76,13 +90,13 @@ class WatermarkController extends Controller
             $font->align('center');
             $font->valign('center');
         });
-    
+
         $image->save();
-    
+
         $imageContent = Storage::get("public/uploads/{$filename}");
-    
+
         session()->put('watermarkFileUrl', $filename);
-    
+
         return Response::make($imageContent, 200, [
             'Content-Type' => 'image/jpeg',
             'Content-Disposition' => 'attachment; filename=' . $filename,

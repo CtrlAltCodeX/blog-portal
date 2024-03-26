@@ -14,6 +14,11 @@
         <div class="panel-body tabs-menu-body p-0 pt-2">
             <div class="tab-content">
                 <div class="tab-pane active" id="tab5">
+                    @if(session('expire_error'))
+                    <div class="alert alert-danger" role="alert">
+                        {{ session('expire_error') }}
+                    </div>
+                    @endif
                     @if(session('error'))
                     <div class="alert alert-danger" role="alert">
                         {!! session('error') !!}

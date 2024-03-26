@@ -69,26 +69,21 @@
                                     <td>{{ $file['name'] }}</td>
                                     <td>{{ date("d-m-Y h:i A", strtotime($file['datetime'])) }}</td>
                                     <td>{{ date("d-m-Y h:i A", strtotime($file['datetime'])) }}</td>
-                                    <td>
+                                    <td style="vertical-align: middle;">
                                         <div class="d-flex justify-content-between" style='grid-gap:10px;'>
                                             <a href="{{ url('/') }}/storage/uploads/{{ $file['name'] }}" id='downloadMultipleImage' download="product-image.jpg">
-                                                <img src='/downlod-icon.png' />
-                                                <!-- <button class="btn btn-sm btn-primary">Download</button> -->
-                                                <!-- <img src="/downlod-icon.png" class="m-1" /> -->
+                                                <i class="fa fa-download" style="font-size: 20px;"></i>
                                             </a>
                                             <a href='#' class="copy" id="{{ url('/') }}/storage/uploads/{{ $file['name'] }}"">
-                                                <img src='/copy.png' width=25 />
-
-                                            <!-- <button class=" btn btn-sm btn-primary">Copy</button> -->
-                                            <!-- <img src=" /copy.png" width="25" class="m-1" /> -->
+                                                <i class=" fa fa-copy" style="font-size: 20px;"></i>
                                             </a>
                                             <a href="/storage/uploads/{{ $file['name'] }}" target="_blank" id='downloadMultipleImage'>
-                                                <img src='/eye.png' width=" 25" />
-                                                <!--<button class="btn btn-sm btn-primary">View</button>-->
+                                                <i class="fa fa-eye" style="font-size: 20px;"></i>
+                                                <!-- <img src='/eye.png' width=" 25" /> -->
                                             </a>
                                             <a href="/storage/uploads/{{ $file['name'] }}" target="_blank" id='downloadMultipleImage'>
-                                                <img src='/trash.png' width=" 25" />
-                                                <!--<button class="btn btn-sm btn-primary">View</button>-->
+                                                <!-- <img src='/trash.png' width=" 25" /> -->
+                                                <i class="fa fa-trash" style="font-size: 20px;"></i>
                                             </a>
                                         </div>
                                     </td>

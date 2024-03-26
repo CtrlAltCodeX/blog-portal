@@ -42,6 +42,9 @@ class CustomThreeImage extends CollageGenerator
     public function twoTopOneBottom()
     {
         [$width, $height, $largeWidth] = $this->getWidthSize();
+        
+        $width = round($width);
+        $height = round($height);
 
         $one = $this->images->get(0);
         $this->canvas->insert($one->fit($width, $height), 'top-left');
@@ -169,7 +172,7 @@ class CustomThreeImage extends CollageGenerator
     protected function getHeightSize()
     {
         [$width, $height] = $this->getSmallSize();
-        $largeHeight = $this->file->getHeight() - $this->file->getPadding();
+        $largeHeight = $this->file->getHeight() - 30;
 
         return [$width, $height, $largeHeight];
     }

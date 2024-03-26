@@ -9,20 +9,20 @@ use App\Models\BackupListing;
 use App\Models\BackupLogs;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Dropbox\Client;
 
 class BackupListingsController extends Controller
 {
-    public $client;
+    public $dropboxClient;
     /**
      * Initiate the class instance
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Client $dropboxClient)
     {
+        $this->dropboxClient = $dropboxClient;
     }
 
     /**
@@ -431,14 +431,14 @@ class BackupListingsController extends Controller
         try {
             $file = request()->file('file');
 
-            $this->client = new Client('sl.BxiDjvjF3oToboM6QR5PL1_Zc0kM6QnE46ZGDfwV-gLIsgY7wSocike_IMR4GgFn07PioTWC_eGYVNFkxGBsYbxhFIGfHWtwsZ6VsXMQcuMbJ-r6PakOBCoQkXAVm1tmYZnTYKRV_cxb');
+            // $this->client = new Client('sl.BxiDjvjF3oToboM6QR5PL1_Zc0kM6QnE46ZGDfwV-gLIsgY7wSocike_IMR4GgFn07PioTWC_eGYVNFkxGBsYbxhFIGfHWtwsZ6VsXMQcuMbJ-r6PakOBCoQkXAVm1tmYZnTYKRV_cxb');
 
             $fileContents = file_get_contents($file->getRealPath());
             $fileName = $file->getClientOriginalName();
             $path = $fileName; // Specify the path where you want to store the file on Dropbox
-            
+
             // Upload file to Dropbox
-            $this->client->upload($path, $fileContents);
+            $this->dropboxClient->upload($path, $fileContents);
 
             return $path;
         } catch (\Exception $e) {

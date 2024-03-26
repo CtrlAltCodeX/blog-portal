@@ -55,10 +55,10 @@ class ImageMakerController extends Controller
             $filepath = explode('/', $path);
 
             foreach ($filepath as $name) {
-                if (strpos($name, '.jpg') !== false) {
+                if (strpos($name, '.jpg') !== false || strpos($name, '.png') !== false) {
                     $files[$key]['name'] = $name;
 
-                    $filePath = exif_read_data(storage_path('/app/public/uploads/' . $name))['FileDateTime'];
+                    $filePath = @exif_read_data(storage_path('/app/public/uploads/' . $name))['FileDateTime'];
                     $dateTime = Carbon::createFromTimestamp($filePath);
                     $files[$key]['datetime'] = $dateTime->toDateTimeString();
                 }
