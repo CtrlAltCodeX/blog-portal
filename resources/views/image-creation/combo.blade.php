@@ -29,7 +29,11 @@
                                 @if(request()->maker == 'wo-watermark')
                                 <div class="form-group">
                                     <div class="d-flex justify-content-between mb-2 align-items-center">
-                                        <label for="fileInput1">Multiple Images<span class="text-danger">*</span></label>
+                                        <div class="d-flex" style="grid-gap: 10px;">
+                                            <label for="fileInput1">Multiple Images<span class="text-danger">*</span></label>
+                                            <p id="selectedCount"></p>
+                                        </div>
+                                        <!-- <label for="fileInput1">Multiple Images<span class="text-danger">*</span></label> -->
                                         <!-- <button class="btn btn-primary" type="submit" id='convert'>Convert</button> -->
                                     </div>
 
@@ -47,7 +51,10 @@
                                 @if(request()->maker == 'w-watermark')
 
                                 <div class="form-group">
-                                    <label for="fileInput1">Watermark Image<span class="text-danger">*</span></label>
+                                    <div class="d-flex" style="grid-gap: 10px;">
+                                        <label for="fileInput1">Watermark Image<span class="text-danger">*</span></label>
+                                        <p id="selectedCount"></p>
+                                    </div>
 
                                     <input name="is_with_watermark" type="hidden" value=1 />
                                     <div class="form-group mb-0 @error('file') is-invalid @enderror" @error('file') style="border: red 2px dotted;" @enderror>
@@ -91,5 +98,14 @@
 <script src="{{ asset('assets/plugins/fancyuploder/jquery.fancy-fileupload.js') }}"></script>
 
 @include('image-creation.script')
+
+<script>
+    $(document).ready(function() {
+        $('#file').on('change', function() {
+            var selectedImages = $(this)[0].files.length;
+            $('#selectedCount').text(selectedImages + " Images selected");
+        });
+    })
+</script>
 
 @endpush

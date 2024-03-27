@@ -89,7 +89,20 @@
                                     </div>
                                     @endforeach
 
-                                    <label for="name" class="form-label heading-design">{{ __('Listing') }}</label>
+                                    <label for="name" class="form-label heading-design">{{ __('Image Creation') }}</label>
+                                    @foreach ($permissionsInCategory['Image'] as $permission)
+                                    <div class="col-md-4">
+                                        <div class="custom-controls-stacked">
+                                            <label class="custom-control custom-checkbox-md">
+                                                <input type="checkbox" class="custom-control-input" type="checkbox" name="permissions[]" id="permission_{{ $permission['id'] }}">
+                                                <label class="custom-control-label" for="permission_{{ $permission['id'] }}">
+                                                    {{ $permission['name'] }}</label>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    @endforeach
+
+                                    <label for="name" class="form-label heading-design">{{ __('Inventory') }}</label>
                                     @foreach ($permissionsInCategory['Inventory'] as $permission)
                                     <div class="col-md-4">
                                         <div class="custom-controls-stacked">
@@ -129,7 +142,7 @@
                                     @endforeach
 
                                     <label for="name" class="form-label heading-design">{{ __('Settings') }}</label>
-                                    @foreach ($permissionsInCategory['Setting'] as $permission)
+                                    @foreach ($permissionsInCategory['Settings'] as $permission)
                                     <div class="col-md-4">
                                         <div class="custom-controls-stacked">
                                             <label class="custom-control custom-checkbox-md">

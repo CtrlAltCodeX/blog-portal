@@ -3,7 +3,7 @@
 @section('title', __('Settings'))
 
 @section('content')
-@can('Site Access')
+@can('Settings -> Site Access')
 <div class="card mt-5">
     <div class="card-body">
         <div>
@@ -39,7 +39,7 @@
                     </div>
                 </div>
 
-                @can('Site Update')
+                @can('Settings -> Site Update')
                 <button class="btn btn-primary mt-5" id="refresh_token">Save</button>
                 @endcan
             </form>

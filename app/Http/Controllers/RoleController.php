@@ -58,12 +58,9 @@ class RoleController extends Controller
                 $permissionsInCategory['Listing'][] = $permission;
             }
 
-            if (
-                stripos($permission['name'], 'Site') !== false
-                || stripos($permission['name'], 'Configure') !== false
-            ) {
+            if (stripos($permission['name'], 'Settings') !== false) {
                 // Add the permission to the array for the current category
-                $permissionsInCategory['Setting'][] = $permission;
+                $permissionsInCategory['Settings'][] = $permission;
             }
 
             if (stripos($permission['name'], 'Dashboard') !== false) {
@@ -128,12 +125,14 @@ class RoleController extends Controller
                 $permissionsInCategory['Listing'][] = $permission;
             }
 
-            if (
-                stripos($permission['name'], 'Site') !== false
-                || stripos($permission['name'], 'Configure') !== false
-            ) {
+            if (stripos($permission['name'], 'Settings') !== false) {
                 // Add the permission to the array for the current category
-                $permissionsInCategory['Setting'][] = $permission;
+                $permissionsInCategory['Settings'][] = $permission;
+            }
+
+            if (stripos($permission['name'], 'Image') !== false) {
+                // Add the permission to the array for the current category
+                $permissionsInCategory['Image'][] = $permission;
             }
 
             if (stripos($permission['name'], 'Dashboard') !== false) {

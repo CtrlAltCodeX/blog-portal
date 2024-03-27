@@ -3,7 +3,7 @@
 @section('title', __('Settings'))
 
 @section('content')
-@can('Configure Blog Update')
+@can('Settings -> Configure Blog Update')
 <div class="card mt-5">
     <div class="card-body">
         <div>
@@ -46,7 +46,7 @@
 
                 <input type="hidden" name="scope" value="Blogger" id='scope' />
 
-                @can('Configure Blog Update')
+                @can('Settings -> Configure Blog Update')
                 <div class="row">
                     <div class="col-md-6">
                         <button type='button' class="btn btn-primary mt-5 connect" id='Blogger'>{{ !$bloggerCreds ? 'Connect with Blogger' : 'Account Disconnect Blogger' }}</button>

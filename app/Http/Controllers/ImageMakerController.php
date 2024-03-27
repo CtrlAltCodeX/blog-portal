@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class ImageMakerController extends Controller
 {
@@ -59,8 +63,11 @@ class ImageMakerController extends Controller
                     $files[$key]['name'] = $name;
 
                     $filePath = @exif_read_data(storage_path('/app/public/uploads/' . $name))['FileDateTime'];
+                    $fileSize = @exif_read_data(storage_path('/app/public/uploads/' . $name))['FileSize'];
+
                     $dateTime = Carbon::createFromTimestamp($filePath);
                     $files[$key]['datetime'] = $dateTime->toDateTimeString();
+                    $files[$key]['size'] = $fileSize;
                 }
             }
         }
@@ -70,7 +77,26 @@ class ImageMakerController extends Controller
             return strtotime($b['datetime']) - strtotime($a['datetime']);
         });
 
+        $files = $this->paginate($files);
+
         return view('image-creation.image-gallery', compact('files'));
+    }
+
+    /**
+     * Paginate  All Queries
+     *
+     * @param array $items
+     * @param int $perPage
+     * @param int $page
+     * @param array $options
+     * @return void
+     */
+    public function paginate($items, $perPage = 15, $page = null, $options = [])
+    {
+        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
+        $items = $items instanceof Collection ? $items : Collection::make($items);
+
+        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
     }
 
     /**
@@ -80,5 +106,26 @@ class ImageMakerController extends Controller
     {
         if (request()->session)
             return session()->get(request()->session);
+    }
+
+    public function deleteImage()
+    {
+        if (request()->ajax()) {
+            foreach (request()->formData[1] as $image) {
+                if (Storage::exists('/public/uploads/' . $image)) {
+                    Storage::delete('/public/uploads/' . $image);
+                }
+            }
+
+            return true;
+        }
+
+        if (Storage::exists('/public/uploads/' . request()->name)) {
+            Storage::delete('/public/uploads/' . request()->name);
+        }
+
+        session()->flash('success', 'Image Delete Successfully');
+
+        return redirect()->back();
     }
 }

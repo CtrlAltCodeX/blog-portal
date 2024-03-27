@@ -53,22 +53,28 @@
                         <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">
                             <thead>
                                 <tr>
+                                    <th>{{ __('-') }}</th>
                                     <th>{{ __('Sl') }}</th>
                                     <th>{{ __('Image') }}</th>
                                     <th>{{ __('Title') }}</th>
+                                    <th>{{ __('Image Size') }}</th>
                                     <th>{{ __('Created On') }}</th>
-                                    <th>{{ __('Created By') }}</th>
+                                    <!-- <th>{{ __('Created By') }}</th> -->
                                     <th>{{ __('Action') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse ($files as $key => $file)
                                 <tr>
+                                    <td>
+                                        <input type="checkbox" name="ids" class="checkbox-update" value="{{$file['name']}}" />
+                                    </td>
                                     <td>{{++$key}}</td>
                                     <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="/storage/uploads/{{ $file['name'] }}" alt="Product Image" width="100" /></td>
                                     <td>{{ $file['name'] }}</td>
+                                    <td>{{ round($file['size']/1000, 1) }} kb</td>
                                     <td>{{ date("d-m-Y h:i A", strtotime($file['datetime'])) }}</td>
-                                    <td>{{ date("d-m-Y h:i A", strtotime($file['datetime'])) }}</td>
+                                    <!-- <td>{{ date("d-m-Y h:i A", strtotime($file['datetime'])) }}</td> -->
                                     <td style="vertical-align: middle;">
                                         <div class="d-flex justify-content-between" style='grid-gap:10px;'>
                                             <a href="{{ url('/') }}/storage/uploads/{{ $file['name'] }}" id='downloadMultipleImage' download="product-image.jpg">
@@ -79,10 +85,8 @@
                                             </a>
                                             <a href="/storage/uploads/{{ $file['name'] }}" target="_blank" id='downloadMultipleImage'>
                                                 <i class="fa fa-eye" style="font-size: 20px;"></i>
-                                                <!-- <img src='/eye.png' width=" 25" /> -->
                                             </a>
-                                            <a href="/storage/uploads/{{ $file['name'] }}" target="_blank" id='downloadMultipleImage'>
-                                                <!-- <img src='/trash.png' width=" 25" /> -->
+                                            <a href="{{ route('image.gallery.delete', ['name' => $file['name']]) }}">
                                                 <i class="fa fa-trash" style="font-size: 20px;"></i>
                                             </a>
                                         </div>
@@ -92,6 +96,7 @@
                                 @endforelse
                             </tbody>
                         </table>
+                        {{ $files->links() }}
                     </div>
                 </div>
             </div>
@@ -136,6 +141,47 @@
 
         $("#category").on("change", function() {
             $("#form").submit();
+        });
+
+        $("#basic-datatable_wrapper .col-sm-12:first").html('<form id="update-status" action={{route("listing.status")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status"><option>Select</option><option value=1>Delete</option></select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div></form>');
+
+        $("#basic-datatable_wrapper").on('click', '.update-status', function(e) {
+            e.preventDefault();
+            var formData = $('#update-status').serializeArray();
+            formData.push(ids);
+
+            if (ids.length <= 0) {
+                alert('Please select the Image')
+                return true;
+            }
+
+            $.ajax({
+                type: "GET",
+                url: "{{ route('image.gallery.delete') }}",
+                data: {
+                    formData: formData
+                },
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(result) {
+                    if (result) {
+                        window.location.href = location.href;
+                    }
+                },
+            });
+        });
+
+        var ids = [];
+        $(".checkbox-update").click(function() {
+            if ($(this).prop('checked')) {
+                ids.push($(this).val());
+            } else {
+                var index = ids.indexOf($(this).val());
+                if (index !== -1) {
+                    ids.splice(index, 1);
+                }
+            }
         })
     })
 </script>

@@ -73,13 +73,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
         Route::get('gallery', [ImageMakerController::class, 'imageGallery'])->name('image.gallery');
 
+        Route::get('gallery/delete', [ImageMakerController::class, 'deleteImage'])->name('image.gallery.delete');
+
         Route::get('refresh', [ImageMakerController::class, 'refreshURL'])->name('image.url.refresh');
 
-        // Route::get('watermark/create', [WatermarkController::class, 'create'])->name('image.watermark.create');
-
         Route::post('watermark/store', [WatermarkController::class, 'store'])->name('image.watermark.store');
-
-        // Route::get('collage/create', [CollageController::class, 'create'])->name('image.collage.create');
 
         Route::post('collage/store', [CollageController::class, 'store'])->name('image.collage.store');
     });

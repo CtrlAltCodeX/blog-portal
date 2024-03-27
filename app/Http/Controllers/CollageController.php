@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
 use Intervention\Image\Facades\Image;
-use Tzsk\Collage\Generators\FourImage;
+use App\Generators\FourImage;
 use Tzsk\Collage\Generators\OneImage;
-use Tzsk\Collage\Generators\TwoImage;
+use App\Generators\TwoImage;
 use Tzsk\Collage\MakeCollage;
 
 class CollageController extends Controller

@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\BackupMail;
-use App\Models\BackupEmail;
 use App\Models\FieldValidation;
 use App\Models\GoogleCredentail;
 use App\Models\SiteSetting;
-use Illuminate\Http\Request;
 
 class SettingsController extends Controller
 {
@@ -18,8 +15,8 @@ class SettingsController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('role_or_permission:Configure Blog', ['only' => ['blog']]);
-        $this->middleware('role_or_permission:Site Access', ['only' => ['site']]);
+        $this->middleware('role_or_permission:Settings -> Configure Blog', ['only' => ['blog']]);
+        $this->middleware('role_or_permission:Settings -> Site Access', ['only' => ['site']]);
     }
 
     /**
