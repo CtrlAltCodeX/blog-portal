@@ -219,3 +219,5 @@ Route::get('/check-session-status', function () {
 
 Route::get('delete/session/{id}', [UserController::class, 'deleteSessionId'])
     ->name('user.session.delete');
+
+Route::get('/assets/images/brand/{filename}', UserController::class)->name('asset.name');

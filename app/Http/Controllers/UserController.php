@@ -7,6 +7,7 @@ use App\Mail\UserMail;
 use App\Models\User;
 use App\Models\UserSession;
 use Carbon\Carbon;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
@@ -14,6 +15,12 @@ use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
+
+    public function __invoke($file)
+    {
+        dd('ad');
+        abort_if(auth()->guest(), Response::HTTP_FORBIDDEN);
+    }
     /**
      * Initiate the class instance
      *
