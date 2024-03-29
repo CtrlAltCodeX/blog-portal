@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
 use Intervention\Image\Facades\Image;
 use App\Generators\FourImage;
-use Tzsk\Collage\Generators\OneImage;
+use App\Generators\OneImage as GeneratorsOneImage;
 use App\Generators\TwoImage;
 use Tzsk\Collage\MakeCollage;
 
@@ -40,7 +40,7 @@ class CollageController extends Controller
         }
 
         $image = (new MakeCollage())->with([
-            1 => OneImage::class,
+            1 => GeneratorsOneImage::class,
             2 => TwoImage::class,
             3 => CustomThreeImage::class,
             4 => FourImage::class,
@@ -71,7 +71,7 @@ class CollageController extends Controller
 
         $countIncrease = count($files) + 1;
 
-        $filename = $countIncrease . '.png';
+        $filename = $countIncrease . '.jpg';
 
         $path = 'storage/uploads/' . $filename;
 

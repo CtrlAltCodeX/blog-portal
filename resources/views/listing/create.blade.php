@@ -63,7 +63,13 @@
 
                             <div class="form-group">
                                 <label for="description" class="form-label d-flex justify-content-between">
-                                    <div>{{ __('Product Description') }}<span class="text-danger">*</span><span class="text-danger"> ( Enter Detail Description without using 3rd party link) </span></div><a target='_blank' href="https://chat.openai.com">ChatGPT</a>
+                                    <div>{{ __('Description') }}<span class="text-danger">*</span><span class="text-success"> (Suggestion - Title + Description + Search Key) </span></div>
+                                    <div>
+                                        <a href='https://www.commontools.org/tool/replace-new-lines-with-commas-40' target='_blank'>Line Remover | </a><a target='_blank' href="https://chat.openai.com"> ChatGPT</a>
+                                    </div>
+                                </label>
+                                <label for="description" class="form-label d-flex justify-content-between text-danger" style="margin-top: -10px;">
+                                    <div>{{ __('Do not use 3rd Party Links/Website Names') }}</div>
                                 </label>
                                 <!-- <div id="summernote" id="description" class="form-control @error('description') is-invalid @enderror" name="description">
                                     {{ old('description') }}
@@ -245,7 +251,7 @@
                             </div>
 
                             <div class="form-group col-md-4">
-                                <label for="url" class="form-label">{{ __('Insta Mojo URL') }}</label>
+                                <label for="url" class="form-label d-flex justify-content-between">{{ __('Insta Mojo URL') }}<span onclick="copyLink()" id='copylink' style="cursor:pointer;">Copy</span></label>
                                 <input id="url" type="url" class="form-control @error('url') is-invalid @enderror" name="url" value="{{ old('url') }}" autocomplete="url" autofocus placeholder="Insta Mojo url">
                                 <span class="error-message url" style="color:red;"></span>
 

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
+use Intervention\Image\ImageManager;
 
 class WatermarkController extends Controller
 {
@@ -47,31 +48,47 @@ class WatermarkController extends Controller
         $filename = $countIncrease . "." . $file->getClientOriginalExtension();
         // $filename = time() . '_' . $file->getClientOriginalName();
         $file->storeAs('public/uploads/', $filename);
+        
+        $background = (new ImageManager())->canvas(555, 555, '#ffffff');
 
-        $image = Image::make(storage_path('app/public/uploads/' . $filename))->fit(555, 555);
+        $background->insert(Image::make(storage_path('app/public/uploads/' . $filename))->resize(380, 520), 'center');
 
-        $fontSize = min($image->width(), $image->height()) / 20;
-
-        // Calculate center coordinates of the image
-        $centerX = $image->width() / 2;
-        $centerY = $image->height() / 2;
-
-        // Calculate watermark position based on the image size
-        $watermarkText = $siteSettings->watermark_text ?? 'shop.Exam360.in';
-        $watermarkLength = strlen($watermarkText);
-        $numPoints = max($watermarkLength, 10); // Ensure we have at least as many points as characters in the watermark text
-
-        $radius = min($image->width(), $image->height()) / 2;
-
-        for ($i = 0; $i < $numPoints; $i++) {
-            $angle = $i * (360 / $numPoints);
-
-            // Calculate the position for the watermark text on the circle
-            $x = $centerX + $radius * cos(deg2rad($angle));
-            $y = $centerY + $radius * sin(deg2rad($angle));
-
-            // Add watermark text
-            $image->text($watermarkText, $x, $y, function ($font) use ($fontSize) {
+        // $image = Image::make(storage_path('app/public/uploads/' . $filename))->fit(555, 555);
+        
+        if (request()->with_watermark) {
+            $fontSize = min($background->width(), $background->height()) / 20;
+    
+            // Calculate center coordinates of the image
+            $centerX = $background->width() / 2;
+            $centerY = $background->height() / 2;
+    
+            // Calculate watermark position based on the image size
+            $watermarkText = $siteSettings->watermark_text ?? 'Exam 360';
+            $watermarkLength = strlen($watermarkText);
+            $numPoints = max($watermarkLength, 10); // Ensure we have at least as many points as characters in the watermark text
+    
+            $radius = min($background->width(), $background->height()) / 2;
+    
+            for ($i = 0; $i < $numPoints; $i++) {
+                $angle = $i * (360 / $numPoints);
+    
+                // Calculate the position for the watermark text on the circle
+                $x = $centerX + $radius * cos(deg2rad($angle));
+                $y = $centerY + $radius * sin(deg2rad($angle));
+    
+                // Add watermark text
+                $background->text($watermarkText, $x, $y, function ($font) use ($fontSize) {
+                    $font->file(public_path('anta.ttf'));
+                    $font->color([128, 128, 128, 0.5]);
+                    $font->size($fontSize);
+                    $font->angle(45);
+                    $font->align('center');
+                    $font->valign('center');
+                });
+            }
+    
+            // Add watermark text at the center of the image
+            $background->text($watermarkText, $centerX, $centerY, function ($font) use ($fontSize) {
                 $font->file(public_path('anta.ttf'));
                 $font->color([128, 128, 128, 0.5]);
                 $font->size($fontSize);
@@ -81,17 +98,7 @@ class WatermarkController extends Controller
             });
         }
 
-        // Add watermark text at the center of the image
-        $image->text($watermarkText, $centerX, $centerY, function ($font) use ($fontSize) {
-            $font->file(public_path('anta.ttf'));
-            $font->color([128, 128, 128, 0.5]);
-            $font->size($fontSize);
-            $font->angle(45);
-            $font->align('center');
-            $font->valign('center');
-        });
-
-        $image->save();
+        $background->save(storage_path('app/public/uploads/' . $filename));
 
         $imageContent = Storage::get("public/uploads/{$filename}");
 

@@ -229,9 +229,9 @@
                                     <a class="dropdown-item" href="{{ route('profile.edit') }}">
                                         <i class="dropdown-icon fe fe-user"></i> Profile
                                     </a>
-                                    <a class="dropdown-item" href="{{ route('profile.listing') }}">
+                                    <!-- <a class="dropdown-item" href="{{ route('profile.listing') }}">
                                         <i class="dropdown-icon fe fe-user"></i> Listings
-                                    </a>
+                                    </a> -->
                                     <!-- <a class="dropdown-item" href="email-inbox.html">
                                         <i class="dropdown-icon fe fe-mail"></i> Inbox
                                         <span class="badge bg-danger rounded-pill float-end">5</span>

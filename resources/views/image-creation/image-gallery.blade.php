@@ -50,10 +50,13 @@
 
                 <div class="card-body">
                     <div class="table-responsive">
+                        <div  class="row mb-2">
+                            <div class="col-md-5" id='update'></div>
+                        </div>
                         <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">
                             <thead>
                                 <tr>
-                                    <th>{{ __('-') }}</th>
+                                    <th><input type="checkbox" class="check-all" /></th>
                                     <th>{{ __('Sl') }}</th>
                                     <th>{{ __('Image') }}</th>
                                     <th>{{ __('Title') }}</th>
@@ -96,7 +99,6 @@
                                 @endforelse
                             </tbody>
                         </table>
-                        {{ $files->links() }}
                     </div>
                 </div>
             </div>
@@ -136,14 +138,13 @@
     $(document).ready(function() {
         //______Basic Data Table
         $('#basic-datatable').DataTable({
-            "paging": false
         });
 
         $("#category").on("change", function() {
             $("#form").submit();
         });
 
-        $("#basic-datatable_wrapper .col-sm-12:first").html('<form id="update-status" action={{route("listing.status")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status"><option>Select</option><option value=1>Delete</option></select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div></form>');
+        $("#update").html('<form id="update-status" action={{route("listing.status")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status"><option>Select</option><option value=1>Delete</option></select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div></form>');
 
         $("#basic-datatable_wrapper").on('click', '.update-status', function(e) {
             e.preventDefault();
@@ -182,7 +183,11 @@
                     ids.splice(index, 1);
                 }
             }
-        })
+        });
+
+        $('.check-all').click(function() {
+            $(".checkbox-update").click();
+        });
     })
 </script>
 @include('image-creation.script')

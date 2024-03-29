@@ -31,19 +31,20 @@ $formRoute = "/admin/images/watermark/store";
                             </form>
                         </div>
 
-                        <form action="{{ request()->maker == 'w-watermark' ? route('image.watermark.store') : route('convert.image')  }}" method="post" enctype="multipart/form-data" id="{{ request()->maker == 'wo-watermark' ? 'multipleImagesform': '' }}">
+                        <form action="{{ route('image.watermark.store')  }}" method="post" enctype="multipart/form-data">
                             @csrf
-                            <div class="form-group mt-2" @error('multipleImages') style="border: red 2px dotted;" @enderror>
+                            <div class="form-group mt-2" @error('file') style="border: red 2px dotted;" @enderror>
                                 @if(request()->maker == 'wo-watermark')
-                                <input id="multipleFiles" type="file" class="dropify @error('multipleImages') is-invalid @enderror" name="multipleImages[]" multiple>
+                                <input type="file" class="dropify @error('file') is-invalid @enderror" name="file" multiple>
                                 <div id='multiImagesDownload' style="display: none;">
-                                    <a href='#' class="w-100 d-flex justify-content-end my-4" id='downloadMultipleImage'>
+                                    <a href='#' class="w-100 d-flex justify-content-end my-4">
                                         <img src="/downlod-icon.png" />
                                     </a>
                                 </div>
                                 @endif
 
                                 @if(request()->maker == 'w-watermark')
+                                <input type='hidden' name='with_watermark' value=1 />
                                 <div class="form-group">
                                     @error('title')
                                     <span class="invalid-feedback" role="alert">
