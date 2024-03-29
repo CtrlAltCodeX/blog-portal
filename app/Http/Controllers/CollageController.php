@@ -82,7 +82,7 @@ class CollageController extends Controller
         if (request()->input('is_with_watermark')) {
             $siteSettings = SiteSetting::first();
 
-            $imageContent = $this->addWaterMark($image, $siteSettings->watermark_text);
+            $imageContent = $this->addWaterMark($image, $siteSettings->watermark_text ?? 'shop.Exam360.in');
         }
 
         Session::put('fileurl', $filename);
@@ -95,24 +95,24 @@ class CollageController extends Controller
 
     public function addWaterMark($image, $title)
     {
-        $fontSize = min($image->width(), $image->height()) / 20;
+        $fontSize = min($image->width(), $image->height()) / 25;
 
         $centerX = $image->width() / 2;
         $centerY = $image->height() / 2;
 
         $watermarkLength = strlen($title);
-        $numPoints = max($watermarkLength, 10);
+        $numPoints = max($watermarkLength, 1);
 
         $radius = min($image->width(), $image->height()) / 2;
 
-        for ($i = 0; $i < $numPoints; $i++) {
-            $angle = $i * (360 / $numPoints);
+        for ($i = 1; $i < $numPoints; $i++) {
+            $angle = $i * (360 / $numPoints) + 55;
 
             $x = $centerX + $radius * cos(deg2rad($angle));
             $y = $centerY + $radius * sin(deg2rad($angle));
 
             $image->text($title, $x, $y, function ($font) use ($fontSize) {
-                $font->file(public_path('anta.ttf'));
+                $font->file(public_path('arial.ttf'));
                 $font->color([128, 128, 128, 0.5]);
                 $font->size($fontSize);
                 $font->angle(45);
@@ -122,7 +122,7 @@ class CollageController extends Controller
         }
 
         $image->text($title, $centerX, $centerY, function ($font) use ($fontSize) {
-            $font->file(public_path('anta.ttf'));
+            $font->file(public_path('arial.ttf'));
             $font->color([128, 128, 128, 0.5]);
             $font->size($fontSize);
             $font->angle(45);

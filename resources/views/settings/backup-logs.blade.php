@@ -53,6 +53,7 @@
                             <th>{{ __('Export File') }}</th>
                             <th>{{ __('Merchant File') }}</th>
                             <th>{{ __('Facebook File') }}</th>
+                            <th>{{ __('SQL File') }}</th>
                             <th>{{ __('Email to') }}</th>
                             <th>{{ __('Download') }}</th>
                         </tr>
@@ -68,6 +69,7 @@
                             <td>{{ date("d-m-Y h:i A", strtotime($log->export_file)) }}</td>
                             <td>{{ date("d-m-Y h:i A", strtotime($log->merchant_file)) }}</td>
                             <td>{{ date("d-m-Y h:i A", strtotime($log->facebook_file)) }}</td>
+                            <td>{{ date("d-m-Y h:i A", strtotime($log->sql_file)) }}</td>
                             <td>
                                 <span data-bs-placement="top" data-bs-toggle="tooltip" title="{{ $log->email_to }}">
                                     View
@@ -87,7 +89,7 @@
                                         <i class="fa fa-file-excel-o" style="font-size:24px"></i>
                                         <!-- <img src="/excel.png" width="25" /> -->
                                     </a>
-                                    <a target="_blank" href='{{url("/")}}'>
+                                    <a target="_blank" href='{{url("/")}}/storage/export-file{{$log->export_file}}.sql'>
                                         <i class="fa fa-database" style="font-size:24px"></i>
                                         <!-- <img src="/sql.png" width="25" /> -->
                                     </a>

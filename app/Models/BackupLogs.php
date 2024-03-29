@@ -16,6 +16,7 @@ class BackupLogs extends Model
         'export_file',
         'merchant_file',
         'facebook_file',
+        'sql_file',
         'email_to'
     ];
 }

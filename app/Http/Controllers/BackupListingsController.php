@@ -9,8 +9,10 @@ use App\Models\BackupListing;
 use App\Models\BackupLogs;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Dropbox\Client;
+use GuzzleHttp\Client as HttpClient;
 
 class BackupListingsController extends Controller
 {
@@ -211,11 +213,21 @@ class BackupListingsController extends Controller
         } else if (request()->file && request()->type == 'report') {
             return Excel::download(new BackupListingsExport($this->exportData()), 'report.xlsx');
         } else if (request()->file && request()->type == 'sql') {
-            // Retrieve data from the database
-            $data = DB::table('backup_listings')->get();
+            // Return data as a downloadable file
+            return response()->download($this->exportSQL()[0], 'export.sql', [
+                'Content-Type' => 'text/plain',
+                'Content-Disposition' => 'attachment',
+            ])->deleteFileAfterSend();
+        }
+    }
 
-            // Generate SQL insert statements
-            $sql = 'CREATE TABLE `backup_listings` (
+    public function exportSQL()
+    {
+        // Retrieve data from the database
+        $data = DB::table('backup_listings')->get();
+
+        // Generate SQL insert statements
+        $sql = 'CREATE TABLE `backup_listings` (
             `id` bigint(20) UNSIGNED NOT NULL,
             `product_id` bigint(20) NOT NULL,
             `title` text NOT NULL,
@@ -235,32 +247,30 @@ class BackupListingsController extends Controller
             `base_url` text NOT NULL,
             `created_at` timestamp NULL DEFAULT NULL,
             `updated_at` timestamp NULL DEFAULT NULL
-          ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;';
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;';
 
-            foreach ($data as $row) {
-                $columns = [];
-                $values = [];
+        foreach ($data as $row) {
+            $columns = [];
+            $values = [];
 
-                foreach ((array) $row as $key => $value) {
-                    $columns[] = "`$key`";
-                    $values[] = str_replace("'s", "\'s", "'$value'");
-                }
-
-                $sql .= "INSERT INTO backup_listings (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $values) . ");" . PHP_EOL;
+            foreach ((array) $row as $key => $value) {
+                $columns[] = "`$key`";
+                $values[] = str_replace("'s", "\'s", "'$value'");
             }
 
-            // Set file path
-            $filePath = storage_path('app/export.sql');
-
-            // Save SQL content to file
-            file_put_contents($filePath, $sql);
-
-            // Return data as a downloadable file
-            return response()->download($filePath, 'export.sql', [
-                'Content-Type' => 'text/plain',
-                'Content-Disposition' => 'attachment',
-            ])->deleteFileAfterSend();
+            $sql .= "INSERT INTO backup_listings (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $values) . ");" . PHP_EOL;
         }
+
+        // Set file path
+        $filePath = storage_path('app/export.sql');
+
+        // Save SQL content to file
+        file_put_contents($filePath, $sql);
+
+        return [
+            $filePath,
+            $sql
+        ];
     }
 
     /**
@@ -421,28 +431,5 @@ class BackupListingsController extends Controller
         ])->deleteFileAfterSend();
     }
 
-    public function dropBox()
-    {
-        return view('auth.dropbox');
-    }
-
-    public function uploadfile()
-    {
-        try {
-            $file = request()->file('file');
-
-            // $this->client = new Client('sl.BxiDjvjF3oToboM6QR5PL1_Zc0kM6QnE46ZGDfwV-gLIsgY7wSocike_IMR4GgFn07PioTWC_eGYVNFkxGBsYbxhFIGfHWtwsZ6VsXMQcuMbJ-r6PakOBCoQkXAVm1tmYZnTYKRV_cxb');
-
-            $fileContents = file_get_contents($file->getRealPath());
-            $fileName = $file->getClientOriginalName();
-            $path = $fileName; // Specify the path where you want to store the file on Dropbox
-
-            // Upload file to Dropbox
-            $this->dropboxClient->upload($path, $fileContents);
-
-            return $path;
-        } catch (\Exception $e) {
-            dd($e);
-        }
-    }
+    
 }

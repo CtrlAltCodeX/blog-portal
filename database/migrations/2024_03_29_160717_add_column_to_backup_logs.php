@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('site_settings', function (Blueprint $table) {
-            $table->string('watermark_text')->nullable();
+        Schema::table('backup_logs', function (Blueprint $table) {
+            $table->dateTime('sql_file')->nullable();
         });
     }
 
@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('site_settings', function (Blueprint $table) {
+        Schema::table('backup_logs', function (Blueprint $table) {
             //
         });
     }

@@ -42,6 +42,6 @@ class BackupMail extends Mailable
     public function build()
     {
         return $this->view('emails.backup-email')
-            ->attach(storage_path("app/" . $this->name));
+            ->attach(($this->name));
     }
 }

@@ -50,7 +50,7 @@ class WatermarkController extends Controller
 
         $image = Image::make(storage_path('app/public/uploads/' . $filename))->fit(555, 555);
 
-        $fontSize = min($image->width(), $image->height()) / 20;
+        $fontSize = min($image->width(), $image->height()) / 25;
 
         // Calculate center coordinates of the image
         $centerX = $image->width() / 2;
@@ -59,12 +59,12 @@ class WatermarkController extends Controller
         // Calculate watermark position based on the image size
         $watermarkText = $siteSettings->watermark_text ?? 'shop.Exam360.in';
         $watermarkLength = strlen($watermarkText);
-        $numPoints = max($watermarkLength, 10); // Ensure we have at least as many points as characters in the watermark text
+        $numPoints = max($watermarkLength, 1); // Ensure we have at least as many points as characters in the watermark text
 
         $radius = min($image->width(), $image->height()) / 2;
 
-        for ($i = 0; $i < $numPoints; $i++) {
-            $angle = $i * (360 / $numPoints);
+        for ($i = 1; $i < $numPoints; $i++) {
+            $angle = $i * (360 / $numPoints) + 55;
 
             // Calculate the position for the watermark text on the circle
             $x = $centerX + $radius * cos(deg2rad($angle));
@@ -72,7 +72,7 @@ class WatermarkController extends Controller
 
             // Add watermark text
             $image->text($watermarkText, $x, $y, function ($font) use ($fontSize) {
-                $font->file(public_path('anta.ttf'));
+                $font->file(public_path('arial.ttf'));
                 $font->color([128, 128, 128, 0.5]);
                 $font->size($fontSize);
                 $font->angle(45);
@@ -83,7 +83,7 @@ class WatermarkController extends Controller
 
         // Add watermark text at the center of the image
         $image->text($watermarkText, $centerX, $centerY, function ($font) use ($fontSize) {
-            $font->file(public_path('anta.ttf'));
+            $font->file(public_path('arial.ttf'));
             $font->color([128, 128, 128, 0.5]);
             $font->size($fontSize);
             $font->angle(45);
