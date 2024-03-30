@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
@@ -11,6 +12,22 @@ use Illuminate\Support\Facades\Storage;
 
 class ImageMakerController extends Controller
 {
+
+    /**
+     * Invoke Function
+     *
+     * @param string $file
+     * @return void
+     */
+    public function __invoke($file)
+    {
+        abort_if(auth()->guest(), Response::HTTP_FORBIDDEN);
+
+        return response()->file(
+            storage_path('app/public/uploads/' . $file)
+        );
+    }
+
     /**
      * Show the create view.
      */
@@ -108,6 +125,11 @@ class ImageMakerController extends Controller
             return session()->get(request()->session);
     }
 
+    /**
+     * Delete Images
+     *
+     * @return void
+     */
     public function deleteImage()
     {
         if (request()->ajax()) {

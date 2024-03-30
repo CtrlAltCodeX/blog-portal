@@ -6,7 +6,6 @@ use App\Http\Requests\BlogRequest;
 use App\Models\Listing;
 use App\Models\UserListingCount;
 use App\Models\UserListingInfo;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Services\GoogleService;
 
@@ -230,12 +229,37 @@ class DatabaseListingController extends Controller
      */
     public function updateStatus()
     {
-        $listing = Listing::whereIn('id', request()->formData[1])
+        $listings = Listing::whereIn('id', request()->formData[1])
             ->get();
 
         $status = request()->formData[0]['value'];
 
-        $listing->map(function ($list) use ($status) {
+        foreach ($listings as $listing) {
+            $userCount = UserListingCount::where('user_id', $listing->created_by)
+                ->whereDate('date', $listing->created_at)
+                ->first();
+
+            if ($status == 2 && !$userCount) {
+                UserListingCount::create([
+                    'user_id' => $listing->created_by,
+                    'date' => $listing->created_at,
+                    'approved_count' => 0,
+                    'reject_count' => 1,
+                ]);
+            } else if ($status == 2 && $userCount) {
+                $userCount->update([
+                    'reject_count' => ++$userCount->reject_count,
+                ]);
+            }
+            
+            if ($status == 0 && $userCount) {
+                $userCount->update([
+                    'reject_count' => --$userCount->reject_count,
+                ]);
+            }
+        }
+
+        $listings->map(function ($list) use ($status) {
             $additionalInfo = UserListingInfo::where("image", $list->images)
                 ->where('title', $list->title)
                 ->first();

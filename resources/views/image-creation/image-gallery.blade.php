@@ -50,7 +50,7 @@
 
                 <div class="card-body">
                     <div class="table-responsive">
-                        <div  class="row mb-2">
+                        <div class="row mb-2">
                             <div class="col-md-5" id='update'></div>
                         </div>
                         <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">
@@ -73,7 +73,7 @@
                                         <input type="checkbox" name="ids" class="checkbox-update" value="{{$file['name']}}" />
                                     </td>
                                     <td>{{++$key}}</td>
-                                    <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="/storage/uploads/{{ $file['name'] }}" alt="Product Image" width="100" /></td>
+                                    <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ route('assets', $file['name']) }}" alt="Product Image" width="100" /></td>
                                     <td>{{ $file['name'] }}</td>
                                     <td>{{ round($file['size']/1000, 1) }} kb</td>
                                     <td>{{ date("d-m-Y h:i A", strtotime($file['datetime'])) }}</td>
@@ -86,7 +86,7 @@
                                             <a href='#' class="copy" id="{{ url('/') }}/storage/uploads/{{ $file['name'] }}"">
                                                 <i class=" fa fa-copy" style="font-size: 20px;"></i>
                                             </a>
-                                            <a href="/storage/uploads/{{ $file['name'] }}" target="_blank" id='downloadMultipleImage'>
+                                            <a href="{{ route('assets', $file['name']) }}" target="_blank" id='downloadMultipleImage'>
                                                 <i class="fa fa-eye" style="font-size: 20px;"></i>
                                             </a>
                                             <a href="{{ route('image.gallery.delete', ['name' => $file['name']]) }}">
@@ -137,8 +137,7 @@
 <script>
     $(document).ready(function() {
         //______Basic Data Table
-        $('#basic-datatable').DataTable({
-        });
+        $('#basic-datatable').DataTable({});
 
         $("#category").on("change", function() {
             $("#form").submit();

@@ -12,8 +12,8 @@
                     <div class="col-md-6">
                         <h5>Google Merchant Center</h5>
                         <div class="d-flex align-items-center" style="grid-gap:15px;">
-                            <input type="text" disabled class="form-control" value="{{ url('/') }}/storage/merchant-file.xlsx" />
-                            <img src="/copy.png" width="25" title="Copy URL" class="copy" id="{{ url('/') }}/storage/merchant-file.xlsx" />
+                            <input type="text" disabled class="form-control" value="{{ url('/') }}/storage/merchant-file.tsv" />
+                            <img src="/copy.png" width="25" title="Copy URL" class="copy" id="{{ url('/') }}/storage/merchant-file.tsv" />
                         </div>
                         <h5 class="mb-0 mt-2">Social Media Files</h5>
                         <div class="d-flex" style="grid-gap: 10px;">

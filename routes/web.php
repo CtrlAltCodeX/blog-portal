@@ -40,6 +40,8 @@ Route::post('/auth/google/refresh', [GoogleController::class, 'refreshGoogle'])
 
 Route::match(['get', 'post'], '/verify/otp', [LoginController::class, 'authenticateOTP'])->name('verify.otp');
 
+Route::get('assets/{id}', \App\Http\Controllers\ImageMakerController::class)->name('assets');
+
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function () {
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');

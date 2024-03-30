@@ -52,7 +52,7 @@
 
             nameValidate(inputValue, this);
 
-            emailValidate(inputValue, this);
+            domainValidation(inputValue, this);
         })
 
         $('textarea').on('input', function() {
@@ -62,7 +62,7 @@
 
             nameValidate(textareaValue, this);
 
-            emailValidate(textareaValue, this);
+            domainValidation(textareaValue, this);
         })
 
         $('#url').on('input', function() {
@@ -249,12 +249,14 @@
             }
         }
 
-        function emailValidate(val, currentElement) {
+        function domainValidation(val, currentElement) {
             var fieldId = $(currentElement).attr('name');
             var validateFields = JSON.parse(localStorage.getItem('validate'));
 
             if (fieldId != 'url') {
-                var urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
+                const urlRegex = /^([a-zA-Z0-9-]+)(?:\.[a-zA-Z]{2,})+(?:\/[^\s]*)?$/;
+
+                // var urlRegex = /^(ftp):\/\/[^ "]+$/;
                 if (urlRegex.test(val)) {
                     var data = [];
                     for (var i = 0; i < validateFields.length; i++) {

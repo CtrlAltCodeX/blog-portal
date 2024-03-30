@@ -18,6 +18,7 @@
         "maatwebsite/excel": "^3.1",
         "sadiqsalau/laravel-otp": "^1.0",
         "spatie/dropbox-api": "^1.22",
+        "spatie/flysystem-dropbox": "^3.0",
         "spatie/laravel-permission": "^6.3",
         "tzsk/collage": "^7.0",
         "weidner/goutte": "^2.3"

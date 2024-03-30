@@ -64,12 +64,16 @@ class BackupListing extends Command
 
             $merchantFileTime = now();
             $googleMerchantfileName = 'merchant-file' . $merchantFileTime . '.tsv';
+            $singleGoogleMerchantfileName = 'merchant-file.tsv';
             Excel::store(new ListingsExport($listingData->getMerchantExportFile()), "/public/" . $googleMerchantfileName);
+            Excel::store(new ListingsExport($listingData->getMerchantExportFile()), "/public/" . $singleGoogleMerchantfileName);
             // Log::channel('backup_activity_log')->info('Google Merchant File Downloaded - ');
 
             $facebookFileTime = now();
             $facebookPixelfileName = 'facebook-file' . $facebookFileTime . '.xlsx';
+            $singleFacebookPixelfileName = 'facebook-file.xlsx';
             Excel::store(new BackupListingsExport($listingData->getFacebookExportFile()), "/public/" . $facebookPixelfileName);
+            Excel::store(new BackupListingsExport($listingData->getFacebookExportFile()), "/public/" . $singleFacebookPixelfileName);
             // Log::channel('backup_activity_log')->info('Facebook Pixel File Downloaded - ');
 
             $sqlFileTime = now();
@@ -85,6 +89,9 @@ class BackupListing extends Command
 
             // Close the zip archive
             $zip->close();
+
+            Storage::disk('dropbox')->put('files/' . $sqlfileName, $listingData->exportSQL()[1]);
+            Storage::disk('dropbox')->put('files/' . $fileName, file_get_contents(storage_path('app/public/' . $fileName)));
 
             $allEmails = BackupEmail::all();
             $emailTo = [];
@@ -249,39 +256,5 @@ class BackupListing extends Command
         $siteSetting = SiteSetting::first();
 
         if ($siteSetting) return $siteSetting->url;
-    }
-
-    /**
-     * Upload File
-     *
-     * @return void
-     */
-    public function uploadfile()
-    {
-        try {
-            $client = new Client();
-            $file = request()->file('file');
-
-            $data = json_encode([
-                'autorename' => false,
-                "mode" => "add",
-                "strict_conflict" => false,
-                "path" => "/Homework/math/Matrices.txt"
-            ]);
-
-            $response = $client->post('https://content.dropboxapi.com/2/files/upload', [
-                'headers' => [
-                    'Dropbox-API-Arg' => $data,
-                    'Content-Type' => 'application/octet-stream',
-                    'Authorization' => 'Bearer sl.ByKvEJVq5sqmyyc38wjnViIAGuwZ4o5O43R8-A0HHxMr-f1L_LSnc2jRWmSVSQXorFFzv0WOh0JVAJ3LK6rphhXWcIDw7IaXwk7B-BEccGKtXgZDmH9KBLo22-wiT4r-mo_0_zQmCIPbnlw'
-                ],
-            ]);
-
-            $tokenData = json_decode($response->getBody(), true);
-dd($tokenData);
-            return $tokenData;
-        } catch (\Exception $e) {
-            dd($e);
-        }
     }
 }

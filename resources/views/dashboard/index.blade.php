@@ -3,6 +3,7 @@
 @section('title', __("Dashboard"))
 
 @section('content')
+
 <!-- CONTAINER -->
 <div class="main-container container-fluid">
     <!-- PAGE-HEADER -->
