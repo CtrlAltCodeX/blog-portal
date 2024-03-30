@@ -3,7 +3,6 @@
 @section('title', 'Login')
 
 @section('content')
-<!-- <img src="{{ route('asset.name', 'logo-3.png') }}" /> -->
 <form method="POST" action="{{ route('verify.otp') }}" id='form'>
     @csrf
 

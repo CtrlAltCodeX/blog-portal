@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Listing;
+use App\Models\UserListingCount;
 use App\Models\UserSession;
 use App\Services\GoogleService;
 use Carbon\Carbon;
@@ -41,7 +43,20 @@ class DashboardController extends Controller
         $userSessionsCount = UserSession::where("user_id", auth()->user()->id)
             ->get();
 
-        return view('dashboard.index', compact('userSessionsCount'));
+        $listingCount = UserListingCount::where("user_id", auth()->user()->id)
+            ->get();
+
+        $pendingListingCount = Listing::where("created_by", auth()->user()->id)
+            ->count();
+
+        $approvedCount = 0;
+        $rejectedCount = 0;
+        foreach ($listingCount as $count) {
+            $approvedCount += $count->approved_count;
+            $rejectedCount += $count->reject_count;
+        }
+
+        return view('dashboard.index', compact('userSessionsCount', 'approvedCount', 'rejectedCount', 'pendingListingCount'));
     }
 
     /**

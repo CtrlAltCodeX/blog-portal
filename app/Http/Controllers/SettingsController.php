@@ -73,7 +73,7 @@ class SettingsController extends Controller
 
         $data = [
             'url' => request()->url,
-            'logo' => $logoImage ?? $siteSettings->homepage_image ?? '',
+            'logo' => $logoImage ?? $siteSettings->logo ?? '',
             'homepage_image' => $fileName ?? $siteSettings->homepage_image ?? '',
             'product_background_image' => 'custom_image.jpg',
             'watermark_text' => request()->watermark_text

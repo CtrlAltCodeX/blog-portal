@@ -72,7 +72,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                 @endcan
 
                 @can('Inventory (Main Menu)')
-                <li class="slide {{ (request()->is('admin/inventory') || request()->is('admin/inventory/drafted') || request()->is('admin/inventory/review') || request()->is('admin/google/products/list')) ? 'is-expanded' : '' }}">
+                <li class="slide {{ (request()->is('admin/inventory') || request()->is('admin/inventory/drafted') || request()->is('admin/inventory/review') || request()->is('admin/google/products/list') || request()->is('admin/profile/listings')) ? 'is-expanded' : '' }}">
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-box"></i><span class="side-menu__label">{{ __('Inventory') }}</span><i class="angle fe fe-chevron-right"></i></a>
                     <ul class="slide-menu">
                         <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
@@ -86,8 +86,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         @can('Inventory -> Under Review Inventory')
                         <li><a href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => 3]) }}" class="slide-item {{ request()->is('admin/inventory/review') ? 'active' : '' }}">{{ __('Under Review Inventory') }}</a></li>
                         @endcan
-                        <!-- <li><a href="{{ route('backup.listings') }}" class="slide-item {{ request()->is('admin/backup/listings') ? 'active' : '' }}">{{ __('Backup Inventory') }}</a></li> -->
-                        <!-- <li><a href="{{ route('google.products.list') }}" class="slide-item {{ request()->is('admin/google/products/list') ? 'active' : '' }}">{{ __('Merchant Inventory') }}</a></li> -->
+                        <li><a href="{{ route('profile.listing') }}" class="slide-item {{ (request()->is('admin/profile/listings')) ? 'active' : '' }}">{{ __('Listing Reports ( DB )') }}</a></li>
                     </ul>
                 </li>
                 @endcan

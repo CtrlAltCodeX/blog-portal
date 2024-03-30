@@ -22,8 +22,8 @@ class FourImage extends CollageGenerator
     {
         $this->check(4);
 
-        $height = $this->file->getHeight() - 180;
-        $width = $this->file->getWidth() - 280;
+        $height = $this->file->getHeight() - 70;
+        $width = $this->file->getWidth() - 190;
 
         $this->canvas = ImageManagerStatic::canvas($width, $height);
 
@@ -88,16 +88,16 @@ class FourImage extends CollageGenerator
         $height = round($height);
 
         $one = $this->images->get(0);
-        $this->canvas->insert($one->fit($width, $height), 'top-left');
+        $this->canvas->insert($one->fit(180, 240), 'top-left');
 
         $two = $this->images->get(1);
-        $this->canvas->insert($two->fit($width, $height), 'top-right');
+        $this->canvas->insert($two->fit(180, 240), 'top-right');
 
         $three = $this->images->get(2);
-        $this->canvas->insert($three->fit($width, $height), 'bottom-left');
+        $this->canvas->insert($three->fit(180, 240), 'bottom-left');
 
         $four = $this->images->get(3);
-        $this->canvas->insert($four->fit($width, $height), 'bottom-right');
+        $this->canvas->insert($four->fit(180, 240), 'bottom-right');
     }
 
     /**

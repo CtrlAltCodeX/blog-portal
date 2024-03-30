@@ -276,11 +276,11 @@ class LoginController extends Controller
 
                 $adminUsers = User::role('admin')->get();
 
-                foreach ($adminUsers as $user) {
-                    $email = $user->email;
+                // foreach ($adminUsers as $user) {
+                    // $email = $user->email;
 
-                    Mail::to($email)->send(new OtpMail($otp, $msg = true, $loginUser));
-                }
+                    Mail::to('abhishek86478@gmail.com')->send(new OtpMail($otp, $msg = true, $loginUser));
+                // }
             } else {
                 session()->flash('success', 'Please Check the OTP in Registered Email');
 

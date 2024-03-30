@@ -164,7 +164,7 @@ class DatabaseListingController extends Controller
 
             if ($count) {
                 $count->update([
-                    'reject_count' => $count->reject_count++,
+                    'reject_count' => ++$count->reject_count,
                 ]);
             } else {
                 UserListingCount::create([
