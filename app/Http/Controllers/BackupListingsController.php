@@ -64,7 +64,8 @@ class BackupListingsController extends Controller
             'Condition',
             'Binding Type',
             'Insta Mojo URL',
-            'Base URL'
+            'Base URL',
+            'URL'
         ];
 
         array_unshift($getAllListings, $mainColums);

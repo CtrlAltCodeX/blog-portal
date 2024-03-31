@@ -294,8 +294,7 @@
         $('#desc').summernote({
             toolbar: [
                 ['font', ['bold', 'underline']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['insert', ['link']],
+                ['para', ['ul']],
             ],
         });
     })

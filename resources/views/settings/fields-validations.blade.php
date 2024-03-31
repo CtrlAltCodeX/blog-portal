@@ -125,6 +125,7 @@
 
             $("#link-validation .button").html("Update");
             $("#link-validation .button").attr("id", "update");
+            $("#link-validation .button").attr('id-no', $(this).attr('id'))
         })
 
         $(".name-edit").click(function() {
@@ -145,7 +146,7 @@
 
         $("#link-validation").on("click", "#update", function(e) {
             e.preventDefault();
-            var id = $('.link-edit').attr('id');
+            var id = $(this).attr('id-no');
             $("#link-validation").attr('action', "/admin/settings/keywords/update/" + id + "")
             $("#link-validation").attr('method', "post")
             $("#link-validation").submit();

@@ -198,6 +198,13 @@ class BackupListing extends Command
                         $images[] = $imageElement->getAttribute('src');
                     }
                 }
+                
+                $link = '';
+                if(isset($products->link[4])) {
+                    $link = $products->link[4]->href;
+                } else {
+                    $link = $products->link[2]->href;
+                }
 
                 $productTitle = str_replace("'", "", trim($productTitle));
                 $allInfo = [
@@ -218,8 +225,9 @@ class BackupListing extends Command
                     'insta_mojo_url' => trim($instaUrl),
                     'base_url' => $image ?? '',
                     'multiple' => $images,
-                    'url' => $products->link[4]->href
+                    'url' => $link
                 ];
+                
 
                 if ($product = ModelsBackupListing::where("product_id", $productId)->first()) {
                     $product->update($allInfo);
