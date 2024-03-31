@@ -24,6 +24,7 @@
                         {!! session('error') !!}
                     </div>
                     @endif
+                    <label>Email / Username</label>
                     <div class="wrap-input100 validate-input input-group is-invalid">
                         <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" placeholder="Email" @if(session()->get('session_email')) value="{{ session()->get('session_email') }}" @else value="{{ old('email') }}" @endif autocomplete="email" autofocus>
 
@@ -34,12 +35,13 @@
                         @enderror
                     </div>
 
-                    <div class="wrap-input100 validate-input input-group mt-5" id="Password-toggle">
+                    <label class="mt-2">Password</label>
+                    <div class="wrap-input100 validate-input input-group" id="Password-toggle">
                         <div class="wrap-input100 validate-input input-group" id="Password-toggle">
+                            <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="Password" autofocus @if(session()->get('session_password')) value="{{ session()->get('session_password') }}" @endif>
                             <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
                                 <i class="zmdi zmdi-eye" aria-hidden="true"></i>
                             </a>
-                            <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="Password" autofocus @if(session()->get('session_password')) value="{{ session()->get('session_password') }}" @endif>
                         </div>
                         @error('password')
                         <span class="invalid-feedback" role="alert">
@@ -54,7 +56,7 @@
                     </div>
                     <div class="container-login100-form-btn">
                         <button type="submit" class="login100-form-btn btn-primary">
-                            Login
+                            Login To Get OTP
                         </button>
                     </div>
                     <div class="container-login100-form-btn">

@@ -50,6 +50,7 @@ class DatabaseSeeder extends Seeder
         Permission::create(['name' => 'Image Creation -> Single Image Maker']);
         Permission::create(['name' => 'Image Creation -> Combo Image Maker']);
         Permission::create(['name' => 'Image Creation -> Gallery ( DB )']);
+        Permission::create(['name' => 'Image Creation -> Gallery ( DB ) -> Delete']);
 
         Permission::create(['name' => 'Inventory (Main Menu)']);
         Permission::create(['name' => 'Inventory -> Manage Inventory']);

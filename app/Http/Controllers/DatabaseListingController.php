@@ -30,7 +30,7 @@ class DatabaseListingController extends Controller
             ->where('status', request()->status)
             ->where('categories', 'LIKE', '%' . request()->category . '%');
 
-        if (!auth()->user()->hasRole('Admin')) {
+        if (!auth()->user()->hasRole('Super Admin')) {
             $googlePosts = $googlePosts->where('created_by', auth()->user()->id);
         }
 
@@ -38,9 +38,19 @@ class DatabaseListingController extends Controller
 
         $allCounts = Listing::count();
 
-        $pendingCounts = Listing::where('status', 0)->count();
-
-        $rejectedCounts = Listing::where('status', 2)->count();
+        $pendingCounts = Listing::where('status', 0);
+        
+        $rejectedCounts = Listing::where('status', 2);
+        
+        if (!auth()->user()->hasRole('Super Admin')) {
+            $pendingCounts = $pendingCounts->where('created_by', auth()->user()->id);
+            
+            $rejectedCounts = $rejectedCounts->where('created_by', auth()->user()->id);
+        }
+        
+        $pendingCounts = $pendingCounts->count();
+        
+        $rejectedCounts = $rejectedCounts->count();
 
         return view('database-listing.index', compact('googlePosts', 'allCounts', 'pendingCounts', 'rejectedCounts'));
     }

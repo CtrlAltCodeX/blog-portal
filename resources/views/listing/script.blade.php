@@ -290,6 +290,14 @@
                 $(".fields .btn").attr('disabled', false);
             }
         }
+
+        $('#desc').summernote({
+            toolbar: [
+                ['font', ['bold', 'underline']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['insert', ['link']],
+            ],
+        });
     })
 
     function copyLink() {

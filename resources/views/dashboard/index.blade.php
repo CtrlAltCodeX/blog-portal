@@ -51,7 +51,7 @@
     </div>
 
     <div class="page-header m-0">
-        <h1 class="page-title">{{ __('Products') }}</h1>
+        <h1 class="page-title">{{ __('Total Products') }}</h1>
     </div>
 
     <div class="row">
@@ -106,6 +106,10 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="page-header m-0">
+                    <h1 class="page-title">{{ __('Review Listings') }}</h1>
                 </div>
 
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
@@ -167,6 +171,11 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="page-header m-0">
+                    <h1 class="page-title">{{ __('User Listing Reports') }}</h1>
+                </div>
+
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
                     <div class="card overflow-hidden">
                         <div class="card-body">
@@ -204,7 +213,7 @@
                                 <div class="mt-2">
                                     <h6 class="">Rejected</h6>
                                     <!-- <a target="_blank" href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => '3Y']) }}"> -->
-                                        <h2 class="mb-0 number-font" id='rejected'>{{ $rejectedCount }}</h2>
+                                    <h2 class="mb-0 number-font" id='rejected'>{{ $rejectedCount }}</h2>
                                     <!-- </a> -->
                                 </div>
                             </div>
@@ -228,7 +237,7 @@
     </div>
 
     <div class="page-header m-0">
-        <h1 class="page-title">{{ __('Stock') }}</h1>
+        <h1 class="page-title">{{ __('Stock Health') }}</h1>
     </div>
 
     <div class="row">

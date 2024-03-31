@@ -94,8 +94,6 @@ class ImageMakerController extends Controller
             return strtotime($b['datetime']) - strtotime($a['datetime']);
         });
 
-        $files = $this->paginate($files);
-
         return view('image-creation.image-gallery', compact('files'));
     }
 

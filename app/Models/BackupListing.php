@@ -26,5 +26,6 @@ class BackupListing extends Model
         'binding_type',
         'insta_mojo_url',
         'base_url',
+        'url',
     ];
 }

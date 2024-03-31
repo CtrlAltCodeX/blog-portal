@@ -25,7 +25,7 @@
     <!-- Row -->
 
     <div class="row">
-        <div class="col-md-9 col-xl-9 fields">
+        <div class="col-md-9 col-xl-12 fields">
             <form action="{{ route('listing.update', $post->id) }}" method="POST" enctype='multipart/form-data' id='form'>
                 @csrf
                 @method('PUT')
@@ -56,9 +56,18 @@
 
                             <div class="form-group">
                                 <label for="description" class="form-label d-flex justify-content-between">
-                                    <div>{{ __('Product Description') }}<span class="text-danger">*</span><span class="text-danger"> ( Enter Detail Description without using 3rd party link) </span></div><a target='_blank' href="https://chat.openai.com">ChatGPT</a>
+                                    <div>{{ __('Product Description') }}<span class="text-danger">*</span><span class="text-success"> (Suggestion - Title + Description + Search Key) </span></div>
+                                    <div>
+                                        <a href='https://www.commontools.org/tool/replace-new-lines-with-commas-40' target='_blank'>Line Remover | </a><a target='_blank' href="https://chat.openai.com"> ChatGPT</a>
+                                    </div>
                                 </label>
-                                <textarea class="form-control @error('description') is-invalid @enderror" name="description" placeholder="Description" rows="10">{{ old('description') ?? $allInfo['desc'] }}</textarea>
+                                <label for="description" class="form-label d-flex justify-content-between text-danger" style="margin-top: -10px;">
+                                    <div>{{ __('Do not use 3rd Party Links/Website Names') }}</div>
+                                </label>
+                                <!-- <label for="description" class="form-label d-flex justify-content-between">
+                                    <div>{{ __('Product Description') }}<span class="text-danger">*</span><span class="text-danger"> ( Enter Detail Description without using 3rd party link) </span></div><a target='_blank' href="https://chat.openai.com">ChatGPT</a>
+                                </label> -->
+                                <textarea class="form-control @error('description') is-invalid @enderror" name="description" placeholder="Description" rows="10" id='desc'>{{ old('description') ?? $allInfo['desc'] }}</textarea>
                                 <span class="error-message description" style="color:red;"></span>
 
                                 @error('description')
@@ -86,7 +95,13 @@
                             </div>
 
                             <div class="form-group col-md-6">
-                                <label for="selling_price" class="form-label">{{ __('Selling Price') }}<span class="text-danger">*</span></label>
+                                <label for="selling_price" class="form-label d-flex justify-content-between">
+                                    <div>{{ __('Selling Price') }}<span class="text-danger">*</span></div>
+                                    <div>
+                                        <a href='https://support.exam360.co.in/' target='_blank'>Calculator |</a><a target='_blank' href="https://docs.google.com/spreadsheets/d/1uSqo6RhsLHaVcVrkEjO_SmOWiXqWBC-aV1LvsowgsL0/"> Disc. Info.</a>
+
+                                    </div>
+                                </label>
                                 <input id="selling_price" type="number" class="form-control @error('selling_price') is-invalid @enderror" name="selling_price" value="{{ old('selling_price') ?? $allInfo['selling']  }}" autocomplete="selling_price" autofocus placeholder="Selling Price">
 
                                 @error('selling_price')
@@ -288,7 +303,7 @@
             </form>
         </div>
 
-        <div class="col-md-3">
+        <!-- <div class="col-md-3">
             <div class="card">
                 <div class="card-body">
                     <div class="form-group">
@@ -357,7 +372,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
     <!-- End Row -->
 </div>
@@ -373,13 +388,6 @@
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 <script>
     $(document).ready(function() {
-        $('#desc').summernote({
-            lang: 'hi',
-            fontNames: ['Roboto Light', 'Roboto Regular', 'Roboto Bold', 'Thai Sans Neue Light', 'Thai Sans Neue Regular', 'Thai Sans Neue Bold'],
-            fontNamesIgnoreCheck: ['Roboto Light', 'Roboto Regular', 'Roboto Bold', 'Thai Sans Neue Light', 'Thai Sans Neue Regular', 'Thai Sans Neue Bold'],
-            fontNamesIgnoreCheck: ['Merriweather']
-        });
-
         $("#multipleFiles").change(function() {
             $('#multiImagesDownload').show();
         })
@@ -392,211 +400,4 @@
 
 @include('listing.script')
 
-<script>
-    // $('input').on('input', function() {
-    //     var inputValue = $(this).val();
-    //     var urlRegex = /^(http|https):\/\/[^\s]*$/i;
-
-    //     if ((urlRegex.test(inputValue) &&
-    //             inputValue != 'http://' &&
-    //             inputValue != 'url') ||
-    //         (inputValue == '[' ||
-    //             inputValue == ']')
-    //     ) {
-    //         // Display error message
-    //         var fieldId = $(this).attr('name');
-    //         if (fieldId != 'images[]' && fieldId != 'multipleImages[]') {
-    //             $('.' + fieldId).text('Please do not enter any special characters or URLs.');
-    //             valid = false;
-    //             $(".fields .btn").attr('disabled', true);
-    //         }
-    //     } else {
-    //         var fieldId = $(this).attr('name');
-    //         $('.' + fieldId).text('');
-
-    //         valid = true;
-    //         $(".fields .btn").attr('disabled', false);
-    //     }
-
-    //     if (inputValue == '') {
-    //         var fieldId = $(this).attr('name');
-    //         if (fieldId != 'images[]' &&
-    //             fieldId != 'multipleImages[]' &&
-    //             fieldId != 'files' &&
-    //             fieldId
-    //         ) {
-    //             $('.' + fieldId).text('This field is required');
-    //             requiredvalid = false;
-    //             $(".fields .btn").attr('disabled', true);
-    //         }
-    //     } else {
-    //         var fieldId = $(this).attr('name');
-    //         $('.' + fieldId).text('');
-    //         requiredvalid = true;
-    //         $(".fields .btn").attr('disabled', false);
-    //     }
-    // })
-
-    // $('textarea').on('input', function() {
-    //     var textareaValue = $(this).val();
-    //     var urlRegex = /^(http|https):\/\/[^\s]*$/i;
-
-    //     if (urlRegex.test(textareaValue)) {
-    //         // Display error message
-    //         var fieldId = $(this).attr('name');
-    //         $('.' + fieldId).text('Please do not enter special characters or URLs.');
-    //         valid = false;
-    //     }
-
-    //     if (textareaValue == '') {
-    //         var fieldId = $(this).attr('name');
-    //         if (fieldId) {
-    //             $('.' + fieldId).text('This field is required');
-
-    //             requiredvalid = false;
-
-    //             $(".fields .btn").attr('disabled', true);
-    //         }
-    //     } else {
-    //         $(".fields .btn").attr('disabled', false);
-    //     }
-    // })
-
-    // $('#url').on('input', function() {
-    //     var url = $(this).val();
-    //     if (!url.includes('https://www.instamojo.com/EXAM360/')) {
-    //         $('.fields .url').text('Please add instamojo link');
-    //         valid = false;
-    //         $(".fields .btn").attr('disabled', true);
-    //     } else {
-    //         $('.fields .url').text('');
-    //         valid = true;
-    //         $(".fields .btn").attr('disabled', false);
-    //     }
-    // })
-
-    // $('#form').submit(function(event) {
-    //     // Reset previous error messages
-    //     $('.error-message').text('');
-
-    //     // Flag to check if any URL is found
-    //     var valid = true;
-    //     var requiredvalid = true;
-
-    //     // Iterate over each input field with the class 'no-url-validation'
-    //     $('input').each(function() {
-    //         var inputValue = $(this).val();
-    //         var urlRegex = /^(http|https):\/\/[^\s]*$/i;
-
-    //         if (urlRegex.test(inputValue) &&
-    //             inputValue != 'http://' &&
-    //             inputValue != 'url'
-    //         ) {
-    //             // Display error message
-    //             var fieldId = $(this).attr('name');
-    //             if (fieldId != 'images[]' && fieldId != 'multipleImages[]') {
-    //                 $('.' + fieldId).text('Please do not enter URLs.');
-    //                 valid = false;
-    //             }
-    //         }
-
-    //         if (inputValue == '') {
-    //             var fieldId = $(this).attr('name');
-    //             if (fieldId != 'images[]' &&
-    //                 fieldId != 'multipleImages[]' &&
-    //                 fieldId != 'files' &&
-    //                 fieldId
-    //             ) {
-    //                 $('.' + fieldId).text('This field is required');
-
-    //                 requiredvalid = false;
-    //             }
-    //         }
-    //     });
-
-    //     $('textarea').each(function() {
-    //         var textareaValue = $(this).val();
-    //         var urlRegex = /^(http|https):\/\/[^\s]*$/i;
-
-    //         if (urlRegex.test(textareaValue)) {
-    //             // Display error message
-    //             var fieldId = $(this).attr('name');
-    //             $('.' + fieldId).text('Please do not enter URLs.');
-    //             valid = false;
-    //         }
-
-    //         if (textareaValue == '') {
-    //             var fieldId = $(this).attr('name');
-    //             if (fieldId) {
-    //                 $('.' + fieldId).text('This field is required');
-
-    //                 requiredvalid = false;
-    //             }
-    //         }
-    //     });
-
-    //     var url = $('#url').val();
-
-    //     if (!url.includes('https://www.instamojo.com/EXAM360/')) {
-    //         $('.url').text('Please add instamojo link');
-    //         valid = false;
-    //     } else {
-    //         $('.url').text('');
-    //         valid = true;
-    //     }
-
-    //     if (!valid || !requiredvalid) {
-    //         event.preventDefault();
-    //     }
-    // });
-
-    // setTimeout(function() {
-    //     calculateFields();
-    // }, 1000);
-
-    // $(".fields select.form-control").on('change', function() {
-    //     calculateFields();
-    // });
-
-    // $(".fields input.form-control").on('input', function() {
-    //     calculateFields();
-    // })
-
-    // // $(".fields textarea.form-control").on('input', function() {
-    // //     calculateFields();
-    // // })
-
-    // function calculateFields() {
-    //     var totalFields = $(".fields input.form-control").length +
-    //         $(".fields select.form-control").length;
-    //     // $(".fields textarea.form-control").length;
-    //     var filledFields = 0;
-    //     var emptyFields = 0;
-    //     var notDefined = 0;
-
-    //     $(".fields input.form-control").each(function(index) {
-    //         var fieldValue = $(this).val();
-
-    //         if (fieldValue != '' && fieldValue != 'http://') {
-    //             filledFields++;
-    //         } else if ($(this).attr('name') !== undefined) {
-    //             emptyFields++;
-    //         } else if ($(this).attr('name') === undefined) {
-    //             notDefined++;
-    //         }
-    //     });
-
-    //     $(".fields select.form-control").each(function() {
-    //         var fieldValue = $(this).val();
-    //         if (fieldValue == '') emptyFields++;
-    //     });
-
-    //     // $(".fields textarea.form-control").each(function() {
-    //     //     var fieldValue = $(this).val();
-    //     //     if (fieldValue == '') emptyFields++;
-    //     // });
-
-    //     $("#progressBar").html(emptyFields + " Remaining Out of " + (totalFields - notDefined) + " Fields");
-    // }
-</script>
 @endpush

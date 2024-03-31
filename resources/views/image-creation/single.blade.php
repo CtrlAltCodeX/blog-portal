@@ -14,12 +14,17 @@ $formRoute = "/admin/images/watermark/store";
 <div class="row">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-body">
+            <div class="card-header d-flex justify-content-between">
+                <h4 class="card-title">
+                    Single Image Maker
+                </h4>
+            </div>
+            <div class="card-body pt-0">
                 <div class="form-group">
                     <div id="fileInputContainer">
                         <div class="form-group"></div>
-                        <div class="d-flex justify-content-between">
-                            <label for="fileInput1" class="mt-2">Images<span class="text-danger">*</span>( Multiple Images )</label>
+                        <div class="d-flex justify-content-end">
+                            <!-- <label for="fileInput1" class="mt-2">Single Image Maker</label> -->
                             <form action="" method="get" id='form'>
                                 <div>
                                     <input type="radio" class="m-2" name="maker" id="w-watermark" value='w-watermark' {{ request()->maker == 'w-watermark' ?  'checked' : '' }} />
@@ -35,6 +40,8 @@ $formRoute = "/admin/images/watermark/store";
                             @csrf
                             <div class="form-group mt-2" @error('file') style="border: red 2px dotted;" @enderror>
                                 @if(request()->maker == 'wo-watermark')
+                                <label for="fileInput1">Image without Watermark<span class="text-danger">*</span></label>
+
                                 <input type="file" class="dropify @error('file') is-invalid @enderror" name="file" multiple>
                                 <div id='multiImagesDownload' style="display: none;">
                                     <a href='#' class="w-100 d-flex justify-content-end my-4">
@@ -44,6 +51,8 @@ $formRoute = "/admin/images/watermark/store";
                                 @endif
 
                                 @if(request()->maker == 'w-watermark')
+                                <label for="fileInput1">Image with Watermark<span class="text-danger">*</span></label>
+
                                 <input type='hidden' name='with_watermark' value=1 />
                                 <div class="form-group">
                                     @error('title')
@@ -54,8 +63,6 @@ $formRoute = "/admin/images/watermark/store";
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="fileInput1">Watermark Image<span class="text-danger">*</span></label>
-
                                     <div class="form-group mb-0 @error('file') is-invalid @enderror" @error('file') style="border: red 2px dotted;" @enderror>
                                         <input type="file" class="dropify @error('images') is-invalid @enderror" data-bs-height="180" id="file" name="file" />
                                     </div>

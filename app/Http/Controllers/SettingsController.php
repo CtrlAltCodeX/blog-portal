@@ -135,7 +135,7 @@ class SettingsController extends Controller
         $row = FieldValidation::find($id);
 
         $row->update([
-            'name' => request()->name,
+            'name' => request()->name ?? '',
             'links' => request()->link,
         ]);
 

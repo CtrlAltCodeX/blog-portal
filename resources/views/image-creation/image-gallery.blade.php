@@ -67,12 +67,13 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @php $i = 0; @endphp
                                 @forelse ($files as $key => $file)
                                 <tr>
                                     <td>
                                         <input type="checkbox" name="ids" class="checkbox-update" value="{{$file['name']}}" />
                                     </td>
-                                    <td>{{++$key}}</td>
+                                    <td>{{++$i}}</td>
                                     <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ route('assets', $file['name']) }}" alt="Product Image" width="100" /></td>
                                     <td>{{ $file['name'] }}</td>
                                     <td>{{ round($file['size']/1000, 1) }} kb</td>
@@ -83,15 +84,17 @@
                                             <a href="{{ url('/') }}/storage/uploads/{{ $file['name'] }}" id='downloadMultipleImage' download="product-image.jpg">
                                                 <i class="fa fa-download" style="font-size: 20px;"></i>
                                             </a>
-                                            <a href='#' class="copy" id="{{ url('/') }}/storage/uploads/{{ $file['name'] }}"">
+                                            <a href='#' class="copy" id="{{ route('assets', $file['name']) }}">
                                                 <i class=" fa fa-copy" style="font-size: 20px;"></i>
                                             </a>
                                             <a href="{{ route('assets', $file['name']) }}" target="_blank" id='downloadMultipleImage'>
                                                 <i class="fa fa-eye" style="font-size: 20px;"></i>
                                             </a>
+                                            @can('Image Creation -> Gallery ( DB ) -> Delete')
                                             <a href="{{ route('image.gallery.delete', ['name' => $file['name']]) }}">
                                                 <i class="fa fa-trash" style="font-size: 20px;"></i>
                                             </a>
+                                            @endcan
                                         </div>
                                     </td>
                                 </tr>
@@ -145,7 +148,7 @@
 
         $("#update").html('<form id="update-status" action={{route("listing.status")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status"><option>Select</option><option value=1>Delete</option></select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div></form>');
 
-        $("#basic-datatable_wrapper").on('click', '.update-status', function(e) {
+        $(".table-responsive").on('click', '.update-status', function(e) {
             e.preventDefault();
             var formData = $('#update-status').serializeArray();
             formData.push(ids);
@@ -185,7 +188,18 @@
         });
 
         $('.check-all').click(function() {
-            $(".checkbox-update").click();
+            $(".checkbox-update").each(function() {
+                if ($('.check-all').prop('checked') == true) {
+                    $(this).prop('checked', true);
+                    ids.push($(this).val());
+                } else {
+                    $(this).prop('checked', false);
+                    var index = ids.indexOf($(this).val());
+                    if (index !== -1) {
+                        ids.splice(index, 1);
+                    }
+                }
+            });
         });
     })
 </script>

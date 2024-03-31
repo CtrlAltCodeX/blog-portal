@@ -85,23 +85,41 @@ class BackupListingsController extends Controller
             ->toArray();
 
         foreach ($getAllListingsFromDatabase as $key => $listing) {
+            $listingCat = json_decode($listing['categories']);
+            
+            if (
+                isset($listingCat)
+                && (in_array('Stk_o', $listingCat) || in_array('stock__out', $listingCat))
+            ) {
+                $stock = 'out_of_stock';
+            } else {
+                $stock = 'in stock';
+            }
+
             $getAllListings[$key][] = $listing['title'];
             $getAllListings[$key][] = $listing['product_id'];
             $getAllListings[$key][] = $listing['selling_price'];
             $getAllListings[$key][] = '0';
             $getAllListings[$key][] = '0';
-            $getAllListings[$key][] = $listing['condition'];
-            $getAllListings[$key][] = 'In Stock';
-            $getAllListings[$key][] = '';
-            $getAllListings[$key][] = '';
-            $getAllListings[$key][] = '';
+            $getAllListings[$key][] = strtolower($listing['condition']);
+            $getAllListings[$key][] = $stock;
+            $getAllListings[$key][] = 'IN';
+            $getAllListings[$key][] = 'Online';
+            $getAllListings[$key][] = 'IN';
             $getAllListings[$key][] = 'en';
             $getAllListings[$key][] = $listing['publisher'];
+            $getAllListings[$key][] = 'Online';
+            $getAllListings[$key][] = '0';
             $getAllListings[$key][] = $listing['description'];
-            $getAllListings[$key][] = '';
+            $getAllListings[$key][] = ' ';
+            $getAllListings[$key][] = ' ';
+            $getAllListings[$key][] = 'yes';
             $getAllListings[$key][] = $listing['base_url'];
-            $getAllListings[$key][] = '';
+            $getAllListings[$key][] = 'en';
+            $getAllListings[$key][] = ' ';
             $getAllListings[$key][] = 'IN';
+            $getAllListings[$key][] = '0';
+            $getAllListings[$key][] = '';
         }
 
         $mainColums = [
@@ -117,11 +135,18 @@ class BackupListingsController extends Controller
             'feed label',
             'language',
             'brand',
+            'channel',
+            'clicks',
             'description',
+            'feed label',
+            'free listings - disapproved or invalid',
             'identifier exists',
             'image link',
+            'language',
             'pause',
             'shipping(country)',
+            'unpaid clicks',
+            'update type',
         ];
 
         array_unshift($getAllListings, $mainColums);
@@ -142,13 +167,21 @@ class BackupListingsController extends Controller
             ->toArray();
 
         foreach ($getAllListingsFromDatabase as $key => $listing) {
+            if ($listing['condition'] == 'Old') {
+                $condition = 'used';
+            } else if ($listing['condition'] == 'Like New') {
+                $condition = 'used_like_new';
+            } else {
+                $condition = $listing['condition'];
+            }
+
             $getAllListings[$key][] = $listing['product_id'];
             $getAllListings[$key][] = $listing['title'];
             $getAllListings[$key][] = $listing['description'];
-            $getAllListings[$key][] = '';
-            $getAllListings[$key][] = $listing['condition'];
+            $getAllListings[$key][] = 'in stock';
+            $getAllListings[$key][] = $condition ? strtolower($condition) : 'new';
             $getAllListings[$key][] = $listing['mrp'];
-            $getAllListings[$key][] = '';
+            $getAllListings[$key][] = $listing['url'];
             $getAllListings[$key][] = $listing['base_url'];
             $getAllListings[$key][] = $listing['publisher'];
             $getAllListings[$key][] = '';
@@ -209,7 +242,7 @@ class BackupListingsController extends Controller
         if (request()->file && request()->type == 'google') {
             return Excel::download(new ListingsExport($this->getMerchantExportFile()), 'merchant-file.tsv', \Maatwebsite\Excel\Excel::TSV);
         } else if (request()->file && request()->type == 'facebook') {
-            return Excel::download(new BackupListingsExport($this->getFacebookExportFile()), 'facebook-file.xlsx');
+            return Excel::download(new BackupListingsExport($this->getFacebookExportFile()), 'facebook-file.csv');
         } else if (request()->file && request()->type == 'report') {
             return Excel::download(new BackupListingsExport($this->exportData()), 'report.xlsx');
         } else if (request()->file && request()->type == 'sql') {
@@ -430,6 +463,4 @@ class BackupListingsController extends Controller
             'Content-Disposition' => 'attachment',
         ])->deleteFileAfterSend();
     }
-
-    
 }

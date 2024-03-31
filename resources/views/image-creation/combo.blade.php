@@ -6,12 +6,17 @@
 <div class="row">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-body">
+            <div class="card-header d-flex justify-content-between">
+                <h4 class="card-title">
+                    Combo Image Maker
+                </h4>
+            </div>
+            <div class="card-body pt-0">
                 <div class="form-group">
                     <div id="fileInputContainer">
                         <div class="form-group"></div>
-                        <div class="d-flex justify-content-between">
-                            <label for="fileInput1" class="mt-2">Images<span class="text-danger">*</span>( Multiple Images )</label>
+                        <div class="d-flex justify-content-end">
+                            <!-- <label for="fileInput1" class="mt-2">Images<span class="text-danger">*</span>( Multiple Images )</label> -->
                             <form action="" method="get" id='form'>
                                 <div>
                                     <input type="radio" class="m-2" name="maker" id="with-watermark" value='w-watermark' {{ request()->maker == 'w-watermark' ?  'checked' : '' }} />
@@ -30,7 +35,7 @@
                                 <div class="form-group">
                                     <div class="d-flex justify-content-between mb-2 align-items-center">
                                         <div class="d-flex" style="grid-gap: 10px;">
-                                            <label for="fileInput1">Multiple Images<span class="text-danger">*</span></label>
+                                            <label for="fileInput1">Image without Watermark<span class="text-danger">*</span></label>
                                             <p id="selectedCount"></p>
                                         </div>
                                         <!-- <label for="fileInput1">Multiple Images<span class="text-danger">*</span></label> -->
@@ -51,8 +56,8 @@
                                 @if(request()->maker == 'w-watermark')
 
                                 <div class="form-group">
-                                    <div class="d-flex" style="grid-gap: 10px;">
-                                        <label for="fileInput1">Watermark Image<span class="text-danger">*</span></label>
+                                    <div class="d-flex justify-content-between" style="grid-gap: 10px;">
+                                        <label for="fileInput1">Image with Watermark<span class="text-danger">*</span></label>
                                         <p id="selectedCount"></p>
                                     </div>
 

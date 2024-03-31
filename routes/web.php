@@ -107,7 +107,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
             Route::get('delete/{id}', [SettingsController::class, 'keywordsDelete'])
                 ->name('settings.keywords.delete');
 
-            Route::get('update/{id}', [SettingsController::class, 'updateKeywords'])
+            Route::post('update/{id}', [SettingsController::class, 'updateKeywords'])
                 ->name('settings.keywords.update');
         });
     });

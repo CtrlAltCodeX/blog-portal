@@ -7,13 +7,7 @@
 @endpush
 
 @push('js')
-
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('#desc').summernote();
-    });
-</script>
 @endpush
 
 @section('content')
@@ -35,7 +29,7 @@
     <!-- Row -->
 
     <div class="row">
-        <div class="col-md-9 col-xl-9 fields">
+        <div class="col-md-9 col-xl-12 fields">
             <form action="{{ route('listing.store') }}" method="POST" enctype='multipart/form-data' id='form'>
                 @csrf
                 <div class="card">
@@ -75,7 +69,7 @@
                                     {{ old('description') }}
                                 </div> -->
 
-                                <textarea type="text" class="form-control @error('description') is-invalid @enderror" name="description" autocomplete="description" autofocus placeholder="Description" rows="10">{{ old('description') }}</textarea>
+                                <textarea type="text" class="form-control @error('description') is-invalid @enderror" name="description" autocomplete="description" autofocus placeholder="Description" rows="10" id='desc'>{{ old('description') }}</textarea>
                                 <span class="error-message description" style="color:red;"></span>
 
                                 @error('description')
@@ -104,7 +98,13 @@
                             </div>
 
                             <div class="form-group col-md-6">
-                                <label for="selling_price" class="form-label">{{ __('Selling Price') }}<span class="text-danger">*</span></label>
+                                <label for="selling_price" class="form-label d-flex justify-content-between">
+                                    <div>{{ __('Selling Price') }}<span class="text-danger">*</span></div>
+                                    <div>
+                                        <a href='https://support.exam360.co.in/' target='_blank'>Calculator |</a><a target='_blank' href="https://docs.google.com/spreadsheets/d/1uSqo6RhsLHaVcVrkEjO_SmOWiXqWBC-aV1LvsowgsL0/"> Disc. Info.</a>
+
+                                    </div>
+                                </label>
                                 <input id="selling_price" type="number" class="form-control @error('selling_price') is-invalid @enderror" name="selling_price" value="{{ old('selling_price') }}" autocomplete="selling_price" autofocus placeholder="Selling Price">
                                 <span class="error-message selling_price" style="color:red;"></span>
 
@@ -292,7 +292,7 @@
             </form>
         </div>
 
-        <div class="col-md-3">
+        <!-- <div class="col-md-3">
             <div class="card">
                 <div class="card-body">
                     <div class="form-group">
@@ -314,7 +314,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </div>
 </div>

@@ -274,7 +274,7 @@ class LoginController extends Controller
 
                 $loginUser = $user->name;
 
-                $adminUsers = User::role('admin')->get();
+                $adminUsers = User::role('Super Admin')->get();
 
                 // foreach ($adminUsers as $user) {
                     // $email = $user->email;

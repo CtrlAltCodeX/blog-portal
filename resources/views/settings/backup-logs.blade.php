@@ -25,8 +25,8 @@
                     <div class="col-md-6">
                         <h5>Facebook Commerce Manager</h5>
                         <div class="d-flex align-items-center" style="grid-gap:15px;">
-                            <input type="text" disabled class="form-control" value="{{ url('/') }}/storage/facebook-file.xlsx" />
-                            <img src="/copy.png" width="25" title="Copy URL" class="copy" id="{{ url('/') }}/storage/facebook-file.xlsx" />
+                            <input type="text" disabled class="form-control" value="{{ url('/') }}/storage/facebook-file.csv" />
+                            <img src="/copy.png" width="25" title="Copy URL" class="copy" id="{{ url('/') }}/storage/facebook-file.csv" />
                         </div>
                         <h5 class="mb-0 mt-2">Export DB Files</h5>
                         <div class="d-flex" style="grid-gap: 10px;">

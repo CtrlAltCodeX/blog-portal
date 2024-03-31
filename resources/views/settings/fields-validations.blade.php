@@ -138,16 +138,16 @@
         $("#name-validation").on("click", "#update", function(e) {
             e.preventDefault();
             var id = $('.name-edit').attr('id');
-            $("#name-validation").attr('action', "/admin/settings/update/keywords/" + id + "")
-            $("#name-validation").attr('method', "GET")
+            $("#name-validation").attr('action', "/admin/settings/keywords/update/" + id + "")
+            $("#name-validation").attr('method', "post")
             $("#name-validation").submit();
         });
 
         $("#link-validation").on("click", "#update", function(e) {
             e.preventDefault();
             var id = $('.link-edit').attr('id');
-            $("#link-validation").attr('action', "/admin/settings/update/keywords/" + id + "")
-            $("#link-validation").attr('method', "GET")
+            $("#link-validation").attr('action', "/admin/settings/keywords/update/" + id + "")
+            $("#link-validation").attr('method', "post")
             $("#link-validation").submit();
         });
     });

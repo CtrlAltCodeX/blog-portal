@@ -88,7 +88,7 @@ class BackupListing extends Command
             }
 
             // Close the zip archive
-            $zip->close();
+            // $zip->close();
 
             Storage::disk('dropbox')->put('files/' . $sqlfileName, $listingData->exportSQL()[1]);
             Storage::disk('dropbox')->put('files/' . $fileName, file_get_contents(storage_path('app/public/' . $fileName)));
@@ -218,6 +218,7 @@ class BackupListing extends Command
                     'insta_mojo_url' => trim($instaUrl),
                     'base_url' => $image ?? '',
                     'multiple' => $images,
+                    'url' => $products->link[4]->href
                 ];
 
                 if ($product = ModelsBackupListing::where("product_id", $productId)->first()) {
