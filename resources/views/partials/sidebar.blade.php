@@ -106,7 +106,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         </li>
                         @endcan
 
-                        @can('User Details (Main Menu)')
+                        @can('User Details -> All Users List')
                         <li><a href="{{ route('users.index') }}" class="slide-item {{ (request()->is('admin/users') || request()->is('admin/users/*/edit')) ? 'active' : '' }}">{{ __('All Users List') }}</a>
                         </li>
                         @endcan

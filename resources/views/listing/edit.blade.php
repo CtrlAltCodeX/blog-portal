@@ -43,8 +43,12 @@
 
                         <div>
                             <div class="form-group">
-                                <label for="title" class="form-label">{{ __('Product Title') }}<span class="text-danger">*</span> <span class="text-success">(Product Name | Author | Edition | Publication ( Medium ) )</span></label>
-                                <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') ?? $post->title }}" autocomplete="title" autofocus placeholder="title">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <label for="title" class="form-label">{{ __('Product Title') }}<span class="text-danger">*</span> <span class="text-success">(Product Name | Author | Edition | Publication ( Medium ) )</span></label>
+                                    <span id="charCount">0/145</span>
+                                </div>
+
+                                <input maxlength="145" id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') ?? $post->title }}" autocomplete="title" autofocus placeholder="title">
                                 <span class="error-message title" style="color:red;"></span>
 
                                 @error('title')
@@ -68,7 +72,7 @@
                                     <div>{{ __('Product Description') }}<span class="text-danger">*</span><span class="text-danger"> ( Enter Detail Description without using 3rd party link) </span></div><a target='_blank' href="https://chat.openai.com">ChatGPT</a>
                                 </label> -->
                                 <textarea class="form-control @error('description') is-invalid @enderror" name="description" placeholder="Description" rows="10" id='desc'>{{ old('description') ?? $allInfo['desc'] }}</textarea>
-                                <span class="error-message description" style="color:red;"></span>
+                                <span class="error-message desc" style="color:red;"></span>
 
                                 @error('description')
                                 <span class="invalid-feedback" role="alert">
@@ -130,8 +134,12 @@
                             </div>
 
                             <div class="form-group col-md-4">
-                                <label for="author_name" class="form-label">{{ __('Author Name') }}<span class="text-danger">*</span></label>
-                                <input id="author_name" type="text" class="form-control @error('author_name') is-invalid @enderror" name="author_name" value="{{ old('author_name') ?? $allInfo['author_name'] }}" autocomplete="author_name" autofocus placeholder="Author name">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <label for="author_name" class="form-label">{{ __('Author Name') }}<span class="text-danger">*</span></label>
+                                    <span class="charCount">0/35</span>
+                                </div>
+
+                                <input maxlength="35" id="author_name" type="text" class="form-control @error('author_name') is-invalid @enderror" name="author_name" value="{{ old('author_name') ?? $allInfo['author_name'] }}" autocomplete="author_name" autofocus placeholder="Author name">
                                 <span class="error-message author_name" style="color:red;"></span>
 
                                 @error('author_name')
@@ -311,70 +319,70 @@
                             <div class="form-group">
                                 <label for="fileInput1">Main Images<span class="text-danger">*</span></label>
                                 <!-- <div class="form-group mb-0" @error('images') style="border: red 2px dotted;" @enderror> -->
-                                <!-- <input type="hidden" name="images[]" value={{ $allInfo['baseimg'] }} /> -->
-                                <input type="file" class="dropify @error('images') is-invalid @enderror" data-bs-height="180" id="fileInput1" name="images[]" value={{ $allInfo['baseimg'] }} data-default-file={{$allInfo['baseimg']}} />
-                                <!-- </div> -->
-                                <a href="{{route('process.image')}}?url={{$allInfo['baseimg']}}" download="image.jpg" class="w-100 d-flex justify-content-end my-4"><img src="/downlod-icon.png" /></a>
+        <!-- <input type="hidden" name="images[]" value={{ $allInfo['baseimg'] }} /> -->
+        <input type="file" class="dropify @error('images') is-invalid @enderror" data-bs-height="180" id="fileInput1" name="images[]" value={{ $allInfo['baseimg'] }} data-default-file={{$allInfo['baseimg']}} />
+        <!-- </div> -->
+        <a href="{{route('process.image')}}?url={{$allInfo['baseimg']}}" download="image.jpg" class="w-100 d-flex justify-content-end my-4"><img src="/downlod-icon.png" /></a>
 
-                                @error('images')
-                                <span class="invalid-feedback mt-2" style="display:block" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
+        @error('images')
+        <span class="invalid-feedback mt-2" style="display:block" role="alert">
+            <strong>{{ $message }}</strong>
+        </span>
+        @enderror
 
-                                <div id='fileInputContainer'>
-                                    @if($allInfo['multiple'] && count($allInfo['multiple']) != 1)
-                                    <label for="fileInput1" class="mt-2">Preview Images<span class="text-danger">*</span></label><br>
-                                    @foreach($allInfo['multiple'] as $key => $images)
-                                    @if($key == 0) @continue; @endif
-                                    <div class="input-group{{$key}}">
-                                        <input type="hidden" name="multipleImages[]" value={{ $images }} />
-                                        <div class="form-group mb-1" @error('multipleImages') style="border: red 2px dotted;" @enderror>
-                                            <input data-default-file={{$images}} id="demo" type="file" class="dropify @error('multipleImages') is-invalid @enderror" name="multipleImages[]" multiple>
-                                        </div>
-                                        <!-- <div class="form-group">
+        <div id='fileInputContainer'>
+            @if($allInfo['multiple'] && count($allInfo['multiple']) != 1)
+            <label for="fileInput1" class="mt-2">Preview Images<span class="text-danger">*</span></label><br>
+            @foreach($allInfo['multiple'] as $key => $images)
+            @if($key == 0) @continue; @endif
+            <div class="input-group{{$key}}">
+                <input type="hidden" name="multipleImages[]" value={{ $images }} />
+                <div class="form-group mb-1" @error('multipleImages') style="border: red 2px dotted;" @enderror>
+                    <input data-default-file={{$images}} id="demo" type="file" class="dropify @error('multipleImages') is-invalid @enderror" name="multipleImages[]" multiple>
+                </div>
+                <!-- <div class="form-group">
                                             <div class="input-group">
                                                 <input type="text" class="form-control" name="multipleImages[]" value="{{$images}}" />
                                                 <div class="input-group-append pt-2"></div>
                                             </div>
                                         </div> -->
 
-                                        <div class="d-flex justify-content-between">
-                                            <button class="btn btn-danger removeFileInput mb-3" id='{{$key}}'>Remove</button>
-                                            <a href='{{route("process.image")}}?url={{$images}}' download="image.jpg"><img src="/downlod-icon.png" /></a>
-                                        </div>
-                                    </div>
-                                    @endforeach
-                                    @endif
-                                </div>
-
-                                <label for="fileInput1" class="mb-0">Images<span class="text-danger">*</span>( Multiple Images )</label>
-                                <div class="form-group mt-2" @error('multipleImages') style="border: red 2px dotted;" @enderror>
-                                    <!-- <input id="demo" type="file" class="dropify @error('multipleImages') is-invalid @enderror" name="multipleImages[]" multiple> -->
-                                    <form action="{{ route('convert.image') }}" method="post" enctype="multipart/form-data" id='multipleImagesform'>
-                                        @csrf
-                                        <input id="multipleFiles" type="file" class="dropify @error('multipleImages') is-invalid @enderror" name="multipleImages[]" multiple>
-                                        <div id='multiImagesDownload' style="display: none;">
-                                            <a href='#' class="w-100 d-flex justify-content-end my-4" id='downloadMultipleImage'>
-                                                <img src="/downlod-icon.png" />
-                                            </a>
-                                        </div>
-                                    </form>
-                                </div>
-
-                                @error('multipleImages')
-                                <span class="invalid-feedback mt-2" style="display:block" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
+                <div class="d-flex justify-content-between">
+                    <button class="btn btn-danger removeFileInput mb-3" id='{{$key}}'>Remove</button>
+                    <a href='{{route("process.image")}}?url={{$images}}' download="image.jpg"><img src="/downlod-icon.png" /></a>
                 </div>
             </div>
-        </div> -->
+            @endforeach
+            @endif
+        </div>
+
+        <label for="fileInput1" class="mb-0">Images<span class="text-danger">*</span>( Multiple Images )</label>
+        <div class="form-group mt-2" @error('multipleImages') style="border: red 2px dotted;" @enderror>
+            <!-- <input id="demo" type="file" class="dropify @error('multipleImages') is-invalid @enderror" name="multipleImages[]" multiple> -->
+            <form action="{{ route('convert.image') }}" method="post" enctype="multipart/form-data" id='multipleImagesform'>
+                @csrf
+                <input id="multipleFiles" type="file" class="dropify @error('multipleImages') is-invalid @enderror" name="multipleImages[]" multiple>
+                <div id='multiImagesDownload' style="display: none;">
+                    <a href='#' class="w-100 d-flex justify-content-end my-4" id='downloadMultipleImage'>
+                        <img src="/downlod-icon.png" />
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        @error('multipleImages')
+        <span class="invalid-feedback mt-2" style="display:block" role="alert">
+            <strong>{{ $message }}</strong>
+        </span>
+        @enderror
     </div>
-    <!-- End Row -->
+</div>
+</div>
+</div>
+</div>
+</div> -->
+</div>
+<!-- End Row -->
 </div>
 @endsection
 

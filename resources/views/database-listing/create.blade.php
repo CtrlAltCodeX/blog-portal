@@ -2,14 +2,6 @@
 
 @section('title', __('Create New Listing'))
 
-@push('css')
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
-@endpush
-
-@push('js')
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
-@endpush
-
 @section('content')
 <form action="{{ route('database-listing.store') }}" method="POST" enctype='multipart/form-data' id='form'>
     @csrf
@@ -34,9 +26,12 @@
                         <div id="progressBar" class="text-end"></div>
                         <div>
                             <div class="form-group">
-                                <label for="title" class="form-label">{{ __('Product Title') }}<span class="text-danger">*</span> <span class="text-success">(Product Name | Author |
-                                        Edition | Publication ( Medium ) )</span></label>
-                                <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') }}" autocomplete="title" autofocus placeholder="Title">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <label for="title" class="form-label">{{ __('Product Title') }}<span class="text-danger">*</span> <span class="text-success">(Product Name | Author | Edition | Publication ( Medium ) )</span></label>
+                                    <span class="charCount">0/145</span>
+                                </div>
+
+                                <input maxlength="145" id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') }}" autocomplete="title" autofocus placeholder="Title">
                                 <span class="error-message title" style="color:red;"></span>
 
                                 @error('title')
@@ -63,7 +58,7 @@
                                 </label> -->
 
                                 <textarea type="text" class="form-control @error('description') is-invalid @enderror" name="description" autocomplete="description" autofocus placeholder="Description" rows="10" id='desc'>{{ old('description') }}</textarea>
-                                <span class="error-message description" style="color:red;"></span>
+                                <span class="error-message desc" style="color:red;"></span>
 
                                 @error('description')
                                 <span class="invalid-feedback" role="alert">
@@ -128,8 +123,12 @@
                             </div>
 
                             <div class="form-group col-md-4">
-                                <label for="author_name" class="form-label">{{ __('Author Name') }}<span class="text-danger">*</span></label>
-                                <input id="author_name" type="text" class="form-control @error('author_name') is-invalid @enderror" name="author_name" value="{{ old('author_name') }}" autocomplete="author_name" autofocus placeholder="Author name">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <label for="author_name" class="form-label">{{ __('Author Name') }}<span class="text-danger">*</span></label>
+                                    <span class="charCount">0/35</span>
+                                </div>
+
+                                <input maxlength="35" id="author_name" type="text" class="form-control @error('author_name') is-invalid @enderror" name="author_name" value="{{ old('author_name') }}" autocomplete="author_name" autofocus placeholder="Author name">
                                 <span class="error-message author_name" style="color:red;"></span>
 
                                 @error('author_name')

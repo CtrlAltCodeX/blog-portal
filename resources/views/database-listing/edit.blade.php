@@ -2,10 +2,6 @@
 
 @section('title', __('Update New Listing ( DB )'))
 
-@push('css')
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
-@endpush
-
 @section('content')
 <!-- CONTAINER -->
 <div class="main-container container-fluid">
@@ -44,9 +40,12 @@
 
                         <div>
                             <div class="form-group">
-                                <label for="title" class="form-label">{{ __('Product Title') }}<span class="text-danger">*</span> <span class="text-success">(Product Name | Author |
-                                        Edition | Publication ( Medium ) )</span></label>
-                                <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') ?? $listing->title }}" autocomplete="title" autofocus placeholder="title">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <label for="title" class="form-label">{{ __('Product Title') }}<span class="text-danger">*</span> <span class="text-success">(Product Name | Author | Edition | Publication ( Medium ) )</span></label>
+                                    <span id="charCount">0/145</span>
+                                </div>
+
+                                <input maxlength="145" id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') ?? $listing->title }}" autocomplete="title" autofocus placeholder="title">
                                 <span class="error-message title" style="color:red;"></span>
 
                                 @error('title')
@@ -72,7 +71,7 @@
                                             link) </span></div><a target='_blank' href="https://chat.openai.com">ChatGPT</a>
                                 </label> -->
                                 <textarea class="form-control @error('description') is-invalid @enderror" name="description" placeholder="Description" rows="10" id='desc'>{{ old('description') ?? $listing->description }}</textarea>
-                                <span class="error-message description" style="color:red;"></span>
+                                <span class="error-message desc" style="color:red;"></span>
 
                                 @error('description')
                                 <span class="invalid-feedback" role="alert">
@@ -135,8 +134,12 @@
                             </div>
 
                             <div class="form-group col-md-4">
-                                <label for="author_name" class="form-label">{{ __('Author Name') }}<span class="text-danger">*</span></label>
-                                <input id="author_name" type="text" class="form-control @error('author_name') is-invalid @enderror" name="author_name" value="{{ old('author_name') ?? $listing->author_name }}" autocomplete="author_name" autofocus placeholder="Author name">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <label for="author_name" class="form-label">{{ __('Author Name') }}<span class="text-danger">*</span></label>
+                                    <span class="charCount">0/35</span>
+                                </div>
+
+                                <input maxlength="35" id="author_name" type="text" class="form-control @error('author_name') is-invalid @enderror" name="author_name" value="{{ old('author_name') ?? $listing->author_name }}" autocomplete="author_name" autofocus placeholder="Author name">
                                 <span class="error-message author_name" style="color:red;"></span>
 
                                 @error('author_name')

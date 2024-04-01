@@ -48,6 +48,23 @@
         $('input').on('input', function() {
             var inputValue = $(this).val();
 
+            if ($(this).attr('name') == 'author_name') {
+                var value = inputValue.replace(/,/g, '');
+                $(this).val(value);
+            }
+
+            var isValid = /^[A-Z]{5}$/.test(inputValue);
+
+            if (!isValid) {
+                // The input is valid (all capital letters and 5 characters)
+                console.log('Valid input');
+            } else {
+                // The input is invalid
+                console.log('Invalid input');
+            }
+
+            limit(this);
+
             requiredFields(inputValue, this);
 
             nameValidate(inputValue, this);
@@ -257,7 +274,7 @@
                 const urlRegex = /^([a-zA-Z0-9-]+)(?:\.[a-zA-Z]{2,})+(?:\/[^\s]*)?$/;
 
                 // var urlRegex = /^(ftp):\/\/[^ "]+$/;
-                if (urlRegex.test(val)) {
+                if (urlRegex.test(val.replace(/(<([^>]+)>)/ig, ''))) {
                     var data = [];
                     for (var i = 0; i < validateFields.length; i++) {
                         if (validateFields[i].links) {
@@ -266,7 +283,8 @@
                     }
 
                     var validDomain = data.some(function(domain) {
-                        return val.startsWith(domain);
+                        var stringWithoutHTML = val.replace(/(<([^>]+)>)/ig, '');
+                        return stringWithoutHTML.startsWith(domain);
                     });
                     // var domainPattern = new RegExp("^(" + data.join('|').replace(/\./g, "\\.") + ")(\/.*)?$", "i");
                     // var allowedURLsRegex = new RegExp("^(https?:\\/\\/)?((" + data.join('|') + ")(\\/|$))", "i");
@@ -277,6 +295,20 @@
                     }
                 }
             }
+        }
+
+        function limit(currentElement) {
+            var fieldId = $(currentElement).attr('name');
+            var maxLength = $(currentElement).attr('maxlength'); // Get the maximum length allowed
+            var currentLength = $(currentElement).val().length;
+
+            $($(currentElement).parent().children().children()[1]).text(currentLength + '/' + maxLength);
+
+            if (currentLength > maxLength) {
+                $(currentElement).val($(currentElement).val().substring(0, 50));
+            }
+
+
         }
 
         function errorHandling(element, msg, valid, currentElement) {
@@ -293,9 +325,23 @@
 
         $('#desc').summernote({
             toolbar: [
-                ['font', ['bold', 'underline']],
-                ['para', ['ul']],
+                ['font', ['italic', 'underline']],
+                ['para', ['paragraph']],
             ],
+            callbacks: {
+                onInit: function() {
+                    $('.note-editable').attr('name', 'desc');
+                },
+                onChange: function(contents, $editable) {
+                    requiredFields(contents, $editable[0]);
+
+                    nameValidate(contents, $editable[0]);
+
+                    domainValidation(contents, $editable[0]);
+
+                    calculateFields();
+                }
+            }
         });
     })
 

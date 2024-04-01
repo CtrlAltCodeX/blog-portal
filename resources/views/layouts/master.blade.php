@@ -83,6 +83,8 @@
     <script src="{{ asset('assets/plugins/charts-c3/d3.v5.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/charts-c3/c3-chart.js') }}"></script>
 
+    <script src="{{ asset('assets/plugins/summernote/summernote1.js') }}"></script>
+
     <!-- INPUT MASK JS-->
     <script src="{{ asset('assets/plugins/input-mask/jquery.mask.min.js') }}"></script>
 
