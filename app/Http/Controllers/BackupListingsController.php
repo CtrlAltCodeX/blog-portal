@@ -82,12 +82,13 @@ class BackupListingsController extends Controller
     {
         $getAllListings = [];
 
-        $getAllListingsFromDatabase = BackupListing::all()->makeHidden(['id', 'created_at', 'updated_at'])
+        $getAllListingsFromDatabase = BackupListing::all()
+            ->makeHidden(['id', 'created_at', 'updated_at'])
             ->toArray();
 
         foreach ($getAllListingsFromDatabase as $key => $listing) {
             $listingCat = json_decode($listing['categories']);
-            
+
             if (
                 isset($listingCat)
                 && (in_array('Stk_o', $listingCat) || in_array('stock__out', $listingCat))
@@ -96,6 +97,8 @@ class BackupListingsController extends Controller
             } else {
                 $stock = 'in stock';
             }
+
+            $desc = str_replace('"', ' ', $listing['description']);
 
             $getAllListings[$key][] = $listing['title'];
             $getAllListings[$key][] = $listing['product_id'];
@@ -111,7 +114,7 @@ class BackupListingsController extends Controller
             $getAllListings[$key][] = $listing['publisher'];
             $getAllListings[$key][] = 'Online';
             $getAllListings[$key][] = '0';
-            $getAllListings[$key][] = $listing['description'];
+            $getAllListings[$key][] = $desc;
             $getAllListings[$key][] = ' ';
             $getAllListings[$key][] = ' ';
             $getAllListings[$key][] = 'yes';

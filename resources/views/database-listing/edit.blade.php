@@ -70,7 +70,7 @@
                                     <div>{{ __('Product Description') }}<span class="text-danger">*</span><span class="text-danger"> ( Enter Detail Description without using 3rd party
                                             link) </span></div><a target='_blank' href="https://chat.openai.com">ChatGPT</a>
                                 </label> -->
-                                <textarea class="form-control @error('description') is-invalid @enderror" name="description" placeholder="Description" rows="10" id='desc'>{{ old('description') ?? $listing->description }}</textarea>
+                                <textarea class="form-control @error('description') is-invalid @enderror" name="description" placeholder="Description" rows="10" id='desc'>{!! old('description') ?? $listing->description !!}</textarea>
                                 <span class="error-message desc" style="color:red;"></span>
 
                                 @error('description')

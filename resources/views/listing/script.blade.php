@@ -53,23 +53,23 @@
                 $(this).val(value);
             }
 
-            var isValid = /^[A-Z]{5}$/.test(inputValue);
-
-            if (!isValid) {
-                // The input is valid (all capital letters and 5 characters)
-                console.log('Valid input');
-            } else {
-                // The input is invalid
-                console.log('Invalid input');
+            if ($(this).attr('name') == 'author_name' || $(this).attr('name') == 'title') {
+                limit(this);
             }
-
-            limit(this);
 
             requiredFields(inputValue, this);
 
             nameValidate(inputValue, this);
 
             domainValidation(inputValue, this);
+
+            // var capitalLettersCount = countCapitalLetters(inputValue);
+
+            // if (capitalLettersCount < 5) {
+            //     errorHandling($(this).attr('name'), 'Capital letter word not allowed', false, this);
+            // } else {
+            //     console.log('else');
+            // }
         })
 
         $('textarea').on('input', function() {
@@ -211,7 +211,20 @@
 
         $("input").on('input', function() {
             calculateFields();
-        })
+        });
+
+        // function countCapitalLetters(input) {
+        //     var count = 0;
+        //     for (var i = 0; i < input.length; i++) {
+        //         if (input[i] >= 'a' && input[i] <= 'z') {
+        //             continue;
+        //         } else if (input[i] >= 'A' && input[i] <= 'Z') {
+        //             count++;
+        //         }
+        //     }
+
+        //     return count;
+        // }
 
         function calculateFields() {
             var totalFields = $(".fields input.form-control").length + $(".fields select.form-control").length + $("textarea").length;
@@ -307,8 +320,6 @@
             if (currentLength > maxLength) {
                 $(currentElement).val($(currentElement).val().substring(0, 50));
             }
-
-
         }
 
         function errorHandling(element, msg, valid, currentElement) {
@@ -325,7 +336,7 @@
 
         $('#desc').summernote({
             toolbar: [
-                ['font', ['italic', 'underline']],
+                ['font', ['bold', 'italic', 'underline']],
                 ['para', ['paragraph']],
             ],
             callbacks: {
