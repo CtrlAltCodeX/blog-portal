@@ -122,8 +122,12 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="form-group col-md-4">
-                                <label for="publication" class="form-label">{{ __('Publisher') }}<span class="text-danger">*</span></label>
-                                <input id="publication" type="text" class="form-control @error('publication') is-invalid @enderror" name="publication" value="{{ old('publication') ?? $listing->publisher }}" autocomplete="publication" autofocus placeholder="Publication">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <label for="publication" class="form-label">{{ __('Publisher') }}<span class="text-danger">*</span></label>
+                                    <span class="charCount">0/35</span>
+                                </div>
+
+                                <input maxlength="35" id="publication" type="text" class="form-control @error('publication') is-invalid @enderror" name="publication" value="{{ old('publication') ?? $listing->publisher }}" autocomplete="publication" autofocus placeholder="Publication">
                                 <span class="error-message publication" style="color:red;"></span>
 
                                 @error('publication')
@@ -150,8 +154,12 @@
                             </div>
 
                             <div class="form-group col-md-4">
-                                <label for="edition" class="form-label">{{ __('Edition') }}</label>
-                                <input id="edition" type="text" class="form-control @error('edition') is-invalid @enderror" name="edition" value="{{ old('edition') ?? $listing->edition }}" autocomplete="edition" autofocus placeholder="Edition">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <label for="edition" class="form-label">{{ __('Edition') }}</label>
+                                    <span class="charCount">0/20</span>
+                                </div>
+
+                                <input maxlength="20" id="edition" type="text" class="form-control @error('edition') is-invalid @enderror" name="edition" value="{{ old('edition') ?? $listing->edition }}" autocomplete="edition" autofocus placeholder="Edition">
                                 <span class="error-message edition" style="color:red;"></span>
 
                                 @error('edition')

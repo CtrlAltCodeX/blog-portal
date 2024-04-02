@@ -48,12 +48,18 @@
         $('input').on('input', function() {
             var inputValue = $(this).val();
 
-            if ($(this).attr('name') == 'author_name') {
+            if ($(this).attr('name') == 'author_name' ||
+                $(this).attr('name') == 'publication' ||
+                $(this).attr('name') == 'edition') {
                 var value = inputValue.replace(/,/g, '');
                 $(this).val(value);
             }
 
-            if ($(this).attr('name') == 'author_name' || $(this).attr('name') == 'title') {
+            if ($(this).attr('name') == 'author_name' ||
+                $(this).attr('name') == 'title' ||
+                $(this).attr('name') == 'publication' ||
+                $(this).attr('name') == 'edition'
+            ) {
                 limit(this);
             }
 

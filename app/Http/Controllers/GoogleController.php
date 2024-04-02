@@ -15,7 +15,7 @@ class GoogleController extends Controller
      */
     public function __construct(protected GoogleService $googleService)
     {
-        $this->middleware('role_or_permission:Configure Blog Update', ['only' => ['redirectToGoogle']]);
+        $this->middleware('role_or_permission:Settings -> Configure Blog Update', ['only' => ['redirectToGoogle']]);
     }
 
     /**
