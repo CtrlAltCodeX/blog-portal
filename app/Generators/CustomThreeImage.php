@@ -42,18 +42,18 @@ class CustomThreeImage extends CollageGenerator
     public function twoTopOneBottom()
     {
         [$width, $height, $largeWidth] = $this->getWidthSize();
-        
-        $width = round(230);
-        $height = round(210);
+
+        $width = round(235);
+        $height = round(360);
 
         $one = $this->images->get(0);
-        $this->canvas->insert($one->fit(230, 360), 'top-left');
+        $this->canvas->insert($one->fit($width, $height), 'top-left');
 
         $two = $this->images->get(1);
-        $this->canvas->insert($two->fit(230, 360), 'top-right');
+        $this->canvas->insert($two->fit($width, $height), 'top-right');
 
         $three = $this->images->get(2);
-        $this->canvas->insert($three->fit(230, 360), 'bottom');
+        $this->canvas->insert($three->fit($width, $height), 'bottom');
     }
 
     /**

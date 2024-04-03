@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\BackupListing;
+use App\Models\BackupListingImage;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -33,6 +34,7 @@ class ListingsExport implements FromArray, WithHeadings, WithCustomCsvSettings
             'channel',
             'feed label',
             'language',
+            'additional image link',
             'brand',
             'channel',
             'clicks',
@@ -51,11 +53,14 @@ class ListingsExport implements FromArray, WithHeadings, WithCustomCsvSettings
         // Add data rows
         foreach ($listings as $listing) {
             // $desc = str_replace('"', ' ', $listing['title']);
+            $additionalImages = BackupListingImage::where('listing_id', $listing->id)
+                ->pluck('image_url')
+                ->toArray();
 
             $data[] = [
                 $listing['url'],
                 $listing['title'],
-                $listing['product_id'],
+                $listing['id'],
                 $listing['selling_price'] . "INR",
                 '0',
                 '0',
@@ -65,10 +70,11 @@ class ListingsExport implements FromArray, WithHeadings, WithCustomCsvSettings
                 'Online',
                 'IN',
                 'en',
+                implode(",", $additionalImages),
                 $listing['publisher'],
                 'Online',
                 '0',
-                '',
+                'Product Description',
                 '',
                 '',
                 'yes',

@@ -57,46 +57,44 @@ class BackupListing extends Command
 
             $listingData = app('App\Http\Controllers\BackupListingsController');
 
-            $reportFileTime = now();
-            $fileName = 'report-' . $reportFileTime . '.xlsx';
+            $currentTimeInSeconds = now()->timestamp;
+            $currentDateTimeFormat = now()->format('Y-m-d H:i:s');
+            $fileName = 'report-' . $currentTimeInSeconds . '.xlsx';
             Excel::store(new BackupListingsExport($listingData->exportData()), "/public/" . $fileName);
             // Log::channel('backup_activity_log')->info('Export File Downloaded - ');
 
-            $merchantFileTime = now();
-            $googleMerchantfileName = 'merchant-file' . $merchantFileTime . '.tsv';
+            $googleMerchantfileName = 'merchant-file' . $currentTimeInSeconds . '.tsv';
             $singleGoogleMerchantfileName = 'merchant-file.tsv';
             Excel::store(new ListingsExport($listingData->getMerchantExportFile()), "/public/" . $googleMerchantfileName);
             Excel::store(new ListingsExport($listingData->getMerchantExportFile()), "/public/" . $singleGoogleMerchantfileName);
             // Log::channel('backup_activity_log')->info('Google Merchant File Downloaded - ');
 
-            $facebookFileTime = now();
-            $facebookPixelfileName = 'facebook-file' . $facebookFileTime . '.xlsx';
+            $facebookPixelfileName = 'facebook-file' . $currentTimeInSeconds . '.xlsx';
             $singleFacebookPixelfileName = 'facebook-file.xlsx';
             Excel::store(new BackupListingsExport($listingData->getFacebookExportFile()), "/public/" . $facebookPixelfileName);
             Excel::store(new BackupListingsExport($listingData->getFacebookExportFile()), "/public/" . $singleFacebookPixelfileName);
             // Log::channel('backup_activity_log')->info('Facebook Pixel File Downloaded - ');
 
-            $sqlFileTime = now();
-            $sqlfileName = 'export-file' . $sqlFileTime . '.sql';
+            $sqlfileName = 'export-file' . $currentTimeInSeconds . '.sql';
             Storage::disk('public')->put($sqlfileName, $listingData->exportSQL()[1]);
 
             $zip = new ZipArchive;
-            $zipFileName = 'backup-files' . now() . '.zip';
-            if ($zip->open(storage_path($zipFileName), ZipArchive::CREATE) === true) {
+            $zipFileName = 'backup-files' . $currentTimeInSeconds . '.zip';
+            if ($zip->open(storage_path("app/public/" . $zipFileName), ZipArchive::CREATE) === true) {
                 $zip->addFile(storage_path("app/public/" . $fileName), basename(storage_path("app/public/" . $fileName)));
                 $zip->addFile(storage_path("app/public/" . $sqlfileName), basename(storage_path("app/public/" . $sqlfileName)));
             }
 
             // Close the zip archive
-            // $zip->close();
+            $zip->close();
 
-            Storage::disk('dropbox')->put('files/' . $sqlfileName, $listingData->exportSQL()[1]);
-            Storage::disk('dropbox')->put('files/' . $fileName, file_get_contents(storage_path('app/public/' . $fileName)));
+            // Storage::disk('dropbox')->put('files/' . $sqlfileName, $listingData->exportSQL()[1]);
+            // Storage::disk('dropbox')->put('files/' . $fileName, file_get_contents(storage_path('app/public/' . $fileName)));
 
             $allEmails = BackupEmail::all();
             $emailTo = [];
             foreach ($allEmails as $email) {
-                Mail::to($email->email)->send(new BackupMail(storage_path($zipFileName)));
+                Mail::to($email->email)->send(new BackupMail(storage_path("app/public/".$zipFileName)));
                 // Log::channel('backup_activity_log')->info('Email Send Successfully to ' . $email->email . " - ");
                 $emailTo[] = $email->email;
             }
@@ -105,11 +103,11 @@ class BackupListing extends Command
                 'batch_id' => $batchId,
                 'started' => $started,
                 'completed' => $completed,
-                'export_file' => $reportFileTime,
-                'merchant_file' => $merchantFileTime,
-                'facebook_file' => $facebookFileTime,
+                'export_file' => $currentDateTimeFormat,
+                'merchant_file' => $currentDateTimeFormat,
+                'facebook_file' => $currentDateTimeFormat,
                 'email_to' => implode(",", $emailTo),
-                'sql_file' => $sqlFileTime,
+                'sql_file' => $currentDateTimeFormat,
             ]);
         } catch (\Exception $e) {
             Log::channel('backup_activity_log')->info('Facing some issues');
@@ -131,7 +129,7 @@ class BackupListing extends Command
         $totalProducts =  $response->json()['feed']['openSearch$totalResults']['$t'];
 
         $paginate = 1;
-        // for ($j = 0; $j < (int) ($totalProducts / 150); $j++) {
+        // for ($j = 0; $j < (int) ($totalProducts / 150) + 1; $j++) {
         for ($i = 0; $i <= 2; $i++) {
             $allProducts = app('App\Services\GoogleService')->backupToDatabse($paginate);
 
@@ -198,9 +196,9 @@ class BackupListing extends Command
                         $images[] = $imageElement->getAttribute('src');
                     }
                 }
-                
+
                 $link = '';
-                if(isset($products->link[4])) {
+                if (isset($products->link[4])) {
                     $link = $products->link[4]->href;
                 } else {
                     $link = $products->link[2]->href;
@@ -227,7 +225,7 @@ class BackupListing extends Command
                     'multiple' => $images,
                     'url' => $link
                 ];
-                
+
 
                 if ($product = ModelsBackupListing::where("product_id", $productId)->first()) {
                     $product->update($allInfo);
