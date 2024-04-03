@@ -27,8 +27,9 @@ class DatabaseListingController extends Controller
     {
         $googlePosts = Listing::with('created_by_user')
             ->orderBy('created_at', 'desc')
-            ->where('status', request()->status)
             ->where('categories', 'LIKE', '%' . request()->category . '%');
+
+        if (request()->status) $googlePosts = $googlePosts->where('status', request()->status);
 
         if (!auth()->user()->hasRole('Super Admin')) {
             $googlePosts = $googlePosts->where('created_by', auth()->user()->id);
@@ -39,17 +40,17 @@ class DatabaseListingController extends Controller
         $allCounts = Listing::count();
 
         $pendingCounts = Listing::where('status', 0);
-        
+
         $rejectedCounts = Listing::where('status', 2);
-        
+
         if (!auth()->user()->hasRole('Super Admin')) {
             $pendingCounts = $pendingCounts->where('created_by', auth()->user()->id);
-            
+
             $rejectedCounts = $rejectedCounts->where('created_by', auth()->user()->id);
         }
-        
+
         $pendingCounts = $pendingCounts->count();
-        
+
         $rejectedCounts = $rejectedCounts->count();
 
         return view('database-listing.index', compact('googlePosts', 'allCounts', 'pendingCounts', 'rejectedCounts'));
@@ -261,7 +262,7 @@ class DatabaseListingController extends Controller
                     'reject_count' => ++$userCount->reject_count,
                 ]);
             }
-            
+
             if ($status == 0 && $userCount) {
                 $userCount->update([
                     'reject_count' => --$userCount->reject_count,

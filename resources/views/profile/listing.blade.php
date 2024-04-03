@@ -7,8 +7,18 @@
     <div class="row row-sm">
         <div class="col-lg-12">
             <div class="card">
-                <div class="card-header justify-content-between">
-                    <h3 class="card-title">Listing</h3>
+                <div class="card-header justify-content-between d-flex">
+                    <h2 class="card-title">Listing</h2>
+                    @if(auth()->user()->hasRole('Super Admin'))
+                    <form action="" method="get" id='form'>
+                        <select class="form-control w-100" name="user" id='user'>
+                            <option value="all">All Users</option>
+                            @foreach($users as $user)
+                            <option value="{{$user->id}}" {{ $user->id == request()->user ? 'selected' : '' }}>{{ $user->id }}</option>
+                            @endforeach
+                        </select>
+                    </form>
+                    @endif
                 </div>
 
                 <div class="card-body">
@@ -30,7 +40,7 @@
                                 @forelse($userListings as $key => $userListing)
                                 <tr>
                                     <td>{{ ++$key }}</td>
-                                    <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $userListing->image }}" alt="Product Image"  width="100"/></td>
+                                    <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $userListing->image }}" alt="Product Image" width="100" /></td>
                                     <td>{{ $userListing->title }}</td>
                                     <td>{{ $userListing->create_user->name }}</td>
                                     <td>{{ date("d-m-Y h:i A", strtotime($userListing->created_at)) }}</td>
@@ -106,7 +116,13 @@
 
         $("#category").on("change", function() {
             $("#form").submit();
-        })
+        });
+
+        $("#basic-datatable_wrapper .col-sm-12:first").html('<div class="d-flex"><label class="m-1">Pending <span id="count-six">({{ $pending }})</span></label><label class="m-1">Approved <span id="count-one">({{ $approved }})</span></label><label class="m-1">Rejected <span id="count-two">({{ $rejected }})</span></label></div>');
+
+        $("#user").change(function() {
+            $("#form").submit();
+        });
     })
 </script>
 

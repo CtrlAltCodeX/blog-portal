@@ -181,7 +181,7 @@ class BackupListing extends Command
                     }
 
                     if ($td->item($i)->getAttribute('itemprop') == 'color') {
-                        $publication = trim($td->item($i)->textContent);
+                        $publication = trim($td->item(0)->textContent);
                     }
                 }
 

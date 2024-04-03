@@ -21,6 +21,7 @@ class ListingsExport implements FromArray, WithHeadings, WithCustomCsvSettings
 
         // Add headings
         $data[] = [
+            'link',
             'title',
             'id',
             'price',
@@ -49,9 +50,10 @@ class ListingsExport implements FromArray, WithHeadings, WithCustomCsvSettings
 
         // Add data rows
         foreach ($listings as $listing) {
-            $desc = str_replace('"', ' ', $listing['description']);
+            // $desc = str_replace('"', ' ', $listing['title']);
 
             $data[] = [
+                $listing['url'],
                 $listing['title'],
                 $listing['product_id'],
                 $listing['selling_price'] . "INR",

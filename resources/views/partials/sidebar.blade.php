@@ -48,7 +48,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         <li><a href="{{ route('database-listing.create') }}" class="slide-item {{ (request()->is('admin/database-listing/create')) ? 'active' : '' }}">{{ __('Create New Listing ( DB )') }}</a></li>
                         @endcan
                         @can('Pending Listing ( DB )')
-                        <li><a href="{{ route('database-listing.index', ['status' => 0]) }}" class="slide-item {{ (request()->is('admin/database-listing')) ? 'active' : '' }}">{{ __('Pending Listing ( DB )') }}</a></li>
+                    <li><a href="{{ route('database-listing.index', ['status' => 0, 'startIndex' => 1, 'category' => '']) }}" class="slide-item {{ (request()->is('admin/database-listing')) ? 'active' : '' }}">{{ __('Pending Listing ( DB )') }}</a></li>
                         @endcan
                     </ul>
                 </li>
@@ -86,7 +86,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         @can('Inventory -> Under Review Inventory')
                         <li><a href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => 3]) }}" class="slide-item {{ request()->is('admin/inventory/review') ? 'active' : '' }}">{{ __('Under Review Inventory') }}</a></li>
                         @endcan
-                        <li><a href="{{ route('profile.listing') }}" class="slide-item {{ (request()->is('admin/profile/listings')) ? 'active' : '' }}">{{ __('Listing Reports ( DB )') }}</a></li>
+                        <li><a href="{{ route('profile.listing', ['user' => 'all']) }}" class="slide-item {{ (request()->is('admin/profile/listings')) ? 'active' : '' }}">{{ __('Listing Reports ( DB )') }}</a></li>
                     </ul>
                 </li>
                 @endcan

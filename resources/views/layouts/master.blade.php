@@ -114,21 +114,27 @@
 
     <script>
         var timeOut = "{{env('SESSION_LIFETIME')}}" * 60000;
-        // Check session expiration every minute (60000 milliseconds)
-        setInterval(function() {
-            $.ajax({
-                type: "GET",
-                url: "{{ route('check.session') }}",
-                headers: {
-                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(result) {
-                    if (!result.active) {
-                        reloadPage();
-                    }
-                },
+
+        var idleTimer;
+        var idleTimeout = "{{env('SESSION_LIFETIME')}}" * 60 * 1000; // 15 minutes in milliseconds
+
+        function resetIdleTimer() {
+            clearTimeout(idleTimer);
+            idleTimer = setTimeout(function() {
+                window.location.href = '/check-session-status';
+                // document.getElementById('logout').submit();
+            }, idleTimeout);
+        }
+
+        $(document).ready(function() {
+            // Start idle timer
+            resetIdleTimer();
+
+            // Listen for user activity events
+            $(document).on('mousemove keydown click touchstart scroll', function() {
+                resetIdleTimer();
             });
-        }, timeOut); // 60000 milliseconds = 1 minute
+        });
 
         function reloadPage() {
             location.reload(true); // Reload the page

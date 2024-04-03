@@ -48,17 +48,17 @@
 
                     <div class="d-flex align-items-center">
                         <div>
-                            <a href="{{ route('database-listing.index', ['status' => '']) }}" class="btn btn-light position-relative me-2 mb-2"> All
+                            <a href="{{ route('database-listing.index', ['status' => '', 'category' => 'Product']) }}" class="btn btn-light position-relative me-2 mb-2"> All
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{$allCounts}}
                                     <span class="visually-hidden">unread messages</span>
                                 </span>
                             </a>
-                            <a href="{{ route('database-listing.index', ['status' => 0]) }}" class="btn btn-warning position-relative me-2 mb-2"> Pending
+                            <a href="{{ route('database-listing.index', ['status' => 0, 'category' => 'Product']) }}" class="btn btn-warning position-relative me-2 mb-2"> Pending
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{$pendingCounts}}
                                     <span class="visually-hidden">unread messages</span>
                                 </span>
                             </a>
-                            <a href="{{ route('database-listing.index', ['status' => 2]) }}" class="btn btn-danger position-relative mb-2"> Rejected
+                            <a href="{{ route('database-listing.index', ['status' => 2, 'category' => '']) }}" class="btn btn-danger position-relative mb-2"> Rejected
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{$rejectedCounts}}
                                     <span class="visually-hidden">unread messages</span>
                                 </span>

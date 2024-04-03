@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\ProfileRequest;
+use App\Models\Listing;
+use App\Models\User;
 use App\Models\UserListingCount;
 use App\Models\UserListingInfo;
 use Intervention\Image\ImageManager;
@@ -76,19 +78,51 @@ class ProfileController extends Controller
      */
     public function listings()
     {
-        if (auth()->user()->hasRole('Admin')) {
-            $userListings = UserListingInfo::with('create_user', 'approve')
-                ->orderBy('created_at', 'desc')
-                ->get();
+        $userListings = UserListingInfo::with('create_user', 'approve')
+            ->orderBy('created_at', 'desc');
 
-            return view('profile.listing', compact('userListings'));
+        $approved = UserListingInfo::where('approved_by', '!=', '');
+
+        $pending = Listing::where('status', 0);
+
+        $rejected = Listing::where('status', 2);
+
+        if (auth()->user()->hasRole('Super Admin')) {
+            if (request()->user != 'all') {
+                $userListings = $userListings
+                    ->where('created_by', request()->user)
+                    ->get();
+            } else {
+                $userListings = $userListings->get();
+            }
+
+            $approved = $approved->count();
+
+            $pending = $pending->count();
+
+            $rejected = $rejected->count();
         } else {
-            $userListings = UserListingInfo::where('created_by', auth()->user()->id)
-                ->orderBy('created_at', 'desc')
-                ->with('create_user', 'approve')
+            $userListings = $userListings
+                ->where('created_by', auth()->user()->id)
                 ->get();
 
-            return view('profile.listing', compact('userListings'));
+            $approved = $approved
+                ->where('created_by', auth()->user()->id)
+                ->count();
+
+            $pending = $pending
+                ->where('created_by', auth()->user()->id)
+                ->count();
+
+            $rejected = $rejected
+                ->where('created_by', auth()->user()->id)
+                ->count();
         }
+
+        $users = User::select('id')
+            ->where('status', 1)
+            ->get();
+
+        return view('profile.listing', compact('userListings', 'pending', 'rejected', 'approved', 'users'));
     }
 }

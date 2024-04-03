@@ -216,7 +216,7 @@ Route::get('/', function () {
 Route::get('/check-session-status', function () {
     session()->put('expire_error', 'Your session has expired. Please log in again.');
 
-    return response()->json(['active' => auth()->check()]);
+    return redirect()->route('login');
 })->name('check.session');
 
 Route::get('delete/session/{id}', [UserController::class, 'deleteSessionId'])
