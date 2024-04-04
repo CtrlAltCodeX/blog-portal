@@ -119,7 +119,7 @@ class ProfileController extends Controller
                 ->count();
         }
 
-        $users = User::select('id')
+        $users = User::select('id', 'name')
             ->where('status', 1)
             ->get();
 

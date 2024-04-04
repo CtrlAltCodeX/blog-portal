@@ -41,6 +41,10 @@
                             <td>
                                 <a href="{{ route('user.session.delete', $session->session_id) }}" class="btn btn-primary btn-sm">Delete</a>
                             </td>
+                            @else
+                            <td>
+                                <a href="#" class="btn btn-primary btn-sm">Current Session</a>
+                            </td>
                             @endif
                         </tr>
                         @endforeach

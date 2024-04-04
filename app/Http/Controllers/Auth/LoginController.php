@@ -110,6 +110,12 @@ class LoginController extends Controller
 
         $user = User::where('email', request()->email)->first();
 
+        $oldSessions = $user->sessions->where('expire_at', '<', now());
+
+        foreach ($oldSessions as $session) {
+            $session->delete();
+        }
+
         // if (
         //     $user
         //     && $user->allow_sessions
@@ -159,7 +165,7 @@ class LoginController extends Controller
 
             $userAgent = request()->header('User-Agent');
 
-            if (!$user->verify_browser) $user->update(['verify_browser' => $userAgent]);
+            $user->update(['verify_browser' => $userAgent]);
 
             $currentDateTime = Carbon::now();
             $sessionExpireDateTime = $currentDateTime->addMinutes(env('SESSION_LIFETIME'));
@@ -277,9 +283,9 @@ class LoginController extends Controller
                 $adminUsers = User::role('Super Admin')->get();
 
                 // foreach ($adminUsers as $user) {
-                    // $email = $user->email;
+                // $email = $user->email;
 
-                    Mail::to('abhishek86478@gmail.com')->send(new OtpMail($otp, $msg = true, $loginUser));
+                Mail::to('abhishek86478@gmail.com')->send(new OtpMail($otp, $msg = true, $loginUser));
                 // }
             } else {
                 session()->flash('success', 'Please Check the OTP in Registered Email');

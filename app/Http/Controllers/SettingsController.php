@@ -112,10 +112,12 @@ class SettingsController extends Controller
         if (request()->name) {
             FieldValidation::create([
                 'name' => request()->name,
+                'links' => null,
                 'status' => 1
             ]);
         } else if (request()->link) {
             FieldValidation::create([
+                'name' => null,
                 'links' => request()->link,
                 'allowed' => request()->allow ? 1 : 0,
                 'status' => 1

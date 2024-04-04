@@ -14,7 +14,7 @@
                         <select class="form-control w-100" name="user" id='user'>
                             <option value="all">All Users</option>
                             @foreach($users as $user)
-                            <option value="{{$user->id}}" {{ $user->id == request()->user ? 'selected' : '' }}>{{ $user->id }}</option>
+                            <option value="{{$user->id}}" {{ $user->id == request()->user ? 'selected' : '' }}>{{ $user->name }}</option>
                             @endforeach
                         </select>
                     </form>
@@ -119,6 +119,8 @@
         });
 
         $("#basic-datatable_wrapper .col-sm-12:first").html('<div class="d-flex"><label class="m-1">Pending <span id="count-six">({{ $pending }})</span></label><label class="m-1">Approved <span id="count-one">({{ $approved }})</span></label><label class="m-1">Rejected <span id="count-two">({{ $rejected }})</span></label></div>');
+
+        // $("#basic-datatable_wrapper .col-sm-12:first").html('<div class="d-flex" style=grid-gap:10px;><div><input class="m-0" type="radio" name="pending" /><label class="m-1">Pending <span id="count-six">({{ $pending }})</span></label></div><div><input class="m-0" type="radio" name="pending" /><label class="m-1">Approved <span id="count-one">({{ $approved }})</span></label></div><div><input class="m-0" type="radio" name="pending" /><label class="m-1">Rejected <span id="count-two">({{ $rejected }})</span></label></div></div>');
 
         $("#user").change(function() {
             $("#form").submit();

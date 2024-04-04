@@ -94,7 +94,7 @@ class BackupListing extends Command
             $allEmails = BackupEmail::all();
             $emailTo = [];
             foreach ($allEmails as $email) {
-                Mail::to($email->email)->send(new BackupMail(storage_path("app/public/".$zipFileName)));
+                Mail::to($email->email)->send(new BackupMail(storage_path("app/public/" . $zipFileName)));
                 // Log::channel('backup_activity_log')->info('Email Send Successfully to ' . $email->email . " - ");
                 $emailTo[] = $email->email;
             }
@@ -129,8 +129,8 @@ class BackupListing extends Command
         $totalProducts =  $response->json()['feed']['openSearch$totalResults']['$t'];
 
         $paginate = 1;
-        // for ($j = 0; $j < (int) ($totalProducts / 150) + 1; $j++) {
-        for ($i = 0; $i <= 2; $i++) {
+        for ($j = 0; $j < (int) ($totalProducts / 150) + 1; $j++) {
+            // for ($i = 0; $i <= 2; $i++) {
             $allProducts = app('App\Services\GoogleService')->backupToDatabse($paginate);
 
             foreach ($allProducts['paginator'] as $key => $products) {
