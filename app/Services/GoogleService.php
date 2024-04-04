@@ -567,13 +567,13 @@ class GoogleService
                 'orderBy' => 'updated',
                 'status' => $status,
                 'pageToken' => $pageToken,
-                'alt' => 'json'
+                'alt' => 'json',
             ];
 
             if (App::runningInConsole()) {
                 $params['start-index'] = $startIndex;
                 $params['max-results'] = $perPage;
-                $params['category'] = request()->query('category');
+                $params['category'] = 'Product';
 
                 if (SiteSetting::first()->url) {
                     $response = Http::get(SiteSetting::first()->url . '/feeds/posts/default', $params);

@@ -32,7 +32,11 @@
 
     <!-- COLOR SKIN CSS -->
     <link id="theme" rel="stylesheet" type="text/css" media="all" href="{{ asset('assets/colors/color1.css') }}" />
-
+    <style>
+        #basic-datatable thead tr {
+            background: #ccc;
+        }
+    </style>
     @stack('css')
 </head>
 
@@ -95,9 +99,9 @@
     <script src="{{ asset('assets/plugins/sidebar/sidebar.js') }}"></script>
 
     <!-- Perfect SCROLLBAR JS-->
-    <script src="{{ asset('assets/plugins/p-scroll/perfect-scrollbar.js') }}"></script>
-    <script src="{{ asset('assets/plugins/p-scroll/pscroll.js') }}"></script>
-    <script src="{{ asset('assets/plugins/p-scroll/pscroll-1.js') }}"></script>
+    <!-- <script src="{{ asset('assets/plugins/p-scroll/perfect-scrollbar.js') }}"></script> -->
+    <!-- <script src="{{ asset('assets/plugins/p-scroll/pscroll.js') }}"></script> -->
+    <!-- <script src="{{ asset('assets/plugins/p-scroll/pscroll-1.js') }}"></script> -->
 
     <!-- INTERNAL SELECT2 JS -->
     <script src="{{ asset('assets/plugins/select2/select2.full.min.js') }}"></script>

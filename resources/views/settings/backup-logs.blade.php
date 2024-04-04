@@ -77,19 +77,19 @@
                             </td>
                             <td>
                                 <div class="d-flex" style="grid-gap: 10px;">
-                                    <a target="_blank" href='{{url("/")}}/storage/merchant-file{{$log->merchant_file}}.tsv'>
+                                    <a target="_blank" href='{{url("/")}}/storage/merchant-file{{strtotime($log->merchant_file)}}.tsv'>
                                         <i class="fa fa-google" style="font-size:24px"></i>
                                         <!-- <img src="/google.png" width="25" /> -->
                                     </a>
-                                    <a target="_blank" href='{{url("/")}}/storage/facebook-file{{$log->facebook_file}}.xlsx'>
+                                    <a target="_blank" href='{{url("/")}}/storage/facebook-file{{strtotime($log->facebook_file)}}.csv'>
                                         <i class="fa fa-facebook" style="font-size:24px"></i>
                                         <!-- <img src="/facebook.png" width="25" /> -->
                                     </a>
-                                    <a target="_blank" href='{{url("/")}}/storage/report-file{{$log->export_file}}.xlsx'>
+                                    <a target="_blank" href='{{url("/")}}/storage/report-{{strtotime($log->export_file)}}.xlsx'>
                                         <i class="fa fa-file-excel-o" style="font-size:24px"></i>
                                         <!-- <img src="/excel.png" width="25" /> -->
                                     </a>
-                                    <a target="_blank" href='{{url("/")}}/storage/export-file{{$log->export_file}}.sql'>
+                                    <a target="_blank" href='{{url("/")}}/storage/export-file{{strtotime($log->export_file)}}.sql'>
                                         <i class="fa fa-database" style="font-size:24px"></i>
                                         <!-- <img src="/sql.png" width="25" /> -->
                                     </a>

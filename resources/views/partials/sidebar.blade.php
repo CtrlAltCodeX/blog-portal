@@ -42,7 +42,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                     <ul class="slide-menu">
                         <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
                         @can('Listing create')
-                        <li><a href="{{ route('listing.create') }}" class="slide-item {{ (request()->is('admin/images/*')) ? 'active' : '' }}">{{ __('Create New Listing') }}</a></li>
+                        <li><a href="{{ route('listing.create') }}" class="slide-item {{ (request()->is('admin/images/*')) ? 'active' : '' }}">{{ __('Create New Listing ( M/S )') }}</a></li>
                         @endcan
                         @can('Listing create ( DB )')
                         <li><a href="{{ route('database-listing.create') }}" class="slide-item {{ (request()->is('admin/database-listing/create')) ? 'active' : '' }}">{{ __('Create New Listing ( DB )') }}</a></li>
@@ -65,7 +65,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         <li><a href="{{ route('image.combo.create', ['maker' => 'w-watermark']) }}" class="slide-item {{ (request()->is('admin/images/combo/create')) ? 'active' : '' }}">{{ __('Combo Image Maker') }}</a></li>
                         @endcan
                         @can('Image Creation -> Gallery ( DB )')
-                        <li><a href="{{ route('image.gallery') }}" class="slide-item {{ (request()->is('admin/images/gallery')) ? 'active' : '' }}">{{ __('Gallery ( DB )') }}</a></li>
+                        <li><a href="{{ route('image.gallery') }}" class="slide-item {{ (request()->is('admin/images/gallery')) ? 'active' : '' }}">{{ __('Gallery List Page ( DB )') }}</a></li>
                         @endcan
                     </ul>
                 </li>
@@ -86,7 +86,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         @can('Inventory -> Under Review Inventory')
                         <li><a href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => 3]) }}" class="slide-item {{ request()->is('admin/inventory/review') ? 'active' : '' }}">{{ __('Under Review Inventory') }}</a></li>
                         @endcan
-                        <li><a href="{{ route('profile.listing', ['user' => 'all']) }}" class="slide-item {{ (request()->is('admin/profile/listings')) ? 'active' : '' }}">{{ __('Listing Reports ( DB )') }}</a></li>
+                        <li><a href="{{ route('profile.listing', ['user' => 'all']) }}" class="slide-item {{ (request()->is('admin/profile/listings')) ? 'active' : '' }}">{{ __('Listing Counts Report ( DB )') }}</a></li>
                     </ul>
                 </li>
                 @endcan

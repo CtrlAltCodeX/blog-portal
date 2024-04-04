@@ -69,8 +69,8 @@ class BackupListing extends Command
             Excel::store(new ListingsExport($listingData->getMerchantExportFile()), "/public/" . $singleGoogleMerchantfileName);
             // Log::channel('backup_activity_log')->info('Google Merchant File Downloaded - ');
 
-            $facebookPixelfileName = 'facebook-file' . $currentTimeInSeconds . '.xlsx';
-            $singleFacebookPixelfileName = 'facebook-file.xlsx';
+            $facebookPixelfileName = 'facebook-file' . $currentTimeInSeconds . '.csv';
+            $singleFacebookPixelfileName = 'facebook-file.csv';
             Excel::store(new BackupListingsExport($listingData->getFacebookExportFile()), "/public/" . $facebookPixelfileName);
             Excel::store(new BackupListingsExport($listingData->getFacebookExportFile()), "/public/" . $singleFacebookPixelfileName);
             // Log::channel('backup_activity_log')->info('Facebook Pixel File Downloaded - ');
@@ -94,7 +94,7 @@ class BackupListing extends Command
             $allEmails = BackupEmail::all();
             $emailTo = [];
             foreach ($allEmails as $email) {
-                Mail::to($email->email)->send(new BackupMail(storage_path("app/public/" . $zipFileName)));
+                // Mail::to($email->email)->send(new BackupMail(storage_path("app/public/" . $zipFileName)));
                 // Log::channel('backup_activity_log')->info('Email Send Successfully to ' . $email->email . " - ");
                 $emailTo[] = $email->email;
             }
@@ -179,7 +179,7 @@ class BackupListing extends Command
                     }
 
                     if ($td->item($i)->getAttribute('itemprop') == 'color') {
-                        $publication = trim($td->item(0)->textContent);
+                        $publication = trim($td->item($i)->textContent);
                     }
                 }
 
@@ -202,6 +202,10 @@ class BackupListing extends Command
                     $link = $products->link[4]->href;
                 } else {
                     $link = $products->link[2]->href;
+                }
+
+                if (strlen($publication) > 100) {
+                    $publication = explode(',', $publication)[0];
                 }
 
                 $productTitle = str_replace("'", "", trim($productTitle));

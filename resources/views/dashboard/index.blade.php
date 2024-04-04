@@ -28,7 +28,8 @@
                             <tr>
                                 <th>{{ __('Sl') }}</th>
                                 <th>{{ __('Session Id') }}</th>
-                                <th>{{ __('Expire at') }}</th>
+                                <th>{{ __('Session Start') }}</th>
+                                <th>{{ __('Session Expire') }}</th>
                                 <th>{{ __('Action') }}</th>
                             </tr>
                         </thead>
@@ -36,6 +37,7 @@
                         <tr>
                             <td>{{ ++$key }}</td>
                             <td>{{ $session->session_id }}</td>
+                            <td>{{date("d-m-Y h:i A", strtotime($session->created_at)) }}</td>
                             <td>{{date("d-m-Y h:i A", strtotime($session->expire_at)) }}</td>
                             @if(session()->get('sessionId') != $session->session_id)
                             <td>
@@ -43,7 +45,7 @@
                             </td>
                             @else
                             <td>
-                                <a href="#" class="btn btn-primary btn-sm">Current Session</a>
+                                <a href="#" class="btn btn-success btn-sm">Current Session</a>
                             </td>
                             @endif
                         </tr>
@@ -55,7 +57,7 @@
     </div>
 
     <div class="page-header m-0">
-        <h1 class="page-title">{{ __('Total Products') }}</h1>
+        <h1 class="page-title">{{ __('Review Listings ( Main Site )') }}</h1>
     </div>
 
     <div class="row">
@@ -64,66 +66,11 @@
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
                     <div class="card overflow-hidden">
                         <div class="card-body">
-                            <a href="{{ route('inventory.index') }}">
-                                <div class="d-flex">
-                                    <div class="mt-2">
-                                        <h6 class="">Total Products</h6>
-                                        <h2 class="mb-0 number-font" id='totalProduct'>-</h2>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
-                    <div class="card overflow-hidden">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <div class="mt-2">
-                                    <h6 class="">Total Published</h6>
-                                    <h2 class="mb-0 number-font" id='products'>-</h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
-                    <div class="card overflow-hidden">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <div class="mt-2">
-                                    <h6 class="">Total Draft</h6>
-                                    <h2 class="mb-0 number-font" id='draftedData'>-</h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
-                    <div class="card overflow-hidden">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <div class="mt-2">
-                                    <h6 class="">Coming Soon</h6>
-                                    <h2 class="mb-0 number-font">Coming Soon</h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="page-header m-0">
-                    <h1 class="page-title">{{ __('Review Listings') }}</h1>
-                </div>
-
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
-                    <div class="card overflow-hidden">
-                        <div class="card-body">
                             <div class="d-flex">
                                 <div class="mt-2">
                                     <h6 class="">6 Months Old</h6>
                                     <a target="_blank" href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => 6]) }}">
-                                        <h2 class="mb-0 number-font" id='six-month-old'>-</h2>
+                                        <h2 class="mb-0 number-font text-success" id='six-month-old'>-</h2>
                                     </a>
                                 </div>
                             </div>
@@ -153,7 +100,7 @@
                                 <div class="mt-2">
                                     <h6 class="">2 Year Old</h6>
                                     <a target="_blank" href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => 2]) }}">
-                                        <h2 class="mb-0 number-font" id='two-year-old'>-</h2>
+                                        <h2 class="mb-0 number-font text-warning" id='two-year-old'>-</h2>
                                     </a>
                                 </div>
                             </div>
@@ -168,69 +115,8 @@
                                 <div class="mt-2">
                                     <h6 class="">3 Year Old</h6>
                                     <a target="_blank" href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => '3Y']) }}">
-                                        <h2 class="mb-0 number-font" id='three-year-old'>-</h2>
+                                        <h2 class="mb-0 number-font text-danger" id='three-year-old'>-</h2>
                                     </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="page-header m-0">
-                    <h1 class="page-title">{{ __('User Listing Reports') }}</h1>
-                </div>
-
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
-                    <div class="card overflow-hidden">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <div class="mt-2">
-                                    <h6 class="">Pending</h6>
-                                    <a target="_blank" href="{{ route('database-listing.index', ['status' => 0]) }}">
-                                        <h2 class="mb-0 number-font" id='pending'>
-                                            {{ $pendingListingCount }}
-                                        </h2>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
-                    <div class="card overflow-hidden">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <div class="mt-2">
-                                    <h6 class="">Approved</h6>
-                                    <!-- <a target="_blank" href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => '3Y']) }}"> -->
-                                    <h2 class="mb-0 number-font" id='approved'>{{ $approvedCount }}</h2>
-                                    <!-- </a> -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
-                    <div class="card overflow-hidden">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <div class="mt-2">
-                                    <h6 class="">Rejected</h6>
-                                    <!-- <a target="_blank" href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => '3Y']) }}"> -->
-                                    <h2 class="mb-0 number-font" id='rejected'>{{ $rejectedCount }}</h2>
-                                    <!-- </a> -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
-                    <div class="card overflow-hidden">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <div class="mt-2">
-                                    <h6 class="">Coming Soon</h6>
-                                    <h2 class="mb-0 number-font">Coming Soon</h2>
                                 </div>
                             </div>
                         </div>
@@ -241,7 +127,127 @@
     </div>
 
     <div class="page-header m-0">
-        <h1 class="page-title">{{ __('Stock Health') }}</h1>
+        <h1 class="page-title">{{ __('User Listing Counts Report') }}</h1>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+            <div class="card overflow-hidden">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="mt-2">
+                            <h6 class="">Pending</h6>
+                            <a target="_blank" href="{{ route('database-listing.index', ['status' => 0]) }}">
+                                <h2 class="mb-0 number-font" id='pending'>
+                                    {{ $pendingListingCount }}
+                                </h2>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+            <div class="card overflow-hidden">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="mt-2">
+                            <h6 class="">Approved</h6>
+                            <!-- <a target="_blank" href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => '3Y']) }}"> -->
+                            <h2 class="mb-0 number-font" id='approved'>{{ $approvedCount }}</h2>
+                            <!-- </a> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+            <div class="card overflow-hidden">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="mt-2">
+                            <h6 class="">Rejected</h6>
+                            <!-- <a target="_blank" href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => '3Y']) }}"> -->
+                            <h2 class="mb-0 number-font" id='rejected'>{{ $rejectedCount }}</h2>
+                            <!-- </a> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+            <div class="card overflow-hidden">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="mt-2">
+                            <h6 class="">Coming Soon</h6>
+                            <h2 class="mb-0 number-font">Coming Soon</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-header m-0">
+        <h1 class="page-title">{{ __('Total Products ( Main Site )') }}</h1>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+            <div class="card overflow-hidden">
+                <div class="card-body">
+                    <a href="{{ route('inventory.index') }}">
+                        <div class="d-flex">
+                            <div class="mt-2">
+                                <h6 class="">Total Products</h6>
+                                <h2 class="mb-0 number-font" id='totalProduct'>-</h2>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+            <div class="card overflow-hidden">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="mt-2">
+                            <h6 class="">Total Published</h6>
+                            <h2 class="mb-0 number-font" id='products'>-</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+            <div class="card overflow-hidden">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="mt-2">
+                            <h6 class="">Total Draft</h6>
+                            <h2 class="mb-0 number-font" id='draftedData'>-</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+            <div class="card overflow-hidden">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="mt-2">
+                            <h6 class="">Coming Soon</h6>
+                            <h2 class="mb-0 number-font">Coming Soon</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-header m-0">
+        <h1 class="page-title">{{ __('Stock Health ( Main Site )') }}</h1>
     </div>
 
     <div class="row">

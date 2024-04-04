@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', __('Gallery ( DB )'))
+@section('title', __('Gallery List Page ( DB )'))
 
 @push('css')
 <style>
@@ -45,7 +45,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header justify-content-between">
-                    <h3 class="card-title">Gallery ( DB )</h3>
+                    <h3 class="card-title">Gallery List Page ( DB )</h3>
                 </div>
 
                 <div class="card-body">
@@ -74,7 +74,7 @@
                                         <input type="checkbox" name="ids" class="checkbox-update" value="{{$file['name']}}" />
                                     </td>
                                     <td>{{++$i}}</td>
-                                    <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ route('assets', $file['name']) }}" alt="Product Image" width="100" /></td>
+                                    <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ route('assets', $file['name']) }}" alt="Product Image" width="50" /></td>
                                     <td>{{ $file['name'] }}</td>
                                     <td>{{ round($file['size']/1000, 1) }} kb</td>
                                     <td>{{ date("d-m-Y h:i A", strtotime($file['datetime'])) }}</td>

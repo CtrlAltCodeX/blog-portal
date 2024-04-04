@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', __('Listing'))
+@section('title', __('Listing Counts Report ( DB )'))
 
 @section('content')
 <div>
@@ -8,17 +8,38 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header justify-content-between d-flex">
-                    <h2 class="card-title">Listing</h2>
-                    @if(auth()->user()->hasRole('Super Admin'))
-                    <form action="" method="get" id='form'>
-                        <select class="form-control w-100" name="user" id='user'>
-                            <option value="all">All Users</option>
-                            @foreach($users as $user)
-                            <option value="{{$user->id}}" {{ $user->id == request()->user ? 'selected' : '' }}>{{ $user->name }}</option>
-                            @endforeach
-                        </select>
-                    </form>
-                    @endif
+                    <h2 class="card-title">Listing Counts Report ( DB )</h2>
+
+                    <div class="d-flex" style="grid-gap: 10px;">
+                        <div>
+                            <a href="#" class="btn btn-light position-relative me-2 mb-2"> Pending
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{ $pending }}
+                                    <span class="visually-hidden">unread messages</span>
+                                </span>
+                            </a>
+                            <a href="#" class="btn btn-warning position-relative me-2 mb-2"> Approved
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{$approved}}
+                                    <span class="visually-hidden">unread messages</span>
+                                </span>
+                            </a>
+                            <a href="#" class="btn btn-danger position-relative mb-2"> Rejected
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{$rejected}}
+                                    <span class="visually-hidden">unread messages</span>
+                                </span>
+                            </a>
+                        </div>
+                        @if(auth()->user()->hasRole('Super Admin'))
+                        <form action="" method="get" id='form' class="d-flex align-items-center">
+                            <b class="w-100">User Filter</b>
+                            <select class="form-control w-100" name="user" id='user'>
+                                <option value="all">All Users</option>
+                                @foreach($users as $user)
+                                <option value="{{$user->id}}" {{ $user->id == request()->user ? 'selected' : '' }}>{{ $user->name }}</option>
+                                @endforeach
+                            </select>
+                        </form>
+                        @endif
+                    </div>
                 </div>
 
                 <div class="card-body">
@@ -28,19 +49,19 @@
                                 <tr>
                                     <th>{{ __('Sl') }}</th>
                                     <th>{{ __('Image') }}</th>
-                                    <th>{{ __('Title') }}</th>
+                                    <th>{{ __('Product Title') }}</th>
                                     <th>{{ __('Created by') }}</th>
                                     <th>{{ __('Created at') }}</th>
                                     <th>{{ __('Approved by') }}</th>
                                     <th>{{ __('Approved at') }}</th>
-                                    <th>{{ __('Status') }}</th>
+                                    <th>{{ __('Current Status') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($userListings as $key => $userListing)
                                 <tr>
                                     <td>{{ ++$key }}</td>
-                                    <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $userListing->image }}" alt="Product Image" width="100" /></td>
+                                    <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $userListing->image }}" alt="Product Image" width="50" /></td>
                                     <td>{{ $userListing->title }}</td>
                                     <td>{{ $userListing->create_user->name }}</td>
                                     <td>{{ date("d-m-Y h:i A", strtotime($userListing->created_at)) }}</td>
@@ -60,11 +81,11 @@
                                     </td>
                                     <td>
                                         @if($userListing->status == "0")
-                                        Pending
+                                        <button class="btn btn-warning btn-sm">Pending</button>
                                         @elseif($userListing->status == 1)
-                                        Approved
+                                        <button class="btn btn-success btn-sm">Approved</button>
                                         @elseif($userListing->status == 2)
-                                        Rejected
+                                        <button class="btn btn-danger btn-sm">Rejected</button>
                                         @endif
                                     </td>
                                 </tr>
@@ -111,14 +132,14 @@
     $(document).ready(function() {
         //______Basic Data Table
         $('#basic-datatable').DataTable({
-            "paging": false
+            "paging": false,
         });
 
         $("#category").on("change", function() {
             $("#form").submit();
         });
 
-        $("#basic-datatable_wrapper .col-sm-12:first").html('<div class="d-flex"><label class="m-1">Pending <span id="count-six">({{ $pending }})</span></label><label class="m-1">Approved <span id="count-one">({{ $approved }})</span></label><label class="m-1">Rejected <span id="count-two">({{ $rejected }})</span></label></div>');
+        // $("#basic-datatable_wrapper .col-sm-12:first").html('<div class="d-flex"><label class="m-1">Pending <span id="count-six">({{ $pending }})</span></label><label class="m-1">Approved <span id="count-one">({{ $approved }})</span></label><label class="m-1">Rejected <span id="count-two">({{ $rejected }})</span></label></div>');
 
         // $("#basic-datatable_wrapper .col-sm-12:first").html('<div class="d-flex" style=grid-gap:10px;><div><input class="m-0" type="radio" name="pending" /><label class="m-1">Pending <span id="count-six">({{ $pending }})</span></label></div><div><input class="m-0" type="radio" name="pending" /><label class="m-1">Approved <span id="count-one">({{ $approved }})</span></label></div><div><input class="m-0" type="radio" name="pending" /><label class="m-1">Rejected <span id="count-two">({{ $rejected }})</span></label></div></div>');
 
