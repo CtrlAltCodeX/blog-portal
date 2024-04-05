@@ -63,19 +63,13 @@
                 limit(this);
             }
 
-            requiredFields(inputValue, this);
+            if ($(this).attr('name') != 'images[]') {
+                requiredFields(inputValue, this);
+            }
 
             nameValidate(inputValue, this);
 
             domainValidation(inputValue, this);
-
-            // var capitalLettersCount = countCapitalLetters(inputValue);
-
-            // if (capitalLettersCount < 5) {
-            //     errorHandling($(this).attr('name'), 'Capital letter word not allowed', false, this);
-            // } else {
-            //     console.log('else');
-            // }
         })
 
         $('textarea').on('input', function() {

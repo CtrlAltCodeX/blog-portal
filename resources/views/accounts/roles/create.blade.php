@@ -82,6 +82,7 @@
                                         <div class="custom-controls-stacked">
                                             <label class="custom-control custom-checkbox-md">
                                                 <input type="checkbox" class="custom-control-input" type="checkbox" name="permissions[]" id="permission_{{ $permission['id'] }}" value="{{ $permission['name'] }}">
+
                                                 <label class="custom-control-label" for="permission_{{ $permission['id'] }}">
                                                     {{ $permission['name'] }}</label>
                                             </label>
@@ -94,7 +95,7 @@
                                     <div class="col-md-4">
                                         <div class="custom-controls-stacked">
                                             <label class="custom-control custom-checkbox-md">
-                                                <input type="checkbox" class="custom-control-input" type="checkbox" name="permissions[]" id="permission_{{ $permission['id'] }}">
+                                                <input type="checkbox" class="custom-control-input" type="checkbox" name="permissions[]" id="permission_{{ $permission['id'] }}" value="{{ $permission['name'] }}">
                                                 <label class="custom-control-label" for="permission_{{ $permission['id'] }}">
                                                     {{ $permission['name'] }}</label>
                                             </label>

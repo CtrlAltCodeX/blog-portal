@@ -88,8 +88,8 @@ class BackupListing extends Command
             // Close the zip archive
             $zip->close();
 
-            // Storage::disk('dropbox')->put('files/' . $sqlfileName, $listingData->exportSQL()[1]);
-            // Storage::disk('dropbox')->put('files/' . $fileName, file_get_contents(storage_path('app/public/' . $fileName)));
+            Storage::disk('dropbox')->put('files/' . $sqlfileName, $listingData->exportSQL()[1]);
+            Storage::disk('dropbox')->put('files/' . $fileName, file_get_contents(storage_path('app/public/' . $fileName)));
 
             $allEmails = BackupEmail::all();
             $emailTo = [];
@@ -223,7 +223,7 @@ class BackupListing extends Command
                     'language' => trim($lang),
                     'no_of_pages' => trim($page_no),
                     'binding_type' => trim($binding),
-                    'condition' => trim($condition),
+                    'condition' => 'new',
                     'insta_mojo_url' => trim($instaUrl),
                     'base_url' => $image ?? '',
                     'multiple' => $images,

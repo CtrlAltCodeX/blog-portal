@@ -263,6 +263,8 @@ class BackupListingsController extends Controller
         // Retrieve data from the database
         $data = DB::table('backup_listings')->get();
 
+        $listingImagesData = DB::table('backup_listing_images')->get();
+
         // Generate SQL insert statements
         $sql = 'CREATE TABLE `backup_listings` (
             `id` bigint(20) UNSIGNED NOT NULL,
@@ -282,6 +284,7 @@ class BackupListingsController extends Controller
             `binding_type` varchar(191) NOT NULL,
             `insta_mojo_url` varchar(191) NOT NULL,
             `base_url` text NOT NULL,
+            `url` varchar(191) NOT NULL,
             `created_at` timestamp NULL DEFAULT NULL,
             `updated_at` timestamp NULL DEFAULT NULL
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;';
@@ -292,10 +295,32 @@ class BackupListingsController extends Controller
 
             foreach ((array) $row as $key => $value) {
                 $columns[] = "`$key`";
-                $values[] = str_replace("'s", "\'s", "'$value'");
+                $values[] = str_replace(["'s", "' ", "I'S"], ["\'s", " ", "I S"], "'$value'");
             }
 
             $sql .= "INSERT INTO backup_listings (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $values) . ");" . PHP_EOL;
+        }
+
+        $sql .= 'CREATE TABLE `backup_listing_images` (
+            `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            `listing_id` bigint(20) NOT NULL,
+            `image_url` text NOT NULL,
+            `created_at` timestamp NULL DEFAULT NULL,
+            `updated_at` timestamp NULL DEFAULT NULL,
+            PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;';
+
+        // Generate SQL insert statements for listing_images table
+        foreach ($listingImagesData as $row) {
+            $columns = [];
+            $values = [];
+
+            foreach ((array) $row as $key => $value) {
+                $columns[] = "`$key`";
+                $values[] = str_replace("'s", "\'s", "'$value'");
+            }
+
+            $sql .= "INSERT INTO backup_listing_images (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $values) . ");" . PHP_EOL;
         }
 
         // Set file path
