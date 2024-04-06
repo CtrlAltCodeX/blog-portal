@@ -9,10 +9,8 @@ use App\Models\BackupListing;
 use App\Models\BackupLogs;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Dropbox\Client;
-use GuzzleHttp\Client as HttpClient;
 
 class BackupListingsController extends Controller
 {
@@ -102,7 +100,7 @@ class BackupListingsController extends Controller
 
             $getAllListings[$key][] = $listing['title'];
             $getAllListings[$key][] = $listing['product_id'];
-            $getAllListings[$key][] = $listing['selling_price'];
+            $getAllListings[$key][] = ($listing['selling_price'] != 0) ? $listing['selling_price'] : 1299;
             $getAllListings[$key][] = '0';
             $getAllListings[$key][] = '0';
             $getAllListings[$key][] = strtolower($listing['condition']);

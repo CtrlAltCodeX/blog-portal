@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', __('Manage Inventory'))
+@section('title', __('Manage Inventory | Draft ( M/S )'))
 
 @push('css')
 <style>
@@ -74,7 +74,7 @@
 
             <div class="card">
                 <div class="card-header justify-content-between">
-                    <h3 class="card-title">Manage Inventory</h3>
+                    <h3 class="card-title">Manage Inventory | Draft ( M/S )</h3>
                     <!-- <form action="" method="get" id='form'>
                         <select class="form-control w-100" id='category' name="category">
                             <option value="">In Stock</option>

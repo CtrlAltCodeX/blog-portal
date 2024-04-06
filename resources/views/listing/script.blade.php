@@ -84,6 +84,8 @@
 
         $('#url').on('input', function() {
             var url = $(this).val();
+            var fieldId = $(this).attr('name');
+
             if (!url.includes('https://www.instamojo.com/EXAM360/')) {
                 errorHandling('url', 'Please add instamojo link', false, this);
             } else {

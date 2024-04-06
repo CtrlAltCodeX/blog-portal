@@ -56,6 +56,7 @@
                                     <th>{{ __('Approved by') }}</th>
                                     <th>{{ __('Approved at') }}</th>
                                     <th>{{ __('Current Status') }}</th>
+                                    <th>{{ __('Action') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -92,6 +93,7 @@
                                         <button class="btn btn-danger btn-sm">Rejected</button>
                                         @endif
                                     </td>
+                                    <td><a href="{{ route('profile.listing.delete.single', $userListing->id) }}" class="btn btn-primary btn-sm">Delete</a></td>
                                 </tr>
                                 @empty
                                 @endforelse
@@ -172,7 +174,7 @@
             }
 
             $.ajax({
-                type: "GET",
+                type: "POST",
                 url: "{{ route('profile.listing.delete') }}",
                 data: {
                     formData: formData

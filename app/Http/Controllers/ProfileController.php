@@ -128,6 +128,21 @@ class ProfileController extends Controller
 
     public function delete()
     {
-        
+        UserListingInfo::whereIn('id', request()->formData[1])->delete();
+
+        Listing::whereIn('id', request()->formData[1])->delete();
+
+        return true;
+    }
+
+    public function singleDelete($id)
+    {
+        UserListingInfo::find($id)->delete();
+
+        Listing::find($id)->delete();
+
+        session()->flash('success', __('Deleted successfully.'));
+
+        return redirect()->back();
     }
 }

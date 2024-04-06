@@ -175,9 +175,21 @@ class ListingController extends Controller
         $desc = [];
         for ($i = 0; $i < $div->length; $i++) {
             if ($div->item($i)->getAttribute('class') == 'pbl box dtmoredetail dt_content') {
-                $desc[] = trim($div->item($i)->textContent);
+                // Access the individual DOMNode
+                $node = $div->item($i);
+
+                // Get the inner HTML content of the node (without the <div> tag)
+                $innerHTML = '';
+                foreach ($node->childNodes as $child) {
+                    $innerHTML .= $node->ownerDocument->saveHTML($child);
+                }
+
+                // Add the inner HTML content to the $desc array
+                $desc[] = $innerHTML;
             }
         }
+
+        $description = implode(' ', $desc);
 
         $selling = 0;
         $mrp = 0;
@@ -212,7 +224,7 @@ class ListingController extends Controller
             'lang' => trim($lang),
             'author_name' => trim($author_name),
             'page_no' => trim($page_no),
-            'desc' => $desc[0] ?? '',
+            'desc' => $description ?? '',
             'selling' => trim($selling),
             'mrp' => trim($mrp),
             'multiple' => $images,

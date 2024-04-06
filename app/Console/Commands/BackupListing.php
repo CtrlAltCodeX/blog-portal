@@ -59,6 +59,7 @@ class BackupListing extends Command
 
             $currentTimeInSeconds = now()->timestamp;
             $currentDateTimeFormat = now()->format('Y-m-d H:i:s');
+            $currentDateFormat = now()->format('Y-m-d');
             $fileName = 'report-' . $currentTimeInSeconds . '.xlsx';
             Excel::store(new BackupListingsExport($listingData->exportData()), "/public/" . $fileName);
             // Log::channel('backup_activity_log')->info('Export File Downloaded - ');
@@ -88,8 +89,8 @@ class BackupListing extends Command
             // Close the zip archive
             $zip->close();
 
-            Storage::disk('dropbox')->put('files/' . $sqlfileName, $listingData->exportSQL()[1]);
-            Storage::disk('dropbox')->put('files/' . $fileName, file_get_contents(storage_path('app/public/' . $fileName)));
+            Storage::disk('dropbox')->put("Backup - ".$currentDateFormat . '/' . $sqlfileName, $listingData->exportSQL()[1]);
+            Storage::disk('dropbox')->put("Backup - ".$currentDateFormat . '/' . $fileName, file_get_contents(storage_path('app/public/' . $fileName)));
 
             $allEmails = BackupEmail::all();
             $emailTo = [];
@@ -215,7 +216,7 @@ class BackupListing extends Command
                     'description' => $desc[0] ?? '',
                     'mrp' => (int) trim($mrp),
                     'selling_price' => (int) trim($selling),
-                    'publisher' => trim($publication),
+                    'publisher' => trim($publication)??'Exam360',
                     'author_name' => trim($author_name),
                     'edition' => trim($edition),
                     'categories' => json_encode(collect($products->category ?? [])->pluck('term')->toArray()),

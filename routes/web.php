@@ -58,6 +58,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
         Route::post('delete', [ProfileController::class, 'delete'])
             ->name('profile.listing.delete');
+
+        Route::get('delete/{id}', [ProfileController::class, 'singleDelete'])
+            ->name('profile.listing.delete.single');
     });
 
     Route::group(['prefix' => 'inventory'], function () {
