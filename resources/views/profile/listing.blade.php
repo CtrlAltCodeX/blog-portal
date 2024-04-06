@@ -47,6 +47,7 @@
                         <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">
                             <thead>
                                 <tr>
+                                    <th><input type="checkbox" class="check-all" /></th>
                                     <th>{{ __('Sl') }}</th>
                                     <th>{{ __('Image') }}</th>
                                     <th>{{ __('Product Title') }}</th>
@@ -60,6 +61,9 @@
                             <tbody>
                                 @forelse($userListings as $key => $userListing)
                                 <tr>
+                                    <td>
+                                        <input type="checkbox" name="ids" class="checkbox-update" value="{{$userListing->id}}" />
+                                    </td>
                                     <td>{{ ++$key }}</td>
                                     <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $userListing->image }}" alt="Product Image" width="50" /></td>
                                     <td>{{ $userListing->title }}</td>
@@ -139,12 +143,64 @@
             $("#form").submit();
         });
 
-        // $("#basic-datatable_wrapper .col-sm-12:first").html('<div class="d-flex"><label class="m-1">Pending <span id="count-six">({{ $pending }})</span></label><label class="m-1">Approved <span id="count-one">({{ $approved }})</span></label><label class="m-1">Rejected <span id="count-two">({{ $rejected }})</span></label></div>');
-
-        // $("#basic-datatable_wrapper .col-sm-12:first").html('<div class="d-flex" style=grid-gap:10px;><div><input class="m-0" type="radio" name="pending" /><label class="m-1">Pending <span id="count-six">({{ $pending }})</span></label></div><div><input class="m-0" type="radio" name="pending" /><label class="m-1">Approved <span id="count-one">({{ $approved }})</span></label></div><div><input class="m-0" type="radio" name="pending" /><label class="m-1">Rejected <span id="count-two">({{ $rejected }})</span></label></div></div>');
-
         $("#user").change(function() {
             $("#form").submit();
+        });
+
+        $("#basic-datatable_wrapper .col-sm-12:first").html('<form id="update-status" action="" method="GET"><div class="d-flex"><select class="form-control w-50" name="status"><option>Select</option><option value=1>Delete</option></select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div></form>');
+
+        var ids = [];
+        $(".checkbox-update").click(function() {
+            if ($(this).prop('checked')) {
+                ids.push($(this).val());
+            } else {
+                var index = ids.indexOf($(this).val());
+                if (index !== -1) {
+                    ids.splice(index, 1);
+                }
+            }
+        });
+
+        $(".table-responsive").on('click', '.update-status', function(e) {
+            e.preventDefault();
+            var formData = $('#update-status').serializeArray();
+            formData.push(ids);
+
+            if (ids.length <= 0) {
+                alert('Please select any item')
+                return true;
+            }
+
+            $.ajax({
+                type: "GET",
+                url: "{{ route('profile.listing.delete') }}",
+                data: {
+                    formData: formData
+                },
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(result) {
+                    if (result) {
+                        window.location.href = location.href;
+                    }
+                },
+            });
+        });
+
+        $('.check-all').click(function() {
+            $(".checkbox-update").each(function() {
+                if ($('.check-all').prop('checked') == true) {
+                    $(this).prop('checked', true);
+                    ids.push($(this).val());
+                } else {
+                    $(this).prop('checked', false);
+                    var index = ids.indexOf($(this).val());
+                    if (index !== -1) {
+                        ids.splice(index, 1);
+                    }
+                }
+            });
         });
     })
 </script>

@@ -55,6 +55,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
         Route::post('', [ProfileController::class, 'update'])
             ->name('profile.update');
+
+        Route::post('delete', [ProfileController::class, 'delete'])
+            ->name('profile.listing.delete');
     });
 
     Route::group(['prefix' => 'inventory'], function () {

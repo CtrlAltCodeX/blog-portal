@@ -125,4 +125,9 @@ class ProfileController extends Controller
 
         return view('profile.listing', compact('userListings', 'pending', 'rejected', 'approved', 'users'));
     }
+
+    public function delete()
+    {
+        
+    }
 }
