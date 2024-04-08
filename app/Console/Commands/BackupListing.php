@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Exports\BackupListingsExport;
-use App\Exports\GoogleMerchantExport;
 use App\Exports\ListingsExport;
 use App\Mail\BackupMail;
 use App\Models\BackupEmail;
@@ -18,7 +17,6 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
-use Maatwebsite\Excel\Excel as ExcelExcel;
 use Maatwebsite\Excel\Facades\Excel;
 use ZipArchive;
 
@@ -49,10 +47,8 @@ class BackupListing extends Command
                 $batchId = str_pad(++$lastLog->batch_id, 7, '0', STR_PAD_LEFT);
             }
 
-            // Log::channel('backup_activity_log')->info('Backup Stated - ');
             $started = now();
             $this->getAllProducts();
-            // Log::channel('backup_activity_log')->info('Backup Completed - ');
             $completed = now();
 
             $listingData = app('App\Http\Controllers\BackupListingsController');
@@ -62,19 +58,16 @@ class BackupListing extends Command
             $currentDateFormat = now()->format('Y-m-d');
             $fileName = 'report-' . $currentTimeInSeconds . '.xlsx';
             Excel::store(new BackupListingsExport($listingData->exportData()), "/public/" . $fileName);
-            // Log::channel('backup_activity_log')->info('Export File Downloaded - ');
 
             $googleMerchantfileName = 'merchant-file' . $currentTimeInSeconds . '.tsv';
             $singleGoogleMerchantfileName = 'merchant-file.tsv';
             Excel::store(new ListingsExport($listingData->getMerchantExportFile()), "/public/" . $googleMerchantfileName);
             Excel::store(new ListingsExport($listingData->getMerchantExportFile()), "/public/" . $singleGoogleMerchantfileName);
-            // Log::channel('backup_activity_log')->info('Google Merchant File Downloaded - ');
 
             $facebookPixelfileName = 'facebook-file' . $currentTimeInSeconds . '.csv';
             $singleFacebookPixelfileName = 'facebook-file.csv';
             Excel::store(new BackupListingsExport($listingData->getFacebookExportFile()), "/public/" . $facebookPixelfileName);
             Excel::store(new BackupListingsExport($listingData->getFacebookExportFile()), "/public/" . $singleFacebookPixelfileName);
-            // Log::channel('backup_activity_log')->info('Facebook Pixel File Downloaded - ');
 
             $sqlfileName = 'export-file' . $currentTimeInSeconds . '.sql';
             Storage::disk('public')->put($sqlfileName, $listingData->exportSQL()[1]);
@@ -89,14 +82,10 @@ class BackupListing extends Command
             // Close the zip archive
             $zip->close();
 
-            Storage::disk('dropbox')->put("Backup - ".$currentDateFormat . '/' . $sqlfileName, $listingData->exportSQL()[1]);
-            Storage::disk('dropbox')->put("Backup - ".$currentDateFormat . '/' . $fileName, file_get_contents(storage_path('app/public/' . $fileName)));
-
             $allEmails = BackupEmail::all();
             $emailTo = [];
             foreach ($allEmails as $email) {
-                // Mail::to($email->email)->send(new BackupMail(storage_path("app/public/" . $zipFileName)));
-                // Log::channel('backup_activity_log')->info('Email Send Successfully to ' . $email->email . " - ");
+                Mail::to($email->email)->send(new BackupMail(storage_path("app/public/" . $zipFileName)));
                 $emailTo[] = $email->email;
             }
 
@@ -110,6 +99,9 @@ class BackupListing extends Command
                 'email_to' => implode(",", $emailTo),
                 'sql_file' => $currentDateTimeFormat,
             ]);
+
+            $this->backupToDropBox($currentDateFormat, $fileName, $sqlfileName);
+
         } catch (\Exception $e) {
             Log::channel('backup_activity_log')->info('Facing some issues');
 
@@ -216,7 +208,7 @@ class BackupListing extends Command
                     'description' => $desc[0] ?? '',
                     'mrp' => (int) trim($mrp),
                     'selling_price' => (int) trim($selling),
-                    'publisher' => trim($publication)??'Exam360',
+                    'publisher' => trim($publication) ?? 'Exam360',
                     'author_name' => trim($author_name),
                     'edition' => trim($edition),
                     'categories' => json_encode(collect($products->category ?? [])->pluck('term')->toArray()),
@@ -268,5 +260,59 @@ class BackupListing extends Command
         $siteSetting = SiteSetting::first();
 
         if ($siteSetting) return $siteSetting->url;
+    }
+
+    /**
+     * Backup to Dropbox
+     *
+     * @return void
+     */
+    public function backupToDropBox($folderName, $firstFile, $secondFile)
+    {
+        $data = [
+            'form_params' => [
+                'grant_type' => 'refresh_token',
+                'refresh_token' => env('DROPBOX_REFRESH_TOKEN'),
+                'client_id' => env('DROPBOX_APP_KEY'),
+                'client_secret' => env('DROPBOX_APP_SECRET')
+            ]
+        ];
+
+        $client = new Client();
+
+        $response = $client->post('https://api.dropbox.com/oauth2/token', $data);
+
+        $tokenData = json_decode($response->getBody(), true);
+
+        $token = $tokenData['access_token']; // should be replaced with the OAuth 2 access token
+
+        $headers = [
+            'Authorization' =>  'Bearer ' . $token,
+            'Content-Type' =>  'application/octet-stream',
+        ];
+
+        $headers['Dropbox-API-Arg'] = json_encode([
+            "path" => "/Backup - " . $folderName . '/' . $firstFile,
+            "mode" => "add",
+            "autorename" => true,
+            "mute" => false
+        ]);
+
+        $client->post(env('DROPBOX_URL'), [
+            'headers' => $headers,
+            'body' => fopen(storage_path('app/public/' . $firstFile), 'r')
+        ]);
+
+        $headers['Dropbox-API-Arg'] = json_encode([
+            "path" => "/Backup - " . $folderName . '/' . $secondFile,
+            "mode" => "add",
+            "autorename" => true,
+            "mute" => false
+        ]);
+
+        $client->post(env('DROPBOX_URL'), [
+            'headers' => $headers,
+            'body' => fopen(storage_path('app/public/' . $secondFile), 'r')
+        ]);
     }
 }
