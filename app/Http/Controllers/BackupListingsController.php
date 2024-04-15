@@ -165,7 +165,8 @@ class BackupListingsController extends Controller
     {
         $getAllListings = [];
 
-        $getAllListingsFromDatabase = BackupListing::all()->makeHidden(['id', 'created_at', 'updated_at'])
+        $getAllListingsFromDatabase = BackupListing::all()
+            ->makeHidden(['id', 'created_at', 'updated_at'])
             ->toArray();
 
         foreach ($getAllListingsFromDatabase as $key => $listing) {
@@ -178,14 +179,14 @@ class BackupListingsController extends Controller
             }
 
             $getAllListings[$key][] = $listing['product_id'];
-            $getAllListings[$key][] = $listing['title'];
-            $getAllListings[$key][] = $listing['description'];
+            $getAllListings[$key][] = substr($listing['title'], 0, 198);
+            $getAllListings[$key][] = ($listing['description']) ? substr($listing['description'], 0, 9900) : $listing['title'];
             $getAllListings[$key][] = 'in stock';
             $getAllListings[$key][] = $condition ? strtolower($condition) : 'new';
             $getAllListings[$key][] = $listing['mrp'];
             $getAllListings[$key][] = $listing['url'];
             $getAllListings[$key][] = $listing['base_url'];
-            $getAllListings[$key][] = $listing['publisher'];
+            $getAllListings[$key][] = ($listing['publisher']) ? $listing['publisher'] : 'Exam360';
             $getAllListings[$key][] = '';
             $getAllListings[$key][] = '';
             $getAllListings[$key][] = '';

@@ -52,19 +52,19 @@ class ListingsExport implements FromArray, WithHeadings, WithCustomCsvSettings
 
         // Add data rows
         foreach ($listings as $listing) {
-            // $desc = str_replace('"', ' ', $listing['title']);
+            $title = str_replace(['"', '(', ')', ',', '&', '|'], ['', '', '', '', '', ''], $listing['title']);
             $additionalImages = BackupListingImage::where('listing_id', $listing->id)
                 ->pluck('image_url')
                 ->toArray();
 
             $data[] = [
                 $listing['url'],
-                $listing['title'],
+                $title,
                 $listing['id'],
-                $listing['selling_price'] . "INR",
+                ($listing['selling_price'] != 0) ? $listing['selling_price'] . "INR" : 1299 . "INR",
                 '0',
                 '0',
-                strtolower($listing['condition']),
+                'new',
                 'in stock',
                 'IN',
                 'Online',
@@ -84,6 +84,7 @@ class ListingsExport implements FromArray, WithHeadings, WithCustomCsvSettings
                 'IN',
                 '0',
                 '',
+                'no',
             ];
         }
 
