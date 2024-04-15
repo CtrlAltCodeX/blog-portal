@@ -140,12 +140,14 @@ class GoogleService
 
             if (
                 (request()->route() && (request()->route()->getName() == 'inventory.index'
-                    || request()->route()->getName() == 'inventory.review'))
+                    || request()->route()->getName() == 'inventory.review'
+                    || request()->route()->getName() == 'listing.search'))
                 || App::runningInConsole()
             ) {
                 $params['start-index'] = $startIndex;
                 $params['max-results'] = $perPage;
                 $params['category'] = request()->query('category');
+                $params['q'] = request()->query('q');
 
                 if ((request()->route() && request()->route()->getName() == 'inventory.review')
                     && !App::runningInConsole()
@@ -237,7 +239,7 @@ class GoogleService
             $data['processed_images'] = [];
 
             $data['processed_images'] = $data['images'];
-            
+
             if (isset($data['multipleImages'])) {
                 foreach ($data['multipleImages'] as $image) {
                     if ($image instanceof UploadedFile) {

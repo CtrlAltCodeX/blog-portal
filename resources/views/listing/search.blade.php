@@ -1,66 +1,53 @@
 @extends('layouts.master')
 
-@section('title', __('Manage Inventory | Published ( M/S )'))
+@section('title', __('Search Products ( M/S )'))
 
 @push('css')
 <style>
     ul {
         justify-content: end;
     }
-
-    #basic-datatable_info {
-        display: none;
-    }
-
-    .tooltip {
-        position: relative;
-        display: inline-block;
-        border-bottom: 1px dotted black;
-    }
-
-    .tooltip .tooltiptext {
-        visibility: hidden;
-        width: 120px;
-        background-color: black;
-        color: #fff;
-        text-align: center;
-        border-radius: 6px;
-        padding: 5px 0;
-
-        /* Position the tooltip */
-        position: absolute;
-        z-index: 1;
-    }
-
-    .tooltip:hover .tooltiptext {
-        visibility: visible;
-    }
 </style>
 @endpush
-
 @section('content')
 
 <div>
     <div class="row row-sm">
         <div class="col-lg-12">
-            
             <div class="card">
-                <div class="card-header justify-content-between">
-                    <h3 class="card-title">Manage Inventory | Published ( M/S )</h3>
-                    <form action="" method="get" id='form'>
-                        <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
-                        <select class="form-control w-100" id='category' name="category">
-                            <option value="">In Stock</option>
-                            <option value="Stk_o" {{ request()->category == 'Stk_o' ? 'selected' : '' }}>Out of Stock (Stk_o)</option>
-                            <option value="stock__out" {{ request()->category == 'stock__out' ? 'selected' : '' }}>Out of Stock (stock__out)</option>
-                            <option value="Stk_d" {{ request()->category == 'Stk_d' ? 'selected' : '' }}>On Demand Stock (Stk_d)</option>
-                            <option value="stock__demand" {{ request()->category == 'stock__demand' ? 'selected' : '' }}>On Demand Stock (stock__demand)</option>
-                            <option value="Stk_l" {{ request()->category == 'Stk_l' ? 'selected' : '' }}>Low Stock (Stk_l)</option>
-                            <option value="stock__low" {{ request()->category == 'stock__low' ? 'selected' : '' }}>Low Stock (stock__low)</option>
-                        </select>
+                <div class="card-header">
+                    <h5>Search Products ( M/S )</h5>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('listing.search') }}" class="text-center">
+                        <label>To Begin Adding New Products</label><br>
+                        <label>
+                            <h3><b>Find The Product in EXAM360`s Catalog</b></h3>
+                        </label>
+                        <br/>
+                        <label>Search Books Using <b>Book Keywords</b> for better Results.</label><br>
+                        <input type="hidden" value="1" name="startIndex" />
+                        <input type="hidden" value="Product" name="category" />
+                        <div class="d-flex align-items-center">
+                            <input type="text" class="form-control" name="q" placeholder="Search by Book Name or Descriptions" value="{{ request()->q }}" />
+                            <button type="submit" class="btn btn-primary mt-2 m-2">Search</button>
+                        </div>
+                        <div class="row" style="font-size: 11px;">
+                            <div class="col-md-6 text-center" style="border-right: 1px solid #ccc;">
+                                <a href="{{ route('listing.create') }}" target="_blank" style="color:#008296;">Item Not Found? Create New Listing (M/S)</a>
+                            </div>
+                            <div class="col-md-6 text-center">
+                                <a href="{{ route('database-listing.create') }}" target="_blank" style="color:#008296;">Item Not Found? Create New Listings (DB)</a>
+                            </div>
+                        </div>
                     </form>
                 </div>
-
+            </div>
+            @if (request()->q)
+            <div class="card">
+                <div class="card-header">
+                    <h5>Displaying Search Results:</h5>
+                </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">
@@ -128,7 +115,7 @@
                                         </a>
                                     </td>
                                     @php
-                                    $categories = collect($googlePost->category??[])->toArray();
+                                    $categories = collect($googlePost->category??[])->pluck('term')->toArray();
                                     @endphp
                                     <td>
                                         <span data-bs-placement="top" data-bs-toggle="tooltip" title="{{ implode(", ", $categories) }}">
@@ -141,12 +128,12 @@
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic example">
                                             @if($mrp && $selling && $productTitle)
-                                            @can('Inventory -> Manage Inventory -> Edit')
+                                            @can('Listing -> Search Listing -> Edit')
                                             <a href="{{ route('listing.edit', $productId) }}" class="btn btn-sm btn-primary">{{ __('Edit') }}</a>
                                             @endcan
                                             @endif
 
-                                            @can('Inventory -> Manage Inventory -> Delete')
+                                            @can('Listing -> Search Listing -> Delete')
                                             <form action="{{ route('listing.destroy', $productId) }}" method="POST" class="ml-2">
                                                 @csrf
                                                 @method('DELETE')
@@ -168,10 +155,10 @@
 
                 <div class="card-footer">
                     <nav aria-label="Page navigation example">
-                        @if(request()->route()->getName() == 'inventory.index')
+                        @if(request()->route()->getName() == 'listing.search')
                         <ul class="pagination">
-                            @if($googlePosts['prevStartIndex'] > 0) <li class="page-item"><a class="page-link" href="{{ route('inventory.index', ['pageToken' => $googlePosts['prevPageToken'], 'startIndex' => $googlePosts['prevStartIndex'], 'category' => request()->category]) }}">Previous</a></li> @endif
-                            <li class="page-item"><a class="page-link" href="{{ route('inventory.index', ['pageToken' => $googlePosts['nextPageToken'], 'startIndex' => $googlePosts['startIndex'], 'category' => request()->category]) }}">Next</a></li>
+                            @if($googlePosts['prevStartIndex'] > 0) <li class="page-item"><a class="page-link" href="{{ route('listing.search', ['pageToken' => $googlePosts['prevPageToken'], 'startIndex' => $googlePosts['prevStartIndex'], 'category' => request()->category, 'q' => request()->q]) }}">Previous</a></li> @endif
+                            <li class="page-item"><a class="page-link" href="{{ route('listing.search', ['pageToken' => $googlePosts['nextPageToken'], 'startIndex' => $googlePosts['startIndex'], 'category' => request()->category, 'q' => request()->q]) }}">Next</a></li>
                         </ul>
                         @elseif(request()->route()->getName() == 'inventory.drafted')
                         <ul class="pagination">
@@ -182,6 +169,7 @@
                     </nav>
                 </div>
             </div>
+            @endif
         </div>
     </div>
 </div>
@@ -189,7 +177,6 @@
 @endsection
 
 @push('js')
-
 <script src="/assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
 <script src="/assets/plugins/datatable/js/dataTables.bootstrap5.js"></script>
 <script src="/assets/plugins/datatable/js/dataTables.buttons.min.js"></script>
@@ -218,7 +205,8 @@
     $(document).ready(function() {
         //______Basic Data Table
         $('#basic-datatable').DataTable({
-            "paging": false
+            "paging": false,
+            'searching': false
         });
 
         $("#category").on("change", function() {

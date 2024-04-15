@@ -105,7 +105,7 @@
                                 <label for="selling_price" class="form-label d-flex justify-content-between">
                                     <div>{{ __('Selling Price') }}<span class="text-danger">*</span></div>
                                     <div>
-                                        <a href='https://support.exam360.co.in/' target='_blank'>Calculator |</a><a target='_blank' href="https://docs.google.com/spreadsheets/d/1uSqo6RhsLHaVcVrkEjO_SmOWiXqWBC-aV1LvsowgsL0/"> Disc. Info.</a>
+                                        <a href='{{ $siteSetting->calc_link }}' target='_blank'>Calculator |</a><a target='_blank' href="https://docs.google.com/spreadsheets/d/1uSqo6RhsLHaVcVrkEjO_SmOWiXqWBC-aV1LvsowgsL0/"> Disc. Info.</a>
 
                                     </div>
                                 </label>
@@ -181,9 +181,9 @@
                             <label for="label" class="form-label">{{ __('Category') }}<span class="text-danger">*</span><span class="text-danger"> ( Publication, 1 Category,
                                     1 Tag, Others ) </span></label>
                             <select class="form-control select2  @error('label') is-invalid @enderror" data-placeholder="Choose Label" multiple name="label[]">
-                                @foreach ($listing->categories as $category)
-                                <option value="{{ $category }}" selected>
-                                    {{ $category }}
+                                @foreach ($categories as $categoryData)
+                                <option value="{{ $categoryData['term'] }}" @foreach($listing->categories as $label) @if($categoryData['term']==$label) selected @endif @endforeach>
+                                    {{ $categoryData['term'] }}
                                 </option>
                                 @endforeach
                             </select>
@@ -197,9 +197,15 @@
 
                         <div class="row">
                             <div class="form-group col-md-4">
-                                <label for="sku" class="form-label">{{ __('SKU') }}<span class="text-danger">*</span><span class="text-danger"> ( Short Code )
-                                    </span></label>
-                                <input id="sku" type="text" class="form-control @error('sku') is-invalid @enderror" name="sku" value="{{ old('sku') ?? $listing->sku }}" autocomplete="sku" autofocus placeholder="SKU">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <label for="sku" class="form-label">
+                                        {{ __('SKU') }}
+                                        <span class="text-danger">*</span>
+                                        <span class="text-danger"> ( Short Code )</span>
+                                    </label>
+                                    <span class="charCount">0/30</span>
+                                </div>
+                                <input maxlength="30" id="sku" type="text" class="form-control @error('sku') is-invalid @enderror" name="sku" value="{{ old('sku') ?? $listing->sku }}" autocomplete="sku" autofocus placeholder="SKU">
                                 <span class="error-message sku" style="color:red;"></span>
 
                                 @error('sku')
@@ -271,7 +277,7 @@
                             </div>
 
                             <div class="form-group col-md-4">
-                                <label for="url" class="form-label">{{ __('Insta Mojo URL') }}</label>
+                                <label for="url" class="form-label d-flex justify-content-between">{{ __('Insta Mojo URL') }}<span onclick="copyLink()" id='copylink' style="cursor:pointer;">Copy</span></label>
                                 <input id="url" type="url" class="form-control @error('url') is-invalid @enderror" name="url" value="{{ old('url') ?? $listing->insta_mojo_url }}" autocomplete="url" autofocus placeholder="Insta Mojo Url">
                                 <span class="error-message url" style="color:red;"></span>
 

@@ -61,6 +61,7 @@
                                     <th>{{ __('Image') }}</th>
                                     <th>{{ __('Title') }}</th>
                                     <th>{{ __('Image Size') }}</th>
+                                    <th>{{ __('Url') }}</th>
                                     <th>{{ __('Created On') }}</th>
                                     <!-- <th>{{ __('Created By') }}</th> -->
                                     <th>{{ __('Action') }}</th>
@@ -77,7 +78,8 @@
                                     <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ route('assets', $file['name']) }}" alt="Product Image" width="50" /></td>
                                     <td>{{ $file['name'] }}</td>
                                     <td>{{ round($file['size']/1000, 1) }} kb</td>
-                                    <td>{{ date("d-m-Y h:i A", strtotime($file['datetime'])) }}</td>
+                                    <td><p style="font-size: 9px;">{{ url('/') }}/storage/uploads/{{ $file['name'] }}</p></td>
+                                    <td> {{ date("d-m-Y h:i A", strtotime($file['datetime'])) }}</td>
                                     <!-- <td>{{ date("d-m-Y h:i A", strtotime($file['datetime'])) }}</td> -->
                                     <td style="vertical-align: middle;">
                                         <div class="d-flex justify-content-between" style='grid-gap:10px;'>

@@ -57,6 +57,7 @@ class DatabaseSeeder extends Seeder
         Permission::create(['name' => 'Inventory -> Manage Inventory']);
         Permission::create(['name' => 'Inventory -> Drafted Inventory']);
         Permission::create(['name' => 'Inventory -> Under Review Inventory']);
+        Permission::create(['name' => 'Inventory -> Listing Counts Report']);
         Permission::create(['name' => 'Inventory -> Manage Inventory -> Edit']);
         Permission::create(['name' => 'Inventory -> Manage Inventory -> Delete']);
         

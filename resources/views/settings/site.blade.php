@@ -22,6 +22,12 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="name" class="form-label">{{ __('Calculator link') }}<span class="text-danger">*</span></label>
+
+                    <input id="calc" type="text" class="form-control @error('calc_link') is-invalid @enderror" name="calc_link" value="{{ $siteSettings->calc_link??"" }}" autofocus placeholder="Calculator link">
+                </div>
+
+                <div class="form-group">
                     <label for="name" class="form-label">{{ __('Logo') }}<span class="text-danger">*</span></label>
                     <div class="row mb-5">
                         <div class="col-lg-3">

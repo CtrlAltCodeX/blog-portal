@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Services\GoogleService;
 use App\Http\Requests\BlogRequest;
 use App\Models\Listing;
+use App\Models\SiteSetting;
 use App\Models\UserListingCount;
 use App\Models\UserListingInfo;
 use Illuminate\Support\Facades\Http;
@@ -58,7 +59,9 @@ class ListingController extends Controller
 
         $categories = $response->json()['feed']['category'];
 
-        return view('listing.create', compact('categories'));
+        $siteSetting = SiteSetting::first();
+
+        return view('listing.create', compact('categories', 'siteSetting'));
     }
 
     /**
@@ -73,7 +76,7 @@ class ListingController extends Controller
         if ($message = $result?->error?->message) {
             session()->flash('error', $message);
 
-            return redirect()->route('inventory.index');
+            return redirect()->route('inventory.index', ['startIndex' => 1, 'category' => 'Product']);
         }
 
         if (
@@ -259,7 +262,7 @@ class ListingController extends Controller
 
         session()->flash('success', 'Post updated successfully');
 
-        return redirect()->route('inventory.index');
+        return redirect()->route('inventory.index', ['startIndex' => 1, 'category' => 'Product']);
     }
 
     /**
@@ -378,5 +381,19 @@ class ListingController extends Controller
         session()->flash('success', 'Post Published successfully');
 
         return redirect()->back();
+    }
+
+    /**
+     * Search
+     */
+    public function search()
+    {
+        $googlePosts = [];
+
+        if (request()->q) {
+            $googlePosts = $this->googleService->posts();
+        }
+
+        return view('listing.search', compact('googlePosts'));
     }
 }

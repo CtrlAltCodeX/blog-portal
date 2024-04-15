@@ -105,7 +105,7 @@
                                     </div>
                                     @endforeach
 
-                                    <label for="name" class="form-label heading-design">{{ __('Listing') }}</label>
+                                    <label for="name" class="form-label heading-design">{{ __('Inventory') }}</label>
                                     @foreach ($permissionsInCategory['Inventory'] as $permission)
                                     <div class="col-md-4">
                                         <div class="custom-controls-stacked">

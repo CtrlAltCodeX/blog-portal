@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BlogRequest;
 use App\Models\Listing;
+use App\Models\SiteSetting;
+use App\Models\User;
 use App\Models\UserListingCount;
 use App\Models\UserListingInfo;
 use Illuminate\Support\Facades\Http;
@@ -29,6 +31,10 @@ class DatabaseListingController extends Controller
             ->orderBy('created_at', 'desc')
             ->where('categories', 'LIKE', '%' . request()->category . '%');
 
+        if (request()->user != 'all') {
+            $googlePosts = $googlePosts->where('created_by', request()->user);
+        }
+
         if (request()->status) $googlePosts = $googlePosts->where('status', request()->status);
 
         if (!auth()->user()->hasRole('Super Admin')) {
@@ -53,7 +59,9 @@ class DatabaseListingController extends Controller
 
         $rejectedCounts = $rejectedCounts->count();
 
-        return view('database-listing.index', compact('googlePosts', 'allCounts', 'pendingCounts', 'rejectedCounts'));
+        $users = User::where('status', 1)->get();
+
+        return view('database-listing.index', compact('googlePosts', 'allCounts', 'pendingCounts', 'rejectedCounts', 'users'));
     }
 
     /**
@@ -71,7 +79,9 @@ class DatabaseListingController extends Controller
 
         $categories = $response->json()['feed']['category'];
 
-        return view('database-listing.create', compact('categories'));
+        $siteSetting = SiteSetting::first();
+
+        return view('database-listing.create', compact('categories', 'siteSetting'));
     }
 
     /**
@@ -136,7 +146,19 @@ class DatabaseListingController extends Controller
     {
         $listing = Listing::find($id);
 
-        return view('database-listing.edit', compact('listing'));
+        $siteSetting = SiteSetting::first();
+        
+        if (!$url = $this->getSiteBaseUrl()) {
+            session()->flash('message', 'Please complete your Site Setting Then Continue');
+
+            return view('settings.error');
+        }
+        
+        $response = Http::get($url . '/feeds/posts/default?alt=json');
+        
+        $categories = $response->json()['feed']['category'];
+
+        return view('database-listing.edit', compact('listing', 'siteSetting', 'categories'));
     }
 
     /**

@@ -43,20 +43,33 @@ class DashboardController extends Controller
         $userSessionsCount = UserSession::where("user_id", auth()->user()->id)
             ->get();
 
-        $listingCount = UserListingCount::where("user_id", auth()->user()->id)
-            ->get();
+        $approved = UserListingInfo::where('approved_by', '!=', '');
 
-        $pendingListingCount = Listing::where("created_by", auth()->user()->id)
-            ->count();
+        $pending = Listing::where('status', 0);
 
-        $approvedCount = 0;
-        $rejectedCount = 0;
-        foreach ($listingCount as $count) {
-            $approvedCount += $count->approved_count;
-            $rejectedCount += $count->reject_count;
+        $rejected = Listing::where('status', 2);
+
+        if (auth()->user()->hasRole('Super Admin')) {
+            $approved = $approved->count();
+
+            $pending = $pending->count();
+
+            $rejected = $rejected->count();
+        } else {
+            $approved = $approved
+                ->where('created_by', auth()->user()->id)
+                ->count();
+
+            $pending = $pending
+                ->where('created_by', auth()->user()->id)
+                ->count();
+
+            $rejected = $rejected
+                ->where('created_by', auth()->user()->id)
+                ->count();
         }
 
-        return view('dashboard.index', compact('userSessionsCount', 'approvedCount', 'rejectedCount', 'pendingListingCount'));
+        return view('dashboard.index', compact('userSessionsCount', 'approved', 'rejected', 'pending'));
     }
 
     /**

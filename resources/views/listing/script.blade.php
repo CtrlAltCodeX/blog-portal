@@ -58,7 +58,8 @@
             if ($(this).attr('name') == 'author_name' ||
                 $(this).attr('name') == 'title' ||
                 $(this).attr('name') == 'publication' ||
-                $(this).attr('name') == 'edition'
+                $(this).attr('name') == 'edition' ||
+                $(this).attr('name') == 'sku'
             ) {
                 limit(this);
             }
@@ -89,7 +90,7 @@
             if (!url.includes('https://www.instamojo.com/EXAM360/')) {
                 errorHandling('url', 'Please add instamojo link', false, this);
             } else {
-                errorHandling(fieldId, '', false, this);
+                errorHandling(fieldId, '', true, this);
             }
         });
 
@@ -195,7 +196,9 @@
 
             // Prevent form submission if a URL is found
             if (!valid || !requiredvalid) {
-                event.preventDefault();
+                console.log(requiredvalid);
+                console.log(valid);
+                // event.preventDefault();
             }
         });
 
@@ -214,19 +217,6 @@
         $("input").on('input', function() {
             calculateFields();
         });
-
-        // function countCapitalLetters(input) {
-        //     var count = 0;
-        //     for (var i = 0; i < input.length; i++) {
-        //         if (input[i] >= 'a' && input[i] <= 'z') {
-        //             continue;
-        //         } else if (input[i] >= 'A' && input[i] <= 'Z') {
-        //             count++;
-        //         }
-        //     }
-
-        //     return count;
-        // }
 
         function calculateFields() {
             var totalFields = $(".fields input.form-control").length + $(".fields select.form-control").length + $("textarea").length;

@@ -79,6 +79,7 @@ class ProfileController extends Controller
     public function listings()
     {
         $userListings = UserListingInfo::with('create_user', 'approve')
+            ->where('status', request()->status)
             ->orderBy('created_at', 'desc');
 
         $approved = UserListingInfo::where('approved_by', '!=', '');

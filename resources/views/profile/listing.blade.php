@@ -12,25 +12,25 @@
 
                     <div class="d-flex" style="grid-gap: 10px;">
                         <div>
-                            <a href="#" class="btn btn-light position-relative me-2 mb-2"> Pending
+                            <a href="{{ route('profile.listing', ['user' => 'all', 'status' => 0]) }}" class="btn btn-light position-relative me-2 mb-2"> Pending
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{ $pending }}
                                     <span class="visually-hidden">unread messages</span>
                                 </span>
                             </a>
-                            <a href="#" class="btn btn-warning position-relative me-2 mb-2"> Approved
+                            <a href="{{ route('profile.listing', ['user' => 'all', 'status' => 1]) }}" class="btn btn-warning position-relative me-2 mb-2"> Approved
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{$approved}}
                                     <span class="visually-hidden">unread messages</span>
                                 </span>
                             </a>
-                            <a href="#" class="btn btn-danger position-relative mb-2"> Rejected
+                            <a href="{{ route('profile.listing', ['user' => 'all', 'status' => 2]) }}" class="btn btn-danger position-relative mb-2"> Rejected
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{$rejected}}
                                     <span class="visually-hidden">unread messages</span>
                                 </span>
                             </a>
                         </div>
                         @if(auth()->user()->hasRole('Super Admin'))
-                        <form action="" method="get" id='form' class="d-flex align-items-center">
-                            <b class="w-100">User Filter</b>
+                        <form action="" method="get" id='form' class="d-flex align-items-center" style="grid-gap: 10px;">
+                            <b class="w-75 text-end mr-2">User Filter - </b>
                             <select class="form-control w-100" name="user" id='user'>
                                 <option value="all">All Users</option>
                                 @foreach($users as $user)
@@ -47,7 +47,9 @@
                         <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">
                             <thead>
                                 <tr>
+                                    @can('Inventory -> Counts Report -> Delete')
                                     <th><input type="checkbox" class="check-all" /></th>
+                                    @endcan
                                     <th>{{ __('Sl') }}</th>
                                     <th>{{ __('Image') }}</th>
                                     <th>{{ __('Product Title') }}</th>
@@ -56,15 +58,19 @@
                                     <th>{{ __('Approved by') }}</th>
                                     <th>{{ __('Approved at') }}</th>
                                     <th>{{ __('Current Status') }}</th>
+                                    @can('Inventory -> Counts Report -> Delete')
                                     <th>{{ __('Action') }}</th>
+                                    @endcan
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($userListings as $key => $userListing)
                                 <tr>
+                                    @can('Inventory -> Counts Report -> Delete')
                                     <td>
                                         <input type="checkbox" name="ids" class="checkbox-update" value="{{$userListing->id}}" />
                                     </td>
+                                    @endcan
                                     <td>{{ ++$key }}</td>
                                     <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $userListing->image }}" alt="Product Image" width="50" /></td>
                                     <td>{{ $userListing->title }}</td>
@@ -93,7 +99,9 @@
                                         <button class="btn btn-danger btn-sm">Rejected</button>
                                         @endif
                                     </td>
+                                    @can('Inventory -> Counts Report -> Delete')
                                     <td><a href="{{ route('profile.listing.delete.single', $userListing->id) }}" class="btn btn-primary btn-sm">Delete</a></td>
+                                    @endcan
                                 </tr>
                                 @empty
                                 @endforelse

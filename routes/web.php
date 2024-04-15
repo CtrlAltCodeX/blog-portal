@@ -159,6 +159,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::resource('listing', ListingController::class);
 
+    Route::get('search', [ListingController::class, 'search'])
+        ->name('listing.search');
+
     Route::resource('database-listing', DatabaseListingController::class);
 
     Route::get('blog/publish/{id}', [ListingController::class, 'publishBlog'])
