@@ -94,6 +94,8 @@ class ImageMakerController extends Controller
             return strtotime($b['datetime']) - strtotime($a['datetime']);
         });
 
+        $files = $this->paginate($files, request()->count, request()->page);
+
         return view('image-creation.image-gallery', compact('files'));
     }
 
@@ -111,7 +113,15 @@ class ImageMakerController extends Controller
         $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
         $items = $items instanceof Collection ? $items : Collection::make($items);
 
-        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
+        $paginated = new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
+
+        // Append existing GET parameters to pagination links
+        $paginated->appends(request()->query());
+
+        // Set the current URL as the base path for pagination
+        $paginated->setPath(request()->url());
+
+        return $paginated;
     }
 
     /**
