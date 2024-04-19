@@ -81,7 +81,7 @@ class BackupListingsController extends Controller
         $getAllListings = [];
 
         $getAllListingsFromDatabase = BackupListing::all()
-            ->makeHidden(['id', 'created_at', 'updated_at'])
+            ->makeHidden(['created_at', 'updated_at'])
             ->toArray();
 
         foreach ($getAllListingsFromDatabase as $key => $listing) {
@@ -99,56 +99,26 @@ class BackupListingsController extends Controller
             $desc = str_replace('"', ' ', $listing['description']);
 
             $getAllListings[$key][] = $listing['title'];
-            $getAllListings[$key][] = $listing['product_id'];
+            $getAllListings[$key][] = $listing['id'];
             $getAllListings[$key][] = ($listing['selling_price'] != 0) ? $listing['selling_price'] : 1299;
-            $getAllListings[$key][] = '0';
-            $getAllListings[$key][] = '0';
             $getAllListings[$key][] = strtolower($listing['condition']);
             $getAllListings[$key][] = $stock;
-            $getAllListings[$key][] = 'IN';
-            $getAllListings[$key][] = 'Online';
-            $getAllListings[$key][] = 'IN';
-            $getAllListings[$key][] = 'en';
             $getAllListings[$key][] = $listing['publisher'];
-            $getAllListings[$key][] = 'Online';
-            $getAllListings[$key][] = '0';
-            $getAllListings[$key][] = $desc;
-            $getAllListings[$key][] = ' ';
-            $getAllListings[$key][] = ' ';
+            $getAllListings[$key][] = 'Product Description';
             $getAllListings[$key][] = 'yes';
             $getAllListings[$key][] = $listing['base_url'];
-            $getAllListings[$key][] = 'en';
-            $getAllListings[$key][] = ' ';
-            $getAllListings[$key][] = 'IN';
-            $getAllListings[$key][] = '0';
-            $getAllListings[$key][] = '';
         }
 
         $mainColums = [
             'title',
             'id',
             'price',
-            'clicks',
-            'unpaid clicks',
             'condition',
             'availability',
-            'Free listings - disapproved or invalid',
-            'channel',
-            'feed label',
-            'language',
             'brand',
-            'channel',
-            'clicks',
             'description',
-            'feed label',
-            'free listings - disapproved or invalid',
-            'identifier exists',
-            'image link',
-            'language',
-            'pause',
-            'shipping(country)',
-            'unpaid clicks',
-            'update type',
+            'identifier_exists',
+            'image_link',
         ];
 
         array_unshift($getAllListings, $mainColums);
@@ -243,7 +213,7 @@ class BackupListingsController extends Controller
     public function export()
     {
         if (request()->file && request()->type == 'google') {
-            return Excel::download(new ListingsExport($this->getMerchantExportFile()), 'merchant-file.tsv', \Maatwebsite\Excel\Excel::TSV);
+            return Excel::download(new BackupListingsExport($this->getMerchantExportFile()), 'merchant-file.xlsx');
         } else if (request()->file && request()->type == 'facebook') {
             return Excel::download(new BackupListingsExport($this->getFacebookExportFile()), 'facebook-file.csv');
         } else if (request()->file && request()->type == 'report') {

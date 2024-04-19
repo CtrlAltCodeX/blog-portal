@@ -59,10 +59,10 @@ class BackupListing extends Command
             $fileName = 'report-' . $currentTimeInSeconds . '.xlsx';
             Excel::store(new BackupListingsExport($listingData->exportData()), "/public/" . $fileName);
 
-            $googleMerchantfileName = 'merchant-file' . $currentTimeInSeconds . '.tsv';
-            $singleGoogleMerchantfileName = 'merchant-file.tsv';
-            Excel::store(new ListingsExport($listingData->getMerchantExportFile()), "/public/" . $googleMerchantfileName);
-            Excel::store(new ListingsExport($listingData->getMerchantExportFile()), "/public/" . $singleGoogleMerchantfileName);
+            $googleMerchantfileName = 'merchant-file' . $currentTimeInSeconds . '.xlsx';
+            $singleGoogleMerchantfileName = 'merchant-file.xlsx';
+            Excel::store(new BackupListingsExport($listingData->getMerchantExportFile()), "/public/" . $googleMerchantfileName);
+            Excel::store(new BackupListingsExport($listingData->getMerchantExportFile()), "/public/" . $singleGoogleMerchantfileName);
 
             $facebookPixelfileName = 'facebook-file' . $currentTimeInSeconds . '.csv';
             $singleFacebookPixelfileName = 'facebook-file.csv';
