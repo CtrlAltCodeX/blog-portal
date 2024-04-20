@@ -263,12 +263,19 @@
         function nameValidate(val, currentElement) {
             var fieldId = $(currentElement).attr('name');
 
+            var errors = [];
+            var normalString = '';
             var validateFields = JSON.parse(localStorage.getItem('validate'));
-            for (var i = 0; i < validateFields.length; i++) {
-                if (val.includes(validateFields[i].name)) {
-                    errorHandling(fieldId, 'Words not allowed', false, currentElement)
+            validateFields.forEach(function(value) {
+                if (value.name) {
+                    var nameToCheck = value.name.toLowerCase();
+                    if (val.toLowerCase().includes(nameToCheck)) {
+                        errors.push(value.name);
+                        normalString = errors.join(", ");
+                        errorHandling(fieldId, 'Words not allowed - ' + errors, false, currentElement)
+                    }
                 }
-            }
+            });
         }
 
         function domainValidation(val, currentElement) {

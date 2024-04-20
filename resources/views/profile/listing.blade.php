@@ -2,41 +2,69 @@
 
 @section('title', __('Listing Counts Report ( DB )'))
 
+@push('css')
+<style>
+    hr {
+        border: 1px solid #ccc;
+        width: 104%;
+        height: 0px !important;
+        margin-top: 0px;
+    }
+</style>
+@endpush
+
 @section('content')
 <div>
     <div class="row row-sm">
         <div class="col-lg-12">
             <div class="card">
-                <div class="card-header justify-content-between d-flex">
-                    <h2 class="card-title">Listing Counts Report ( DB )</h2>
-
-                    <div class="d-flex" style="grid-gap: 10px;">
+                <div class="card-header d-flex flex-column">
+                    <div class="d-flex w-100 justify-content-between mb-4">
+                        <h2 class="card-title">Listing Counts Report ( DB )</h2>
                         <div>
-                            <a href="{{ route('profile.listing', ['user' => 'all', 'status' => 0]) }}" class="btn btn-light position-relative me-2 mb-2"> Pending
+                            <a href="{{ route('profile.listing', ['user' => 'all', 'status' => 0, 'from' => request()->from, 'to' => request()->to]) }}" class="btn btn-sm btn-light position-relative me-2 mb-2"> Pending
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{ $pending }}
                                     <span class="visually-hidden">unread messages</span>
                                 </span>
                             </a>
-                            <a href="{{ route('profile.listing', ['user' => 'all', 'status' => 1]) }}" class="btn btn-warning position-relative me-2 mb-2"> Approved
+                            <a href="{{ route('profile.listing', ['user' => 'all', 'status' => 1]) }}" class="btn btn-sm btn-warning position-relative me-2 mb-2"> Approved
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{$approved}}
                                     <span class="visually-hidden">unread messages</span>
                                 </span>
                             </a>
-                            <a href="{{ route('profile.listing', ['user' => 'all', 'status' => 2]) }}" class="btn btn-danger position-relative mb-2"> Rejected
+                            <a href="{{ route('profile.listing', ['user' => 'all', 'status' => 2]) }}" class="btn btn-sm btn-danger position-relative mb-2"> Rejected
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{$rejected}}
                                     <span class="visually-hidden">unread messages</span>
                                 </span>
                             </a>
                         </div>
+                    </div>
+                    <hr />
+
+                    <div class="d-flex w-100" style="grid-gap: 10px;;">
                         @if(auth()->user()->hasRole('Super Admin'))
-                        <form action="" method="get" id='form' class="d-flex align-items-center" style="grid-gap: 10px;">
-                            <b class="w-75 text-end mr-2">User Filter - </b>
-                            <select class="form-control w-100" name="user" id='user'>
+                        <form action="" method="get" id='form' class="d-flex align-items-center" style="width: 100%;grid-gap: 10px;">
+                            <input type="hidden" name="status" value="{{request()->status}}">
+                            <b class="text-end mr-2">User Filter - </b>
+                            <select class="form-control w-25" name="user" id='user'>
                                 <option value="all">All Users</option>
                                 @foreach($users as $user)
                                 <option value="{{$user->id}}" {{ $user->id == request()->user ? 'selected' : '' }}>{{ $user->name }}</option>
                                 @endforeach
                             </select>
+                            <div class="input-group w-50">
+                                <label class="m-2">Start Date</label>
+                                <div class="input-group-text">
+                                    <i class="fa fa-calendar tx-16 lh-0 op-6"></i>
+                                </div><input class="form-control fc-datepicker" value="{{ request()->from }}" name="from" placeholder="DD/MM/YYYY" type="text">
+                            </div>
+                            <div class="input-group w-50">
+                            <label class="m-2">End Date</label>
+                                <div class="input-group-text">
+                                    <i class="fa fa-calendar tx-16 lh-0 op-6"></i>
+                                </div><input class="form-control fc-datepicker" value="{{ request()->to }}" name="to" placeholder="DD/MM/YYYY" type="text">
+                            </div>
+                            <button class="btn btn-primary w-15" type="submit">Filter</button>
                         </form>
                         @endif
                     </div>
@@ -153,9 +181,9 @@
             $("#form").submit();
         });
 
-        $("#user").change(function() {
-            $("#form").submit();
-        });
+        // $("#user").change(function() {
+        //     $("#form").submit();
+        // });
 
         $("#basic-datatable_wrapper .col-sm-12:first").html('<form id="update-status" action="" method="GET"><div class="d-flex"><select class="form-control w-50" name="status"><option>Select</option><option value=1>Delete</option></select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div></form>');
 

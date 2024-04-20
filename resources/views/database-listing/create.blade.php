@@ -2,6 +2,22 @@
 
 @section('title', __('Create New Listing'))
 
+@push('css')
+<style>
+    hr {
+        border: 1px solid #ccc;
+        width: 100%;
+        height: 0px !important;
+        margin-top: 0px;
+    }
+
+    .alert-msg {
+        background-color: grey;
+        color: white;
+    }
+</style>
+@endpush
+
 @section('content')
 <form action="{{ route('database-listing.store') }}" method="POST" enctype='multipart/form-data' id='form'>
     @csrf
@@ -23,6 +39,9 @@
 
                 <div class="card">
                     <div class="card-body">
+                        <span class="d-flex justify-content-center mb-4 alert-msg">Alert: Please refrain from creating duplicate listings repeatedly. Prior to creating any new listings, ensure to first check the product in 'Search Listing (M/S)'.</span>
+                        <hr />
+
                         <div id="progressBar" class="text-end"></div>
                         <div>
                             <div class="form-group">

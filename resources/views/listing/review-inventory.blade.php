@@ -35,6 +35,18 @@
     .tooltip:hover .tooltiptext {
         visibility: visible;
     }
+
+    hr {
+        border: 1px solid #ccc;
+        width: 100%;
+        height: 0px !important;
+        margin-top: 0px;
+    }
+
+    .alert-msg {
+        background-color: grey;
+        color: white;
+    }
 </style>
 @endpush
 
@@ -62,6 +74,8 @@
                 </div>
 
                 <div class="card-body">
+                    <span class="d-flex mb-4 alert-msg text-center">Alert: If any products are showing as 2 years or 3 years old, you must update the listings immediately and maintain these items at zero to avoid any disruption. Otherwise, we may have to remove you from this section.</span>
+                    <hr />
                     <div class="table-responsive">
                         <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">
                             <thead>

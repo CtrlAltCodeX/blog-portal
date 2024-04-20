@@ -8,6 +8,7 @@ use App\Models\Listing;
 use App\Models\User;
 use App\Models\UserListingCount;
 use App\Models\UserListingInfo;
+use Carbon\Carbon;
 use Intervention\Image\ImageManager;
 use Intervention\Image\ImageManagerStatic as Image;
 
@@ -84,9 +85,22 @@ class ProfileController extends Controller
 
         $approved = UserListingInfo::where('approved_by', '!=', '');
 
-        $pending = Listing::where('status', 0);
+        $pending = UserListingInfo::where('status', 0);
 
-        $rejected = Listing::where('status', 2);
+        $rejected = UserListingInfo::where('status', 2);
+
+        if (request()->from && request()->to) {
+            $startDate = Carbon::createFromFormat('m/d/Y', request()->from)->format('Y-m-d');
+            $endDate = Carbon::createFromFormat('m/d/Y', request()->to)->format('Y-m-d');
+
+            $userListings = $userListings->whereBetween('created_at', [$startDate, $endDate]);
+
+            $approved = $approved->whereBetween('created_at', [$startDate, $endDate]);
+
+            $pending = $pending->whereBetween('created_at', [$startDate, $endDate]);
+
+            $rejected = $rejected->whereBetween('created_at', [$startDate, $endDate]);
+        }
 
         if (auth()->user()->hasRole('Super Admin')) {
             if (request()->user != 'all') {

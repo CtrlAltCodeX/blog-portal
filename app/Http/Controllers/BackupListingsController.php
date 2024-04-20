@@ -86,23 +86,16 @@ class BackupListingsController extends Controller
 
         foreach ($getAllListingsFromDatabase as $key => $listing) {
             $listingCat = json_decode($listing['categories']);
+            // $title = str_replace(['"', '(', ')', ',', '&', '|'], ['', '', '', '', '', ''], $listing['title']);
 
-            if (
-                isset($listingCat)
-                && (in_array('Stk_o', $listingCat) || in_array('stock__out', $listingCat))
-            ) {
-                $stock = 'out_of_stock';
-            } else {
-                $stock = 'in stock';
-            }
+            // $desc = str_replace('"', ' ', $listing['description']);
 
-            $desc = str_replace('"', ' ', $listing['description']);
-
+            $getAllListings[$key][] = $listing['url'];
             $getAllListings[$key][] = $listing['title'];
             $getAllListings[$key][] = $listing['id'];
-            $getAllListings[$key][] = ($listing['selling_price'] != 0) ? $listing['selling_price'] : 1299;
+            $getAllListings[$key][] = ($listing['selling_price'] != 0) ? $listing['selling_price'] . "INR" : 1299 . "INR";
             $getAllListings[$key][] = strtolower($listing['condition']);
-            $getAllListings[$key][] = $stock;
+            $getAllListings[$key][] = 'in stock';
             $getAllListings[$key][] = $listing['publisher'];
             $getAllListings[$key][] = 'Product Description';
             $getAllListings[$key][] = 'yes';
@@ -110,6 +103,7 @@ class BackupListingsController extends Controller
         }
 
         $mainColums = [
+            'link',
             'title',
             'id',
             'price',
