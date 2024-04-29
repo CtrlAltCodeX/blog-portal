@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BlogRequest;
+use App\Jobs\PublishProducts;
 use App\Models\Listing;
 use App\Models\SiteSetting;
 use App\Models\User;
@@ -147,15 +148,15 @@ class DatabaseListingController extends Controller
         $listing = Listing::find($id);
 
         $siteSetting = SiteSetting::first();
-        
+
         if (!$url = $this->getSiteBaseUrl()) {
             session()->flash('message', 'Please complete your Site Setting Then Continue');
 
             return view('settings.error');
         }
-        
+
         $response = Http::get($url . '/feeds/posts/default?alt=json');
-        
+
         $categories = $response->json()['feed']['category'];
 
         return view('database-listing.edit', compact('listing', 'siteSetting', 'categories'));
@@ -262,48 +263,64 @@ class DatabaseListingController extends Controller
      */
     public function updateStatus()
     {
-        $listings = Listing::whereIn('id', request()->formData[1])
-            ->get();
+        if (request()->publish == 3) {
+            foreach (request()->ids as $id) {
+                PublishProducts::dispatch($id);
 
-        $status = request()->formData[0]['value'];
+                Listing::find($id)->delete();
 
-        foreach ($listings as $listing) {
-            $userCount = UserListingCount::where('user_id', $listing->created_by)
-                ->whereDate('date', $listing->created_at)
-                ->first();
+                $additionalInfo = UserListingInfo::find($id);
 
-            if ($status == 2 && !$userCount) {
-                UserListingCount::create([
-                    'user_id' => $listing->created_by,
-                    'date' => $listing->created_at,
-                    'approved_count' => 0,
-                    'reject_count' => 1,
-                ]);
-            } else if ($status == 2 && $userCount) {
-                $userCount->update([
-                    'reject_count' => ++$userCount->reject_count,
+                $additionalInfo->update([
+                    'status' => 1,
+                    'approved_by' => auth()->user()->id,
+                    'approved_at' => now()
                 ]);
             }
+        } else {
+            $listings = Listing::whereIn('id', request()->formData[1])
+                ->get();
 
-            if ($status == 0 && $userCount) {
-                $userCount->update([
-                    'reject_count' => --$userCount->reject_count,
-                ]);
+            $status = request()->formData[0]['value'];
+
+            foreach ($listings as $listing) {
+                $userCount = UserListingCount::where('user_id', $listing->created_by)
+                    ->whereDate('date', $listing->created_at)
+                    ->first();
+
+                if ($status == 2 && !$userCount) {
+                    UserListingCount::create([
+                        'user_id' => $listing->created_by,
+                        'date' => $listing->created_at,
+                        'approved_count' => 0,
+                        'reject_count' => 1,
+                    ]);
+                } else if ($status == 2 && $userCount) {
+                    $userCount->update([
+                        'reject_count' => ++$userCount->reject_count,
+                    ]);
+                }
+
+                if ($status == 0 && $userCount) {
+                    $userCount->update([
+                        'reject_count' => --$userCount->reject_count,
+                    ]);
+                }
             }
+
+            $listings->map(function ($list) use ($status) {
+                $additionalInfo = UserListingInfo::where("image", $list->images)
+                    ->where('title', $list->title)
+                    ->first();
+
+                $additionalInfo->update([
+                    'status' => $status
+                ]);
+
+                $list->update(['status' => $status]);
+            });
+
+            return true;
         }
-
-        $listings->map(function ($list) use ($status) {
-            $additionalInfo = UserListingInfo::where("image", $list->images)
-                ->where('title', $list->title)
-                ->first();
-
-            $additionalInfo->update([
-                'status' => $status
-            ]);
-
-            $list->update(['status' => $status]);
-        });
-
-        return true;
     }
 }

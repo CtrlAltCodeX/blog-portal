@@ -186,8 +186,11 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="label" class="form-label">{{ __('Category') }}<span class="text-danger">*</span><span class="text-danger"> ( Publication, 1 Category,
-                                    1 Tag, Others ) </span></label>
+                            <div class="d-flex justify-content-between align-between-center" >
+                                <label for="label" class="form-label">{{ __('Category') }}<span class="text-danger">*</span><span class="text-danger"> ( Publication, 1 Category, 1 Tag, Others ) </span></label>
+
+                                <div id='count'>1 Selected</div>
+                            </div>
                             <select class="form-control select2  @error('label') is-invalid @enderror" data-placeholder="Choose Label" multiple name="label[]">
                                 @foreach ($categories as $category)
                                 <option value="{{ $category['term'] }}" {{ $category['term'] == 'Product' ? 'selected' : '' }}>

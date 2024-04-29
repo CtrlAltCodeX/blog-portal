@@ -353,7 +353,13 @@
                 }
             }
         });
-    })
+    });
+
+    $('#count').html($('.select2').val().length + " Selected");
+
+    $('.select2').change(function() {
+        $('#count').html($(this).val().length + " Selected");
+    });
 
     function copyLink() {
         // Get the text field

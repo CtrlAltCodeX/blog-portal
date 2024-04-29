@@ -48,6 +48,7 @@
 
 @section('content')
 <div>
+    <div id='loading'></div>
     <div class="row row-sm">
         <div class="col-lg-12">
             <div class="card">
@@ -118,9 +119,7 @@
                                     <th>{{ __('Created By') }}</th>
                                     <th>{{ __('Created at') }}</th>
                                     <th>{{ __('Updated at') }}</th>
-                                    @if(request()->status != 2 && ( auth()->user()->can('Pending Listing ( DB ) -> Edit') || auth()->user()->can('Pending Listing ( DB ) -> Delete') ))
                                     <th>{{ __('Action') }}</th>
-                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -202,7 +201,6 @@
 @endsection
 
 @push('js')
-
 <script src="/assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
 <script src="/assets/plugins/datatable/js/dataTables.bootstrap5.js"></script>
 <script src="/assets/plugins/datatable/js/dataTables.buttons.min.js"></script>
@@ -246,7 +244,7 @@
             $("#form").submit();
         });
 
-        $("#basic-datatable_wrapper .col-sm-12:first").html('<form id="update-status" action={{route("listing.status")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status"><option>Select</option><option value=0>Pending</option><option value=2>Reject</option> </select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div></form>');
+        $("#basic-datatable_wrapper .col-sm-12:first").html('<form id="update-status" action={{route("listing.status")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status" id="status"><option>Select</option><option value=0>Pending</option><option value=2>Reject</option><option value=3>Publish to Website</option></select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div></form>');
 
         $("#basic-datatable_wrapper").on('click', '.update-status', function(e) {
             e.preventDefault();
@@ -262,10 +260,15 @@
                 type: "GET",
                 url: "{{ route('listing.status') }}",
                 data: {
-                    formData: formData
+                    formData: formData,
+                    publish: $('#status').val(),
+                    ids: ids
                 },
                 headers: {
                     'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                beforeSend: function() {
+                    $('#loading').html('<button class="btn btn-primary mb-2" type="button" disabled><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...</button>');
                 },
                 success: function(result) {
                     window.location.href = location.href;
