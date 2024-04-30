@@ -49,6 +49,7 @@
 @section('content')
 <div>
     <div id='loading'></div>
+
     <div class="row row-sm">
         <div class="col-lg-12">
             <div class="card">
@@ -107,7 +108,8 @@
                         <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">
                             <thead>
                                 <tr>
-                                    <th>{{ __('-') }}</th>
+                                    <th><input type="checkbox" class="check-all" /></th>
+                                    <!-- <th>{{ __('-') }}</th> -->
                                     <th>{{ __('Sl') }}</th>
                                     <th>{{ __('Status') }}</th>
                                     <th>{{ __('Stock') }}</th>
@@ -128,7 +130,7 @@
                                     <td>
                                         <input type="checkbox" name="ids" class="checkbox-update" value="{{$googlePost->id}}" />
                                     </td>
-                                    <td>{{ $googlePost->id }}</td>
+                                    <td>{{ ++$key }}</td>
                                     <td>
                                         @switch($googlePost->status)
                                         @case(0)
@@ -268,10 +270,13 @@
                     'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
                 },
                 beforeSend: function() {
-                    $('#loading').html('<button class="btn btn-primary mb-2" type="button" disabled><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...</button>');
+                    $('.overlay').addClass('show');
+                    $('.spanner').addClass('show');
+                    // $('#loading').html('<button class="btn btn-primary mb-2" type="button" disabled><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...</button>');
                 },
                 success: function(result) {
-                    window.location.href = location.href;
+                    // alert(result);
+                    // window.location.href = location.href;
                 },
             });
         });
@@ -286,7 +291,22 @@
                     ids.splice(index, 1);
                 }
             }
-        })
+        });
+
+        $('.check-all').click(function() {
+            $(".checkbox-update").each(function() {
+                if ($('.check-all').prop('checked') == true) {
+                    $(this).prop('checked', true);
+                    ids.push($(this).val());
+                } else {
+                    $(this).prop('checked', false);
+                    var index = ids.indexOf($(this).val());
+                    if (index !== -1) {
+                        ids.splice(index, 1);
+                    }
+                }
+            });
+        });
     })
 </script>
 

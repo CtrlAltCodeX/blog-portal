@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BlogRequest;
+use App\Jobs\ProductPublish;
 use App\Jobs\PublishProducts;
 use App\Models\Listing;
 use App\Models\SiteSetting;
@@ -264,19 +265,22 @@ class DatabaseListingController extends Controller
     public function updateStatus()
     {
         if (request()->publish == 3) {
-            foreach (request()->ids as $id) {
-                PublishProducts::dispatch($id);
+            // foreach (request()->ids as $id) {
+            PublishProducts::dispatch(request()->ids);
+            // dump($id);
+            // Listing::find($id)->delete();
 
-                Listing::find($id)->delete();
+            // $additionalInfo = UserListingInfo::find($id);
 
-                $additionalInfo = UserListingInfo::find($id);
+            // $additionalInfo->update([
+            //     'status' => 1,
+            //     'approved_by' => auth()->user()->id,
+            //     'approved_at' => now()
+            // ]);
+            // }
 
-                $additionalInfo->update([
-                    'status' => 1,
-                    'approved_by' => auth()->user()->id,
-                    'approved_at' => now()
-                ]);
-            }
+            // return count(request()->ids);
+            // die;
         } else {
             $listings = Listing::whereIn('id', request()->formData[1])
                 ->get();
