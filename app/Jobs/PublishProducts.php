@@ -2,7 +2,9 @@
 
 namespace App\Jobs;
 
+use App\Events\PublishProducts as EventsPublishProducts;
 use App\Models\Listing;
+use App\Models\UserListingInfo;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -26,7 +28,7 @@ class PublishProducts implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(): void
+    public function handle()
     {
         $getData = Listing::find($this->id);
 
@@ -37,6 +39,22 @@ class PublishProducts implements ShouldQueue
         $getData['url'] = $getData->insta_mojo_url;
         $getData['publication'] = $getData->publisher;
 
-        app('App\Services\GoogleService')->createPost($getData->toArray());
+        $result = app('App\Services\GoogleService')->createPost($getData->toArray());
+
+        if ($result?->error?->code == 401) {
+            event(new EventsPublishProducts($this->id, $result->error->message));
+        } else {
+            Listing::find($this->id)->delete();
+
+            $additionalInfo = UserListingInfo::find($this->id);
+
+            if ($additionalInfo) {
+                $additionalInfo->update([
+                    'status' => 1,
+                    'approved_by' => auth()->user()->id,
+                    'approved_at' => now()
+                ]);
+            }
+        }
     }
 }

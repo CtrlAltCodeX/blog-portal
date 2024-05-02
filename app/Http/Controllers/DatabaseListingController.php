@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BlogRequest;
-use App\Jobs\ProductPublish;
 use App\Jobs\PublishProducts;
+use App\Models\Job;
 use App\Models\Listing;
 use App\Models\SiteSetting;
 use App\Models\User;
@@ -265,22 +265,20 @@ class DatabaseListingController extends Controller
     public function updateStatus()
     {
         if (request()->publish == 3) {
-            // foreach (request()->ids as $id) {
-            PublishProducts::dispatch(request()->ids);
-            // dump($id);
-            // Listing::find($id)->delete();
+            foreach (request()->ids as $loopIndex => $id) {
+                $job = PublishProducts::dispatch($id)->delay(now()->addSeconds(10 * $loopIndex));
 
-            // $additionalInfo = UserListingInfo::find($id);
+                $loopIndex++;
 
-            // $additionalInfo->update([
-            //     'status' => 1,
-            //     'approved_by' => auth()->user()->id,
-            //     'approved_at' => now()
-            // ]);
-            // }
+                $jobRow = Job::orderBy('id', 'desc')->first();
 
-            // return count(request()->ids);
-            // die;
+                if ($jobRow) {
+                    Listing::find($id)->update([
+                        'job_id' => $jobRow->id,
+                        'error' => 'Queued',
+                    ]);
+                }
+            }
         } else {
             $listings = Listing::whereIn('id', request()->formData[1])
                 ->get();

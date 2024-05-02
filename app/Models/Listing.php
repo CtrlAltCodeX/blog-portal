@@ -34,7 +34,9 @@ class Listing extends Model
         'multiple_images',
         'base_url',
         'status',
-        'created_by'
+        'created_by',
+        'job_id',
+        'error'
     ];
 
     public function created_by_user()

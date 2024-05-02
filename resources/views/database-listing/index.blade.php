@@ -112,6 +112,7 @@
                                     <!-- <th>{{ __('-') }}</th> -->
                                     <th>{{ __('Sl') }}</th>
                                     <th>{{ __('Status') }}</th>
+                                    <th>{{ __('Status') }}</th>
                                     <th>{{ __('Stock') }}</th>
                                     <th>{{ __('Image') }}</th>
                                     <th>{{ __('Product name') }}</th>
@@ -126,11 +127,13 @@
                             </thead>
                             <tbody>
                                 @forelse ($googlePosts as $key => $googlePost)
-                                <tr>
+                                <tr id='{{$googlePost->id}}'>
                                     <td>
                                         <input type="checkbox" name="ids" class="checkbox-update" value="{{$googlePost->id}}" />
                                     </td>
                                     <td>{{ ++$key }}</td>
+                                    <td class="status">{{substr($googlePost->error, 0, 20)}}</td>
+                                    <!-- @if($googlePost->error) <span data-bs-placement="top" data-bs-toggle="tooltip" title="{{$googlePost->error}}">Error</span> @else - @endif </td> -->
                                     <td>
                                         @switch($googlePost->status)
                                         @case(0)
@@ -140,6 +143,7 @@
                                         <span class="text-danger"><b>Rejected</b></span>
                                         @break;
                                         @endswitch
+                                    </td>
                                     <td>
                                         @if(isset($googlePost->categories) && (in_array('Stk_o', $googlePost->categories) || in_array('stock__out', $googlePost->categories)))
                                         {{ 'Out of Stock' }}
@@ -162,7 +166,7 @@
                                     <td>
                                         <span data-bs-placement="top" data-bs-toggle="tooltip" title="{{ implode(", ", $categories) }}">
                                             {{ count($categories ?? []) }}
-                                            </button>
+                                        </span>
                                     </td>
                                     <td>{{ $googlePost->created_by_user->name }}</td>
                                     <td>{{ date("d-m-Y h:i A", strtotime($googlePost->created_at)) }}</td>
@@ -246,12 +250,18 @@
             $("#form").submit();
         });
 
-        $("#basic-datatable_wrapper .col-sm-12:first").html('<form id="update-status" action={{route("listing.status")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status" id="status"><option>Select</option><option value=0>Pending</option><option value=2>Reject</option><option value=3>Publish to Website</option></select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div></form>');
+        $("#basic-datatable_wrapper .col-sm-12:first").html('<form id="update-status" action={{route("listing.status")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status" id="status"><option value="">Select</option><option value=0>Pending</option><option value=2>Reject</option><option value=3>Publish to Website</option></select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div></form>');
 
         $("#basic-datatable_wrapper").on('click', '.update-status', function(e) {
             e.preventDefault();
             var formData = $('#update-status').serializeArray();
             formData.push(ids);
+
+            if (!$('#status').val()) {
+                alert('Please select the action')
+
+                return true;
+            }
 
             if (ids.length <= 0) {
                 alert('Please select the listing')
@@ -269,14 +279,10 @@
                 headers: {
                     'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
                 },
-                beforeSend: function() {
-                    $('.overlay').addClass('show');
-                    $('.spanner').addClass('show');
-                    // $('#loading').html('<button class="btn btn-primary mb-2" type="button" disabled><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...</button>');
-                },
                 success: function(result) {
-                    // alert(result);
-                    // window.location.href = location.href;
+                    ids.forEach(function(id) {
+                        $("#" + id + " .status").html('Queued');
+                    })
                 },
             });
         });
