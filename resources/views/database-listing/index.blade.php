@@ -122,7 +122,9 @@
                                     <th>{{ __('Created By') }}</th>
                                     <th>{{ __('Created at') }}</th>
                                     <th>{{ __('Updated at') }}</th>
+                                    @if(request()->status != 2 && ( auth()->user()->can('Pending Listing ( DB ) -> Edit') || auth()->user()->can('Pending Listing ( DB ) -> Delete') ))
                                     <th>{{ __('Action') }}</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>

@@ -86,9 +86,10 @@ class BackupListingsController extends Controller
 
         foreach ($getAllListingsFromDatabase as $key => $listing) {
             $listingCat = json_decode($listing['categories']);
-            // $title = str_replace(['"', '(', ')', ',', '&', '|'], ['', '', '', '', '', ''], $listing['title']);
 
-            // $desc = str_replace('"', ' ', $listing['description']);
+            $desc = str_replace(['"', '(', ')', ',', '&', '|'], ['', '', '', '', '', ''], $listing['description']);
+
+            $cleanString = str_replace(array("\r", "\n"), '', $desc);
 
             $getAllListings[$key][] = $listing['url'];
             $getAllListings[$key][] = $listing['title'];
@@ -97,7 +98,7 @@ class BackupListingsController extends Controller
             $getAllListings[$key][] = strtolower($listing['condition']);
             $getAllListings[$key][] = 'in stock';
             $getAllListings[$key][] = $listing['publisher'];
-            $getAllListings[$key][] = 'Product Description';
+            $getAllListings[$key][] = substr($cleanString, 0, 9900);
             $getAllListings[$key][] = 'yes';
             $getAllListings[$key][] = $listing['base_url'];
         }

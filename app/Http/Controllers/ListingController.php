@@ -79,40 +79,48 @@ class ListingController extends Controller
             return redirect()->route('inventory.index', ['startIndex' => 1, 'category' => 'Product']);
         }
 
-        if (
-            $request->database
-            && $request->created_by
-            && $request->created_on
-            && $request->status
-        ) {
-            $count = UserListingCount::where('user_id', $request->created_by)
-                ->whereDate('date', $request->created_on)
-                ->first();
+        // if (
+        //     $request->database
+        //     && $request->created_by
+        //     && $request->created_on
+        //     && $request->status
+        // ) {
+        //     $count = UserListingCount::where('user_id', $request->created_by)
+        //         ->whereDate('date', $request->created_on)
+        //         ->first();
 
-            if (!$count) {
-                UserListingCount::create([
-                    'user_id' => $request->created_by,
-                    'date' => $request->created_on,
-                    'approved_count' => 1,
-                    'reject_count' => 0,
-                ]);
-            } else {
-                $count->update([
-                    'approved_count' => ++$count->approved_count,
-                ]);
-            }
+        //     if (!$count) {
+        //         UserListingCount::create([
+        //             'user_id' => $request->created_by,
+        //             'date' => $request->created_on,
+        //             'approved_count' => 1,
+        //             'reject_count' => 0,
+        //         ]);
+        //     } else {
+        //         $count->update([
+        //             'approved_count' => ++$count->approved_count,
+        //         ]);
+        //     }
+        // }
 
+        if ($request->database) {
             Listing::find($request->database)->delete();
 
             $additionalInfo = UserListingInfo::where('image', $request->images[0])
                 ->where('title', request()->title)
                 ->first();
 
-            $additionalInfo->update([
-                'status' => request()->status,
-                'approved_by' => auth()->user()->id,
-                'approved_at' => now()
-            ]);
+            if ($additionalInfo) {
+                $additionalInfo->update([
+                    'status' => request()->status,
+                    'approved_by' => auth()->user()->id,
+                    'approved_at' => now()
+                ]);
+            }
+
+            session()->flash('success', 'Post created successfully');
+
+            return redirect()->route('database-listing.index', ['status' => 0, 'startIndex' => 1, 'category' => '', 'user' => 'all']);
         }
 
         session()->flash('success', 'Post created successfully');
