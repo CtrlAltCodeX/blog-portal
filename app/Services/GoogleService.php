@@ -191,7 +191,7 @@ class GoogleService
                 count($response->entry ?? []),
                 1,
                 count($response->entry ?? []),
-                ['path' => route('inventory.index')]
+                ['path' => route('inventory.index', ['startIndex' => 1, 'category' => 'Product'])]
             );
 
             return [
@@ -207,7 +207,7 @@ class GoogleService
                 count([]),
                 1,
                 count([]),
-                ['path' => route('inventory.index')]
+                ['path' => route('inventory.index', ['startIndex' => 1, 'category' => 'Product'])]
             );
 
             return [
@@ -225,7 +225,7 @@ class GoogleService
      * 
      * @param array $data
      */
-    public function createPost(array $data)
+    public function createPost(array $data, $draft = null)
     {
         try {
             $credential = $this->getCredentails();
@@ -259,6 +259,8 @@ class GoogleService
 
             $isDraft = [];
             if (request()->isDraft) $isDraft = ['isDraft' => request()->isDraft];
+
+            if ($draft == 4) $isDraft = ['isDraft' => 1];
 
             return $blogger->posts->insert($credential->blog_id, $post, $isDraft);
         } catch (\Google_Service_Exception $e) {
@@ -619,7 +621,7 @@ class GoogleService
                 count($response->entry ?? []),
                 1,
                 count($response->entry ?? []),
-                ['path' => route('inventory.index')]
+                ['path' => route('inventory.index', ['startIndex' => 1, 'category' => 'Product'])]
             );
 
             return [
@@ -635,7 +637,7 @@ class GoogleService
                 count([]),
                 1,
                 count([]),
-                ['path' => route('inventory.index')]
+                ['path' => route('inventory.index', ['startIndex' => 1, 'category' => 'Product'])]
             );
 
             return [

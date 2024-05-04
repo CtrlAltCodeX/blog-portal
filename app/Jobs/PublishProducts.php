@@ -17,12 +17,16 @@ class PublishProducts implements ShouldQueue
 
     protected $id = [];
 
+    protected $isDraft = 0;
+
     /**
      * Create a new job instance.
      */
-    public function __construct($id)
+    public function __construct($id, $isDraft)
     {
         $this->id = $id;
+
+        $this->isDraft = $isDraft;
     }
 
     /**
@@ -38,8 +42,7 @@ class PublishProducts implements ShouldQueue
         $getData['binding'] = $getData->binding_type;
         $getData['url'] = $getData->insta_mojo_url;
         $getData['publication'] = $getData->publisher;
-
-        $result = app('App\Services\GoogleService')->createPost($getData->toArray());
+        $result = app('App\Services\GoogleService')->createPost($getData->toArray(), $this->isDraft);
 
         if ($result?->error?->code == 401) {
             event(new EventsPublishProducts($this->id, $result->error->message));

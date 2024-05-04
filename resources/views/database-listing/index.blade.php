@@ -250,7 +250,7 @@
             $("#form").submit();
         });
 
-        $("#basic-datatable_wrapper .col-sm-12:first").html('<form id="update-status" action={{route("listing.status")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status" id="status"><option value="">Select</option><option value=0>Pending</option><option value=2>Reject</option><option value=3>Publish to Website</option></select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div></form>');
+        $("#basic-datatable_wrapper .col-sm-12:first").html('<form id="update-status" action={{route("listing.status")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status" id="status"><option value="">Select</option><option value=0>Pending</option><option value=2>Reject</option><option value=3>Publish to Website</option><option value=4>Save to Draft</option></select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div></form>');
 
         $("#basic-datatable_wrapper").on('click', '.update-status', function(e) {
             e.preventDefault();
@@ -280,9 +280,10 @@
                     'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(result) {
-                    ids.forEach(function(id) {
-                        $("#" + id + " .status").html('Queued');
-                    })
+                    location.reload();
+                    // ids.forEach(function(id) {
+                    //     $("#" + id + " .status").html('Queued');
+                    // })
                 },
             });
         });
