@@ -178,6 +178,9 @@
 
                                 <div id='count'>1 Selected</div>
                             </div>
+                            <label for="description" class="form-label d-flex justify-content-between text-danger" style="margin-top: -10px;">
+                                <div>{{ __('Note - You need to Select Min. 8 Perfect Categories to go Your Listing Live. Else It may be Rejected.') }}</div>
+                            </label>
                             <select class="form-control select2  @error('label') is-invalid @enderror" data-placeholder="Choose Label" multiple value="{{ old('label') }}" name="label[]">
                                 @foreach($categories as $category)
                                 <option value="{{ $category['term'] }}" @foreach($labels as $label) @if($category['term']==$label) selected @endif @endforeach>

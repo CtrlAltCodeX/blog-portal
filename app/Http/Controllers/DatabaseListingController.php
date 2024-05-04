@@ -246,6 +246,10 @@ class DatabaseListingController extends Controller
     {
         $listing = Listing::find($id);
 
+        UserListingInfo::where('title', $listing->title)
+            ->where('image', $listing->images)
+            ->delete();
+
         if ($listing->delete()) {
             session()->flash('success', 'Listing deleted succesfully.');
 

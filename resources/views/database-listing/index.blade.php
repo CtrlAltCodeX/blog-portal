@@ -122,7 +122,9 @@
                                     <th>{{ __('Created By') }}</th>
                                     <th>{{ __('Created at') }}</th>
                                     <th>{{ __('Updated at') }}</th>
+                                    @if(request()->status != 2 && ( auth()->user()->can('Pending Listing ( DB ) -> Edit') || auth()->user()->can('Pending Listing ( DB ) -> Delete') ))
                                     <th>{{ __('Action') }}</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -280,9 +282,10 @@
                     'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(result) {
-                    ids.forEach(function(id) {
-                        $("#" + id + " .status").html('Queued');
-                    })
+                    location.reload();
+                    // ids.forEach(function(id) {
+                    //     $("#" + id + " .status").html('Queued');
+                    // })
                 },
             });
         });

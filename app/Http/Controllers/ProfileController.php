@@ -90,16 +90,19 @@ class ProfileController extends Controller
         $rejected = UserListingInfo::where('status', 2);
 
         if (request()->from && request()->to) {
-            $startDate = Carbon::createFromFormat('m/d/Y', request()->from)->format('Y-m-d');
-            $endDate = Carbon::createFromFormat('m/d/Y', request()->to)->format('Y-m-d');
+            $from = \DateTime::createFromFormat('d/m/Y', request()->from);
+            $fromFormattedDate = $from->format('Y-m-d');
 
-            $userListings = $userListings->whereBetween('created_at', [$startDate, $endDate]);
+            $to = \DateTime::createFromFormat('d/m/Y', request()->to);
+            $toFormattedDate = $to->format('Y-m-d');
 
-            $approved = $approved->whereBetween('created_at', [$startDate, $endDate]);
+            $userListings = $userListings->whereBetween('created_at', [$fromFormattedDate, $toFormattedDate]);
 
-            $pending = $pending->whereBetween('created_at', [$startDate, $endDate]);
+            $approved = $approved->whereBetween('created_at', [$fromFormattedDate, $toFormattedDate]);
 
-            $rejected = $rejected->whereBetween('created_at', [$startDate, $endDate]);
+            $pending = $pending->whereBetween('created_at', [$fromFormattedDate, $toFormattedDate]);
+
+            $rejected = $rejected->whereBetween('created_at', [$fromFormattedDate, $toFormattedDate]);
         }
 
         if (auth()->user()->hasRole('Super Admin')) {
