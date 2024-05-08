@@ -80,8 +80,11 @@ class ProfileController extends Controller
     public function listings()
     {
         $userListings = UserListingInfo::with('create_user', 'approve')
-            ->where('status', request()->status)
             ->orderBy('created_at', 'desc');
+
+        if (request()->status == '0' || request()->status == 1 || request()->status == 2) {
+            $userListings = $userListings->where('status', request()->status);
+        }
 
         $approved = UserListingInfo::where('approved_by', '!=', '');
 
@@ -96,13 +99,17 @@ class ProfileController extends Controller
             $to = \DateTime::createFromFormat('d/m/Y', request()->to);
             $toFormattedDate = $to->format('Y-m-d');
 
-            $userListings = $userListings->whereBetween('created_at', [$fromFormattedDate, $toFormattedDate]);
+            $userListings = $userListings->whereDate('created_at', ">=", $fromFormattedDate)
+                ->whereDate('created_at', "<=", $toFormattedDate);
 
-            $approved = $approved->whereBetween('created_at', [$fromFormattedDate, $toFormattedDate]);
+            $approved = $approved->whereDate('created_at', ">=", $fromFormattedDate)
+                ->whereDate('created_at', "<=", $toFormattedDate);
 
-            $pending = $pending->whereBetween('created_at', [$fromFormattedDate, $toFormattedDate]);
+            $pending = $pending->whereDate('created_at', ">=", $fromFormattedDate)
+                ->whereDate('created_at', "<=", $toFormattedDate);
 
-            $rejected = $rejected->whereBetween('created_at', [$fromFormattedDate, $toFormattedDate]);
+            $rejected = $rejected->whereDate('created_at', ">=", $fromFormattedDate)
+                ->whereDate('created_at', "<=", $toFormattedDate);
         }
 
         if (auth()->user()->hasRole('Super Admin')) {

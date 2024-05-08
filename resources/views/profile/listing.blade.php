@@ -22,17 +22,17 @@
                     <div class="d-flex w-100 justify-content-between mb-4">
                         <h2 class="card-title">Listing Counts Report ( DB )</h2>
                         <div>
-                            <a href="{{ route('profile.listing', ['user' => 'all', 'status' => 0, 'from' => request()->from, 'to' => request()->to]) }}" class="btn btn-sm btn-light position-relative me-2 mb-2"> Pending
+                            <a href="{{ route('profile.listing', ['user' => 'all', 'status' => 0, 'from' => request()->from, 'to' => request()->to]) }}" class="btn btn-sm btn-warning position-relative me-2 mb-2"> Pending
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{ $pending }}
                                     <span class="visually-hidden">unread messages</span>
                                 </span>
                             </a>
-                            <a href="{{ route('profile.listing', ['user' => 'all', 'status' => 1]) }}" class="btn btn-sm btn-warning position-relative me-2 mb-2"> Approved
+                            <a href="{{ route('profile.listing', ['user' => 'all', 'status' => 1,'from' => request()->from, 'to' => request()->to]) }}" class="btn btn-sm btn-success position-relative me-2 mb-2"> Approved
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{$approved}}
                                     <span class="visually-hidden">unread messages</span>
                                 </span>
                             </a>
-                            <a href="{{ route('profile.listing', ['user' => 'all', 'status' => 2]) }}" class="btn btn-sm btn-danger position-relative mb-2"> Rejected
+                            <a href="{{ route('profile.listing', ['user' => 'all', 'status' => 2,'from' => request()->from, 'to' => request()->to]) }}" class="btn btn-sm btn-danger position-relative mb-2"> Rejected
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{$rejected}}
                                     <span class="visually-hidden">unread messages</span>
                                 </span>
@@ -44,7 +44,7 @@
                     <div class="d-flex w-100" style="grid-gap: 10px;;">
                         @if(auth()->user()->hasRole('Super Admin'))
                         <form action="" method="get" id='form' class="d-flex align-items-center" style="width: 100%;grid-gap: 10px;">
-                            <input type="hidden" name="status" value="{{request()->status}}">
+                            <input type="hidden" name="status" value="">
                             <b class="text-end mr-2">User Filter - </b>
                             <select class="form-control w-25" name="user" id='user'>
                                 <option value="all">All Users</option>

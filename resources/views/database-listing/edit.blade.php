@@ -329,10 +329,21 @@
                         </div>
 
                         <div style="text-align: right;">
+                            @can('Pending Listing ( DB ) -> Reject ( DB )')
                             <button class="btn btn-danger float-right" id='reject'>Reject ( DB )</button>
+                            @endcan
+
+                            @can('Pending Listing ( DB ) -> Update ( DB )')
                             <button class="btn btn-warning float-right" id='update'>Update ( DB )</button>
+                            @endcan
+
+                            @can('Pending Listing ( DB ) -> Save as Draft')
                             <button class="btn btn-dark float-right" id='draft'>Save as Draft</button>
+                            @endcan
+
+                            @can('Pending Listing ( DB ) -> Publish to Website')
                             <button class="btn btn-success float-right" id='publish'>Publish to Website</button>
+                            @endcan
                         </div>
                     </div>
                 </div>
