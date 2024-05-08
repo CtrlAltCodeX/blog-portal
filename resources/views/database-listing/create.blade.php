@@ -53,7 +53,7 @@
                                     <div>{{ __('Excess Capitalism in Product Title Not Allowed') }}</div>
                                 </label>
 
-                                <input maxlength="115" id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') }}" autocomplete="title" autofocus placeholder="Title">
+                                <input  minlength="75" maxlength="115" id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') }}" autocomplete="title" autofocus placeholder="Title">
                                 <span class="error-message title" style="color:red;"></span>
 
                                 @error('title')

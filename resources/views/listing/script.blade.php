@@ -71,6 +71,10 @@
             nameValidate(inputValue, this);
 
             domainValidation(inputValue, this);
+            
+            if($(this).attr('name') == 'title') {
+                minLimit(this);
+            }
         })
 
         $('textarea').on('input', function() {
@@ -85,8 +89,6 @@
 
         $('#url').on('input', function() {
             var url = $(this).val();
-            var fieldId = $(this).attr('name');
-
             if (!url.includes('https://www.instamojo.com/EXAM360/')) {
                 errorHandling('url', 'Please add instamojo link', false, this);
             } else {
@@ -196,9 +198,7 @@
 
             // Prevent form submission if a URL is found
             if (!valid || !requiredvalid) {
-                console.log(requiredvalid);
-                console.log(valid);
-                // event.preventDefault();
+                event.preventDefault();
             }
         });
 
@@ -266,13 +266,13 @@
             var errors = [];
             var normalString = '';
             var validateFields = JSON.parse(localStorage.getItem('validate'));
-            validateFields.forEach(function(value) {
-                if (value.name) {
+            validateFields.forEach(function(value){
+                if(value.name){
                     var nameToCheck = value.name.toLowerCase();
                     if (val.toLowerCase().includes(nameToCheck)) {
                         errors.push(value.name);
                         normalString = errors.join(", ");
-                        errorHandling(fieldId, 'Words not allowed - ' + errors, false, currentElement)
+                        errorHandling(fieldId, 'Words not allowed - '+errors, false, currentElement)
                     }
                 }
             });
@@ -320,6 +320,15 @@
                 $(currentElement).val($(currentElement).val().substring(0, 50));
             }
         }
+        
+        function minLimit(currentElement) {
+            var fieldId = $(currentElement).attr('name');
+            var minLength = Number($(currentElement).attr('minlength')); // Get the maximum length allowed
+            var currentLength = $(currentElement).val().length;
+            if(currentLength < minLength) {
+                errorHandling(fieldId, 'Minmum 75 Character requried', false, currentElement);
+            }
+        }
 
         function errorHandling(element, msg, valid, currentElement) {
             if (!valid) {
@@ -353,8 +362,8 @@
                 }
             }
         });
-    });
-
+    })
+    
     $('#count').html($('.select2').val().length + " Selected");
 
     $('.select2').change(function() {

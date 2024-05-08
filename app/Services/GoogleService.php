@@ -6,7 +6,9 @@ use Google_Client;
 use Google_Service_Blogger;
 use Google_Service_Blogger_Post;
 use App\Models\GoogleCredentail;
+use App\Models\Listing;
 use App\Models\SiteSetting;
+use App\Models\UserListingInfo;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
@@ -261,6 +263,22 @@ class GoogleService
             if (request()->isDraft) $isDraft = ['isDraft' => request()->isDraft];
 
             if ($draft == 4) $isDraft = ['isDraft' => 1];
+
+            if (isset($data['database'])) {
+                Listing::find($data['database'])->delete();
+
+                $additionalInfo = UserListingInfo::where('image', $data['images'][0])
+                    ->where('title', $data['title'])
+                    ->first();
+
+                if ($additionalInfo) {
+                    $additionalInfo->update([
+                        'status' => request()->status,
+                        'approved_by' => auth()->user()->id,
+                        'approved_at' => now()
+                    ]);
+                }
+            }
 
             return $blogger->posts->insert($credential->blog_id, $post, $isDraft);
         } catch (\Google_Service_Exception $e) {

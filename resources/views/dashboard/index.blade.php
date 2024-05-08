@@ -137,9 +137,9 @@
                     <div class="d-flex">
                         <div class="mt-2">
                             <h6 class="">Pending</h6>
-                            <a target="_blank" href="{{ route('database-listing.index', ['status' => 0]) }}">
+                            <a target="_blank" href="{{ route('database-listing.index', ['status' => 0, 'startIndex' => 1, 'user' => 'all']) }}">
                                 <h2 class="mb-0 number-font" id='pending'>
-                                    {{ $pendingListingCount }}
+                                    {{ $pending }}
                                 </h2>
                             </a>
                         </div>
@@ -154,7 +154,7 @@
                         <div class="mt-2">
                             <h6 class="">Approved</h6>
                             <!-- <a target="_blank" href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => '3Y']) }}"> -->
-                            <h2 class="mb-0 number-font" id='approved'>{{ $approvedCount }}</h2>
+                            <h2 class="mb-0 number-font" id='approved'>{{ $approved }}</h2>
                             <!-- </a> -->
                         </div>
                     </div>
@@ -168,7 +168,7 @@
                         <div class="mt-2">
                             <h6 class="">Rejected</h6>
                             <!-- <a target="_blank" href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => '3Y']) }}"> -->
-                            <h2 class="mb-0 number-font" id='rejected'>{{ $rejectedCount }}</h2>
+                            <h2 class="mb-0 number-font" id='rejected'>{{ $rejected }}</h2>
                             <!-- </a> -->
                         </div>
                     </div>
@@ -197,7 +197,7 @@
         <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
             <div class="card overflow-hidden">
                 <div class="card-body">
-                    <a href="{{ route('inventory.index') }}">
+                    <a href="{{ route('inventory.index', ['startIndex' => 1, 'category' => 'Product']) }}">
                         <div class="d-flex">
                             <div class="mt-2">
                                 <h6 class="">Total Products</h6>
@@ -310,23 +310,10 @@
 @push('js')
 <script>
     $(document).ready(function() {
-        getDraftedInventory();
-
-        getInventoryData();
-
-        getInventoryOutStockData();
-
-        getInventoryLowStockData();
-
-        getInventoryDemandStockData();
-
-        getOneYearOldInventory();
-
-        getSixMonthOldInventory();
-
-        getTwoYearOldInventory();
-
-        getThreeYearOldInventory();
+        
+        setTimeout(function(){
+            getDraftedInventory();
+        }, 2000)
 
         function getDraftedInventory() {
             localStorage.setItem('drafted', 0);
@@ -345,6 +332,8 @@
                         getInventoryInStockData();
 
                     }, 1000);
+                    
+                    getInventoryData();
                 },
             });
         }
@@ -358,12 +347,17 @@
                     category: 'Product'
                 },
                 headers: {
-                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
                 },
                 success: function(result) {
+                    // console.log(result);
                     $("#products").html(result);
                     localStorage.setItem('totalPublished', result);
-                },
+                    getInventoryOutStockData();
+                    
+                },error:function(err){
+                    console.log(err);
+                }
             });
         }
 
@@ -395,6 +389,8 @@
                             localStorage.setItem('out_Stock', result);
                             var getCount = localStorage.getItem('outStock');
                             $("#outStock").html(parseInt(result) + parseInt(getCount));
+                            
+                            getInventoryLowStockData();
                         },
                     });
                 },
@@ -431,6 +427,8 @@
                             localStorage.setItem('low_stock', result);
                             var getCount = localStorage.getItem('low_stock');
                             $("#lowStock").html(parseInt(result) + parseInt(getCount));
+                            
+                            getInventoryDemandStockData();
                         },
                     });
                 },
@@ -467,6 +465,8 @@
                             localStorage.setItem('out_demand', result);
                             var getCount = localStorage.getItem('demandStock');
                             $("#demandStock").html(parseInt(result) + parseInt(getCount));
+                            
+                            getOneYearOldInventory();
                         },
                     });
 
@@ -501,6 +501,8 @@
                 success: function(result) {
                     $("#one-year-old").html(result);
                     localStorage.setItem('one-year-old', result);
+                    
+                    getTwoYearOldInventory();
                 },
             });
         }
@@ -521,6 +523,8 @@
                 success: function(result) {
                     $("#two-year-old").html(result);
                     localStorage.setItem('two-year-old', result);
+                    
+                    getThreeYearOldInventory();
                 },
             });
         }
@@ -541,6 +545,8 @@
                 success: function(result) {
                     $("#three-year-old").html(result);
                     localStorage.setItem('three-year-old', result);
+                    
+                    getSixMonthOldInventory();
                 },
             });
         }

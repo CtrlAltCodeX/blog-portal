@@ -103,27 +103,11 @@ class ListingController extends Controller
         //     }
         // }
 
+        session()->flash('success', 'Post created successfully');
+
         if ($request->database) {
-            Listing::find($request->database)->delete();
-
-            $additionalInfo = UserListingInfo::where('image', $request->images[0])
-                ->where('title', request()->title)
-                ->first();
-
-            if ($additionalInfo) {
-                $additionalInfo->update([
-                    'status' => request()->status,
-                    'approved_by' => auth()->user()->id,
-                    'approved_at' => now()
-                ]);
-            }
-
-            session()->flash('success', 'Post created successfully');
-
             return redirect()->route('database-listing.index', ['status' => 0, 'startIndex' => 1, 'category' => '', 'user' => 'all']);
         }
-
-        session()->flash('success', 'Post created successfully');
 
         return redirect()->route('inventory.index', ['startIndex' => 1, 'category' => 'Product']);
     }
