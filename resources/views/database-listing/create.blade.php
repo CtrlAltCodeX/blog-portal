@@ -95,7 +95,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-4">
                                 <label for="mrp" class="form-label">{{ __('MRP') }}<span class="text-danger">*</span><span class="text-success"> ( Maximum Retail
                                         Price)</span></label>
                                 <input id="mrp" type="number" class="form-control @error('mrp') is-invalid @enderror" name="mrp" value="{{ old('mrp') }}" autocomplete="mrp" autofocus placeholder="MRP">
@@ -108,12 +108,17 @@
                                 @enderror
                             </div>
 
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-4">
+                                <label for="discount" class="form-label">{{ __('Discount ( % )') }}</label>
+                                <input id="discount" name="discount" type="number" class="form-control" placeholder="Discount ( % )">
+                                <span class="error-message discount" style="color:red;"></span>
+                            </div>
+
+                            <div class="form-group col-md-4">
                                 <label for="selling_price" class="form-label d-flex justify-content-between">
                                     <div>{{ __('Selling Price') }}<span class="text-danger">*</span></div>
                                     <div>
                                         <a href='{{ $siteSetting->calc_link }}' target='_blank'>Calculator |</a><a target='_blank' href="https://docs.google.com/spreadsheets/d/1uSqo6RhsLHaVcVrkEjO_SmOWiXqWBC-aV1LvsowgsL0/"> Disc. Info.</a>
-
                                     </div>
                                 </label>
                                 <input id="selling_price" type="number" class="form-control @error('selling_price') is-invalid @enderror" name="selling_price" value="{{ old('selling_price') }}" autocomplete="selling_price" autofocus placeholder="Selling Price">

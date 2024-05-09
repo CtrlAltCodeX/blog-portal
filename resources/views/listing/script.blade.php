@@ -47,33 +47,52 @@
 
         $('input').on('input', function() {
             var inputValue = $(this).val();
+            var inputName = $(this).attr('name');
 
-            if ($(this).attr('name') == 'author_name' ||
-                $(this).attr('name') == 'publication' ||
-                $(this).attr('name') == 'edition') {
+            if (inputName == 'author_name' ||
+                inputName == 'publication' ||
+                inputName == 'edition') {
                 var value = inputValue.replace(/,/g, '');
                 $(this).val(value);
             }
 
-            if ($(this).attr('name') == 'author_name' ||
-                $(this).attr('name') == 'title' ||
-                $(this).attr('name') == 'publication' ||
-                $(this).attr('name') == 'edition' ||
-                $(this).attr('name') == 'sku'
+            if (inputName == 'author_name' ||
+                inputName == 'title' ||
+                inputName == 'publication' ||
+                inputName == 'edition' ||
+                inputName == 'sku'
             ) {
                 limit(this);
             }
 
-            if ($(this).attr('name') != 'images[]') {
+            if (inputName != 'images[]') {
                 requiredFields(inputValue, this);
             }
 
             nameValidate(inputValue, this);
 
             domainValidation(inputValue, this);
-            
-            if($(this).attr('name') == 'title') {
+
+            if (inputName == 'title') {
                 minLimit(this);
+            }
+
+            if (inputName == 'discount' ||
+                inputName == 'mrp'
+            ) {
+                var discount = $('#discount').val();
+                var mrp = parseInt($("#mrp").val());
+
+                var discountedPrice = (mrp * discount) / 100;
+
+                $('#selling_price').val(mrp - discountedPrice);
+            }
+
+            if (inputName == 'selling_price') {
+                var sellingPrice = $(this).val();
+                var mrp = parseInt($("#mrp").val());
+
+                $('#discount').val(((mrp - sellingPrice) / mrp) * 100);
             }
         })
 
@@ -252,7 +271,7 @@
         function requiredFields(val, currentElement) {
             var fieldId = $(currentElement).attr('name');
             if (val == '') {
-                if (fieldId != 'multipleImages[]' && fieldId != 'files') {
+                if (fieldId != 'multipleImages[]' && fieldId != 'files' && fieldId != 'discount') {
                     errorHandling(fieldId, 'This field is required', false, currentElement);
                 }
             } else {
@@ -266,13 +285,13 @@
             var errors = [];
             var normalString = '';
             var validateFields = JSON.parse(localStorage.getItem('validate'));
-            validateFields.forEach(function(value){
-                if(value.name){
+            validateFields.forEach(function(value) {
+                if (value.name) {
                     var nameToCheck = value.name.toLowerCase();
                     if (val.toLowerCase().includes(nameToCheck)) {
                         errors.push(value.name);
                         normalString = errors.join(", ");
-                        errorHandling(fieldId, 'Words not allowed - '+errors, false, currentElement)
+                        errorHandling(fieldId, 'Words not allowed - ' + errors, false, currentElement)
                     }
                 }
             });
@@ -320,12 +339,12 @@
                 $(currentElement).val($(currentElement).val().substring(0, 50));
             }
         }
-        
+
         function minLimit(currentElement) {
             var fieldId = $(currentElement).attr('name');
             var minLength = Number($(currentElement).attr('minlength')); // Get the maximum length allowed
             var currentLength = $(currentElement).val().length;
-            if(currentLength < minLength) {
+            if (currentLength < minLength) {
                 errorHandling(fieldId, 'Minmum 75 Character requried', false, currentElement);
             }
         }
@@ -363,7 +382,7 @@
             }
         });
     })
-    
+
     $('#count').html($('.select2').val().length + " Selected");
 
     $('.select2').change(function() {
