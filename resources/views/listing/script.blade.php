@@ -80,19 +80,24 @@
             if (inputName == 'discount' ||
                 inputName == 'mrp'
             ) {
-                var discount = $('#discount').val();
+                var discount = parseInt($('#discount').val());
                 var mrp = parseInt($("#mrp").val());
 
-                var discountedPrice = (mrp * discount) / 100;
+                if (discount <= 100) {
+                    var discountedPrice = (mrp * discount) / 100;
+    
+                    $('#selling_price').val(Math.round(mrp - discountedPrice));
+                } else {
+                    $('#discount').val(0);
+                }
 
-                $('#selling_price').val(mrp - discountedPrice);
             }
 
             if (inputName == 'selling_price') {
                 var sellingPrice = $(this).val();
                 var mrp = parseInt($("#mrp").val());
 
-                $('#discount').val(((mrp - sellingPrice) / mrp) * 100);
+                $('#discount').val(Math.round(((mrp - sellingPrice) / mrp) * 100));
             }
         })
 
