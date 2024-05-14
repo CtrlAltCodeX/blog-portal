@@ -113,6 +113,7 @@
 
         $('#url').on('input', function() {
             var url = $(this).val();
+            var fieldId = $(this).attr('name');
             if (!url.includes('https://www.instamojo.com/EXAM360/')) {
                 errorHandling('url', 'Please add instamojo link', false, this);
             } else {
@@ -131,100 +132,100 @@
             },
         });
 
-        $('#form').submit(function(event) {
-            // Reset previous error messages
-            $('.error-message').text('');
+        // $('#form').submit(function(event) {
+        //     // Reset previous error messages
+        //     $('.error-message').text('');
 
-            // Flag to check if any URL is found
-            var valid = true;
-            var requiredvalid = true;
+        //     // Flag to check if any URL is found
+        //     var valid = true;
+        //     var requiredvalid = true;
 
-            // Iterate over each input field with the class 'no-url-validation'
-            $('input').each(function() {
-                var inputValue = $(this).val();
-                var urlRegex = /^(http|https):\/\/[^\s\[\]]*$/i;
+        //     // Iterate over each input field with the class 'no-url-validation'
+        //     $('input').each(function() {
+        //         var inputValue = $(this).val();
+        //         var urlRegex = /^(http|https):\/\/[^\s\[\]]*$/i;
 
-                if ((urlRegex.test(inputValue) &&
-                        inputValue != 'http://' &&
-                        inputValue != 'url') ||
-                    (inputValue.includes('[') ||
-                        inputValue.includes(']'))
-                ) {
-                    // Display error message
-                    var fieldId = $(this).attr('name');
-                    if (fieldId != 'images[]' && fieldId != 'multipleImages[]' && fieldId != 'url' && fieldId != 'images') {
-                        $(this).css('border', '1px red solid');
+        //         if ((urlRegex.test(inputValue) &&
+        //                 inputValue != 'http://' &&
+        //                 inputValue != 'url') ||
+        //             (inputValue.includes('[') ||
+        //                 inputValue.includes(']'))
+        //         ) {
+        //             // Display error message
+        //             var fieldId = $(this).attr('name');
+        //             if (fieldId != 'images[]' && fieldId != 'multipleImages[]' && fieldId != 'url' && fieldId != 'images') {
+        //                 $(this).css('border', '1px red solid');
 
-                        $('.' + fieldId).text('Please do not enter URLs.');
-                        valid = false;
-                    }
-                }
+        //                 $('.' + fieldId).text('Please do not enter URLs.');
+        //                 valid = false;
+        //             }
+        //         }
 
-                if (inputValue == '') {
-                    var fieldId = $(this).attr('name');
-                    if (fieldId != 'multipleImages[]' &&
-                        fieldId != 'files' &&
-                        fieldId
-                    ) {
-                        $(this).css('border', '1px red solid');
-                        $('.' + fieldId).text('This field is required');
-                        requiredvalid = false;
-                    }
-                }
-            });
+        //         if (inputValue == '') {
+        //             var fieldId = $(this).attr('name');
+        //             if (fieldId != 'multipleImages[]' &&
+        //                 fieldId != 'files' &&
+        //                 fieldId
+        //             ) {
+        //                 $(this).css('border', '1px red solid');
+        //                 $('.' + fieldId).text('This field is required');
+        //                 requiredvalid = false;
+        //             }
+        //         }
+        //     });
 
-            $('textarea').each(function() {
-                var textareaValue = $(this).val();
-                var urlRegex = /^(http|https):\/\/[^\s]*$/i;
+        //     $('textarea').each(function() {
+        //         var textareaValue = $(this).val();
+        //         var urlRegex = /^(http|https):\/\/[^\s]*$/i;
 
-                if (urlRegex.test(textareaValue)) {
-                    // Display error message
-                    var fieldId = $(this).attr('name');
-                    $('.' + fieldId).text('Please do not enter URLs.');
-                    $(this).css('border', '1px red solid');
+        //         if (urlRegex.test(textareaValue)) {
+        //             // Display error message
+        //             var fieldId = $(this).attr('name');
+        //             $('.' + fieldId).text('Please do not enter URLs.');
+        //             $(this).css('border', '1px red solid');
 
-                    valid = false;
-                }
+        //             valid = false;
+        //         }
 
-                if (textareaValue == '') {
-                    var fieldId = $(this).attr('name');
-                    if (fieldId) {
-                        $(this).css('border', '1px red solid');
-                        $('.' + fieldId).text('This field is required');
-                        requiredvalid = false;
-                    }
-                }
-            });
+        //         if (textareaValue == '') {
+        //             var fieldId = $(this).attr('name');
+        //             if (fieldId) {
+        //                 $(this).css('border', '1px red solid');
+        //                 $('.' + fieldId).text('This field is required');
+        //                 requiredvalid = false;
+        //             }
+        //         }
+        //     });
 
-            $('select').each(function() {
-                var textareaValue = $(this).val();
+        //     $('select').each(function() {
+        //         var textareaValue = $(this).val();
 
-                if (textareaValue == '') {
-                    var fieldId = $(this).attr('name');
-                    if (fieldId) {
-                        $(this).css('border', '1px red solid');
-                        $('.' + fieldId).text('This field is required');
-                        requiredvalid = false;
-                    }
-                }
-            });
+        //         if (textareaValue == '') {
+        //             var fieldId = $(this).attr('name');
+        //             if (fieldId) {
+        //                 $(this).css('border', '1px red solid');
+        //                 $('.' + fieldId).text('This field is required');
+        //                 requiredvalid = false;
+        //             }
+        //         }
+        //     });
 
-            var url = $('#url').val();
-            if (!url.includes('https://www.instamojo.com/EXAM360/')) {
-                $('#url').css('border', '1px red solid');
-                $('.url').text('Please add instamojo link');
-                valid = false;
-            } else {
-                $(this).css('border', '1px solid #e9edf4');
-                $('.url').text('');
-                valid = true;
-            }
+        //     var url = $('#url').val();
+        //     if (!url.includes('https://www.instamojo.com/EXAM360/')) {
+        //         $('#url').css('border', '1px red solid');
+        //         $('.url').text('Please add instamojo link');
+        //         valid = false;
+        //     } else {
+        //         $(this).css('border', '1px solid #e9edf4');
+        //         $('.url').text('');
+        //         valid = true;
+        //     }
 
-            // Prevent form submission if a URL is found
-            if (!valid || !requiredvalid) {
-                event.preventDefault();
-            }
-        });
+        //     // Prevent form submission if a URL is found
+        //     if (!valid || !requiredvalid) {
+        //         event.preventDefault();
+        //     }
+        // });
 
         setTimeout(function() {
             calculateFields();

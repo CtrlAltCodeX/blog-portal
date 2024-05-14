@@ -46,7 +46,7 @@ class PublishProducts implements ShouldQueue
 
         if ($result?->error?->code == 401) {
             event(new EventsPublishProducts($this->id, $result->error->message));
-        } else {
+        } else if (isset($result->id)) {
             Listing::find($this->id)->delete();
 
             $additionalInfo = UserListingInfo::find($this->id);
