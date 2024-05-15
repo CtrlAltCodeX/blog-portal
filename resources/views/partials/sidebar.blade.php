@@ -6,7 +6,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
 <!--APP-SIDEBAR-->
 <div class="sticky">
     <div class="app-sidebar__overlay" data-bs-toggle="sidebar"></div>
-    <div class="app-sidebar">
+    <div class="app-sidebar" style="overflow: scroll;">
         <div class="side-header">
             <a class="header-brand1" href="/admin/dashboard">
                 <img src="/storage/{{ $userInfo->logo??'logo-3.png' }}" class="header-brand-img desktop-logo" alt="logo">
@@ -156,15 +156,15 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         @can('Settings -> Backup E-Mail')
                         <li><a href="{{ route('settings.emails') }}" class="slide-item {{ request()->is('admin/backup/emails') ? 'active' : '' }}">{{ __('Backup E-Mail') }}</a></li>
                         @endcan
-                        
+
                         @can('Settings -> Backup Logs & Links')
                         <li><a href="{{ route('backup.logs') }}" class="slide-item {{ request()->is('admin/backup/logs') ? 'active' : '' }}">{{ __('Backup Logs & Links') }}</a></li>
                         @endcan
-                        
+
                         @can('Settings -> Validations')
                         <li><a href="{{ route('settings.keywords.valid') }}" class="slide-item {{ request()->is('admin/names/validations') ? 'active' : '' }}">{{ __('Validations') }}</a></li>
                         @endcan
-                        
+
                         @can('Settings -> Configure Blog')
                         <li><a href="{{ route('settings.blog') }}" class="slide-item {{ request()->is('admin/settings/blog') ? 'active' : '' }}">{{ __('Confiure Blog') }}</a></li>
                         @endcan
