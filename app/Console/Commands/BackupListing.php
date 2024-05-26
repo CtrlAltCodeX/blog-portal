@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Exports\BackupListingsExport;
-use App\Exports\ListingsExport;
 use App\Mail\BackupMail;
 use App\Models\BackupEmail;
 use App\Models\BackupListing as ModelsBackupListing;
@@ -52,42 +51,23 @@ class BackupListing extends Command
             $completed = now();
 
             $listingData = app('App\Http\Controllers\BackupListingsController');
-
             $currentTimeInSeconds = now()->timestamp;
             $currentDateTimeFormat = now()->format('Y-m-d H:i:s');
             $currentDateFormat = now()->format('Y-m-d');
             $fileName = 'report-' . $currentTimeInSeconds . '.xlsx';
-            Excel::store(new BackupListingsExport($listingData->exportData()), "/public/" . $fileName);
-
-            $googleMerchantfileName = 'merchant-file' . $currentTimeInSeconds . '.xlsx';
-            $singleGoogleMerchantfileName = 'merchant-file.xlsx';
-            Excel::store(new BackupListingsExport($listingData->getMerchantExportFile()), "/public/" . $googleMerchantfileName);
-            Excel::store(new BackupListingsExport($listingData->getMerchantExportFile()), "/public/" . $singleGoogleMerchantfileName);
-
-            $facebookPixelfileName = 'facebook-file' . $currentTimeInSeconds . '.csv';
-            $singleFacebookPixelfileName = 'facebook-file.csv';
-            Excel::store(new BackupListingsExport($listingData->getFacebookExportFile()), "/public/" . $facebookPixelfileName);
-            Excel::store(new BackupListingsExport($listingData->getFacebookExportFile()), "/public/" . $singleFacebookPixelfileName);
-
             $sqlfileName = 'export-file' . $currentTimeInSeconds . '.sql';
-            Storage::disk('public')->put($sqlfileName, $listingData->exportSQL()[1]);
 
-            $zip = new ZipArchive;
-            $zipFileName = 'backup-files' . $currentTimeInSeconds . '.zip';
-            if ($zip->open(storage_path("app/public/" . $zipFileName), ZipArchive::CREATE) === true) {
-                $zip->addFile(storage_path("app/public/" . $fileName), basename(storage_path("app/public/" . $fileName)));
-                $zip->addFile(storage_path("app/public/" . $sqlfileName), basename(storage_path("app/public/" . $sqlfileName)));
-            }
+            $this->generateXLSFile($currentTimeInSeconds, $listingData);
 
-            // Close the zip archive
-            $zip->close();
+            $this->generateGoogleMerchantCenterFile($currentTimeInSeconds, $listingData);
 
-            $allEmails = BackupEmail::all();
-            $emailTo = [];
-            foreach ($allEmails as $email) {
-                Mail::to($email->email)->send(new BackupMail(storage_path("app/public/" . $zipFileName)));
-                $emailTo[] = $email->email;
-            }
+            $this->generateFacebookPixelFile($currentTimeInSeconds, $listingData);
+
+            $this->generateSQLFile($currentTimeInSeconds, $listingData);
+
+            $emailTo = $this->createZipAndMail($currentTimeInSeconds, $fileName, $sqlfileName);
+
+            $this->backupToDropBox($currentDateFormat, $fileName, $sqlfileName);
 
             BackupLogs::create([
                 'batch_id' => $batchId,
@@ -99,9 +79,6 @@ class BackupListing extends Command
                 'email_to' => implode(",", $emailTo),
                 'sql_file' => $currentDateTimeFormat,
             ]);
-
-            $this->backupToDropBox($currentDateFormat, $fileName, $sqlfileName);
-
         } catch (\Exception $e) {
             Log::channel('backup_activity_log')->info('Facing some issues');
 
@@ -118,7 +95,11 @@ class BackupListing extends Command
     public function getAllProducts()
     {
         $url = $this->getSiteBaseUrl();
-        $response = Http::get($url . '/feeds/posts/default?alt=json');
+        $response = Http::withOptions([
+            'force_ip_resolve' => 'v4',
+        ])->get('https://shop.exam360.in/feeds/posts/default?alt=json');
+
+        // $response = Http::get($url . 'feeds/posts/default?alt=json');
         $totalProducts =  $response->json()['feed']['openSearch$totalResults']['$t'];
 
         $paginate = 1;
@@ -310,9 +291,76 @@ class BackupListing extends Command
             "mute" => false
         ]);
 
-        $client->post(env('DROPBOX_URL'), [
+        $reponse = $client->post(env('DROPBOX_URL'), [
             'headers' => $headers,
             'body' => fopen(storage_path('app/public/' . $secondFile), 'r')
         ]);
+    }
+
+    /**
+     * Generate Google Merchant File
+     */
+    public function generateGoogleMerchantCenterFile($currentTimeInSeconds, $listingData)
+    {
+        $googleMerchantfileName = 'merchant-file' . $currentTimeInSeconds . '.xlsx';
+        $singleGoogleMerchantfileName = 'merchant-file.xlsx';
+
+        Excel::store(new BackupListingsExport($listingData->getMerchantExportFile()), "/public/" . $googleMerchantfileName);
+        Excel::store(new BackupListingsExport($listingData->getMerchantExportFile()), "/public/" . $singleGoogleMerchantfileName);
+    }
+
+    /**
+     * Generate Facebook Pixel File
+     */
+    public function generateFacebookPixelFile($currentTimeInSeconds, $listingData)
+    {
+        $facebookPixelfileName = 'facebook-file' . $currentTimeInSeconds . '.csv';
+        $singleFacebookPixelfileName = 'facebook-file.csv';
+
+        Excel::store(new BackupListingsExport($listingData->getFacebookExportFile()), "/public/" . $facebookPixelfileName);
+        Excel::store(new BackupListingsExport($listingData->getFacebookExportFile()), "/public/" . $singleFacebookPixelfileName);
+    }
+
+    /**
+     * Generate SQL file
+     */
+    public function generateSQLFile($currentTimeInSeconds, $listingData)
+    {
+        $sqlfileName = 'export-file' . $currentTimeInSeconds . '.sql';
+        Storage::disk('public')->put($sqlfileName, $listingData->exportSQL()[1]);
+    }
+
+    /**
+     * Generate XLS file
+     */
+    public function generateXLSFile($currentTimeInSeconds, $listingData)
+    {
+        $fileName = 'report-' . $currentTimeInSeconds . '.xlsx';
+        Excel::store(new BackupListingsExport($listingData->exportData()), "/public/" . $fileName);
+    }
+
+    /**
+     * Generate ZIP file and Mail
+     */
+    public function createZipAndMail($currentTimeInSeconds, $fileName, $sqlfileName)
+    {
+        $zip = new ZipArchive;
+        $zipFileName = 'backup-files' . $currentTimeInSeconds . '.zip';
+        if ($zip->open(storage_path("app/public/" . $zipFileName), ZipArchive::CREATE) === true) {
+            $zip->addFile(storage_path("app/public/" . $fileName), basename(storage_path("app/public/" . $fileName)));
+            $zip->addFile(storage_path("app/public/" . $sqlfileName), basename(storage_path("app/public/" . $sqlfileName)));
+        }
+
+        // Close the zip archive
+        $zip->close();
+
+        $allEmails = BackupEmail::all();
+        $emailTo = [];
+        foreach ($allEmails as $email) {
+            Mail::to($email->email)->send(new BackupMail(storage_path("app/public/" . $zipFileName)));
+            $emailTo[] = $email->email;
+        }
+
+        return $emailTo;
     }
 }

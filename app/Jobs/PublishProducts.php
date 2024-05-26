@@ -19,14 +19,18 @@ class PublishProducts implements ShouldQueue
 
     protected $isDraft = 0;
 
+    protected $user = 0;
+
     /**
      * Create a new job instance.
      */
-    public function __construct($id, $isDraft)
+    public function __construct($id, $isDraft, $userId)
     {
         $this->id = $id;
 
         $this->isDraft = $isDraft;
+
+        $this->user = $userId;
     }
 
     /**
@@ -36,7 +40,9 @@ class PublishProducts implements ShouldQueue
     {
         $getData = Listing::find($this->id);
 
-        $getData['images'] = [$getData->images];
+        if(isset($getData->images)){
+            $getData['images'] = [$getData->images];
+        }
         $getData['label'] = $getData->categories;
         $getData['pages'] = $getData->no_of_pages;
         $getData['binding'] = $getData->binding_type;
@@ -53,10 +59,12 @@ class PublishProducts implements ShouldQueue
                 ->where('image', $listing->images)
                 ->first();
 
+            $listing->delete();
+
             if ($additionalInfo) {
                 $additionalInfo->update([
                     'status' => 1,
-                    'approved_by' => auth()->user()->id,
+                    'approved_by' => $this->user,
                     'approved_at' => now()
                 ]);
             }

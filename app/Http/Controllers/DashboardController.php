@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Listing;
 use App\Models\UserListingCount;
+use App\Models\UserListingInfo;
 use App\Models\UserSession;
 use App\Services\GoogleService;
 use Carbon\Carbon;

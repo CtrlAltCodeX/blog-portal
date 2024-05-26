@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Exports\BackupListingsExport;
 use App\Exports\ListingsExport;
+use App\Jobs\ManualBackup;
 use App\Models\BackupEmail;
 use App\Models\BackupListing;
 use App\Models\BackupLogs;
+use App\Models\Job;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Dropbox\Client;
@@ -385,18 +388,22 @@ class BackupListingsController extends Controller
      */
     public function manuallyRunBackup()
     {
-        try {
-            Artisan::call('backup:listing'); // Replace 'command:name' with your actual command signature
-            $output = Artisan::output(); // Get the output of the command if needed
+        // Create a job instance
+        $job = new ManualBackup();
 
-            session()->flash('success', 'Backup Done Successfully');
+        // Dispatch the job
+        $jobId = Bus::dispatch($job);
 
-            return redirect()->back();
-        } catch (\Exception $e) {
-            session()->flash('error', $e->getMessage());
+        // Return the job ID or use it as needed
+        return $jobId;
+    }
 
-            return redirect()->back();
-        }
+    /**
+     * Get Queues
+     */
+    public function getQueues()
+    {
+        return Job::find(request()->id);
     }
 
     /**

@@ -125,6 +125,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         Route::get('logs', [BackupListingsController::class, 'getLoggerFile'])
             ->name('backup.logs');
 
+        Route::post('run/backup', [BackupListingsController::class, 'manuallyRunBackup'])
+            ->name('backup.run.backup');
+
+        Route::get('queues', [BackupListingsController::class, 'getQueues'])
+            ->name('get.queues');
+
         Route::get('emails', [BackupListingsController::class, 'backupEmail'])
             ->name('settings.emails');
 

@@ -265,19 +265,19 @@ class GoogleService
             if ($draft == 4) $isDraft = ['isDraft' => 1];
 
             if (isset($data['database'])) {
-                Listing::find($data['database'])->delete();
+                // Listing::find($data['database'])->delete();
 
-                $additionalInfo = UserListingInfo::where('image', $data['images'][0])
-                    ->where('title', $data['title'])
-                    ->first();
+                // $additionalInfo = UserListingInfo::where('image', $data['images'][0])
+                //     ->where('title', $data['title'])
+                //     ->first();
 
-                if ($additionalInfo) {
-                    $additionalInfo->update([
-                        'status' => request()->status,
-                        'approved_by' => auth()->user()->id,
-                        'approved_at' => now()
-                    ]);
-                }
+                // if ($additionalInfo) {
+                //     $additionalInfo->update([
+                //         'status' => request()->status,
+                //         'approved_by' => auth()->user()->id,
+                //         'approved_at' => now()
+                //     ]);
+                // }
             }
 
             return $blogger->posts->insert($credential->blog_id, $post, $isDraft);

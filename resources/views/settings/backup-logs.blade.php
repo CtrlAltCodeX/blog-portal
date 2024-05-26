@@ -40,7 +40,10 @@
     </div>
     <div class="card mt-5">
         <div class="card-body">
-            <h3 class="card-title">Backup Logs History</h3>
+            <div class="d-flex justify-content-between mb-3">
+                <h3 class="card-title">Backup Logs History</h3>
+                <a class="btn btn-primary" id='backup'>Manual Backup</a>
+            </div>
             <div class="table-responsive">
                 <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">
                     <thead>
@@ -143,6 +146,37 @@
 
         $('#basic-datatable').DataTable({
             "paging": false
+        });
+
+        $('#backup').click(function() {
+            $.ajax({
+                type: "POST",
+                url: "{{ route('backup.run.backup') }}",
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(result) {
+                    localStorage.setItem('backup', result);
+                },
+            });
+        })
+
+        $.ajax({
+            type: "GET",
+            url: "{{ route('get.queues') }}",
+            headers: {
+                'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: {
+                id: localStorage.getItem('backup'),
+            },
+            success: function(result) {
+                if (result) {
+                    $("#backup").html('Backing Up');
+                } else {
+                    $("#backup").html('Manual Backup');
+                }
+            },
         });
     })
 </script>

@@ -106,6 +106,22 @@ class ListingController extends Controller
         session()->flash('success', 'Post created successfully');
 
         if ($request->database) {
+            $listing = Listing::find($request->database);
+
+            $additionalInfo = UserListingInfo::where('title', $listing->title)
+                ->where('image', $listing->images)
+                ->first();
+
+            $listing->delete();
+
+            if ($additionalInfo) {
+                $additionalInfo->update([
+                    'status' => 1,
+                    'approved_by' => auth()->user()->id,
+                    'approved_at' => now()
+                ]);
+            }
+            
             return redirect()->route('database-listing.index', ['status' => 0, 'startIndex' => 1, 'category' => '', 'user' => 'all']);
         }
 

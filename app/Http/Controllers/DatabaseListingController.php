@@ -270,7 +270,7 @@ class DatabaseListingController extends Controller
     {
         if (request()->publish == 3 || request()->publish == 4) {
             foreach (request()->ids as $loopIndex => $id) {
-                $job = PublishProducts::dispatch($id, request()->publish)->delay(now()->addSeconds(10 * $loopIndex));
+                $job = PublishProducts::dispatch($id, request()->publish, auth()->user()->id)->delay(now()->addSeconds(10 * $loopIndex));
 
                 $loopIndex++;
 
