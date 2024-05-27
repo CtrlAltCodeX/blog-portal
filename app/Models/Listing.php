@@ -36,7 +36,8 @@ class Listing extends Model
         'status',
         'created_by',
         'job_id',
-        'error'
+        'error',
+        'product_id',
     ];
 
     public function created_by_user()

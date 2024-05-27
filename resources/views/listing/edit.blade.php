@@ -22,7 +22,7 @@
 
     <div class="row">
         <div class="col-md-9 col-xl-12 fields">
-            <form action="{{ route('listing.update', $post->id) }}" method="POST" enctype='multipart/form-data' id='form'>
+            <form action="{{ route('listing.update', $post->id??$productId) }}" method="POST" enctype='multipart/form-data' id='form'>
                 @csrf
                 @method('PUT')
                 <div class="card">
@@ -47,7 +47,7 @@
                                     <div>{{ __('Excess Capitalism in Product Title Not Allowed') }}</div>
                                 </label>
 
-                                <input minlength="75" maxlength="115" id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') ?? $post->title }}" autocomplete="title" autofocus placeholder="title">
+                                <input minlength="75" maxlength="115" id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') ?? $post->title??$productTitle }}" autocomplete="title" autofocus placeholder="title">
                                 <span class="error-message title" style="color:red;"></span>
 
                                 @error('title')
@@ -331,6 +331,7 @@
 
                         <div style="text-align: right;">
                             <button type="submit" class="btn btn-success float-right">Update & Publish</button>
+                            <button type="button" class="btn btn-success float-right" id='publishDB'>Update ( DB )</button>
                         </div>
                     </div>
                 </div>
@@ -428,6 +429,12 @@
 
         $("#downloadMultipleImage").click(function() {
             $("#multipleImagesform").submit();
+        })
+
+        $('#publishDB').click(function() {
+            $("#form").attr('action', "{{ route('listing.publish.database', $post->id??$productId) }}");
+
+            $("#form").submit();
         })
     });
 </script>

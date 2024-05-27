@@ -165,6 +165,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::resource('listing', ListingController::class);
 
+    Route::get('publish/database/{id}', [ListingController::class, 'publshInDB'])->name('listing.publish.database');
+
+    // Route::get('edit/database/{id}', [ListingController::class, 'editInDB'])->name('listing.edit.database');
+
     Route::get('search', [ListingController::class, 'search'])
         ->name('listing.search');
 
