@@ -632,7 +632,7 @@ class ListingController extends Controller
             'language' => trim($lang),
             'no_of_pages' => trim($page_no),
             'binding_type' => trim($binding),
-            'condition' => $condition,
+            'condition' => trim($condition),
             'insta_mojo_url' => trim($instaUrl),
             'images' => $image ?? '',
             'multiple' => $images,
