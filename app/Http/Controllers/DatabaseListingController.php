@@ -31,7 +31,8 @@ class DatabaseListingController extends Controller
     {
         $googlePosts = Listing::with('created_by_user')
             ->orderBy('created_at', 'desc')
-            ->where('categories', 'LIKE', '%' . request()->category . '%');
+            ->where('categories', 'LIKE', '%' . request()->category . '%')
+            ->whereNull('product_id');
 
         if (request()->user != 'all') {
             $googlePosts = $googlePosts->where('created_by', request()->user);
@@ -328,5 +329,65 @@ class DatabaseListingController extends Controller
 
             return true;
         }
+    }
+
+    /**
+     * Get Publish Pending Listing
+     *
+     * @return void
+     */
+    public function getPublishPending()
+    {
+        $googlePosts = Listing::with('created_by_user')
+            ->orderBy('created_at', 'desc')
+            // ->where('categories', 'LIKE', '%' . request()->category . '%')
+            ->whereNotNull('product_id');
+
+        $googlePosts = $googlePosts->paginate(150);
+
+        $allCounts = Listing::whereNotNull('product_id')->count();
+
+        $pendingCounts = Listing::whereNotNull('product_id')->where('status', 0);
+
+        $rejectedCounts = Listing::whereNotNull('product_id')->where('status', 2);
+
+        if (!auth()->user()->hasRole('Super Admin')) {
+            $pendingCounts = $pendingCounts->where('created_by', auth()->user()->id);
+
+            $rejectedCounts = $rejectedCounts->where('created_by', auth()->user()->id);
+        }
+
+        $pendingCounts = $pendingCounts->count();
+
+        $rejectedCounts = $rejectedCounts->count();
+
+        $users = User::where('status', 1)->get();
+
+        return view('database-listing.publish-pending', compact('users', 'allCounts', 'googlePosts', 'pendingCounts', 'rejectedCounts'));
+    }
+
+    /**
+     * Edit the Publish 
+     *
+     * @param int $id
+     * @return void
+     */
+    public function editPublish($id)
+    {
+        $listing = Listing::find($id);
+
+        $siteSetting = SiteSetting::first();
+
+        if (!$url = $this->getSiteBaseUrl()) {
+            session()->flash('message', 'Please complete your Site Setting Then Continue');
+
+            return view('settings.error');
+        }
+
+        $response = Http::get($url . '/feeds/posts/default?alt=json');
+
+        $categories = $response->json()['feed']['category'];
+
+        return view('database-listing.publish-edit', compact('listing', 'siteSetting', 'categories'));
     }
 }

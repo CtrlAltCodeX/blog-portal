@@ -174,6 +174,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::resource('database-listing', DatabaseListingController::class);
 
+    Route::get('edit/publish/pending/{id}', [DatabaseListingController::class, 'editPublish'])->name('publish.edit');
+    
+    Route::get('publish/pending', [DatabaseListingController::class, 'getPublishPending'])->name('publish.pending');
+
     Route::get('blog/publish/{id}', [ListingController::class, 'publishBlog'])
         ->name('blog.publish');
 

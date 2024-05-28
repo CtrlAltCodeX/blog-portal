@@ -79,30 +79,6 @@ class ListingController extends Controller
             return redirect()->route('inventory.index', ['startIndex' => 1, 'category' => 'Product']);
         }
 
-        // if (
-        //     $request->database
-        //     && $request->created_by
-        //     && $request->created_on
-        //     && $request->status
-        // ) {
-        //     $count = UserListingCount::where('user_id', $request->created_by)
-        //         ->whereDate('date', $request->created_on)
-        //         ->first();
-
-        //     if (!$count) {
-        //         UserListingCount::create([
-        //             'user_id' => $request->created_by,
-        //             'date' => $request->created_on,
-        //             'approved_count' => 1,
-        //             'reject_count' => 0,
-        //         ]);
-        //     } else {
-        //         $count->update([
-        //             'approved_count' => ++$count->approved_count,
-        //         ]);
-        //     }
-        // }
-
         session()->flash('success', 'Post created successfully');
 
         if ($request->database) {
@@ -121,7 +97,7 @@ class ListingController extends Controller
                     'approved_at' => now()
                 ]);
             }
-            
+
             return redirect()->route('database-listing.index', ['status' => 0, 'startIndex' => 1, 'category' => '', 'user' => 'all']);
         }
 
@@ -265,6 +241,27 @@ class ListingController extends Controller
     public function update(Request $request, $postId)
     {
         $this->googleService->updatePost($request->all(), $postId);
+
+        if ($request->database) {
+            $listing = Listing::where('product_id', $request->database)
+                ->first();
+
+            $additionalInfo = UserListingInfo::where('title', $listing->title)
+                ->where('image', $listing->images)
+                ->first();
+
+            $listing->delete();
+
+            if ($additionalInfo) {
+                $additionalInfo->update([
+                    'status' => 1,
+                    'approved_by' => auth()->user()->id,
+                    'approved_at' => now()
+                ]);
+            }
+
+            return redirect()->route('database-listing.index', ['status' => 0, 'startIndex' => 1, 'category' => '', 'user' => 'all']);
+        }
 
         session()->flash('success', 'Post updated successfully');
 
@@ -646,6 +643,18 @@ class ListingController extends Controller
         ];
 
         Listing::create($allInfo);
+
+        $additionalInfo = UserListingInfo::where('image', $image)
+            ->where('title', $productTitle)
+            ->first();
+
+        if ($additionalInfo) {
+            $additionalInfo->update([
+                'status' => 0,
+                'approved_by' => auth()->user()->id,
+                'approved_at' => now()
+            ]);
+        }
 
         session()->flash('success', 'Please check Pending Listing');
 
