@@ -253,8 +253,7 @@
 
                                 <select class="form-control @error('condition') is-invalid @enderror" name="condition" value="{{ old('condition') }}">
                                     <option value="">--Select--</option>
-                                    <option value="New" {{ $listing->condition == 'New' ? 'selected' : '' }}>New
-                                    </option>
+                                    <option value="New" {{ $listing->condition == 'New' ? 'selected' : '' }}>New</option>
                                     <option value="Like New" {{ $listing->condition == 'Like New' ? 'selected' : '' }}>Like New</option>
                                     <option value="Old" {{ $listing->condition == 'Old' ? 'selected' : '' }}>Old
                                     </option>
@@ -301,7 +300,7 @@
                         <div class="row" id="addUrls">
                             <div class="form-group col-md-4">
                                 <label for="url" class="form-label">{{ __('Main Image URL') }}</label>
-                                <input id="url" type="text" value="{{ $listing->images }}" class="form-control @error('images') is-invalid @enderror" name="images[]" autocomplete="images" autofocus placeholder="Base URL">
+                                <input id="url" type="text" value="{{ $listing->images }}" class="form-control @error('images') is-invalid @enderror" name="images" autocomplete="images" autofocus placeholder="Base URL">
                                 <span class="error-message images" style="color:red;"></span>
 
                                 @error('base_url')

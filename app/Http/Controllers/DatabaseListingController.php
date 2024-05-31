@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BlogRequest;
 use App\Jobs\PublishProducts;
+use App\Jobs\UpdateProducts;
 use App\Models\Job;
 use App\Models\Listing;
 use App\Models\SiteSetting;
@@ -272,6 +273,21 @@ class DatabaseListingController extends Controller
         if (request()->publish == 3 || request()->publish == 4) {
             foreach (request()->ids as $loopIndex => $id) {
                 $job = PublishProducts::dispatch($id, request()->publish, auth()->user()->id)->delay(now()->addSeconds(10 * $loopIndex));
+
+                $loopIndex++;
+
+                $jobRow = Job::orderBy('id', 'desc')->first();
+
+                if ($jobRow) {
+                    Listing::find($id)->update([
+                        'job_id' => $jobRow->id,
+                        'error' => 'Queued',
+                    ]);
+                }
+            }
+        } else if (request()->publish == 5) {
+            foreach (request()->ids as $loopIndex => $id) {
+                $job = UpdateProducts::dispatch($id, request()->publish, auth()->user()->id)->delay(now()->addSeconds(10 * $loopIndex));
 
                 $loopIndex++;
 
