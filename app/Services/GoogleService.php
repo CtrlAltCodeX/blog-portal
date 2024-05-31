@@ -338,7 +338,7 @@ class GoogleService
             $data['processed_images'] = [];
             $data['multiple_images'] = [];
 
-            $data['processed_images'][] = $data['images'];
+            $data['processed_images'] = $data['images'];
 
             // if (isset($data['images'])) {
             //     foreach ($data['images'] as $image) {

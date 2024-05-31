@@ -10,6 +10,7 @@ use App\Models\BackupListingImage;
 use App\Models\BackupLogs;
 use App\Models\SiteSetting;
 use App\Services\GoogleService;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
@@ -68,6 +69,8 @@ class BackupListing extends Command
             $emailTo = $this->createZipAndMail($currentTimeInSeconds, $fileName, $sqlfileName);
 
             $this->backupToDropBox($currentDateFormat, $fileName, $sqlfileName);
+
+            $this->deleteTenDaysAboveFiles();
 
             BackupLogs::create([
                 'batch_id' => $batchId,
@@ -362,5 +365,30 @@ class BackupListing extends Command
         }
 
         return $emailTo;
+    }
+
+    /**
+     * Delete the files above 10 Days 
+     *
+     * @return void
+     */
+    public function deleteTenDaysAboveFiles()
+    {
+        // Get all files in the directory
+        $files = Storage::files('public');
+
+        // Current time
+        $now = Carbon::now();
+
+        foreach ($files as $file) {
+            // Get the file's last modified time
+            $lastModified = Carbon::createFromTimestamp(Storage::lastModified($file));
+
+            // Check if the file is older than 10 days
+            if ($now->diffInDays($lastModified) > 10) {
+                // Delete the file
+                Storage::delete($file);
+            }
+        }
     }
 }
