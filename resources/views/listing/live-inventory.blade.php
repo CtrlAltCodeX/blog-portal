@@ -148,7 +148,7 @@
                                             @endif
 
                                             @if(!$listing)
-                                            <a href="{{ route('listing.publish.database', $productId) }}" class="btn btn-sm btn-primary">Edit (DB)</a>
+                                            <a href="{{ route('listing.edit.database', $productId) }}" class="btn btn-sm btn-primary">Edit (DB)</a>
                                             @endif
 
                                             @can('Inventory -> Manage Inventory -> Delete')

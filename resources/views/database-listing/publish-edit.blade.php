@@ -23,9 +23,8 @@
         <div class="col-md-9 col-xl-12 fields">
             <form action="" method="POST" enctype='multipart/form-data' id='formTest'>
                 @csrf
-                @method('PUT')
+                @method('POST')
                 <input type="hidden" name="created_by" value="{{ $listing->created_by }}" />
-                <input type="hidden" name="created_on" value='{{ date("Y-m-d", strtotime($listing->updated_at)) }}' />
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">
                         <h4 class="card-title">
@@ -136,7 +135,7 @@
                                     <span class="charCount">0/35</span>
                                 </div>
 
-                                <input maxlength="35" id="publication" type="text" class="form-control @error('publication') is-invalid @enderror" name="publication" value="{{ old('publication') ?? $listing->publisher }}" autocomplete="publication" autofocus placeholder="Publication">
+                                <input maxlength="35" id="publication" type="text" class="form-control @error('publication') is-invalid @enderror" name="publication" value="{{ old('publication') ?? $listing->publication }}" autocomplete="publication" autofocus placeholder="Publication">
                                 <span class="error-message publication" style="color:red;"></span>
 
                                 @error('publication')
@@ -334,17 +333,7 @@
                         </div>
 
                         <div style="text-align: right;">
-                            @can('Pending Listing ( DB ) -> Reject ( DB )')
-                            <button class="btn btn-danger float-right" id='reject'>Reject ( DB )</button>
-                            @endcan
-
-                            @can('Pending Listing ( DB ) -> Update ( DB )')
-                            <button class="btn btn-warning float-right" id='update'>Update ( DB )</button>
-                            @endcan
-
-                            @can('Pending Listing ( DB ) -> Publish to Website')
-                            <button class="btn btn-success float-right" id='website'>Update to Website</button>
-                            @endcan
+                            <button class="btn btn-warning float-right" id='update'>Request for update</button>
                         </div>
                     </div>
                 </div>
@@ -364,41 +353,11 @@
 <script src="{{ asset('assets/plugins/fancyuploder/jquery.fancy-fileupload.js') }}"></script>
 <script>
     $(document).ready(function() {
-        // $("#multipleFiles").change(function() {
-        //     $('#multiImagesDownload').show();
-        // })
-
-        // $("#downloadMultipleImage").click(function() {
-        //     $("#multipleImagesform").submit();
-        // });
-
-        // $("#draft").click(function(e) {
-        //     e.preventDefault();
-        //     $("#formTest").append("<input type='hidden' name='isDraft' value=1 />");
-        //     $("#formTest").attr("action", "{{ route('listing.store') }}");
-        //     $('[name="_method"]').remove();
-
-        //     $("#formTest").submit();
-        // });
-
-        $("#website").click(function(e) {
-            e.preventDefault();
-            $("#formTest").attr("action", "{{ route('listing.update', $listing->product_id) }}");
-            $("#formTest").append("<input type='hidden' name='database' value={{$listing->product_id}} />");
-            // $("#formTest").append("<input type='hidden' name='status' value=1 />");
-            $("#formTest").submit();
-        });
 
         $("#update").click(function(e) {
             e.preventDefault();
-            $("#formTest").attr("action", "{{ route('database-listing.update', $listing->id) }}");
-            $("#formTest").submit();
-        });
-
-        $("#reject").click(function(e) {
-            e.preventDefault();
-            $("#formTest").attr("action", "{{ route('database-listing.update', $listing->id) }}");
-            $("#formTest").append("<input type='hidden' name='status' value=2 />");
+            $("#formTest").attr("action", "{{ route('listing.publish.database', $listing->product_id) }}");
+            $("#formTest").append("<input type='hidden' name='database' value={{$listing->product_id}} />");
             $("#formTest").submit();
         });
     });

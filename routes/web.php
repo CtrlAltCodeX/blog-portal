@@ -46,6 +46,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
+    Route::get('posts', [DashboardController::class, 'getStats'])
+        ->name('get.posts.count');
+
+    /**
+     * Profile 
+     */
     Route::group(['prefix' => 'profile'], function () {
         Route::get('', [ProfileController::class, 'edit'])
             ->name('profile.edit');
@@ -63,6 +69,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
             ->name('profile.listing.delete.single');
     });
 
+    /**
+     * Profile
+     */
+
+    /**
+     * Inventory
+     */
     Route::group(['prefix' => 'inventory'], function () {
         Route::get('', [ListingController::class, 'inventory'])
             ->name('inventory.index');
@@ -73,7 +86,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         Route::get('drafted', [ListingController::class, 'draftedInventory'])
             ->name('inventory.drafted');
     });
+    /**
+     * Inventory
+     */
 
+    /**
+     * Image related 
+     */
     Route::group(['prefix' => 'images'], function () {
         Route::get('single/create', [ImageMakerController::class, 'singleImage'])->name('image.single.create');
 
@@ -90,6 +109,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         Route::post('collage/store', [CollageController::class, 'store'])->name('image.collage.store');
     });
 
+    /**
+     * Image
+     */
+
+    /**
+     * Settings
+     */
     Route::group(['prefix' => 'settings'], function () {
         Route::get('blog', [SettingsController::class, 'blog'])
             ->name('settings.blog');
@@ -117,7 +143,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
                 ->name('settings.keywords.update');
         });
     });
+    /**
+     * Settings ENd
+     */
 
+    /**
+     * Backup
+     */
     Route::group(['prefix' => 'backup'], function () {
         Route::get('listings', [BackupListingsController::class, 'backupListings'])
             ->name('backup.listings');
@@ -147,55 +179,20 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         Route::post('dropbox/submit', [BackupListingsController::class, 'uploadfile'])->name('upload.file');
     });
 
+    Route::get('export', [BackupListingsController::class, 'export'])
+        ->name('backup.export');
+
+    /**
+     * Backup
+     */
+
+    /**
+     * Google Services
+     */
     Route::group(['prefix' => 'google/products'], function () {
         Route::get('list', [GoogleController::class, 'listProducts'])
             ->name('google.products.list');
     });
-
-    Route::resource('roles', RoleController::class);
-
-    Route::get('roles/all/view', [RoleController::class, 'view'])
-        ->name('view.roles');
-
-    Route::get('change/password', [UserController::class, 'updatePassword'])
-        ->name('change.user.password');
-
-    Route::post('update/password', [UserController::class, 'updatePassword'])
-        ->name('update.user.password');
-
-    Route::resource('listing', ListingController::class);
-
-    Route::get('publish/database/{id}', [ListingController::class, 'publshInDB'])->name('listing.publish.database');
-
-    // Route::get('edit/database/{id}', [ListingController::class, 'editInDB'])->name('listing.edit.database');
-
-    Route::get('search', [ListingController::class, 'search'])
-        ->name('listing.search');
-
-    Route::resource('database-listing', DatabaseListingController::class);
-
-    Route::get('edit/publish/pending/{id}', [DatabaseListingController::class, 'editPublish'])->name('publish.edit');
-    
-    Route::get('publish/pending', [DatabaseListingController::class, 'getPublishPending'])->name('publish.pending');
-
-    Route::get('blog/publish/{id}', [ListingController::class, 'publishBlog'])
-        ->name('blog.publish');
-
-    Route::get('dashboard', [DashboardController::class, 'index'])
-        ->name('dashboard');
-
-    Route::get('update/status', [DatabaseListingController::class, 'updateStatus'])->name('listing.status');
-
-    Route::resource('users', UserController::class);
-
-    Route::get('users/verified/approved', [UserController::class, 'verified'])
-        ->name('verified.users');
-
-    Route::get('edit/users/status/{id}', [UserController::class, 'editStatus'])
-        ->name('edit.users.status');
-
-    Route::post('update/users/status/{id}', [UserController::class, 'updateStatus'])
-        ->name('update.users.status');
 
     Route::match(['get', 'post'], 'process/image', [GoogleService::class, 'processImageAndDownload'])
         ->name('process.image');
@@ -208,15 +205,80 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::post('live/posts', [GoogleService::class, 'posts'])
         ->name('live.posts');
+    /**
+     * Google Services
+     */
 
-    Route::get('posts', [DashboardController::class, 'getStats'])
-        ->name('get.posts.count');
+    /**
+     * Roles
+     */
+    Route::resource('roles', RoleController::class);
+
+    Route::get('roles/all/view', [RoleController::class, 'view'])
+        ->name('view.roles');
+    /**
+     * Roles
+     */
+
+    /**
+     * Direct Blogger
+     */
+    Route::resource('listing', ListingController::class);
+
+    Route::get('search', [ListingController::class, 'search'])
+        ->name('listing.search');
+
+    Route::get('blog/publish/{id}', [ListingController::class, 'publishBlog'])
+        ->name('blog.publish');
+    /**
+     * Direct Blogger End 
+     */
+
+    /**
+     * Database
+     */
+    Route::post('publish/database/{id}', [DatabaseListingController::class, 'publshInDB'])
+        ->name('listing.publish.database');
+
+    Route::get('edit/database/{id}', [DatabaseListingController::class, 'editInDB'])
+        ->name('listing.edit.database');
+
+    Route::resource('database-listing', DatabaseListingController::class);
+
+    Route::get('edit/publish/pending/{id}', [DatabaseListingController::class, 'editPublish'])->name('publish.edit');
+
+    Route::get('publish/pending', [DatabaseListingController::class, 'getPublishPending'])->name('publish.pending');
+
+    Route::get('update/status', [DatabaseListingController::class, 'updateStatus'])->name('listing.status');
+    /**
+     * Database END
+     */
+
+    /**
+     * User Functionalities
+     */
+    Route::resource('users', UserController::class);
+
+    Route::get('change/password', [UserController::class, 'updatePassword'])
+        ->name('change.user.password');
+
+    Route::post('update/password', [UserController::class, 'updatePassword'])
+        ->name('update.user.password');
+
+    Route::get('users/verified/approved', [UserController::class, 'verified'])
+        ->name('verified.users');
+
+    Route::get('edit/users/status/{id}', [UserController::class, 'editStatus'])
+        ->name('edit.users.status');
+
+    Route::post('update/users/status/{id}', [UserController::class, 'updateStatus'])
+        ->name('update.users.status');
 
     Route::get('set/session/id', [UserController::class, 'setSessionId'])
         ->name('user.session.id');
-
-    Route::get('export', [BackupListingsController::class, 'export'])
-        ->name('backup.export');
+    /**
+     *  END
+     */
 });
 
 Route::group(['prefix' => 'password'], function () {
