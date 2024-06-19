@@ -290,15 +290,15 @@ class ListingController extends Controller
      */
     public function inventory()
     {
-        if ($this->tokenIsExpired($this->googleService)) {
+        // if ($this->tokenIsExpired($this->googleService)) {
 
-            if (!$this->googleService->getCredentails()) return view('settings.authenticate');
+        if (!$this->googleService->getCredentails()) return view('settings.authenticate');
 
-            $url = $this->googleService->refreshToken($this->googleService->getCredentails()->toArray());
-            request()->session()->put('page_url', request()->url());
+        // $url = $this->googleService->refreshToken($this->googleService->getCredentails()->toArray());
+        // request()->session()->put('page_url', request()->url());
 
-            return redirect()->to($url);
-        }
+        // return redirect()->to($url);
+        // }
 
         $googlePosts = $this->googleService->posts();
 
@@ -312,15 +312,15 @@ class ListingController extends Controller
      */
     public function reviewInventory()
     {
-        if ($this->tokenIsExpired($this->googleService)) {
+        // if ($this->tokenIsExpired($this->googleService)) {
 
-            if (!$this->googleService->getCredentails()) return view('settings.authenticate');
+        if (!$this->googleService->getCredentails()) return view('settings.authenticate');
 
-            $url = $this->googleService->refreshToken($this->googleService->getCredentails()->toArray());
-            request()->session()->put('page_url', request()->url());
+        //     $url = $this->googleService->refreshToken($this->googleService->getCredentails()->toArray());
+        //     request()->session()->put('page_url', request()->url());
 
-            return redirect()->to($url);
-        }
+        //     return redirect()->to($url);
+        // }
 
         $googlePosts = $this->googleService->posts();
 

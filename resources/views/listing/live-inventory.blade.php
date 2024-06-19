@@ -147,9 +147,11 @@
                                             @endcan
                                             @endif
 
+                                            @can('Inventory -> Manage Inventory -> Edit ( DB )')
                                             @if(!$listing)
                                             <a href="{{ route('listing.edit.database', $productId) }}" class="btn btn-sm btn-primary">Edit (DB)</a>
                                             @endif
+                                            @endcan
 
                                             @can('Inventory -> Manage Inventory -> Delete')
                                             <form action="{{ route('listing.destroy', $productId) }}" method="POST" class="ml-2">

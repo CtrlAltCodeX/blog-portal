@@ -143,6 +143,7 @@
                                     </td>
                                     @php
                                     $categories = collect($googlePost->category??[])->toArray();
+                                    $listing = app("\App\Models\Listing")->where('product_id', $productId)->first();
                                     @endphp
                                     <td>
                                         <span data-bs-placement="top" data-bs-toggle="tooltip" title="{{ implode(", ", $categories) }}">
@@ -153,12 +154,18 @@
                                     <td>{{ date("d-m-Y h:i A", strtotime($published)) }}</td>
                                     <td>{{ date("d-m-Y h:i A", strtotime($updated)) }}</td>
                                     <td>
-                                        <div class="btn-group" role="group" aria-label="Basic example">
+                                        <div class="btn-group" role="group" aria-label="Basic example" style="grid-gap: 5px;">
                                             @if($mrp && $selling && $productTitle)
                                             @can('Inventory -> Manage Inventory -> Edit')
                                             <a href="{{ route('listing.edit', $productId) }}" class="btn btn-sm btn-primary">{{ __('Edit') }}</a>
                                             @endcan
                                             @endif
+
+                                            @can('Inventory -> Manage Inventory -> Edit ( DB )')
+                                            @if(!$listing)
+                                            <a href="{{ route('listing.edit.database', $productId) }}" class="btn btn-sm btn-primary">Edit (DB)</a>
+                                            @endif
+                                            @endcan
 
                                             @can('Inventory -> Manage Inventory -> Delete')
                                             <form action="{{ route('listing.destroy', $productId) }}" method="POST" class="ml-2">
