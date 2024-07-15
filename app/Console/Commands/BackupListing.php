@@ -72,6 +72,8 @@ class BackupListing extends Command
 
             $this->deleteTenDaysAboveFiles();
 
+            $this->deleteThreeMonthsOldFiles();
+
             BackupLogs::create([
                 'batch_id' => $batchId,
                 'started' => $started,
@@ -83,6 +85,18 @@ class BackupListing extends Command
                 'sql_file' => $currentDateTimeFormat,
             ]);
         } catch (\Exception $e) {
+            BackupLogs::create([
+                'batch_id' => $batchId,
+                'started' => now(),
+                'completed' => now(),
+                'export_file' => now(),
+                'merchant_file' => now(),
+                'facebook_file' => now(),
+                'email_to' => '',
+                'sql_file' => now(),
+                'error' => $e->getMessage()
+            ]);
+
             Log::channel('backup_activity_log')->info('Facing some issues');
 
             Log::info($e);
@@ -387,6 +401,25 @@ class BackupListing extends Command
             // Check if the file is older than 10 days
             if ($now->diffInDays($lastModified) > 10) {
                 // Delete the file
+                Storage::delete($file);
+            }
+        }
+    }
+
+    /**
+     * Delete the files above 3 Months 
+     *
+     * @return void
+     */
+    public function deleteThreeMonthsOldFiles()
+    {
+        $files = Storage::files('public/uploads');
+
+        foreach ($files as $file) {
+            $lastModified = Storage::lastModified($file);
+            $fileDate = Carbon::createFromTimestamp($lastModified);
+
+            if ($fileDate->lt(Carbon::now()->subMonths(3))) {
                 Storage::delete($file);
             }
         }

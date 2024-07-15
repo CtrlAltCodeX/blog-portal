@@ -669,23 +669,4 @@ class GoogleService
             ];
         }
     }
-
-    /**
-     * Google Merchant Center Data
-     *
-     * @return void
-     */
-    public function googleMerchantCenter()
-    {
-        $credential = $this->getCredentails('Merchant');
-
-        $client = $this->createGoogleClient($credential->toArray(), [ShoppingContent::CONTENT]);
-        $client->setAccessToken($credential->token);
-
-        $service = new ShoppingContent($client);
-        $response = $service->products->listProducts($credential->merchant_id);
-        $products = $response->getResources();
-
-        return $products;
-    }
 }

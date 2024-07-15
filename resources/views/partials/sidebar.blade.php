@@ -41,6 +41,9 @@ $userInfo = app('App\Models\SiteSetting')->first();
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-list"></i><span class="side-menu__label">{{ __('Product Listing') }}</span><i class="angle fe fe-chevron-right"></i></a>
                     <ul class="slide-menu">
                         <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
+                        @can('Listing -> Search Listing')
+                        <li><a href="{{ route('listing.search') }}" class="slide-item {{ (request()->is('admin/search')) ? 'active' : '' }}">{{ __('Search Listing ( M/S )') }}</a></li>
+                        @endcan
                         @can('Listing create')
                         <li><a href="{{ route('listing.create') }}" class="slide-item {{ (request()->is('admin/images/*')) ? 'active' : '' }}">{{ __('Create New Listing ( M/S )') }}</a></li>
                         @endcan
@@ -50,9 +53,8 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         @can('Pending Listing ( DB )')
                         <li><a href="{{ route('database-listing.index', ['status' => 0, 'startIndex' => 1, 'category' => '', 'user' => 'all']) }}" class="slide-item {{ (request()->is('admin/database-listing')) ? 'active' : '' }}">{{ __('Pending Listing ( DB )') }}</a></li>
                         @endcan
-                        <li><a href="{{ route('publish.pending', ['status' => 0, 'startIndex' => 1, 'category' => '', 'user' => 'all']) }}" class="slide-item {{ (request()->is('admin/publish/pending')) ? 'active' : '' }}">{{ __('Publish Pending Listing') }}</a></li>
-                        @can('Listing -> Search Listing')
-                        <li><a href="{{ route('listing.search') }}" class="slide-item {{ (request()->is('admin/search')) ? 'active' : '' }}">{{ __('Search Listing ( M/S )') }}</a></li>
+                        @can('Update Published Listing')
+                        <li><a href="{{ route('publish.pending', ['status' => 0, 'startIndex' => 1, 'category' => '', 'user' => 'all']) }}" class="slide-item {{ (request()->is('admin/publish/pending')) ? 'active' : '' }}">{{ __('Update Published Listing') }}</a></li>
                         @endcan
                     </ul>
                 </li>
@@ -69,7 +71,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         <li><a href="{{ route('image.combo.create', ['maker' => 'w-watermark']) }}" class="slide-item {{ (request()->is('admin/images/combo/create')) ? 'active' : '' }}">{{ __('Combo Image Maker') }}</a></li>
                         @endcan
                         @can('Image Creation -> Gallery ( DB )')
-                        <li><a href="{{ route('image.gallery') }}" class="slide-item {{ (request()->is('admin/images/gallery')) ? 'active' : '' }}">{{ __('Gallery List Page ( DB )') }}</a></li>
+                        <li><a href="{{ route('image.gallery', ['count' => 15, 'page' => '']) }}" class="slide-item {{ (request()->is('admin/images/gallery')) ? 'active' : '' }}">{{ __('Gallery List Page ( DB )') }}</a></li>
                         @endcan
                     </ul>
                 </li>

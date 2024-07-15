@@ -558,7 +558,7 @@ class DatabaseListingController extends Controller
             'condition' => trim(request()->condition),
             'insta_mojo_url' => trim(request()->url),
             'images' => request()->images ?? "",
-            'multiple_images' => json_encode(request()->multipleImages),
+            'multiple_images' => request()->multipleImages ? json_encode(request()->multipleImages) : null,
             // 'url' => request()->,
             'created_by' => auth()->user()->id,
             'status' => 0,

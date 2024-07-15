@@ -268,7 +268,7 @@
 
             $("textarea").each(function() {
                 var fieldValue = $(this).val();
-                if (fieldValue == '') emptyFields++;
+                if (fieldValue == '' && $(this).attr('class') != 'note-codable') emptyFields++;
             });
 
             $("#progressBar").html(emptyFields + " Remaining Out of " + (totalFields - notDefined) + " Fields");

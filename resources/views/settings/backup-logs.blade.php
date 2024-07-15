@@ -42,7 +42,7 @@
         <div class="card-body">
             <div class="d-flex justify-content-between mb-3">
                 <h3 class="card-title">Backup Logs History</h3>
-                <a class="btn btn-primary" id='backup'>Manual Backup</a>
+                <button class="btn btn-primary" id='backup'>Manual Backup</button>
             </div>
             <div class="table-responsive">
                 <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">
@@ -157,6 +157,7 @@
                 },
                 success: function(result) {
                     localStorage.setItem('backup', result);
+                    location.reload();
                 },
             });
         })
@@ -173,6 +174,7 @@
             success: function(result) {
                 if (result) {
                     $("#backup").html('Backing Up');
+                    $("#backup").attr('disabled', true);
                 } else {
                     $("#backup").html('Manual Backup');
                 }

@@ -48,13 +48,13 @@
                             <div class="form-group">
                                 <div class="d-flex align-items-center justify-content-between">
                                     <label for="title" class="form-label">{{ __('Product Title') }}<span class="text-danger">*</span> <span class="text-success">(Product Name | Author | Edition | Publication ( Medium ) )</span></label>
-                                    <span id="charCount">0/115</span>
+                                    <span id="charCount">0/130</span>
                                 </div>
                                 <label for="description" class="form-label d-flex justify-content-between text-danger" style="margin-top: -10px;">
                                     <div>{{ __('Excess Capitalism in Product Title Not Allowed') }}</div>
                                 </label>
 
-                                <input minlength="75" maxlength="115" id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') ?? $listing->title }}" autocomplete="title" autofocus placeholder="title">
+                                <input minlength="75" maxlength="130" id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') ?? $listing->title }}" autocomplete="title" autofocus placeholder="title">
                                 <span class="error-message title" style="color:red;"></span>
 
                                 @error('title')
