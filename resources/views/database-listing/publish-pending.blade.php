@@ -156,7 +156,7 @@
                                         @else {{ 'In Stock' }}
                                         @endif
                                     </td>
-                                    <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $googlePost->images }}" alt="Product Image" /></td>
+                                    <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $googlePost->images[0] }}" alt="Product Image" /></td>
                                     <td>{{ $googlePost->title }}</td>
                                     <td>{{ '₹'.$googlePost->selling_price }}</td>
                                     <td>{{ '₹'.$googlePost->mrp }}</td>
@@ -175,7 +175,7 @@
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic example">
                                             @can('Pending Listing ( DB ) -> Edit')
-                                            <a href="{{ route('publish.edit', $googlePost->id) }}" class="btn btn-sm btn-primary">{{ __('Edit') }}</a>
+                                            <a href="{{ route('publish.edit', $googlePost->id) }}?edit=true" class="btn btn-sm btn-primary">{{ __('Edit') }}</a>
                                             @endcan
                                             @can('Pending Listing ( DB ) -> Delete')
                                             <form action="{{ route('database-listing.destroy', $googlePost->id) }}" method="POST" class="ml-2">

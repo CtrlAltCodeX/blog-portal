@@ -369,7 +369,9 @@ class GoogleService
         } catch (\Google_Service_Exception $e) {
             \Log::error('Blogger API Error: ' . $e->getMessage());
 
-            return json_decode($e->getMessage());
+            return response()->json([
+                'message' => json_decode($e->getMessage()),
+            ], 500);
         }
     }
 

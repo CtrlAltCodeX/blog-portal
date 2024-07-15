@@ -23,8 +23,15 @@
         <div class="col-md-9 col-xl-12 fields">
             <form action="" method="POST" enctype='multipart/form-data' id='formTest'>
                 @csrf
+                @if(request()->edit)
+                @method('PUT')
+                @else
                 @method('POST')
+                @endif
                 <input type="hidden" name="created_by" value="{{ $listing->created_by }}" />
+                @if(request()->edit)
+                <input type="hidden" name="edit" value="true" />
+                @endif
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">
                         <h4 class="card-title">
@@ -299,7 +306,7 @@
                         <div class="row" id="addUrls">
                             <div class="form-group col-md-4">
                                 <label for="url" class="form-label">{{ __('Main Image URL') }}</label>
-                                <input id="url" type="text" value="{{ $listing->images }}" class="form-control @error('images') is-invalid @enderror" name="images" autocomplete="images" autofocus placeholder="Base URL">
+                                <input id="url" type="text" value="{{ (isset($listing->images[0]) && $listing->images[0]!='h') ? $listing->images[0] : $listing->images }}" class="form-control @error('images') is-invalid @enderror" name="images[]" autocomplete="images" autofocus placeholder="Base URL">
                                 <span class="error-message images" style="color:red;"></span>
 
                                 @error('base_url')
@@ -310,7 +317,15 @@
                             </div>
 
                             @if($listing->multiple_images)
-                            @foreach ($listing->multiple_images as $key => $images)
+                            @php
+                            $allImages = [];
+                            if((request()->edit)) {
+                            $allImages = json_decode($listing->multiple_images??[]);
+                            } else {
+                            $allImages = $listing->multiple_images??[];
+                            }
+                            @endphp
+                            @foreach ($allImages as $key => $images)
                             <div class="form-group col-md-4">
                                 <label for="url" class="form-label">{{ __('Additional Image URL') }}</label>
                                 <div class="input-group align-items-center">
@@ -333,7 +348,11 @@
                         </div>
 
                         <div style="text-align: right;">
+                            @if(request()->edit)
+                            <button class="btn btn-success float-right" id='website'>Update to Website</button>
+                            @else
                             <button class="btn btn-warning float-right" id='update'>Request for update</button>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -353,11 +372,17 @@
 <script src="{{ asset('assets/plugins/fancyuploder/jquery.fancy-fileupload.js') }}"></script>
 <script>
     $(document).ready(function() {
-
         $("#update").click(function(e) {
             e.preventDefault();
             $("#formTest").attr("action", "{{ route('listing.publish.database', $listing->product_id) }}");
             $("#formTest").append("<input type='hidden' name='database' value={{$listing->product_id}} />");
+            $("#formTest").submit();
+        });
+
+        $("#website").click(function(e) {
+            e.preventDefault();
+            $("#formTest").attr("action", "{{ route('listing.update', $listing->product_id) }}");
+            $("#formTest").append("<input type='hidden' name='product_id' value={{$listing->product_id}} />");
             $("#formTest").submit();
         });
     });

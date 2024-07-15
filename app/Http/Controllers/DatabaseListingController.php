@@ -512,7 +512,7 @@ class DatabaseListingController extends Controller
             'language' => trim($lang),
             'no_of_pages' => trim($page_no),
             'binding_type' => trim($binding),
-            'condition' => $condition,
+            'condition' => trim($condition),
             'insta_mojo_url' => trim($instaUrl),
             'images' => $image ?? '',
             'multipleImages' => $images,
@@ -541,120 +541,33 @@ class DatabaseListingController extends Controller
      */
     public function publshInDB($id)
     {
-        if (!$url = $this->getSiteBaseUrl()) {
-            session()->flash('message', 'Please complete your Site Setting Then Continue');
-
-            return view('settings.error');
-        }
-
-        $response = Http::get($url . '/feeds/posts/default/' . $id . '?alt=json');
-
-        $products = (object) ($response->json()['entry']);
-
-        $images = [];
-        $doc = new \DOMDocument();
-        if (((array)($products->content))['$t']) {
-            @$doc->loadHTML(((array)($products->content))['$t']);
-        }
-        $td = $doc->getElementsByTagName('td');
-        $a = $doc->getElementsByTagName('a');
-        $div = $doc->getElementsByTagName('div');
-
-        $price = explode('-', $td->item(1)->textContent ?? '');
-        $selling = $price[0] ?? 0;
-        $mrp = $price[1] ?? 0;
-        $image = $doc->getElementsByTagName("img")?->item(0)?->getAttribute('src');
-        $productId = explode('-', ((array)$products->id)['$t'])[2];
-        $productTitle = ((array)$products->title)['$t'];
-        $published = ((array)$products->published)['$t'];
-        $updated = ((array)$products->updated)['$t'];
-
-        $edition_author_lang = explode(',', $td->item(7)->textContent ?? '');
-        $author_name = $edition_author_lang[0];
-        $edition = $edition_author_lang[1] ?? '';
-        $lang = $edition_author_lang[2] ?? '';
-
-        $bindingType = explode(',', $td->item(9)->textContent ?? '');
-        $binding = $bindingType[0] ?? '';
-        $condition = $bindingType[1] ?? '';
-
-        $page_no = $td->item(11)->textContent ?? '';
-
-        $instaUrl = "";
-        for ($i = 0; $i < $a->length; $i++) {
-            $item = trim($a->item($i)->textContent);
-            if ($item == 'BUY AT INSTAMOJO') {
-                $instaUrl = $a->item($i)->getAttribute('href');
-            }
-        }
-
-        $sku = '';
-        $publication = '';
-        for ($i = 0; $i < $td->length; $i++) {
-            if ($td->item($i)->getAttribute('itemprop') == 'sku') {
-                $sku = trim($td->item($i)->textContent);
-            }
-
-            if ($td->item($i)->getAttribute('itemprop') == 'color') {
-                $publication = trim($td->item($i)->textContent);
-            }
-        }
-
-        $desc = [];
-        for ($i = 0; $i < $div->length; $i++) {
-            if ($div->item($i)->getAttribute('class') == 'pbl box dtmoredetail dt_content') {
-                $desc[] = str_replace("'", "", trim($div->item($i)->textContent));
-            }
-        }
-
-        if ($doc->getElementsByTagName("img")->length > 1) {
-            for ($i = 0; $i < $doc->getElementsByTagName("img")->length; $i++) {
-                $imageElement = $doc->getElementsByTagName("img")->item($i);
-                $images[] = $imageElement->getAttribute('src');
-            }
-        }
-
-        $link = '';
-        if (isset($products->link[4])) {
-            $link = $products->link[4]['href'];
-        } else {
-            $link = $products->link[2]['href'];
-        }
-
-        if (strlen($publication) > 100) {
-            $publication = explode(',', $publication)[0];
-        }
-
-        $productTitle = str_replace("'", "", trim($productTitle));
-
         $allInfo = [
-            'product_id' => trim($productId),
-            'title' => trim($productTitle),
-            'description' => $desc[0] ?? '',
-            'mrp' => (int) trim($mrp),
-            'selling_price' => (int) trim($selling),
-            'publisher' => trim($publication) ?? 'Exam360',
-            'author_name' => trim($author_name),
-            'edition' => trim($edition),
-            'categories' => (collect($products->category ?? [])->pluck('term')->toArray()),
-            'sku' => trim($sku),
-            'language' => trim($lang),
-            'no_of_pages' => trim($page_no),
-            'binding_type' => trim($binding),
-            'condition' => trim($condition),
-            'insta_mojo_url' => trim($instaUrl),
-            'images' => $image ?? '',
-            'multiple' => $images,
-            'url' => $link,
+            'product_id' => trim(request()->database),
+            'title' => trim(request()->title),
+            'description' => request()->description ?? '',
+            'mrp' => (int) trim(request()->mrp),
+            'selling_price' => (int) trim(request()->selling_price),
+            'publisher' => trim(request()->publication) ?? 'Exam360',
+            'author_name' => trim(request()->author_name),
+            'edition' => trim(request()->edition),
+            'categories' => request()->label,
+            'sku' => trim(request()->sku),
+            'language' => trim(request()->language),
+            'no_of_pages' => trim(request()->pages),
+            'binding_type' => trim(request()->binding),
+            'condition' => trim(request()->condition),
+            'insta_mojo_url' => trim(request()->url),
+            'images' => request()->images ?? "",
+            'multiple_images' => json_encode(request()->multipleImages),
+            // 'url' => request()->,
             'created_by' => auth()->user()->id,
             'status' => 0,
-            'product_id' => $id
         ];
 
         Listing::create($allInfo);
 
-        $additionalInfo = UserListingInfo::where('image', $image)
-            ->where('title', $productTitle)
+        $additionalInfo = UserListingInfo::where('image', request()->images)
+            ->where('title', request()->title)
             ->first();
 
         if ($additionalInfo) {
@@ -667,6 +580,6 @@ class DatabaseListingController extends Controller
 
         session()->flash('success', 'Pending for Approval');
 
-        return redirect()->back();
+        return redirect()->route('inventory.index', ['startIndex' => '1', 'category' => 'Product']);
     }
 }
