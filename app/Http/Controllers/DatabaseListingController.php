@@ -425,7 +425,7 @@ class DatabaseListingController extends Controller
         $images = [];
         $doc = new \DOMDocument();
         if (((array)($products->content))['$t']) {
-            @$doc->loadHTML(((array)($products->content))['$t']);
+            @$doc->loadHTML('<meta http-equiv="Content-Type" content="text/html; charset=utf-8">' . ((array)($products->content))['$t']);
         }
         $td = $doc->getElementsByTagName('td');
         $a = $doc->getElementsByTagName('a');
@@ -474,7 +474,17 @@ class DatabaseListingController extends Controller
         $desc = [];
         for ($i = 0; $i < $div->length; $i++) {
             if ($div->item($i)->getAttribute('class') == 'pbl box dtmoredetail dt_content') {
-                $desc[] = str_replace("'", "", trim($div->item($i)->textContent));
+                // Access the individual DOMNode
+                $node = $div->item($i);
+
+                // Get the inner HTML content of the node (without the <div> tag)
+                $innerHTML = '';
+                foreach ($node->childNodes as $child) {
+                    $innerHTML .= $node->ownerDocument->saveHTML($child);
+                }
+
+                // Add the inner HTML content to the $desc array
+                $desc[] = $innerHTML;
             }
         }
 
