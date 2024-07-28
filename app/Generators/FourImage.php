@@ -23,7 +23,7 @@ class FourImage extends CollageGenerator
         $this->check(4);
 
         $height = $this->file->getHeight() - 50;
-        $width = $this->file->getWidth() - 210;
+        $width = $this->file->getWidth() - 170;
 
         $this->canvas = ImageManagerStatic::canvas($width, $height);
 
@@ -84,7 +84,8 @@ class FourImage extends CollageGenerator
     public function grid()
     {
         [$width, $height] = $this->getSmallSize();
-        $width = round(170);
+
+        $width = round(185);
         $height = round(250);
 
         $one = $this->images->get(0);

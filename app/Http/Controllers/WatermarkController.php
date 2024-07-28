@@ -51,7 +51,7 @@ class WatermarkController extends Controller
         
         $background = (new ImageManager())->canvas(555, 555, '#ffffff');
 
-        $background->insert(Image::make(storage_path('app/public/uploads/' . $filename))->resize(380, 520), 'center');
+        $background->insert(Image::make(storage_path('app/public/uploads/' . $filename))->resize(390, 520), 'center');
 
         // $image = Image::make(storage_path('app/public/uploads/' . $filename))->fit(555, 555);
         

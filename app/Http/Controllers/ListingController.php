@@ -242,53 +242,53 @@ class ListingController extends Controller
     {
         $data = $this->googleService->updatePost($request->all(), $postId);
 
-        if ($data->getStatusCode() != 500) {
-            if ($request->database) {
-                $listing = Listing::where('product_id', $request->database)
-                    ->first();
-
-                $additionalInfo = UserListingInfo::where('title', $listing->title)
-                    ->where('image', $listing->images)
-                    ->first();
-
-                $listing->delete();
-
-                if ($additionalInfo) {
-                    $additionalInfo->update([
-                        'status' => 1,
-                        'approved_by' => auth()->user()->id,
-                        'approved_at' => now()
-                    ]);
-                }
-
-                return redirect()->route('database-listing.index', ['status' => 0, 'startIndex' => 1, 'category' => '', 'user' => 'all']);
-            }
-
-            if (request()->edit == 'true') {
-                $listing = Listing::where('product_id', $request->product_id)
-                    ->first();
-
-                $additionalInfo = UserListingInfo::where('title', $listing->title)
-                    ->where('image', $listing->images)
-                    ->first();
-
-                $listing->delete();
-
-                if ($additionalInfo) {
-                    $additionalInfo->update([
-                        'status' => 1,
-                        'approved_by' => auth()->user()->id,
-                        'approved_at' => now()
-                    ]);
-                }
-            }
-
-            session()->flash('success', 'Post updated successfully');
+        if (method_exists($data, 'getStatusCode') && $data->getStatusCode() == 500) {
+            session()->flash('error', json_decode($data->getContent())->message->error->message);
 
             return redirect()->route('inventory.index', ['startIndex' => 1, 'category' => 'Product']);
         }
-        
-        session()->flash('success', 'Please Authenticate with Google');
+
+        if ($request->database) {
+            $listing = Listing::where('product_id', $request->database)
+                ->first();
+
+            $additionalInfo = UserListingInfo::where('title', $listing->title)
+                ->where('image', $listing->images)
+                ->first();
+
+            $listing->delete();
+
+            if ($additionalInfo) {
+                $additionalInfo->update([
+                    'status' => 1,
+                    'approved_by' => auth()->user()->id,
+                    'approved_at' => now()
+                ]);
+            }
+
+            return redirect()->route('database-listing.index', ['status' => 0, 'startIndex' => 1, 'category' => '', 'user' => 'all']);
+        }
+
+        if (request()->edit == 'true') {
+            $listing = Listing::where('product_id', $request->product_id)
+                ->first();
+
+            $additionalInfo = UserListingInfo::where('title', $listing->title)
+                ->where('image', $listing->images)
+                ->first();
+
+            $listing->delete();
+
+            if ($additionalInfo) {
+                $additionalInfo->update([
+                    'status' => 1,
+                    'approved_by' => auth()->user()->id,
+                    'approved_at' => now()
+                ]);
+            }
+        }
+
+        session()->flash('success', 'Post updated successfully');
 
         return redirect()->route('inventory.index', ['startIndex' => 1, 'category' => 'Product']);
     }
