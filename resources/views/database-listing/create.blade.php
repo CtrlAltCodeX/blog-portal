@@ -53,7 +53,7 @@
                                     <div>{{ __('Excess Capitalism in Product Title Not Allowed') }}</div>
                                 </label>
 
-                                <input  minlength="75" maxlength="115" id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') }}" autocomplete="title" autofocus placeholder="Title">
+                                <input minlength="75" maxlength="115" id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') }}" autocomplete="title" autofocus placeholder="Title">
                                 <span class="error-message title" style="color:red;"></span>
 
                                 @error('title')
@@ -191,7 +191,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="form-group">
-                            <div class="d-flex justify-content-between align-between-center" >
+                            <div class="d-flex justify-content-between align-between-center">
                                 <label for="label" class="form-label">{{ __('Category') }}<span class="text-danger">*</span><span class="text-danger"> ( Publication, 1 Category, 1 Tag, Others ) </span></label>
 
                                 <div id='count'>1 Selected</div>
@@ -262,9 +262,9 @@
                                 <label for="condition" class="form-label">{{ __('Condition') }}<span class="text-danger">*</span></label>
                                 <select class="form-control @error('condition') is-invalid @enderror" name="condition" value="{{ old('condition') }}">
                                     <option value="">--Select--</option>
-                                    <option value="New">New</option>
-                                    <option value="Like New">Like New</option>
-                                    <option value="Old">Old</option>
+                                    <option {{ old('condition') == 'New' ? 'selected' : '' }} value="New">New</option>
+                                    <option {{ old('condition') == 'Like New' ? 'selected' : '' }} value="Like New">Like New</option>
+                                    <option {{ old('condition') == 'Old' ? 'selected' : '' }} value="Old">Old</option>
                                 </select>
                                 <span class="error-message condition" style="color:red;"></span>
 
@@ -279,8 +279,8 @@
                                 <label for="binding" class="form-label">{{ __('Binding Type') }}<span class="text-danger">*</span></label>
                                 <select class="form-control @error('binding') is-invalid @enderror" name="binding" value="{{ old('binding') }}">
                                     <option value="">--Select--</option>
-                                    <option value="Hardcover">Hardcover</option>
-                                    <option value="Paperback">Paperback</option>
+                                    <option {{ old('binding') == 'Hardcover' ? 'selected' : '' }} value="Hardcover">Hardcover</option>
+                                    <option {{ old('binding') == 'Paperback' ? 'selected' : '' }} value="Paperback">Paperback</option>
                                 </select>
                                 <span class="error-message binding" style="color:red;"></span>
                                 @error('binding')
