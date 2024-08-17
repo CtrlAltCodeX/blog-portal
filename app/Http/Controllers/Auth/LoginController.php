@@ -110,12 +110,10 @@ class LoginController extends Controller
 
         $user = User::where('email', request()->email)->first();
 
-        $oldSessions = $user?->sessions->where('expire_at', '<', now());
+        $oldSessions = $user->sessions->where('expire_at', '<', now());
 
-        if ($oldSessions) {
-            foreach ($oldSessions as $session) {
-                $session->delete();
-            }
+        foreach ($oldSessions as $session) {
+            $session->delete();
         }
 
         // if (

@@ -48,8 +48,6 @@
 
 @section('content')
 <div>
-    <div id='loading'></div>
-
     <div class="row row-sm">
         <div class="col-lg-12">
             <div class="card">
@@ -59,24 +57,23 @@
                     <div class="d-flex align-items-center justify-content-between">
 
                         <form action="" method="get" id='form' style="margin-left: 10px;" class="d-flex align-items-center justify-content-end">
-                            <div>
-                                <a href="{{ route('database-listing.index', ['status' => '', 'category' => 'Product', 'startIndex' => 1, 'user' => request()->user]) }}" class="btn btn-light position-relative me-2 mb-2 btn-sm"> All
-                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{$allCounts}}
-                                        <span class="visually-hidden">unread messages</span>
-                                    </span>
-                                </a>
-                                <a href="{{ route('database-listing.index', ['status' => 0, 'category' => 'Product', 'startIndex' => 1, 'user' => request()->user]) }}" class="btn btn-warning position-relative me-2 mb-2 btn-sm"> Pending
-                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{$pendingCounts}}
-                                        <span class="visually-hidden">unread messages</span>
-                                    </span>
-                                </a>
-                                <a href="{{ route('database-listing.index', ['status' => 2, 'category' => 'Product', 'startIndex' => 1, 'user' => request()->user]) }}" class="btn btn-danger position-relative mb-2 btn-sm"> Rejected
-                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{$rejectedCounts}}
-                                        <span class="visually-hidden">unread messages</span>
-                                    </span>
-                                </a>
-                            </div>
-
+                        <div>
+                            <a href="{{ route('database-listing.index', ['status' => '', 'category' => 'Product', 'startIndex' => 1, 'user' => request()->user]) }}" class="btn btn-light position-relative me-2 mb-2 btn-sm"> All
+                                ( {{$allCounts}} )
+                                <!--<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">-->
+                                <!--    <span class="visually-hidden">unread messages</span>-->
+                                <!--</span>-->
+                            </a>
+                            <a href="{{ route('database-listing.index', ['status' => 0, 'category' => 'Product', 'startIndex' => 1, 'user' => request()->user]) }}" class="btn btn-success position-relative me-2 mb-2 btn-sm"> Pending
+                                ( {{$pendingCounts}} ) 
+                                <!--<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">-->
+                                <!--    <span class="visually-hidden">unread messages</span>-->
+                                <!--</span>-->
+                            </a>
+                            <a href="{{ route('database-listing.index', ['status' => 2, 'category' => '', 'startIndex' => 1, 'user' => request()->user]) }}" class="btn btn-danger position-relative mb-2 btn-sm"> Rejected
+                                ( {{$rejectedCounts}} )
+                            </a>
+                        </div>
                             <labeL class='user-label'>Stock Filter: </labeL>
                             <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
                             <input type="hidden" value="{{ request()->status ?? 0 }}" name='status'>
@@ -109,7 +106,7 @@
                             <thead>
                                 <tr>
                                     <th><input type="checkbox" class="check-all" /></th>
-                                    <!-- <th>{{ __('-') }}</th> -->
+                                    <!--<th>{{ __('-') }}</th>-->
                                     <th>{{ __('Sl') }}</th>
                                     <th>{{ __('Status') }}</th>
                                     <th>{{ __('Status') }}</th>
@@ -122,7 +119,7 @@
                                     <th>{{ __('Created By') }}</th>
                                     <th>{{ __('Created at') }}</th>
                                     <th>{{ __('Updated at') }}</th>
-                                    @if(request()->status != 2 && ( auth()->user()->can('Pending Listing ( DB ) -> Edit') || auth()->user()->can('Pending Listing ( DB ) -> Delete') ))
+                                    @if(request()->status != 2 && ( auth()->user()->can('Pending Listing ( DB ) -> Edit') || auth()->user()->can('Pending Listing ( DB ) -> Delete')  ))
                                     <th>{{ __('Action') }}</th>
                                     @endif
                                 </tr>
@@ -135,7 +132,6 @@
                                     </td>
                                     <td>{{ ++$key }}</td>
                                     <td class="status">{{substr($googlePost->error, 0, 20)}}</td>
-                                    <!-- @if($googlePost->error) <span data-bs-placement="top" data-bs-toggle="tooltip" title="{{$googlePost->error}}">Error</span> @else - @endif </td> -->
                                     <td>
                                         @switch($googlePost->status)
                                         @case(0)
@@ -145,7 +141,6 @@
                                         <span class="text-danger"><b>Rejected</b></span>
                                         @break;
                                         @endswitch
-                                    </td>
                                     <td>
                                         @if(isset($googlePost->categories) && (in_array('Stk_o', $googlePost->categories) || in_array('stock__out', $googlePost->categories)))
                                         {{ 'Out of Stock' }}
@@ -168,12 +163,12 @@
                                     <td>
                                         <span data-bs-placement="top" data-bs-toggle="tooltip" title="{{ implode(", ", $categories) }}">
                                             {{ count($categories ?? []) }}
-                                        </span>
+                                            </button>
                                     </td>
                                     <td>{{ $googlePost->created_by_user->name }}</td>
                                     <td>{{ date("d-m-Y h:i A", strtotime($googlePost->created_at)) }}</td>
                                     <td>{{ date("d-m-Y h:i A", strtotime($googlePost->updated_at)) }}</td>
-                                    @if(request()->status != 2 && ( auth()->user()->can('Pending Listing ( DB ) -> Edit') || auth()->user()->can('Pending Listing ( DB ) -> Delete') ))
+                                    @if(request()->status != 2 && ( auth()->user()->can('Pending Listing ( DB ) -> Edit') || auth()->user()->can('Pending Listing ( DB ) -> Delete')  ))
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic example">
                                             @can('Pending Listing ( DB ) -> Edit')
@@ -285,7 +280,7 @@
                     location.reload();
                     // ids.forEach(function(id) {
                     //     $("#" + id + " .status").html('Queued');
-                    // })
+                    // });
                 },
             });
         });

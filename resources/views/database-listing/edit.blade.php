@@ -42,13 +42,13 @@
                             <div class="form-group">
                                 <div class="d-flex align-items-center justify-content-between">
                                     <label for="title" class="form-label">{{ __('Product Title') }}<span class="text-danger">*</span> <span class="text-success">(Product Name | Author | Edition | Publication ( Medium ) )</span></label>
-                                    <span id="charCount">0/115</span>
+                                    <span id="charCount">0/130</span>
                                 </div>
                                 <label for="description" class="form-label d-flex justify-content-between text-danger" style="margin-top: -10px;">
                                     <div>{{ __('Excess Capitalism in Product Title Not Allowed') }}</div>
                                 </label>
 
-                                <input minlength="75" maxlength="115" id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') ?? $listing->title }}" autocomplete="title" autofocus placeholder="title">
+                                <input minlength='75' maxlength="130" id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') ?? $listing->title }}" autocomplete="title" autofocus placeholder="title">
                                 <span class="error-message title" style="color:red;"></span>
 
                                 @error('title')
@@ -100,7 +100,7 @@
                                 </span>
                                 @enderror
                             </div>
-
+                            
                             <div class="form-group col-md-4">
                                 <label for="discount" class="form-label">{{ __('Discount ( % )') }}</label>
                                 <input id="discount" name="discount" type="number" class="form-control" placeholder="Discount ( % )">
@@ -189,6 +189,9 @@
 
                                 <div id='count'>1 Selected</div>
                             </div>
+                            <label for="description" class="form-label d-flex justify-content-between text-danger" style="margin-top: -10px;">
+                                <div>{{ __('Note - You need to Select Min. 8 Perfect Categories to go Your Listing Live. Else It may be Rejected.') }}</div>
+                            </label>
                             <select class="form-control select2  @error('label') is-invalid @enderror" data-placeholder="Choose Label" multiple name="label[]">
                                 @foreach ($categories as $categoryData)
                                 <option value="{{ $categoryData['term'] }}" @foreach($listing->categories as $label) @if($categoryData['term']==$label) selected @endif @endforeach>

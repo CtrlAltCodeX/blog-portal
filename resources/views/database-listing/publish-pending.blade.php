@@ -113,6 +113,7 @@
                                     <th>{{ __('Status') }}</th>
                                     <th>{{ __('Stock') }}</th>
                                     <th>{{ __('Image') }}</th>
+                                    <th>{{ __('Product ID') }}</th>
                                     <th>{{ __('Product name') }}</th>
                                     <th>{{ __('Sell Price') }}</th>
                                     <th>{{ __('MRP') }}</th>
@@ -157,6 +158,7 @@
                                         @endif
                                     </td>
                                     <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $googlePost->images[0] }}" alt="Product Image" /></td>
+                                    <td><a href="{{ $googlePost->url ? $googlePost->url : '#' }}" target='_blank'>{{ $googlePost->product_id }}</a></td>
                                     <td>{{ $googlePost->title }}</td>
                                     <td>{{ '₹'.$googlePost->selling_price }}</td>
                                     <td>{{ '₹'.$googlePost->mrp }}</td>

@@ -43,15 +43,8 @@ class DatabaseSeeder extends Seeder
 
         Permission::create(['name' => 'Listing (Main Menu)']);
         Permission::create(['name' => 'Listing create']);
-        Permission::create(['name' => 'Listing -> Search Listing -> Delete']);
-        Permission::create(['name' => 'Listing -> Search Listing -> Edit']);
-        Permission::create(['name' => 'Listing -> Search Listing']);
         Permission::create(['name' => 'Listing create ( DB )']);
         Permission::create(['name' => 'Pending Listing ( DB )']);
-        Permission::create(['name' => 'Update Published Listing']);
-        Permission::create(['name' => 'Inventory -> Manage Inventory -> Edit (DB)']);
-        Permission::create(['name' => 'Pending Listing ( DB ) -> Edit']);
-        Permission::create(['name' => 'Pending Listing ( DB ) -> Delete']);
         Permission::create(['name' => 'Listing publish']);
         Permission::create(['name' => 'Pending Listing ( DB ) -> Reject ( DB )']);
         Permission::create(['name' => 'Pending Listing ( DB ) -> Update ( DB )']);
@@ -68,11 +61,9 @@ class DatabaseSeeder extends Seeder
         Permission::create(['name' => 'Inventory -> Manage Inventory']);
         Permission::create(['name' => 'Inventory -> Drafted Inventory']);
         Permission::create(['name' => 'Inventory -> Under Review Inventory']);
-        Permission::create(['name' => 'Inventory -> Listing Counts Report']);
         Permission::create(['name' => 'Inventory -> Manage Inventory -> Edit']);
         Permission::create(['name' => 'Inventory -> Manage Inventory -> Delete']);
-        Permission::create(['name' => 'Inventory -> Counts Report']);
-        Permission::create(['name' => 'Inventory -> Counts Report -> Delete']);
+        Permission::create(['name' => 'Inventory -> Listing Counts Report']);
         
         Permission::create(['name' => 'Settings (Main Menu)']);
         Permission::create(['name' => 'Settings -> Site Access']);

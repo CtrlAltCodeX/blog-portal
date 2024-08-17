@@ -59,6 +59,7 @@
                             <th>{{ __('SQL File') }}</th>
                             <th>{{ __('Email to') }}</th>
                             <th>{{ __('Download') }}</th>
+                            <th>{{ __('Error') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -97,6 +98,13 @@
                                         <!-- <img src="/sql.png" width="25" /> -->
                                     </a>
                                 </div>
+                            </td>
+                            <td>
+                                @if($log->error)
+                                <span data-bs-placement="top" data-bs-toggle="tooltip" title="{{ $log->error }}">
+                                    View
+                                </span>
+                                @endif
                             </td>
                         </tr>
                         @empty

@@ -82,19 +82,19 @@
                             <tbody>
                                 @forelse ($googlePosts['paginator'] as $key => $googlePost)
                                 @php
-                                $doc = new \DOMDocument();
-                                if(((array)($googlePost->content))['$t']){
-                                @$doc->loadHTML(((array)($googlePost->content))['$t']);
-                                }
-                                $td = $doc->getElementsByTagName('td');
-                                $price = explode('-', $td->item(1)->textContent ?? '');
-                                $selling = $price[0]??0;
-                                $mrp = $price[1]??0;
-                                $image = $doc->getElementsByTagName("img")?->item(0)?->getAttribute('src');
-                                $productId = explode('-', ((array)$googlePosts['paginator'][$key]->id)['$t'])[2];
-                                $productTitle = ((array)$googlePosts['paginator'][$key]->title)['$t'];
-                                $published = ((array)$googlePosts['paginator'][$key]->published)['$t'];
-                                $updated = ((array)$googlePosts['paginator'][$key]->updated)['$t'];
+                                    $doc = new \DOMDocument();
+                                    if(((array)($googlePost->content))['$t']){
+                                    @$doc->loadHTML(((array)($googlePost->content))['$t']);
+                                    }
+                                    $td = $doc->getElementsByTagName('td');
+                                    $price = explode('-', $td->item(1)->textContent ?? '');
+                                    $selling = $price[0]??0;
+                                    $mrp = $price[1]??0;
+                                    $image = $doc->getElementsByTagName("img")?->item(0)?->getAttribute('src');
+                                    $productId = explode('-', ((array)$googlePosts['paginator'][$key]->id)['$t'])[2];
+                                    $productTitle = ((array)$googlePosts['paginator'][$key]->title)['$t'];
+                                    $published = ((array)$googlePosts['paginator'][$key]->published)['$t'];
+                                    $updated = ((array)$googlePosts['paginator'][$key]->updated)['$t'];
                                 @endphp
                                 <tr>
                                     <td>{{ request()->startIndex++ }}</td>

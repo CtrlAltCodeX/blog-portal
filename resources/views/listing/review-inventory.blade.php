@@ -278,12 +278,11 @@
 
             window.location.href = url.origin + url.pathname + "?" + allParams;
         });
-
-        getOneYearOldInventory();
-        getSixMonthOldInventory();
-        getTwoYearOldInventory();
-        get3YearOldInventory();
-
+        
+        setTimeout(function(){
+            getSixMonthOldInventory();    
+        },1000);
+        
         function getTwoYearOldInventory() {
             $.ajax({
                 type: "GET",
@@ -297,6 +296,8 @@
                 },
                 success: function(result) {
                     $("#count-two").html("(" + result + ")");
+                    
+                    get3YearOldInventory();
                 },
             });
         }
@@ -316,6 +317,8 @@
                 },
                 success: function(result) {
                     $("#count-one").html("(" + result + ")");
+                    
+                    getTwoYearOldInventory();
                     // localStorage.setItem('one-year-old', result);
                 },
             });
@@ -337,6 +340,7 @@
                 success: function(result) {
                     $("#count-six").html("(" + result + ")");
                     // localStorage.setItem('six-month-old', result);
+                    getOneYearOldInventory();
                 },
             });
         }

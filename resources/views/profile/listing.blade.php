@@ -10,6 +10,10 @@
         height: 0px !important;
         margin-top: 0px;
     }
+    
+    .pagination {
+        justify-content:end;
+    }
 </style>
 @endpush
 
@@ -100,7 +104,7 @@
                                     </td>
                                     @endcan
                                     <td>{{ ++$key }}</td>
-                                    <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $userListing->image }}" alt="Product Image" width="50" /></td>
+                                    <td><img onerror="this.onerror=null;this.src='/dummy.jpg';" src="{{ $userListing->image }}" alt="Product Image" width="50" /></td>
                                     <td>{{ $userListing->title }}</td>
                                     <td>{{ $userListing->create_user->name }}</td>
                                     <td>{{ date("d-m-Y h:i A", strtotime($userListing->created_at)) }}</td>
@@ -136,6 +140,7 @@
                             </tbody>
                         </table>
                     </div>
+                    {{ $userListings->links() }}
                 </div>
             </div>
         </div>

@@ -8,9 +8,9 @@ use App\Models\Listing;
 use App\Models\User;
 use App\Models\UserListingCount;
 use App\Models\UserListingInfo;
-use Carbon\Carbon;
 use Intervention\Image\ImageManager;
 use Intervention\Image\ImageManagerStatic as Image;
+use Carbon\Carbon;
 
 class ProfileController extends Controller
 {
@@ -116,9 +116,9 @@ class ProfileController extends Controller
             if (request()->user != 'all') {
                 $userListings = $userListings
                     ->where('created_by', request()->user)
-                    ->get();
+                    ->paginate(100);
             } else {
-                $userListings = $userListings->get();
+                $userListings = $userListings->paginate(100);
             }
 
             $approved = $approved->count();
@@ -129,7 +129,7 @@ class ProfileController extends Controller
         } else {
             $userListings = $userListings
                 ->where('created_by', auth()->user()->id)
-                ->get();
+                ->paginate(100);
 
             $approved = $approved
                 ->where('created_by', auth()->user()->id)

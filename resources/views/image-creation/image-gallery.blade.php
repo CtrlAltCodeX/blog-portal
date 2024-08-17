@@ -75,13 +75,11 @@
                                         <input type="checkbox" name="ids" class="checkbox-update" value="{{$file['name']}}" />
                                     </td>
                                     <td>{{++$key}}</td>
-                                    <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ route('assets', $file['name']) }}" alt="Product Image" width="50" /></td>
+                                    <td><img src="/storage/uploads/{{ $file['name'] }}" alt="Product Image" width="50" /></td>
                                     <td>{{ $file['name'] }}</td>
                                     <td>{{ round($file['size']/1000, 1) }} kb</td>
-                                    <td>
-                                        <p style="font-size: 9px;">{{ url('/') }}/storage/uploads/{{ $file['name'] }}</p>
-                                    </td>
-                                    <td> {{ date("d-m-Y h:i A", strtotime($file['datetime'])) }}</td>
+                                    <td><p style="font-size: 9px;">{{ url('/') }}/storage/uploads/{{ $file['name'] }}</p></td>
+                                    <td>{{ date("d-m-Y h:i A", strtotime($file['datetime'])) }}</td>
                                     <!-- <td>{{ date("d-m-Y h:i A", strtotime($file['datetime'])) }}</td> -->
                                     <td style="vertical-align: middle;">
                                         <div class="d-flex justify-content-between" style='grid-gap:10px;'>
@@ -107,6 +105,7 @@
                             </tbody>
                         </table>
                     </div>
+                    {{ $files->links() }}
                 </div>
             </div>
         </div>
@@ -144,19 +143,21 @@
 <script>
     $(document).ready(function() {
         //______Basic Data Table
-        $('#basic-datatable').DataTable({});
+        $('#basic-datatable').DataTable({
+            'paging':false
+        });
 
         $("#category").on("change", function() {
             $("#form").submit();
         });
 
         $("#basic-datatable_wrapper .col-sm-12:first").html('<form id="count" action={{route("image.gallery")}} method="GET"><input type="hidden" name="page" value="{{ request()->page }}" /><select class="form-control w-25 count" name="count"><option value="15" {{ request()->count == 15 ? "selected" : "" }}>15</option><option value="25" {{ request()->count == 25 ? "selected" : "" }}>25</option><option value="50"  {{ request()->count == 50 ? "selected" : "" }}>50</option><option value="100"  {{ request()->count == 100 ? "selected" : "" }}>100</option></select></form>');
-
-        $('#basic-datatable_wrapper').on('change', '.count', function() {
-            $('#count').submit();
+        
+        $('#basic-datatable_wrapper').on('change', '.count', function(){
+                $('#count').submit();
         });
 
-        $("#update").html('<form id="update-status" action={{route("listing.status")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status"><option>Select</option><option value=1>Delete</option></select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div></form>');
+        $("#update").html('<form id="update-status" action={{route("listing.status")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status"><option>Select</option>@can("Image Creation -> Gallery ( DB ) -> Delete") <option value=1>Delete</option>@endcan</select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div></form>');
 
         $(".table-responsive").on('click', '.update-status', function(e) {
             e.preventDefault();

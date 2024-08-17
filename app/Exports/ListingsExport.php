@@ -27,9 +27,10 @@ class ListingsExport implements FromArray, WithHeadings, WithCustomCsvSettings
             'id',
             'price',
             // 'clicks',
-            // 'unpaid_clicks',
+            // 'unpaid clicks',
             'condition',
             'availability',
+            // 'Free listings - disapproved or invalid',
             // 'channel',
             // 'feed label',
             // 'language',
@@ -43,48 +44,63 @@ class ListingsExport implements FromArray, WithHeadings, WithCustomCsvSettings
             'identifier_exists',
             'image_link',
             // 'language',
-            // // 'pause',
-            // // 'shipping(country)',
-            // // 'unpaid clicks',
-            // // 'update type',
-            'adult',
+            // 'pause',
+            // 'shipping(country)',
+            // 'unpaid clicks',
+            // 'update type',
+            // 'adult',
         ];
 
         // Add data rows
-        foreach ($listings as $listing) {
-            $title = str_replace(['"', '(', ')', ',', '&', '|'], ['', '', '', '', '', ''], $listing['title']);
-            $additionalImages = BackupListingImage::where('listing_id', $listing->id)
-                ->pluck('image_url')
-                ->toArray();
-
-            $data[] = [
-                $listing['url'],
-                $title,
-                $listing['id'],
-                ($listing['selling_price'] != 0) ? $listing['selling_price'] . "INR" : 1299 . "INR",
-                // '0',
-                // '0',
-                'new',
-                'in_stock',
-                // 'Online',
-                // 'IN',
-                // 'en',
-                implode(",", $additionalImages),
-                $listing['publisher'],
-                // 'Online',
-                // '0',
-                'Product Description',
-                // '',
-                // '',
-                'yes',
-                $listing['base_url'],
-                // 'en',
-                // '',
-                // 'IN',
-                // '0',
-                // '',
-                'no',
-            ];
+        foreach ($listings as $key => $listing) {
+            if($key == 0){
+                $title = str_replace(['"', '(', ')', ',', '&', '|'], ['', '', '', '', '', ''], $listing['title']);
+                
+                $additionalImages = BackupListingImage::where('listing_id', $listing->id)
+                    ->pluck('image_url')
+                    ->toArray();
+                    
+                if ($listing['publisher']) {
+                    if ((string) $listing['publisher']) {
+                        $publisher  = str_replace('-', "", $listing['publisher']);
+                    } else {
+                        $publisher = 'Exam360';
+                    }
+                } else {
+                    $publisher = 'Exam360';
+                }
+    
+                $data[] = [
+                    $listing['url'],
+                    $title,
+                    $listing['id'],
+                    ($listing['selling_price'] != 0) ? $listing['selling_price'] . "INR" : 1299 . "INR",
+                    '0',
+                    '0',
+                    'new',
+                    'in_stock',
+                    'IN',
+                    'Online',
+                    'IN',
+                    'en',
+                    implode(",", $additionalImages),
+                    $publisher,
+                    'Online',
+                     '0',
+                    'Product Description',
+                    '',
+                    '',
+                    'yes',
+                    $listing['base_url'],
+                    'en',
+                    '',
+                    'IN',
+                    '0',
+                    '',
+                    'no',
+                ];
+                
+            }
         }
 
         return $data;

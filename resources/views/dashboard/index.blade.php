@@ -136,7 +136,7 @@
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="mt-2">
-                            <h6 class="">Pending</h6>
+                            <h6 class="">Listing Pending</h6>
                             <a target="_blank" href="{{ route('database-listing.index', ['status' => 0, 'startIndex' => 1, 'user' => 'all']) }}">
                                 <h2 class="mb-0 number-font" id='pending'>
                                     {{ $pending }}
@@ -152,9 +152,9 @@
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="mt-2">
-                            <h6 class="">Approved</h6>
+                            <h6 class="">Listing Approved</h6>
                             <!-- <a target="_blank" href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => '3Y']) }}"> -->
-                            <h2 class="mb-0 number-font" id='approved'>{{ $approved }}</h2>
+                            <h2 class="mb-0 number-font text-success" id='approved'>{{ $approved }}</h2>
                             <!-- </a> -->
                         </div>
                     </div>
@@ -166,9 +166,9 @@
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="mt-2">
-                            <h6 class="">Rejected</h6>
+                            <h6 class="">Listing Rejected</h6>
                             <!-- <a target="_blank" href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => '3Y']) }}"> -->
-                            <h2 class="mb-0 number-font" id='rejected'>{{ $rejected }}</h2>
+                            <h2 class="mb-0 number-font text-danger" id='rejected'>{{ $rejected }}</h2>
                             <!-- </a> -->
                         </div>
                     </div>
@@ -258,8 +258,8 @@
                         <div class="card-body">
                             <div class="d-flex">
                                 <div class="mt-2">
-                                    <h6 class="">Total In Stock</h6>
-                                    <h2 class="mb-0 number-font" id='inStock'>-</h2>
+                                    <h6 class="">Total <b class='text-success'>In Stock</b></h6>
+                                    <h2 class="mb-0 number-font text-success" id='inStock'>-</h2>
                                 </div>
                             </div>
                         </div>
@@ -270,8 +270,8 @@
                         <div class="card-body">
                             <div class="d-flex">
                                 <div class="mt-2">
-                                    <h6 class="">Total Out Stock</h6>
-                                    <h2 class="mb-0 number-font" id='outStock'>-</h2>
+                                    <h6 class="">Total <b class='text-danger'>Out of Stock</b></h6>
+                                    <h2 class="mb-0 number-font text-danger" id='outStock'>-</h2>
                                 </div>
                             </div>
                         </div>
@@ -282,8 +282,8 @@
                         <div class="card-body">
                             <div class="d-flex">
                                 <div class="mt-2">
-                                    <h6 class="">Total Low Stock</h6>
-                                    <h2 class="mb-0 number-font" id='lowStock'>-</h2>
+                                    <h6 class="">Total <b class='text-info'>Low Stock</b></h6>
+                                    <h2 class="mb-0 number-font text-info" id='lowStock'>-</h2>
                                 </div>
                             </div>
                         </div>
@@ -294,8 +294,8 @@
                         <div class="card-body">
                             <div class="d-flex">
                                 <div class="mt-2">
-                                    <h6 class="">Total On Demand</h6>
-                                    <h2 class="mb-0 number-font" id='demandStock'>-</h2>
+                                    <h6 class="">Total <b class='text-primary'>On Demand</b></h6>
+                                    <h2 class="mb-0 number-font text-primary" id='demandStock'>-</h2>
                                 </div>
                             </div>
                         </div>
@@ -328,10 +328,7 @@
                     localStorage.setItem('drafted', result.length);
                     getTotalProducts();
 
-                    setTimeout(() => {
-                        getInventoryInStockData();
-
-                    }, 1000);
+                    
                     
                     getInventoryData();
                 },
@@ -547,6 +544,10 @@
                     localStorage.setItem('three-year-old', result);
                     
                     getSixMonthOldInventory();
+                    
+                    setTimeout(() => {
+                        getInventoryInStockData();
+                    }, 1000);
                 },
             });
         }

@@ -249,6 +249,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::get('publish/pending', [DatabaseListingController::class, 'getPublishPending'])->name('publish.pending');
 
+    Route::get('blog/publish/{id}', [ListingController::class, 'publishBlog'])
+        ->name('blog.publish');
+
+    Route::get('dashboard', [DashboardController::class, 'index'])
+        ->name('dashboard');
+
     Route::get('update/status', [DatabaseListingController::class, 'updateStatus'])->name('listing.status');
     /**
      * Database END
@@ -273,6 +279,21 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::post('update/users/status/{id}', [UserController::class, 'updateStatus'])
         ->name('update.users.status');
+
+    Route::match(['get', 'post'], 'process/image', [GoogleService::class, 'processImageAndDownload'])
+        ->name('process.image');
+
+    Route::post('convert/image', [GoogleService::class, 'downloadProcessedImage'])
+        ->name('convert.image');
+
+    Route::post('drafted/posts', [GoogleService::class, 'draftedInventory'])
+        ->name('drafted.posts');
+
+    Route::post('live/posts', [GoogleService::class, 'posts'])
+        ->name('live.posts');
+
+    Route::get('posts', [DashboardController::class, 'getStats'])
+        ->name('get.posts.count');
 
     Route::get('set/session/id', [UserController::class, 'setSessionId'])
         ->name('user.session.id');

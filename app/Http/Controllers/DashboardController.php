@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Listing;
-use App\Models\UserListingCount;
-use App\Models\UserListingInfo;
 use App\Models\UserSession;
 use App\Services\GoogleService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
+use App\Models\UserListingInfo;
 
 class DashboardController extends Controller
 {
@@ -49,12 +48,12 @@ class DashboardController extends Controller
         $pending = Listing::where('status', 0);
 
         $rejected = Listing::where('status', 2);
-
-        if (auth()->user()->hasRole('Super Admin')) {
+        
+        if(auth()->user()->hasRole('Super Admin')){
             $approved = $approved->count();
-
+    
             $pending = $pending->count();
-
+    
             $rejected = $rejected->count();
         } else {
             $approved = $approved

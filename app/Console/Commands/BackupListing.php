@@ -10,7 +10,6 @@ use App\Models\BackupListingImage;
 use App\Models\BackupLogs;
 use App\Models\SiteSetting;
 use App\Services\GoogleService;
-use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
@@ -19,6 +18,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use ZipArchive;
+use Carbon\Carbon;
 
 class BackupListing extends Command
 {
@@ -68,10 +68,10 @@ class BackupListing extends Command
 
             $emailTo = $this->createZipAndMail($currentTimeInSeconds, $fileName, $sqlfileName);
 
-            $this->backupToDropBox($currentDateFormat, $fileName, $sqlfileName);
-
             $this->deleteTenDaysAboveFiles();
-
+            
+            $this->backupToDropBox($currentDateFormat, $fileName, $sqlfileName);
+            
             $this->deleteThreeMonthsOldFiles();
 
             BackupLogs::create([

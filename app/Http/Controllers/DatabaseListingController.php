@@ -47,11 +47,13 @@ class DatabaseListingController extends Controller
 
         $googlePosts = $googlePosts->paginate(150);
 
-        $allCounts = Listing::count();
+        $allCounts = Listing::whereNull('product_id')->count();
 
-        $pendingCounts = Listing::where('status', 0);
+        $pendingCounts = Listing::where('status', 0)
+                ->whereNull('product_id');
 
-        $rejectedCounts = Listing::where('status', 2);
+        $rejectedCounts = Listing::where('status', 2)
+                ->whereNull('product_id');
 
         if (!auth()->user()->hasRole('Super Admin')) {
             $pendingCounts = $pendingCounts->where('created_by', auth()->user()->id);
@@ -569,7 +571,7 @@ class DatabaseListingController extends Controller
             'insta_mojo_url' => trim(request()->url),
             'images' => request()->images ?? "",
             'multiple_images' => request()->multipleImages ? json_encode(request()->multipleImages) : null,
-            // 'url' => request()->,
+            'url' => request()->product_url,
             'created_by' => auth()->user()->id,
             'status' => 0,
         ];

@@ -101,7 +101,7 @@ class ListingController extends Controller
             return redirect()->route('database-listing.index', ['status' => 0, 'startIndex' => 1, 'category' => '', 'user' => 'all']);
         }
 
-        return redirect()->route('inventory.index', ['startIndex' => 1, 'category' => 'Product']);
+        return redirect()->route('listing.create', ['startIndex' => 1, 'category' => 'Product']);
     }
 
     /**
@@ -319,10 +319,10 @@ class ListingController extends Controller
 
         if (!$this->googleService->getCredentails()) return view('settings.authenticate');
 
-        // $url = $this->googleService->refreshToken($this->googleService->getCredentails()->toArray());
-        // request()->session()->put('page_url', request()->url());
+        //     $url = $this->googleService->refreshToken($this->googleService->getCredentails()->toArray());
+        //     request()->session()->put('page_url', request()->url());
 
-        // return redirect()->to($url);
+        //     return redirect()->to($url);
         // }
 
         $googlePosts = $this->googleService->posts();
