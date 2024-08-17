@@ -15,6 +15,9 @@ class SiteSetting extends Model
         'product_background_image',
         'homepage_image',
         'watermark_text',
-        'calc_link'
+        'calc_link',
+        'button_1',
+        'button_2',
+        'button_3'
     ];
 }

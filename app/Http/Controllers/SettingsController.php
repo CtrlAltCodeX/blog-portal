@@ -55,13 +55,13 @@ class SettingsController extends Controller
         $siteSettings = SiteSetting::latest()->first();
 
         if (request()->file('logo')) {
-            $logoImage = time() . "_logo.jpg";
+            $logoImage = "site/" . time() . "_logo.jpg";
             request()->file('logo')
                 ->storePubliclyAs('public/' . $logoImage);
         }
 
         if (request()->file('homepage_image')) {
-            $fileName = time() . "_homepage_image.jpg";
+            $fileName = "site/" . time() . "_homepage_image.jpg";
             request()->file('homepage_image')
                 ->storeAs("/public/" . $fileName);
         }
@@ -77,7 +77,10 @@ class SettingsController extends Controller
             'homepage_image' => $fileName ?? $siteSettings->homepage_image ?? '',
             'product_background_image' => 'custom_image.jpg',
             'watermark_text' => request()->watermark_text,
-            'calc_link' => request()->calc_link
+            'calc_link' => request()->calc_link,
+            'button_1' => request()->button_1 . "," . request()->button_1_href,
+            'button_2' => request()->button_2 . "," . request()->button_2_href,
+            'button_3' => request()->button_3 . "," . request()->button_3_href,
         ];
 
         if (!$siteSettings) SiteSetting::create($data);

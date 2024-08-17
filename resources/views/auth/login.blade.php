@@ -2,6 +2,13 @@
 
 @section('title', 'Login')
 
+@php
+$siteSettings = app('App\Models\SiteSetting')->first();
+$buttonOne = explode(',',$siteSettings->button_1);
+$buttonTwo = explode(',',$siteSettings->button_2);
+$buttonThree = explode(',',$siteSettings->button_3);
+@endphp
+
 @section('content')
 <form method="POST" action="{{ route('verify.otp') }}" id='form'>
     @csrf
@@ -58,6 +65,17 @@
                         <button type="submit" class="login100-form-btn btn-primary">
                             Login To Get OTP
                         </button>
+                    </div>
+                    <div class="d-grid mt-3 justify-content-center" style="grid-gap: 10px;grid-template-columns: auto auto auto;">
+                        @if($buttonOne[0])
+                        <a href="{{ $buttonOne[1] }}" class="btn btn-primary">{{$buttonOne[0]}}</a>
+                        @endif
+                        @if($buttonTwo[0])
+                        <a href="{{ $buttonTwo[1] }}" class="btn btn-primary">{{$buttonTwo[0]}}</a>
+                        @endif
+                        @if($buttonThree[0])
+                        <a href="{{ $buttonThree[1] }}" class="btn btn-primary">{{$buttonThree[0]}}</a>
+                        @endif
                     </div>
                     <div class="container-login100-form-btn">
                         <button type='button' class="login100-form-btn btn-primary" id='without-otp'>
