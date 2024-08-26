@@ -143,7 +143,7 @@
                                     <span class="charCount">0/35</span>
                                 </div>
 
-                                <input maxlength="35" id="publication" type="text" class="form-control @error('publication') is-invalid @enderror" name="publication" value="{{ old('publication') ?? $listing->publication }}" autocomplete="publication" autofocus placeholder="Publication">
+                                <input maxlength="35" id="publication" type="text" class="form-control @error('publication') is-invalid @enderror" name="publication" value="{{ old('publication') ?? $listing->publisher }}" autocomplete="publication" autofocus placeholder="Publication">
                                 <span class="error-message publication" style="color:red;"></span>
 
                                 @error('publication')

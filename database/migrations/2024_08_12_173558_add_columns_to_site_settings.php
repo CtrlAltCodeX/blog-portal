@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('button_1');
             $table->string('button_2');
             $table->string('button_3');
+            $table->string('button_4');
         });
     }
 

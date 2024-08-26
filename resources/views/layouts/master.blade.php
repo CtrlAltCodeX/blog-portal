@@ -40,13 +40,6 @@
     @stack('css')
 </head>
 
-<div class="overlay" style="z-index: 998;"></div>
-<div class="spanner" style="background: inherit !important;">
-    <div class="loader"></div>
-    <p>Please be patient.</p>
-</div>
-
-
 <body class="app sidebar-mini ltr">
     @include('partials.loader')
 

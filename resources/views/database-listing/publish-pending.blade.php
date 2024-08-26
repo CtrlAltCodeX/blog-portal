@@ -157,7 +157,7 @@
                                         @else {{ 'In Stock' }}
                                         @endif
                                     </td>
-                                    <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $googlePost->images[0] }}" alt="Product Image" /></td>
+                                    <td><img onerror="this.onerror=null;this.src='/dummy.jpg';" src="{{ $googlePost->images[0] }}" alt="Product Image" /></td>
                                     <td><a href="{{ $googlePost->url ? $googlePost->url : '#' }}" target='_blank'>{{ $googlePost->product_id }}</a></td>
                                     <td>{{ $googlePost->title }}</td>
                                     <td>{{ '₹'.$googlePost->selling_price }}</td>

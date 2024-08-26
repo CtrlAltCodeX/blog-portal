@@ -6,6 +6,7 @@
 $buttonOne = explode(',',$siteSettings->button_1);
 $buttonTwo = explode(',',$siteSettings->button_2);
 $buttonThree = explode(',',$siteSettings->button_3);
+$buttonFour = explode(',',$siteSettings->button_4);
 
 @endphp
 
@@ -55,6 +56,14 @@ $buttonThree = explode(',',$siteSettings->button_3);
                     <div class="d-flex" style="grid-gap: 10px;">
                         <input id="button_3" type="text" class="form-control @error('button_3') is-invalid @enderror" name="button_3" value="{{ $buttonThree[0]??'' }}" autofocus placeholder="Button Three">
                         <input id="button_3_href" type="text" class="form-control @error('button_3_href') is-invalid @enderror" name="button_3_href" value="{{ $buttonThree[1]??'' }}" autofocus placeholder="Button Link">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="name" class="form-label">{{ __('Button 4') }}<span class="text-danger">*</span></label>
+                    <div class="d-flex" style="grid-gap: 10px;">
+                        <input id="button_4" type="text" class="form-control @error('button_4') is-invalid @enderror" name="button_4" value="{{ $buttonFour[0]??'' }}" autofocus placeholder="Button Four">
+                        <input id="button_4_href" type="text" class="form-control @error('button_4_href') is-invalid @enderror" name="button_4_href" value="{{ $buttonFour[1]??'' }}" autofocus placeholder="Button Link">
                     </div>
                 </div>
 
