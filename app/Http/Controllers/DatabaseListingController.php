@@ -516,7 +516,7 @@ class DatabaseListingController extends Controller
             'description' => $desc[0] ?? '',
             'mrp' => (int) trim($mrp),
             'selling_price' => (int) trim($selling),
-            'publication' => trim($publication) ?? 'Exam360',
+            'publisher' => trim($publication) ?? 'Exam360',
             'author_name' => trim($author_name),
             'edition' => trim($edition),
             'categories' => (collect($products->category ?? [])->pluck('term')->toArray()),

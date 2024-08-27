@@ -65,10 +65,10 @@ $userInfo = app('App\Models\SiteSetting')->first();
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-list"></i><span class="side-menu__label">{{ __('Images Creation') }}</span><i class="angle fe fe-chevron-right"></i></a>
                     <ul class="slide-menu">
                         @can('Image Creation -> Single Image Maker')
-                        <li><a href="{{ route('image.single.create', ['maker' => 'w-watermark']) }}" class="slide-item {{ (request()->is('admin/images/single/create')) ? 'active' : '' }}">{{ __('Single Image Maker') }}</a></li>
+                        <li><a href="{{ route('image.single.create', ['maker' => 'wo-watermark']) }}" class="slide-item {{ (request()->is('admin/images/single/create')) ? 'active' : '' }}">{{ __('Single Image Maker') }}</a></li>
                         @endcan
                         @can('Image Creation -> Combo Image Maker')
-                        <li><a href="{{ route('image.combo.create', ['maker' => 'w-watermark']) }}" class="slide-item {{ (request()->is('admin/images/combo/create')) ? 'active' : '' }}">{{ __('Combo Image Maker') }}</a></li>
+                        <li><a href="{{ route('image.combo.create', ['maker' => 'wo-watermark']) }}" class="slide-item {{ (request()->is('admin/images/combo/create')) ? 'active' : '' }}">{{ __('Combo Image Maker') }}</a></li>
                         @endcan
                         @can('Image Creation -> Gallery ( DB )')
                         <li><a href="{{ route('image.gallery', ['count' => 15, 'page' => '']) }}" class="slide-item {{ (request()->is('admin/images/gallery')) ? 'active' : '' }}">{{ __('Gallery List Page ( DB )') }}</a></li>

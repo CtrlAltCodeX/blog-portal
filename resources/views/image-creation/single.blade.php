@@ -26,12 +26,20 @@ $formRoute = "/admin/images/watermark/store";
                         <div class="d-flex justify-content-end">
                             <!-- <label for="fileInput1" class="mt-2">Single Image Maker</label> -->
                             <form action="" method="get" id='form'>
-                                <div>
-                                    <input type="radio" class="m-2" name="maker" id="w-watermark" value='w-watermark' {{ request()->maker == 'w-watermark' ?  'checked' : '' }} />
-                                    <label for="w-watermark">With Watermark</label>
+                                <div class="d-flex">
+                                    <div class="d-flex align-items-baseline">
+                                        <input type="radio" class="m-2" name="maker" id="w-watermark" value='w-watermark' {{ request()->maker == 'w-watermark' ?  'checked' : '' }} />
+                                        <label for="w-watermark">With Watermark<br />
+                                            <small class="text-danger">( GMC Not Approved )</small>
+                                        </label>
+                                    </div>
 
-                                    <input type="radio" class="m-2" name="maker" id="wo-watermark" value='wo-watermark' {{ request()->maker == 'wo-watermark' ?  'checked' : '' }} />
-                                    <label for="wo-watermark">Without Watermark</label>
+                                    <div class="d-flex align-items-baseline">
+                                        <input type="radio" class="m-2" name="maker" id="wo-watermark" value='wo-watermark' {{ request()->maker == 'wo-watermark' ?  'checked' : '' }} />
+                                        <label for="wo-watermark">Without Watermark<br />
+                                            <small class="text-danger">( GMC Approved )</small>
+                                        </label>
+                                    </div>
                                 </div>
                             </form>
                         </div>

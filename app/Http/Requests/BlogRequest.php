@@ -26,9 +26,17 @@ class BlogRequest extends FormRequest
             'description' => 'required|string',
             'selling_price' => 'required|numeric',
             'mrp' => 'required|numeric|gte:selling_price',
-            'label' => 'required|array|min:1',
+            'label' => [
+                'required',
+                'array',
+                'min:1',
+                function ($attribute, $value, $fail) {
+                    if (!in_array('Product', $value)) {
+                        $fail('Category Must Contain Product Tag');
+                    }
+                },
+            ],
             'images' => 'required|array|min:1',
-            // 'multipleImages' => 'image|mimes:jpeg,png,jpg,gif,svg|array|min:1',
             'sku' => 'required|string|max:255',
             'publication' => 'required|string|max:255',
             'author_name' => 'required|string',
