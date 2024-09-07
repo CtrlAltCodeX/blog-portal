@@ -4,10 +4,10 @@
 
 @php
 $siteSettings = app('App\Models\SiteSetting')->first();
-$buttonOne = explode(',',$siteSettings->button_1);
-$buttonTwo = explode(',',$siteSettings->button_2);
-$buttonThree = explode(',',$siteSettings->button_3);
-$buttonFour = explode(',',$siteSettings->button_4);
+$buttonOne = explode(',',$siteSettings?->button_1);
+$buttonTwo = explode(',',$siteSettings?->button_2);
+$buttonThree = explode(',',$siteSettings?->button_3);
+$buttonFour = explode(',',$siteSettings?->button_4);
 @endphp
 
 @section('content')

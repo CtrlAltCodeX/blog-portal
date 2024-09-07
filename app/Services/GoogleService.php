@@ -103,13 +103,6 @@ class GoogleService
     public function posts($status = 'live')
     {
         try {
-            $credential = $this->getCredentails();
-
-            $client = $this->createGoogleClient($credential->toArray());
-            $client->setAccessToken($credential->token);
-
-            $blogger = new Google_Service_Blogger($client);
-
             $posts = [];
             $pageToken = null;
             $perPage = 150;
@@ -179,6 +172,13 @@ class GoogleService
                     }
                 }
             } else if (request()->route()->getName() == 'inventory.drafted') {
+                $credential = $this->getCredentails();
+
+                $client = $this->createGoogleClient($credential->toArray());
+                $client->setAccessToken($credential->token);
+
+                $blogger = new Google_Service_Blogger($client);
+
                 $params['maxResults'] = 250;
                 $response = $blogger->posts->listPosts($credential->blog_id, $params);
                 $posts = $response->items ?? [];
@@ -597,7 +597,6 @@ class GoogleService
             if (App::runningInConsole()) {
                 $params['start-index'] = $startIndex;
                 $params['max-results'] = $perPage;
-                $params['category'] = 'Product';
 
                 if (SiteSetting::first()->url) {
                     $response = Http::get(SiteSetting::first()->url . '/feeds/posts/default', $params);
@@ -620,17 +619,6 @@ class GoogleService
                         }
                     }
                 }
-            } else if (request()->route()->getName() == 'inventory.drafted') {
-                $params['maxResults'] = 250;
-
-                $credential = $this->getCredentails();
-                $client = $this->createGoogleClient($credential->toArray());
-                $client->setAccessToken($credential->token);
-                $blogger = new Google_Service_Blogger($client);
-
-                $response = $blogger->posts->listPosts($credential->blog_id, $params);
-                $posts = $response->items ?? [];
-                $filteredPost = $response->items ?? [];
             }
 
             $nextPageToken = $response->nextPageToken ?? null;

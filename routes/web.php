@@ -225,6 +225,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
      */
     Route::resource('listing', ListingController::class);
 
+    Route::get('articles', [DatabaseListingController::class, 'articles'])
+        ->name('articles.index');
+
     Route::get('search', [ListingController::class, 'search'])
         ->name('listing.search');
 

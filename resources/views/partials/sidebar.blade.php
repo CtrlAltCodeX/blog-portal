@@ -82,6 +82,9 @@ $userInfo = app('App\Models\SiteSetting')->first();
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-box"></i><span class="side-menu__label">{{ __('Inventory') }}</span><i class="angle fe fe-chevron-right"></i></a>
                     <ul class="slide-menu">
                         <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
+                        @can('Inventory -> Blogger Articles')
+                        <li><a href="{{ route('articles.index') }}" class="slide-item {{ request()->is('admin/articles') ? 'active' : '' }}">{{ __('Blogger Articles') }}</a></li>
+                        @endcan
                         @can('Inventory -> Manage Inventory')
                         <li><a href="{{ route('inventory.index', ['startIndex' => 1, 'category' => 'Product']) }}" class="slide-item {{ request()->is('admin/inventory') ? 'active' : '' }}">{{ __('Manage Inventory ( M/S )') }}</a></li>
                         @endcan

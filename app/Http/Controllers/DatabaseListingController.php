@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BlogRequest;
 use App\Jobs\PublishProducts;
 use App\Jobs\UpdateProducts;
+use App\Models\BackupListing;
 use App\Models\Job;
 use App\Models\Listing;
 use App\Models\SiteSetting;
@@ -21,9 +22,7 @@ class DatabaseListingController extends Controller
      *
      * @param GoogleService $googleService
      */
-    public function __construct(protected GoogleService $googleService)
-    {
-    }
+    public function __construct(protected GoogleService $googleService) {}
 
     /**
      * Display the listing of the resources
@@ -50,10 +49,10 @@ class DatabaseListingController extends Controller
         $allCounts = Listing::whereNull('product_id')->count();
 
         $pendingCounts = Listing::where('status', 0)
-                ->whereNull('product_id');
+            ->whereNull('product_id');
 
         $rejectedCounts = Listing::where('status', 2)
-                ->whereNull('product_id');
+            ->whereNull('product_id');
 
         if (!auth()->user()->hasRole('Super Admin')) {
             $pendingCounts = $pendingCounts->where('created_by', auth()->user()->id);
@@ -593,5 +592,18 @@ class DatabaseListingController extends Controller
         session()->flash('success', 'Pending for Approval');
 
         return redirect()->route('inventory.index', ['startIndex' => '1', 'category' => 'Product']);
+    }
+
+    /**
+     * List the Articles
+     *
+     * @return void
+     */
+    public function articles()
+    {
+        $articles = BackupListing::whereRaw('NOT JSON_CONTAINS(categories, \'"\Product"\')')
+            ->paginate(150);
+
+        return view('listing.articles', compact('articles'));
     }
 }
