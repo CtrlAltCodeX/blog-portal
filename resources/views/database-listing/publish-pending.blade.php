@@ -75,10 +75,10 @@
                                 </a>
                             </div>
 
-                            <labeL class='user-label'>Stock Filter: </labeL>
+                            <!--<labeL class='user-label'>Stock Filter: </labeL>-->
                             <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
                             <input type="hidden" value="{{ request()->status ?? 0 }}" name='status'>
-                            <select class="form-control w-25" id='category' name="category">
+                            <select class="form-control w-25 m-2" id='category' name="category">
                                 <option value="">In Stock</option>
                                 <option value="Stk_o" {{ request()->category == 'Stk_o' ? 'selected' : '' }}>Out of Stock (Stk_o)</option>
                                 <option value="stock__out" {{ request()->category == 'stock__out' ? 'selected' : '' }}>Out of Stock (stock__out)</option>
@@ -89,9 +89,9 @@
                             </select>
 
                             @if(auth()->user()->hasRole('Super Admin'))
-                            <labeL class='user-label'>User Filter: </labeL>
-                            <select class="form-control w-25" id='user' name="user">
-                                <option value="all">All</option>
+                            <!--<labeL class='user-label'>User Filter: </labeL>-->
+                            <select class="form-control w-25 m-2" id='user' name="user">
+                                <option value="all">All Users</option>
                                 @foreach($users as $user)
                                 <option value="{{ $user->id }}" {{ request()->user == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
                                 @endforeach
@@ -157,7 +157,7 @@
                                         @else {{ 'In Stock' }}
                                         @endif
                                     </td>
-                                    <td><img onerror="this.onerror=null;this.src='/dummy.jpg';" src="{{ $googlePost->images[0] }}" alt="Product Image" /></td>
+                                    <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $googlePost->images[0] }}" alt="Product Image" /></td>
                                     <td><a href="{{ $googlePost->url ? $googlePost->url : '#' }}" target='_blank'>{{ $googlePost->product_id }}</a></td>
                                     <td>{{ $googlePost->title }}</td>
                                     <td>{{ '₹'.$googlePost->selling_price }}</td>
@@ -252,7 +252,7 @@
             $("#form").submit();
         });
 
-        $("#basic-datatable_wrapper .col-sm-12:first").html('<form id="update-status" action={{route("listing.status")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status" id="status"><option value="">Select</option><option value=0>Pending</option><option value=2>Reject</option><option value=5>Update to Website</option></select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div></form>');
+        $("#basic-datatable_wrapper .col-sm-12:first").html('<form id="update-status" action={{route("listing.status")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status" id="status"><option value="">Select</option><option value=0>Pending</option><option value=2>Reject</option><option value=5>Update to Website</option></select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div><span class="text-danger m-2">Note: Bulk Approve Listings must configure with Google Authenticator</span></form>');
 
         $("#basic-datatable_wrapper").on('click', '.update-status', function(e) {
             e.preventDefault();

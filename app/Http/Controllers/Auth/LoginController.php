@@ -110,12 +110,10 @@ class LoginController extends Controller
 
         $user = User::where('email', request()->email)->first();
 
-        $oldSessions = $user?->sessions->where('expire_at', '<', now());
+        $oldSessions = $user->sessions->where('expire_at', '<', now());
 
-        if ($oldSessions) {
-            foreach ($oldSessions as $session) {
-                $session->delete();
-            }
+        foreach ($oldSessions as $session) {
+            $session->delete();
         }
 
         // if (
@@ -164,17 +162,23 @@ class LoginController extends Controller
             }
 
             $user = User::where('email', request()->email)->first();
+            
+            if ($user->verify_browser != null) {
+                $oldBrowsers = json_decode($user->verify_browser);
+            } else {
+                $oldBrowsers = [];
+            }
 
-            $userAgent = request()->header('User-Agent');
+            array_push($oldBrowsers, request()->header('User-Agent'));
 
-            $user->update(['verify_browser' => $userAgent]);
+            $user->update(['verify_browser' => $oldBrowsers]);
 
             $currentDateTime = Carbon::now();
             $sessionExpireDateTime = $currentDateTime->addMinutes(env('SESSION_LIFETIME'));
             $sessionId = session()->getId();
             session()->put('sessionId', $sessionId);
 
-            if ($user->allow_sessions) {
+            if (isset($user->allow_sessions)) {
                 if ($userSession = UserSession::where('user_id', $user->id)->first()) {
                     $userSession->update([
                         'user_id' => $user->id,
@@ -239,7 +243,7 @@ class LoginController extends Controller
                 ->where('plain_password', request()->password)
                 ->first();
 
-            if ($user->allow_sessions) {
+            if (isset($user->allow_sessions)) {
                 $sessionExists = UserSession::where('user_id', $user->id)
                     ->first();
 
@@ -276,26 +280,24 @@ class LoginController extends Controller
             $user->update(['otp' => $otp]);
 
             $userAgent = request()->header('User-Agent');
-
-            if ((($user->verify_browser != $userAgent) && $user->verify_browser) || !$user->verify_browser) {
-                session()->flash('success', 'Please get OTP From System Admin');
-
-                $loginUser = $user->name;
-
-                $adminUsers = User::role('Super Admin')->get();
-
-                // foreach ($adminUsers as $user) {
-                // $email = $user->email;
-
-                Mail::to('abhishek86478@gmail.com')->send(new OtpMail($otp, $msg = true, $loginUser));
-                // }
-            } else {
+            
+            $headers = json_decode($user->verify_browser);
+            
+           if ($headers && in_array($userAgent, $headers)) {
                 session()->flash('success', 'Please Check the OTP in Registered Email');
 
                 $email = request()->email;
                 $name = request()->name;
 
                 Mail::to($email)->send(new OtpMail($otp, null, $name));
+            } else {
+                session()->flash('success', 'Please get OTP From System Admin');
+
+                $loginUser = $user->name;
+
+                $adminUsers = User::role('Super Admin')->get();
+
+                Mail::to('abhishek86478@gmail.com')->send(new OtpMail($otp, $msg = true, $loginUser));
             }
 
             return view('auth.enter-otp');

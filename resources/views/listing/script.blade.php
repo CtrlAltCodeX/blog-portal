@@ -290,13 +290,13 @@
             var errors = [];
             var normalString = '';
             var validateFields = JSON.parse(localStorage.getItem('validate'));
-            validateFields.forEach(function(value){
-                if(value.name){
+            validateFields.forEach(function(value) {
+                if (value.name) {
                     var nameToCheck = value.name.toLowerCase();
                     if (val.toLowerCase().includes(nameToCheck)) {
                         errors.push(value.name);
                         normalString = errors.join(", ");
-                        errorHandling(fieldId, 'Words not allowed - '+errors, false, currentElement)
+                        errorHandling(fieldId, 'Words not allowed - ' + errors, false, currentElement)
                     }
                 }
             });
@@ -349,7 +349,7 @@
             var fieldId = $(currentElement).attr('name');
             var minLength = Number($(currentElement).attr('minlength')); // Get the maximum length allowed
             var currentLength = $(currentElement).val().length;
-            if(currentLength < minLength) {
+            if (currentLength < minLength) {
                 errorHandling(fieldId, 'Minmum 75 Character requried', false, currentElement);
             }
         }
@@ -379,7 +379,7 @@
                     var tempDiv = document.createElement('div');
                     tempDiv.innerHTML = contents;
                     var innerHTML = contents;
-                    if(tempDiv.querySelector('h1')){
+                    if (tempDiv.querySelector('h1')) {
                         var innerHTML = tempDiv.querySelector('h1').innerHTML;
                     }
 
@@ -392,6 +392,44 @@
                     calculateFields();
                 }
             }
+        });
+
+        let totalLength = 0;
+        let selectedOptions = $(".select2").find('option:selected');
+        selectedOptions.each(function() {
+            let optionText = $(this).text().trim();
+            let textLength = optionText.length;
+            totalLength += textLength;
+        });
+
+        $('#textLength').html('Total Length: ' + totalLength);
+
+
+        let maxLength = 192;
+        $('.select2').on('change', function(event) {
+            let totalLength = 0; // Reset total length before recalculating
+            let selectedOptions = $(this).find('option:selected');
+        
+            // Calculate the total length of the selected options
+            selectedOptions.each(function() {
+                let optionText = $(this).text().trim();
+                let textLength = optionText.length;
+                totalLength += textLength;
+            });
+        
+            // Check if the total length exceeds the limit
+            if (totalLength > maxLength) {
+                let lastSelected = $(this).val()[$(this).val().length - 1];
+                
+                $(this).find(`option[value='${lastSelected}']`).prop('selected', false); // Deselect only the last one
+                $(this).trigger('change.select2'); // Trigger the select2 change event to update the UI
+        
+                alert('You have reached the maximum limit of 192 characters.');
+                totalLength -= $(this).find(`option[value='${lastSelected}']`).text().trim().length; // Adjust total length after deselecting
+            }
+        
+            // Update the total length in the UI
+            $('#textLength').text('Total Length: ' + totalLength);
         });
     })
 

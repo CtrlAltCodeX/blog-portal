@@ -194,7 +194,10 @@
                             <div class="d-flex justify-content-between align-between-center">
                                 <label for="label" class="form-label">{{ __('Category') }}<span class="text-danger">*</span><span class="text-danger"> ( Publication, 1 Category, 1 Tag, Others ) </span></label>
 
-                                <div id='count'>1 Selected</div>
+                                <div class="d-flex flex-column">
+                                    <div id='count'>1 Selected</div>
+                                    <div id='textLength'></div>
+                                </div>
                             </div>
                             <select class="form-control select2  @error('label') is-invalid @enderror" data-placeholder="Choose Label" multiple name="label[]">
                                 @foreach ($categories as $categoryData)
