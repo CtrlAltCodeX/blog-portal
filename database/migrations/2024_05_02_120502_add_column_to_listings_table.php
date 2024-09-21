@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::table('listings', function (Blueprint $table) {
             $table->string('job_id')->nullable();
             $table->longText('error')->nullable();
+            $table->longText('url')->nullable();
         });
     }
 

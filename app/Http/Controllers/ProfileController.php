@@ -22,7 +22,6 @@ class ProfileController extends Controller
         $user = auth()->user();
 
         $userCounts = UserListingCount::where('user_id', auth()->user()->id)
-            ->whereDate('date', date("Y-m-d"))
             ->first();
 
         return view('profile.edit', compact('user', 'userCounts'));

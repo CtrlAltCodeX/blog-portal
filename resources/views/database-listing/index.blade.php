@@ -55,7 +55,7 @@
                     <h3 class="card-title">Pending Listings ( DB )</h3>
 
                     <div class="d-flex align-items-center justify-content-between">
-
+                        
                         <form action="" method="get" id='form' style="margin-left: 10px;" class="d-flex align-items-center justify-content-end">
                         <div>
                             <a href="{{ route('database-listing.index', ['status' => '', 'category' => 'Product', 'startIndex' => 1, 'user' => request()->user]) }}" class="btn btn-light position-relative me-2 mb-2 btn-sm"> All
@@ -71,13 +71,16 @@
                                 <!--</span>-->
                             </a>
                             <a href="{{ route('database-listing.index', ['status' => 2, 'category' => '', 'startIndex' => 1, 'user' => request()->user]) }}" class="btn btn-danger position-relative mb-2 btn-sm"> Rejected
-                                ( {{$rejectedCounts}} )
+                                ( {{$rejectedCounts}} ) 
+                                <!--<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">-->
+                                <!--    <span class="visually-hidden">unread messages</span>-->
+                                <!--</span>-->
                             </a>
                         </div>
-                            <labeL class='user-label'>Stock Filter: </labeL>
+                            <!--<labeL class='user-label'>Stock: </labeL>-->
                             <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
                             <input type="hidden" value="{{ request()->status ?? 0 }}" name='status'>
-                            <select class="form-control w-25" id='category' name="category">
+                            <select class="form-control w-25 m-2" id='category' name="category">
                                 <option value="">In Stock</option>
                                 <option value="Stk_o" {{ request()->category == 'Stk_o' ? 'selected' : '' }}>Out of Stock (Stk_o)</option>
                                 <option value="stock__out" {{ request()->category == 'stock__out' ? 'selected' : '' }}>Out of Stock (stock__out)</option>
@@ -88,9 +91,9 @@
                             </select>
 
                             @if(auth()->user()->hasRole('Super Admin'))
-                            <labeL class='user-label'>User Filter: </labeL>
-                            <select class="form-control w-25" id='user' name="user">
-                                <option value="all">All</option>
+                            <!--<labeL class='user-label'>User: </labeL>-->
+                            <select class="form-control w-25 m-2" id='user' name="user">
+                                <option value="all">All Users</option>
                                 @foreach($users as $user)
                                 <option value="{{ $user->id }}" {{ request()->user == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
                                 @endforeach
@@ -204,6 +207,7 @@
 @endsection
 
 @push('js')
+
 <script src="/assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
 <script src="/assets/plugins/datatable/js/dataTables.bootstrap5.js"></script>
 <script src="/assets/plugins/datatable/js/dataTables.buttons.min.js"></script>
@@ -242,12 +246,12 @@
         $("#status").change(function() {
             $("#formStatus").submit();
         });
-
+        
         $("#user").change(function() {
             $("#form").submit();
         });
 
-        $("#basic-datatable_wrapper .col-sm-12:first").html('<form id="update-status" action={{route("listing.status")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status" id="status"><option value="">Select</option><option value=0>Pending</option><option value=2>Reject</option><option value=3>Publish to Website</option><option value=4>Save to Draft</option></select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div></form>');
+        $("#basic-datatable_wrapper .col-sm-12:first").html('<form id="update-status" action={{route("listing.status")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status" id="status"><option value="">Select</option><option value=0>Pending</option><option value=2>Reject</option><option value=3>Publish to Website</option><option value=4>Save to Draft</option></select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div><span class="text-danger m-2">Note: Bulk Approve Listings must configure with Google Authenticator</span></form>');
 
         $("#basic-datatable_wrapper").on('click', '.update-status', function(e) {
             e.preventDefault();
@@ -296,7 +300,7 @@
                 }
             }
         });
-
+        
         $('.check-all').click(function() {
             $(".checkbox-update").each(function() {
                 if ($('.check-all').prop('checked') == true) {
