@@ -183,6 +183,20 @@
                                     </select>
                                 </div>
 
+                                <div class="form-group col-3">
+                                    <label for="password" class="form-label">{{ __('Posting Price') }}</label>
+                                    <input id="price" type="number" value="{{ $user->posting_rate }}" class="form-control @error('posting_rate') is-invalid @enderror" name="posting_rate" placeholder="Posting Price">
+
+                                    @error('posting_rate')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                                <div class="form-group col-3"></div>
+                                <div class="form-group col-3"></div>
+                                <div class="form-group col-3"></div>
+
                                 <div class="form-group col-6">
                                     <label for="name" class="form-label">{{ __('Full Address') }}</label>
                                     <textarea class="form-control" name="full_address" cols=10 rows=5>

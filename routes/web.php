@@ -42,6 +42,12 @@ Route::match(['get', 'post'], '/verify/otp', [LoginController::class, 'authentic
 
 Route::get('assets/{id}', \App\Http\Controllers\ImageMakerController::class)->name('assets');
 
+Route::get('register/otp', [UserController::class, 'registerOTP'])
+    ->name('register.otp');
+
+Route::post('registers/store', [UserController::class, 'register'])
+    ->name('register.store');
+
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function () {
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
@@ -248,9 +254,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::resource('database-listing', DatabaseListingController::class);
 
-    Route::get('edit/publish/pending/{id}', [DatabaseListingController::class, 'editPublish'])->name('publish.edit');
+    Route::get('edit/publish/pending/{id}', [DatabaseListingController::class, 'editPublish'])
+        ->name('publish.edit');
 
-    Route::get('publish/pending', [DatabaseListingController::class, 'getPublishPending'])->name('publish.pending');
+    Route::get('publish/pending', [DatabaseListingController::class, 'getPublishPending'])
+        ->name('publish.pending');
 
     Route::get('blog/publish/{id}', [ListingController::class, 'publishBlog'])
         ->name('blog.publish');
@@ -258,7 +266,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
-    Route::get('update/status', [DatabaseListingController::class, 'updateStatus'])->name('listing.status');
+    Route::get('update/status', [DatabaseListingController::class, 'updateStatus'])
+        ->name('listing.status');
     /**
      * Database END
      */
@@ -267,6 +276,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
      * User Functionalities
      */
     Route::resource('users', UserController::class);
+
+    Route::get('count/users', [UserController::class, 'userCounts'])
+        ->name('users.count');
 
     Route::get('change/password', [UserController::class, 'updatePassword'])
         ->name('change.user.password');
@@ -317,7 +329,6 @@ Route::group(['prefix' => 'password'], function () {
     Route::post('update', [ResetPasswordController::class, 'updatePassword'])->name('password.update');
 });
 
-
 Route::get('/', function () {
     return redirect()->route('dashboard');
 });
@@ -331,4 +342,5 @@ Route::get('/check-session-status', function () {
 Route::get('delete/session/{id}', [UserController::class, 'deleteSessionId'])
     ->name('user.session.delete');
 
-Route::get('/assets/images/brand/{filename}', UserController::class)->name('asset.name');
+Route::get('/assets/images/brand/{filename}', UserController::class)
+    ->name('asset.name');

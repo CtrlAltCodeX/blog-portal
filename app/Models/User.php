@@ -34,7 +34,8 @@ class User extends Authenticatable
         'verify_browser',
         'otp',
         'profile',
-        'allow_sessions'
+        'allow_sessions',
+        'posting_rate'
     ];
 
     /**

@@ -34,7 +34,8 @@ class UserRequest extends FormRequest
             'email'        => ['required', 'string', 'email', 'max:255'],
             'password'     => ['required', 'string', 'min:8', 'confirmed'],
             'plain_password' => ['nullable', 'string', 'min:8'],
-            'allow_sessions' => ['required', 'string']
+            'allow_sessions' => ['required', 'string'],
+            'posting_rate' => ['required']
         ];
 
         if ($this->isMethod('patch') || $this->isMethod('put')) {

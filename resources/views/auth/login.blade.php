@@ -22,6 +22,11 @@ $buttonFour = explode(',',$siteSettings?->button_4);
         <div class="panel-body tabs-menu-body p-0 pt-2">
             <div class="tab-content">
                 <div class="tab-pane active" id="tab5">
+                    @if(session('success'))
+                    <div class="alert alert-primary" role="alert">
+                        {{ session('success') }}
+                    </div>
+                    @endif
                     @if(session('expire_error'))
                     <div class="alert alert-danger" role="alert">
                         {{ session('expire_error') }}
@@ -58,7 +63,9 @@ $buttonFour = explode(',',$siteSettings?->button_4);
                         @enderror
 
                     </div>
-                    <div class="text-end pt-4">
+                    <div class="text-end pt-4 d-flex justify-content-between">
+                        <p class="mb-0"><a href="{{ route('register') }}" class="text-primary ms-1">Sign Up (Management)</a>
+                        </p>
                         <p class="mb-0"><a href="{{ route('password.request') }}" class="text-primary ms-1">Forgot Password?</a>
                         </p>
                     </div>
@@ -81,11 +88,11 @@ $buttonFour = explode(',',$siteSettings?->button_4);
                         <a href="{{ $buttonFour[1] }}" target='_blank'>{{$buttonFour[0]}}</a>
                         @endif
                     </div>
-                    <div class="container-login100-form-btn">
-                        <button type='button' class="login100-form-btn btn-primary" id='without-otp'>
-                            Login without OTP
-                        </button>
-                    </div>
+                    <!--<div class="container-login100-form-btn">-->
+                    <!--    <button type='button' class="login100-form-btn btn-primary" id='without-otp'>-->
+                    <!--        Login without OTP-->
+                    <!--    </button>-->
+                    <!--</div>-->
                     <!-- <div class="text-center pt-3">
                         <p class="text-dark mb-0">Not a member?<a href="{{ route('register') }}" class="text-primary ms-1">Sign UP</a></p>
                     </div> -->

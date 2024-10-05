@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
+use App\Mail\OtpMail;
+use App\Mail\RegisterOtpMail;
 use App\Mail\UserMail;
 use App\Models\User;
+use App\Models\UserListingCount;
 use App\Models\UserSession;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -72,6 +76,52 @@ class UserController extends Controller
         session()->flash('success', __('User created successfully.'));
 
         return redirect()->route('users.index');
+    }
+
+    /**
+     * Generate Random Digits
+     *
+     * @return int
+     */
+    public function generateOTP($n)
+    {
+        $generator = "1357902468";
+        $result = "";
+
+        for ($i = 1; $i <= $n; $i++) {
+            $result .= substr($generator, rand() % strlen($generator), 1);
+        }
+
+        // Returning the result
+        return $result;
+    }
+
+    public function registerOTP()
+    {
+        $otp = $this->generateOTP(6);
+
+        session()->flash('otp', $otp);
+
+        Mail::to('abhishek86478@gmail.com')->send(new RegisterOtpMail($otp, request()->name));
+
+        session()->flash('success', __('OTP Send to Admin'));
+
+        return view('auth.enter-otp', ['register' => true]);
+    }
+
+    public function register()
+    {
+        if (session('otp') == request()->otp) {
+            User::create(request()->all())?->syncRoles(request()->input('roles'));
+
+            session()->flash('success', __('You have Registered Successfully...'));
+
+            return redirect()->route('login');
+        } else {
+            session()->flash('success', __('Invalid OTP'));
+
+            return view('auth.enter-otp', ['register' => true]);
+        }
     }
 
     /**
@@ -244,5 +294,56 @@ class UserController extends Controller
         session()->flash('success', 'Session Deleted Succesfully');
 
         return redirect()->back();
+    }
+
+    public function userCounts()
+    {
+        // Query for 'Created' status
+        $countCreated = UserListingCount::with('user')
+            ->where('status', 'Created');
+
+        if (request()->has('start_date') && request()->has('end_date')) {
+            $startDate = Carbon::parse(request()->start_date);
+            $endDate = Carbon::parse(request()->end_date);
+
+            $countCreated->whereBetween('created_at', [$startDate->startOfDay(), $endDate->endOfDay()]);
+        }
+
+        if (request()->user_id) {
+            $countCreated->where('user_id', request()->user_id);
+        }
+
+        if (!auth()->user()->hasRole('Super Admin')) {
+            $countCreated->where('user_id', auth()->user()->id);
+        }
+
+        $countCreated = $countCreated->get();
+
+        // Query for 'Edited' status
+        $countEdited = UserListingCount::with('user')
+            ->where('status', 'Edited');
+
+        if (request()->has('start_date') && request()->has('end_date')) {
+            $startDate = Carbon::parse(request()->start_date);
+            $endDate = Carbon::parse(request()->end_date);
+
+            $countEdited->whereBetween('created_at', [$startDate->startOfDay(), $endDate->endOfDay()]);
+        }
+
+        if (request()->user_id) {
+            $countEdited->where('user_id', request()->user_id);
+        }
+
+        if (!auth()->user()->hasRole('Super Admin')) {
+            $countEdited->where('user_id', auth()->user()->id);
+        }
+
+        $countEdited = $countEdited->get();
+
+        // Get all users
+        $users = User::all();
+
+        // Pass data to the view
+        return view('counts', compact('countCreated', 'countEdited', 'users'));
     }
 }
