@@ -48,26 +48,26 @@ class UpdateProducts implements ShouldQueue
         $getData['binding'] = $getData->binding_type;
         $getData['url'] = $getData->insta_mojo_url;
         $getData['publication'] = $getData->publisher;
-        $result = app('App\Services\GoogleService')->updatePost($getData->toArray(), $getData->product_id);
+        $result = app('App\Services\GoogleService')->updatePost($getData->toArray(), $getData->product_id, $this->user);
 
         if ($result?->error?->code == 401) {
             event(new PublishProducts($this->id, $result->error->message));
         } else if (isset($result->id)) {
-            $listing = Listing::find($this->id);
+            // $listing = Listing::find($this->id);
 
-            $additionalInfo = UserListingInfo::where('title', $listing->title)
-                ->where('image', $listing->images)
-                ->first();
+            // $additionalInfo = UserListingInfo::where('title', $listing->title)
+            //     ->where('image', $listing->images)
+            //     ->first();
 
-            $listing->delete();
+            // $listing->delete();
 
-            if ($additionalInfo) {
-                $additionalInfo->update([
-                    'status' => 1,
-                    'approved_by' => $this->user,
-                    'approved_at' => now()
-                ]);
-            }
+            // if ($additionalInfo) {
+            //     $additionalInfo->update([
+            //         'status' => 1,
+            //         'approved_by' => $this->user,
+            //         'approved_at' => now()
+            //     ]);
+            // }
         }
     }
 }

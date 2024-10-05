@@ -11,8 +11,15 @@ class UserListingCount extends Model
 
     protected $fillable = [
         'user_id',
-        'date',
         'approved_count',
         'reject_count',
+        'status',
+        'delete_count',
+        'create_count'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

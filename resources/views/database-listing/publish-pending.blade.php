@@ -179,16 +179,15 @@
                                             @can('Pending Listing ( DB ) -> Edit')
                                             <a href="{{ route('publish.edit', $googlePost->id) }}?edit=true" class="btn btn-sm btn-primary">{{ __('Edit') }}</a>
                                             @endcan
-                                            @can('Pending Listing ( DB ) -> Delete')
                                             <form action="{{ route('database-listing.destroy', $googlePost->id) }}" method="POST" class="ml-2">
                                                 @csrf
                                                 @method('DELETE')
 
+                                                <input type="hidden" name="edit" value=1 />
                                                 <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this item?')">
                                                     {{ __('Delete') }}
                                                 </button>
                                             </form>
-                                            @endcan
                                         </div>
                                     </td>
                                     @endif

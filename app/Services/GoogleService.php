@@ -8,6 +8,7 @@ use Google_Service_Blogger_Post;
 use App\Models\GoogleCredentail;
 use App\Models\Listing;
 use App\Models\SiteSetting;
+use App\Models\UserListingCount;
 use App\Models\UserListingInfo;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -227,7 +228,7 @@ class GoogleService
      * 
      * @param array $data
      */
-    public function createPost(array $data, $draft = null)
+    public function createPost(array $data, $draft = null, $userId = null)
     {
         try {
             $credential = $this->getCredentails();
@@ -280,9 +281,49 @@ class GoogleService
                 // }
             }
 
+            $listing = Listing::find($data['id']);
+
+            $this->updateTheCount('Created', $userId);
+
+            $additionalInfo = UserListingInfo::where('listings_id', $listing->id)->first();
+
+            $listing->delete();
+
+            $additionalInfo->update([
+                'status' => 1,
+                'approved_by' => $userId,
+                'approved_at' => now()
+            ]);
+
             return $blogger->posts->insert($credential->blog_id, $post, $isDraft);
         } catch (\Google_Service_Exception $e) {
             return json_decode($e->getMessage());
+        }
+    }
+
+    public function updateTheCount($status, $userId)
+    {
+        // Get the current date
+        $currentDate = Carbon::now()->toDateString(); // This will give you 'YYYY-MM-DD' format
+
+        // Check if a record exists for the current date and user
+        $userListingCount = UserListingCount::where('user_id', $userId)
+            ->where('status', $status)
+            ->whereDate('created_at', $currentDate)
+            ->first();
+
+        if ($userListingCount) {
+            // If record exists, increment the approved_count
+            $userListingCount->increment('create_count');
+            $userListingCount->status = $status; // Update status if needed
+            $userListingCount->save();
+        } else {
+            // If no record exists, create a new record
+            UserListingCount::create([
+                'user_id' => $userId,
+                'approved_count' => 1,
+                'status' => $status,
+            ]);
         }
     }
 
@@ -320,7 +361,7 @@ class GoogleService
      * 
      * @return void
      */
-    public function updatePost($data, $postId)
+    public function updatePost($data, $postId, $userId = null)
     {
         try {
             $credential = $this->getCredentails();
@@ -364,6 +405,19 @@ class GoogleService
             $existingPost->content = view('listing.template', compact('data'))->render();
             $existingPost->setLabels($data['label']);
             // $existingPost->setImages('Testing');
+
+            $listing = Listing::find($getData['id']);
+
+            $additionalInfo = UserListingInfo::where('listings_id', $listing->id)
+                ->first();
+
+            $listing->delete();
+
+            $additionalInfo->update([
+                'status' => 1,
+                'approved_by' => $userId,
+                'approved_at' => now()
+            ]);
 
             return $blogger->posts->update($credential->blog_id, $postId, $existingPost);
         } catch (\Google_Service_Exception $e) {

@@ -14,9 +14,8 @@ return new class extends Migration
         Schema::create('user_listing_counts', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->integer('approved_count');
-            $table->integer('reject_count');
-            $table->date('date');
+            $table->integer('approved_count')->default(0);
+            $table->integer('reject_count')->default(0);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

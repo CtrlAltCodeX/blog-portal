@@ -9,6 +9,7 @@ use App\Models\Listing;
 use App\Models\SiteSetting;
 use App\Models\UserListingCount;
 use App\Models\UserListingInfo;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -55,7 +56,7 @@ class ListingController extends Controller
             return view('settings.error');
         }
 
-        $response = Http::get($url . '/feeds/posts/default?alt=json');
+        $response = Http::withoutVerifying()->get($url . '/feeds/posts/default?alt=json');
 
         $categories = $response->json()['feed']['category'];
 
@@ -90,13 +91,13 @@ class ListingController extends Controller
 
             $listing->delete();
 
-            if ($additionalInfo) {
-                $additionalInfo->update([
-                    'status' => 1,
-                    'approved_by' => auth()->user()->id,
-                    'approved_at' => now()
-                ]);
-            }
+            $additionalInfo->update([
+                'status' => 1,
+                'approved_by' => auth()->user()->id,
+                'approved_at' => now()
+            ]);
+
+            $this->updateTheCount('Created');
 
             return redirect()->route('database-listing.index', ['status' => 0, 'startIndex' => 1, 'category' => '', 'user' => 'all']);
         }
@@ -224,7 +225,7 @@ class ListingController extends Controller
             return view('settings.error');
         }
 
-        $response = Http::get($url . '/feeds/posts/default?alt=json');
+        $response = Http::withoutVerifying()->get($url . '/feeds/posts/default?alt=json');
 
         $categories = $response->json()['feed']['category'];
 
@@ -265,6 +266,8 @@ class ListingController extends Controller
                     'approved_at' => now()
                 ]);
             }
+
+            $this->updateTheCount('Edited');
 
             return redirect()->route('database-listing.index', ['status' => 0, 'startIndex' => 1, 'category' => '', 'user' => 'all']);
         }
@@ -423,5 +426,37 @@ class ListingController extends Controller
         }
 
         return view('listing.search', compact('googlePosts'));
+    }
+
+    /**
+     * Update or Create Count
+     *
+     * @param string $status
+     * @return void
+     */
+    public function updateTheCount($status)
+    {
+        // Get the current date
+        $currentDate = Carbon::now()->toDateString(); // This will give you 'YYYY-MM-DD' format
+
+        // Check if a record exists for the current date and user
+        $userListingCount = UserListingCount::where('user_id', auth()->user()->id)
+            ->where('status', $status)
+            ->whereDate('created_at', $currentDate)
+            ->first();
+
+        if ($userListingCount) {
+            // If record exists, increment the approved_count
+            $userListingCount->increment('approved_count');
+            $userListingCount->status = $status; // Update status if needed
+            $userListingCount->save();
+        } else {
+            // If no record exists, create a new record
+            UserListingCount::create([
+                'user_id' => auth()->user()->id,
+                'approved_count' => 1,
+                'status' => $status,
+            ]);
+        }
     }
 }

@@ -14,6 +14,7 @@ use App\Models\UserListingCount;
 use App\Models\UserListingInfo;
 use Illuminate\Support\Facades\Http;
 use App\Services\GoogleService;
+use Carbon\Carbon;
 
 class DatabaseListingController extends Controller
 {
@@ -80,7 +81,8 @@ class DatabaseListingController extends Controller
             return view('settings.error');
         }
 
-        $response = Http::get($url . '/feeds/posts/default?alt=json');
+        $response = Http::withoutVerifying()
+            ->get($url . '/feeds/posts/default?alt=json');
 
         $categories = $response->json()['feed']['category'];
 
@@ -128,6 +130,8 @@ class DatabaseListingController extends Controller
                 'status' => 0,
             ]);
 
+            $this->updateTheCount('Created', 'create_count');
+
             if ($listing) {
                 session()->flash('success', 'Listing created successfully');
 
@@ -159,7 +163,8 @@ class DatabaseListingController extends Controller
             return view('settings.error');
         }
 
-        $response = Http::get($url . '/feeds/posts/default?alt=json');
+        $response = Http::withoutVerifying()
+            ->get($url . '/feeds/posts/default?alt=json');
 
         $categories = $response->json()['feed']['category'];
 
@@ -195,22 +200,7 @@ class DatabaseListingController extends Controller
         $listing = Listing::find($id);
 
         if ($request->status == 2) {
-            $count = UserListingCount::where('user_id', $request->created_by)
-                ->where('date', $request->created_on)
-                ->first();
-
-            if ($count) {
-                $count->update([
-                    'reject_count' => ++$count->reject_count,
-                ]);
-            } else {
-                UserListingCount::create([
-                    'user_id' => $request->created_by,
-                    'date' => $request->created_on,
-                    'approved_count' => 0,
-                    'reject_count' => 1,
-                ]);
-            }
+            $this->updateTheCount('Created', 'reject_count');
 
             $data['status'] = request()->status;
 
@@ -254,6 +244,13 @@ class DatabaseListingController extends Controller
             ->delete();
 
         if ($listing->delete()) {
+
+            if (request()->edit) {
+                $this->updateTheCount('Edited', 'delete_count');
+            } else {
+                $this->updateTheCount('Created', 'delete_count');
+            }
+
             session()->flash('success', 'Listing deleted succesfully.');
 
             return redirect()->back();
@@ -271,9 +268,11 @@ class DatabaseListingController extends Controller
      */
     public function updateStatus()
     {
+        // For Publishing and saving to Draft
         if (request()->publish == 3 || request()->publish == 4) {
             foreach (request()->ids as $loopIndex => $id) {
-                $job = PublishProducts::dispatch($id, request()->publish, auth()->user()->id)->delay(now()->addSeconds(10 * $loopIndex));
+                $job = PublishProducts::dispatch($id, request()->publish, auth()->user()->id)
+                    ->delay(now()->addSeconds(10 * $loopIndex));
 
                 $loopIndex++;
 
@@ -288,7 +287,8 @@ class DatabaseListingController extends Controller
             }
         } else if (request()->publish == 5) {
             foreach (request()->ids as $loopIndex => $id) {
-                $job = UpdateProducts::dispatch($id, request()->publish, auth()->user()->id)->delay(now()->addSeconds(10 * $loopIndex));
+                $job = UpdateProducts::dispatch($id, request()->publish, auth()->user()->id)
+                    ->delay(now()->addSeconds(10 * $loopIndex));
 
                 $loopIndex++;
 
@@ -315,7 +315,6 @@ class DatabaseListingController extends Controller
                 if ($status == 2 && !$userCount) {
                     UserListingCount::create([
                         'user_id' => $listing->created_by,
-                        'date' => $listing->created_at,
                         'approved_count' => 0,
                         'reject_count' => 1,
                     ]);
@@ -360,8 +359,6 @@ class DatabaseListingController extends Controller
             // ->where('categories', 'LIKE', '%' . request()->category . '%')
             ->whereNotNull('product_id');
 
-        $googlePosts = $googlePosts->paginate(150);
-
         $allCounts = Listing::whereNotNull('product_id')->count();
 
         $pendingCounts = Listing::whereNotNull('product_id')->where('status', 0);
@@ -372,11 +369,15 @@ class DatabaseListingController extends Controller
             $pendingCounts = $pendingCounts->where('created_by', auth()->user()->id);
 
             $rejectedCounts = $rejectedCounts->where('created_by', auth()->user()->id);
+
+            $googlePosts->where('created_by', auth()->user()->id);
         }
 
         $pendingCounts = $pendingCounts->count();
 
         $rejectedCounts = $rejectedCounts->count();
+
+        $googlePosts = $googlePosts->paginate(150);
 
         $users = User::where('status', 1)->get();
 
@@ -401,7 +402,8 @@ class DatabaseListingController extends Controller
             return view('settings.error');
         }
 
-        $response = Http::get($url . '/feeds/posts/default?alt=json');
+        $response = Http::withoutVerifying()
+            ->get($url . '/feeds/posts/default?alt=json');
 
         $categories = $response->json()['feed']['category'];
 
@@ -419,7 +421,7 @@ class DatabaseListingController extends Controller
             return view('settings.error');
         }
 
-        $response = Http::get($url . '/feeds/posts/default/' . $id . '?alt=json');
+        $response = Http::withoutVerifying()->get($url . '/feeds/posts/default/' . $id . '?alt=json');
 
         $products = (object) ($response->json()['entry']);
 
@@ -534,7 +536,8 @@ class DatabaseListingController extends Controller
             'multiple_images' => $images ?? '',
         ];
 
-        $response = Http::get($url . '/feeds/posts/default?alt=json');
+        $response = Http::withoutVerifying()
+            ->get($url . '/feeds/posts/default?alt=json');
 
         $categories = $response->json()['feed']['category'];
 
@@ -577,17 +580,19 @@ class DatabaseListingController extends Controller
 
         Listing::create($allInfo);
 
-        $additionalInfo = UserListingInfo::where('image', request()->images)
-            ->where('title', request()->title)
-            ->first();
+        // $additionalInfo = UserListingInfo::where('image', request()->images)
+        //     ->where('title', request()->title)
+        //     ->first();
 
-        if ($additionalInfo) {
-            $additionalInfo->update([
-                'status' => 0,
-                'approved_by' => auth()->user()->id,
-                'approved_at' => now()
-            ]);
-        }
+        // if ($additionalInfo) {
+        //     $additionalInfo->update([
+        //         'status' => 0,
+        //         'approved_by' => auth()->user()->id,
+        //         'approved_at' => now()
+        //     ]);
+        // }
+
+        $this->updateTheCount('Edited', 'create_count');
 
         session()->flash('success', 'Pending for Approval');
 
@@ -605,5 +610,37 @@ class DatabaseListingController extends Controller
             ->paginate(150);
 
         return view('listing.articles', compact('articles'));
+    }
+
+    /**
+     * Update or Create Count
+     *
+     * @param string $status
+     * @return void
+     */
+    public function updateTheCount($status, $column)
+    {
+        // Get the current date
+        $currentDate = Carbon::now()->toDateString(); // This will give you 'YYYY-MM-DD' format
+
+        // Check if a record exists for the current date and user
+        $userListingCount = UserListingCount::where('user_id', auth()->user()->id)
+            ->where('status', $status)
+            ->whereDate('created_at', $currentDate)
+            ->first();
+
+        if ($userListingCount) {
+            // If record exists, increment the approved_count
+            $userListingCount->increment($column);
+            $userListingCount->status = $status; // Update status if needed
+            $userListingCount->save();
+        } else {
+            // If no record exists, create a new record
+            UserListingCount::create([
+                'user_id' => auth()->user()->id,
+                $column => 1,
+                'status' => $status,
+            ]);
+        }
     }
 }

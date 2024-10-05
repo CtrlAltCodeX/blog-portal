@@ -4,7 +4,6 @@ namespace App\Jobs;
 
 use App\Events\PublishProducts as EventsPublishProducts;
 use App\Models\Listing;
-use App\Models\UserListingInfo;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -40,34 +39,23 @@ class PublishProducts implements ShouldQueue
     {
         $getData = Listing::find($this->id);
 
-        if(isset($getData->images)){
+        if (isset($getData->images)) {
             $getData['images'] = [$getData->images];
         }
+
         $getData['label'] = $getData->categories;
         $getData['pages'] = $getData->no_of_pages;
         $getData['binding'] = $getData->binding_type;
         $getData['url'] = $getData->insta_mojo_url;
         $getData['publication'] = $getData->publisher;
-        $result = app('App\Services\GoogleService')->createPost($getData->toArray(), $this->isDraft);
+        $result = app('App\Services\GoogleService')
+            ->createPost($getData->toArray(), $this->isDraft, $this->user);
 
         if ($result?->error?->code == 401) {
             event(new EventsPublishProducts($this->id, $result->error->message));
-        } else if (isset($result->id)) {
-            $listing = Listing::find($this->id);
-
-            $additionalInfo = UserListingInfo::where('title', $listing->title)
-                ->where('image', $listing->images)
-                ->first();
-
-            $listing->delete();
-
-            if ($additionalInfo) {
-                $additionalInfo->update([
-                    'status' => 1,
-                    'approved_by' => $this->user,
-                    'approved_at' => now()
-                ]);
-            }
         }
+        //  else if (isset($result->id)) {
+            
+        // }
     }
 }

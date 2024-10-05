@@ -98,6 +98,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         @can('Inventory -> Counts Report')
                         <li><a href="{{ route('profile.listing', ['user' => 'all', 'status' => 0]) }}" class="slide-item {{ (request()->is('admin/profile/listings')) ? 'active' : '' }}">{{ __('Listing Counts Report ( DB )') }}</a></li>
                         @endcan
+                        <li><a href="{{ route('users.count') }}" class="slide-item {{ (request()->is('admin/users/count/users')) ? 'active' : '' }}">{{ __('Detailed Count Reports') }}</a></li>
                     </ul>
                 </li>
                 @endcan
