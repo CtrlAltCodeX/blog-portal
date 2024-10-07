@@ -184,7 +184,7 @@
                                 </div>
 
                                 <div class="form-group col-3">
-                                    <label for="password" class="form-label">{{ __('Posting Price') }}</label>
+                                    <label for="password" class="form-label">{{ __('Listing Rates (Per Listings)') }}</label>
                                     <input id="price" type="number" value="{{ $user->posting_rate }}" class="form-control @error('posting_rate') is-invalid @enderror" name="posting_rate" placeholder="Posting Price">
 
                                     @error('posting_rate')

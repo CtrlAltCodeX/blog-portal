@@ -85,6 +85,10 @@ class ProfileController extends Controller
             $userListings = $userListings->where('status', request()->status);
         }
 
+        if (request()->status_listing) {
+            $userListings = $userListings->where('status_listing', request()->status_listing);
+        }
+
         $approved = UserListingInfo::where('approved_by', '!=', '');
 
         $pending = UserListingInfo::where('status', 0);

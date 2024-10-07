@@ -10,9 +10,9 @@
         height: 0px !important;
         margin-top: 0px;
     }
-    
+
     .pagination {
-        justify-content:end;
+        justify-content: end;
     }
 </style>
 @endpush
@@ -25,7 +25,20 @@
                 <div class="card-header d-flex flex-column">
                     <div class="d-flex w-100 justify-content-between mb-4">
                         <h2 class="card-title">Listing Counts Report ( DB )</h2>
-                        <div>
+                        <div class="d-flex align-items-center">
+                            <form action="{{ route('profile.listing') }}" method="GET" id='status_form'>
+                                <input type="hidden" name="status" value="{{ request()->status }}">
+                                <input type="hidden" name="user" value="{{ request()->user }}">
+                                <label>
+                                    Created
+                                    <input type="radio" {{ request()->status_listing == 'Created' ? 'checked' : '' }} name="status_listing" class='status_listing' value="Created" />
+                                </label>
+    
+                                <label>
+                                    Edited
+                                    <input type="radio" {{ request()->status_listing == 'Edited' ? 'checked' : '' }} name="status_listing" value="Edited" class='status_listing' />
+                                </label>
+                            </form>
                             <a href="{{ route('profile.listing', ['user' => 'all', 'status' => 0, 'from' => request()->from, 'to' => request()->to]) }}" class="btn btn-sm btn-warning position-relative me-2 mb-2"> Pending
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{ $pending }}
                                     <span class="visually-hidden">unread messages</span>
@@ -63,7 +76,7 @@
                                 </div><input class="form-control fc-datepicker" value="{{ request()->from }}" name="from" placeholder="DD/MM/YYYY" type="text">
                             </div>
                             <div class="input-group w-50">
-                            <label class="m-2">End Date</label>
+                                <label class="m-2">End Date</label>
                                 <div class="input-group-text">
                                     <i class="fa fa-calendar tx-16 lh-0 op-6"></i>
                                 </div><input class="form-control fc-datepicker" value="{{ request()->to }}" name="to" placeholder="DD/MM/YYYY" type="text">
@@ -245,6 +258,10 @@
                 }
             });
         });
+
+        $(".status_listing").click(function(){
+            $('#status_form').submit();
+        })
     })
 </script>
 

@@ -107,6 +107,7 @@ $getRoles = app('App\Http\Controllers\RoleController');
                                     <th>{{ __('Roles') }}</th>
                                     <th>{{ __('Session Type') }}</th>
                                     <th>{{ __('Status') }}</th>
+                                    <th>{{ __('Posting Rate') }}</th>
                                     @canany(['User Details -> All Users List -> Edit', 'User delete'])
                                     <th>{{ __('Actions') }}</th>
                                     @endcanany
@@ -130,6 +131,7 @@ $getRoles = app('App\Http\Controllers\RoleController');
                                     <td>{{ $user->allow_sessions ? 'Single' : 'Multiple' }}</td>
                                     <td><span class="badge bg-{{ $user->status ? 'success' : 'danger' }}">{{ $user->status ? 'Active' : 'Inactive' }}</span>
                                     </td>
+                                    <td>₹ {{ $user->posting_rate }}</td>
                                     <td>
                                         <div class="btn-group btn-group-sm" role="group" aria-label="{{ __('Actions') }}">
                                             @can('User Details -> All Users List -> Edit')

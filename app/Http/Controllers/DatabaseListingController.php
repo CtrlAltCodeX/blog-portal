@@ -128,6 +128,8 @@ class DatabaseListingController extends Controller
                 'approved_by' => null,
                 'approved_at' => null,
                 'status' => 0,
+                'status_listing' => 'Created',
+                'listings_id' => $listing->id,
             ]);
 
             $this->updateTheCount('Created', 'create_count');
@@ -578,7 +580,20 @@ class DatabaseListingController extends Controller
             'status' => 0,
         ];
 
-        Listing::create($allInfo);
+        $listing = Listing::create($allInfo);
+
+        $data = [
+            'image' => $listing->images[0],
+            'title' => $listing->title,
+            'created_by' => auth()->user()->id,
+            'approved_by' => null,
+            'approved_at' => null,
+            'status' => 0,
+            'status_listing' => 'Edited',
+            'listings_id' =>  $listing->id
+        ];
+
+        UserListingInfo::create($data);
 
         // $additionalInfo = UserListingInfo::where('image', request()->images)
         //     ->where('title', request()->title)
