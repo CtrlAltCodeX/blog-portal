@@ -96,7 +96,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         <li><a href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => 3]) }}" class="slide-item {{ request()->is('admin/inventory/review') ? 'active' : '' }}">{{ __('Review Inventory ( M/S )') }}</a></li>
                         @endcan
                         @can('Inventory -> Counts Report')
-                        <li><a href="{{ route('profile.listing', ['user' => 'all', 'status' => 0]) }}" class="slide-item {{ (request()->is('admin/profile/listings')) ? 'active' : '' }}">{{ __('Listing Counts Report ( DB )') }}</a></li>
+                        <li><a href="{{ route('profile.listing', ['user' => 'all', 'status' => 0, 'status_listing' => 'Created']) }}" class="slide-item {{ (request()->is('admin/profile/listings')) ? 'active' : '' }}">{{ __('Listing Counts Report ( DB )') }}</a></li>
                         @endcan
                         <li><a href="{{ route('users.count') }}" class="slide-item {{ (request()->is('admin/users/count/users')) ? 'active' : '' }}">{{ __('Detailed Count Reports') }}</a></li>
                     </ul>

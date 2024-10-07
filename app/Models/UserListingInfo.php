@@ -17,6 +17,8 @@ class UserListingInfo extends Model
         'approved_by',
         'approved_at',
         'status',
+        'listings_id',
+        'status_listing'
     ];
 
     public function create_user()
