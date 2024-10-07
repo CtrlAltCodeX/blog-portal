@@ -66,6 +66,22 @@ $buttonFour = explode(',',$siteSettings?->button_4);
                         <input id="button_4_href" type="text" class="form-control @error('button_4_href') is-invalid @enderror" name="button_4_href" value="{{ $buttonFour[1]??'' }}" autofocus placeholder="Button Link">
                     </div>
                 </div>
+                
+                <div class="form-group">
+                    <label for="name" class="form-label">{{ __('Listing Button 1') }}<span class="text-danger">*</span></label>
+                    <div class="d-flex" style="grid-gap: 10px;">
+                        <input id="listing_button_1" type="text" class="form-control @error('listing_button_1') is-invalid @enderror" name="listing_button_1" value="{{ $siteSettings->listing_button_1??'' }}" autofocus placeholder="Button Four">
+                        <input id="listing_button_1_link" type="text" class="form-control @error('listing_button_1_link') is-invalid @enderror" name="listing_button_1_link" value="{{ $siteSettings->listing_button_1_link??'' }}" autofocus placeholder="Listing Button 1">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="name" class="form-label">{{ __('Listing Button 2') }}<span class="text-danger">*</span></label>
+                    <div class="d-flex" style="grid-gap: 10px;">
+                        <input id="listing_button_2" type="text" class="form-control @error('listing_button_2') is-invalid @enderror" name="listing_button_2" value="{{ $siteSettings->listing_button_2??'' }}" autofocus placeholder="Button Four">
+                        <input id="listing_button_2_link" type="text" class="form-control @error('listing_button_2_link') is-invalid @enderror" name="listing_button_2_link" value="{{ $siteSettings->listing_button_2_link??'' }}" autofocus placeholder="Listing Button 2">
+                    </div>
+                </div>
 
                 <div class="form-group">
                     <label for="name" class="form-label">{{ __('Logo') }}<span class="text-danger">*</span></label>

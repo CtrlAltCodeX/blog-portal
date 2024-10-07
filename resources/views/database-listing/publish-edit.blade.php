@@ -68,8 +68,9 @@
                             <div class="form-group">
                                 <label for="description" class="form-label d-flex justify-content-between">
                                     <div>{{ __('Product Description') }}<span class="text-danger">*</span><span class="text-success"> (Suggestion - Title + Description + Search Key) </span></div>
-                                    <div>
-                                        <a href='https://www.commontools.org/tool/replace-new-lines-with-commas-40' target='_blank'>Line Remover | </a><a target='_blank' href="https://chat.openai.com"> ChatGPT</a>
+                                    <div class="d-flex">
+                                        <a href='{{ $siteSetting->listing_button_1_link }}' target='_blank'>{{ $siteSetting->listing_button_1 }} | &nbsp;</a><a target='_blank' href="{{ $siteSetting->listing_button_2_link }}"> {{ $siteSetting->listing_button_2 }} | </a>
+                                        <a href='https://www.commontools.org/tool/replace-new-lines-with-commas-40' target='_blank'>&nbsp;Line Remover | </a><a target='_blank' href="https://chat.openai.com"> ChatGPT</a>
                                     </div>
                                 </label>
                                 <label for="description" class="form-label d-flex justify-content-between text-danger" style="margin-top: -10px;">

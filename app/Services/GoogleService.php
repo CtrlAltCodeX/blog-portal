@@ -86,6 +86,8 @@ class GoogleService
 
             $client = $this->createGoogleClient($credential->toArray());
 
+            $client->setHttpClient(new \GuzzleHttp\Client(['verify' => false]));
+
             $token = $client->fetchAccessTokenWithAuthCode($data['code']);
 
             $credential->token = json_encode($token);
@@ -152,7 +154,7 @@ class GoogleService
                 }
 
                 if (SiteSetting::first()->url) {
-                    $response = Http::get(SiteSetting::first()->url . '/feeds/posts/default', $params);
+                    $response = Http::withoutVerifying()->get(SiteSetting::first()->url . '/feeds/posts/default', $params);
                     $response = json_decode(json_encode($response->json()))->feed;
                     $posts = $response->entry ?? [];
                     $filteredPost = $response->entry ?? [];
@@ -228,7 +230,7 @@ class GoogleService
      * 
      * @param array $data
      */
-    public function createPost(array $data, $draft = null, $userId = null)
+    public function createPost(array $data, $draft = null, $userId)
     {
         try {
             $credential = $this->getCredentails();
@@ -237,6 +239,7 @@ class GoogleService
 
             $client->setScopes('https://www.googleapis.com/auth/blogger');
             $client->setAccessToken(json_decode($credential->token)->access_token);
+            $client->setHttpClient(new \GuzzleHttp\Client(['verify' => false]));
 
             $data['multiple_images'] = [];
             $data['processed_images'] = [];
@@ -265,35 +268,24 @@ class GoogleService
 
             if ($draft == 4) $isDraft = ['isDraft' => 1];
 
-            if (isset($data['database'])) {
-                // Listing::find($data['database'])->delete();
+            if (isset($data['id']) || isset($data['database'])) {
+                $id = isset($data['id']) ? $data['id'] : $data['database'];
 
-                // $additionalInfo = UserListingInfo::where('image', $data['images'][0])
-                //     ->where('title', $data['title'])
-                //     ->first();
+                $listing = Listing::find($id);
 
-                // if ($additionalInfo) {
-                //     $additionalInfo->update([
-                //         'status' => request()->status,
-                //         'approved_by' => auth()->user()->id,
-                //         'approved_at' => now()
-                //     ]);
-                // }
+                $this->updateTheCount('Created', $userId);
+
+                $additionalInfo = UserListingInfo::where('listings_id', $listing->id)
+                    ->first();
+
+                $listing->delete();
+
+                $additionalInfo->update([
+                    'status' => 1,
+                    'approved_by' => $userId,
+                    'approved_at' => now()
+                ]);
             }
-
-            $listing = Listing::find($data['id']);
-
-            $this->updateTheCount('Created', $userId);
-
-            $additionalInfo = UserListingInfo::where('listings_id', $listing->id)->first();
-
-            $listing->delete();
-
-            $additionalInfo->update([
-                'status' => 1,
-                'approved_by' => $userId,
-                'approved_at' => now()
-            ]);
 
             return $blogger->posts->insert($credential->blog_id, $post, $isDraft);
         } catch (\Google_Service_Exception $e) {
@@ -361,7 +353,7 @@ class GoogleService
      * 
      * @return void
      */
-    public function updatePost($data, $postId, $userId = null)
+    public function updatePost($data, $postId, $userId)
     {
         try {
             $credential = $this->getCredentails();
@@ -372,6 +364,8 @@ class GoogleService
 
             $client->setAccessToken(json_decode($credential->token)->access_token);
 
+            $client->setHttpClient(new \GuzzleHttp\Client(['verify' => false]));
+
             $blogger = new Google_Service_Blogger($client);
 
             $existingPost = $blogger->posts->get($credential->blog_id, $postId);
@@ -379,7 +373,7 @@ class GoogleService
             $data['processed_images'] = [];
             $data['multiple_images'] = [];
 
-            $data['processed_images'] = $data['images'];
+            $data['processed_images'] = [];
 
             // if (isset($data['images'])) {
             //     foreach ($data['images'] as $image) {
@@ -404,20 +398,24 @@ class GoogleService
             $existingPost->title = $data['title'];
             $existingPost->content = view('listing.template', compact('data'))->render();
             $existingPost->setLabels($data['label']);
-            // $existingPost->setImages('Testing');
 
-            $listing = Listing::find($getData['id']);
+            if ($data['product_id']) {
+                $listing = Listing::where('product_id', $data['product_id'])
+                    ->first();
 
-            $additionalInfo = UserListingInfo::where('listings_id', $listing->id)
-                ->first();
+                $additionalInfo = UserListingInfo::where('listings_id', $listing->id)
+                    ->first();
 
-            $listing->delete();
+                $additionalInfo->update([
+                    'status' => 1,
+                    'approved_by' => $userId,
+                    'approved_at' => now()
+                ]);
 
-            $additionalInfo->update([
-                'status' => 1,
-                'approved_by' => $userId,
-                'approved_at' => now()
-            ]);
+                $this->updateTheCount('Edited', $userId);
+
+                $listing->delete();
+            }
 
             return $blogger->posts->update($credential->blog_id, $postId, $existingPost);
         } catch (\Google_Service_Exception $e) {

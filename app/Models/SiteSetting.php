@@ -19,6 +19,10 @@ class SiteSetting extends Model
         'button_1',
         'button_2',
         'button_3',
-        'button_4'
+        'button_4',
+        'listing_button_1',
+        'listing_button_1_link',
+        'listing_button_2',
+        'listing_button_2_link'
     ];
 }

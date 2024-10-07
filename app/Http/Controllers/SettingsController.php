@@ -82,6 +82,10 @@ class SettingsController extends Controller
             'button_2' => request()->button_2 . "," . request()->button_2_href,
             'button_3' => request()->button_3 . "," . request()->button_3_href,
             'button_4' => request()->button_4 . "," . request()->button_4_href,
+            'listing_button_1' => request()->listing_button_1,
+            'listing_button_1_link' => request()->listing_button_1_link,
+            'listing_button_2' => request()->listing_button_2,
+            'listing_button_2_link' => request()->listing_button_2_link,
         ];
 
         if (!$siteSettings) SiteSetting::create($data);
