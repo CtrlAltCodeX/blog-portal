@@ -49,13 +49,13 @@
                             <div class="form-group">
                                 <div class="d-flex align-items-center justify-content-between">
                                     <label for="title" class="form-label">{{ __('Product Title') }}<span class="text-danger">*</span> <span class="text-success">(Product Name | Author | Edition | Publication ( Medium ) )</span></label>
-                                    <span id="charCount">0/130</span>
+                                    <span id="charCount">0/160</span>
                                 </div>
                                 <label for="description" class="form-label d-flex justify-content-between text-danger" style="margin-top: -10px;">
                                     <div>{{ __('Excess Capitalism in Product Title Not Allowed') }}</div>
                                 </label>
 
-                                <input minlength="75" maxlength="130" id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') ?? $listing->title }}" autocomplete="title" autofocus placeholder="title">
+                                <input minlength="75" maxlength="160" id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') ?? $listing->title }}" autocomplete="title" autofocus placeholder="title">
                                 <span class="error-message title" style="color:red;"></span>
 
                                 @error('title')
@@ -196,7 +196,7 @@
                                 <label for="label" class="form-label">{{ __('Category') }}<span class="text-danger">*</span><span class="text-danger"> ( Publication, 1 Category, 1 Tag, Others ) </span></label>
 
                                 <div class="d-flex flex-column">
-                                    <div id='count'>1 Selected</div>
+                                     <div id='count'><strong>Label Selected</strong> : 1</div>
                                     <div id='textLength'></div>
                                 </div>
                             </div>
@@ -354,7 +354,9 @@
 
                         <div style="text-align: right;">
                             @if(request()->edit)
+                            @can('Pending Listing ( DB ) -> Publish to Website')
                             <button class="btn btn-success float-right" id='website'>Update to Website</button>
+                            @endcan
                             @else
                             <button class="btn btn-warning float-right" id='update'>Request for update</button>
                             @endif

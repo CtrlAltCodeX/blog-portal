@@ -94,6 +94,14 @@ class ProfileController extends Controller
         $pending = UserListingInfo::where('status', 0);
 
         $rejected = UserListingInfo::where('status', 2);
+        
+        if (request()->status_listing) {
+            $approved = $approved->where('status_listing', request()->status_listing);
+            
+            $pending = $pending->where('status_listing', request()->status_listing);
+            
+            $rejected = $rejected->where('status_listing', request()->status_listing);
+        }
 
         if (request()->from && request()->to) {
             $from = \DateTime::createFromFormat('d/m/Y', request()->from);

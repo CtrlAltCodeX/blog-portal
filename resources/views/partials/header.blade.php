@@ -1,14 +1,14 @@
 @php
 $count = app('App\Models\UserListingCount');
 $currentMonthDataApproved = $count->whereMonth('created_at', \Carbon\Carbon::now()->month)
-    ->whereYear('created_at', \Carbon\Carbon::now()->year)
-    ->where('user_id', auth()->user()->id)
-    ->sum('approved_count');
+->whereYear('created_at', \Carbon\Carbon::now()->year)
+->where('user_id', auth()->user()->id)
+->sum('approved_count');
 
 $currentMonthDataCreated = $count->whereMonth('created_at', \Carbon\Carbon::now()->month)
-    ->whereYear('created_at', \Carbon\Carbon::now()->year)
-    ->where('user_id', auth()->user()->id)
-    ->sum('create_count');
+->whereYear('created_at', \Carbon\Carbon::now()->year)
+->where('user_id', auth()->user()->id)
+->sum('create_count');
 @endphp
 <!-- app-Header -->
 <div class="app-header header sticky">
@@ -228,7 +228,11 @@ $currentMonthDataCreated = $count->whereMonth('created_at', \Carbon\Carbon::now(
 
                 <div class="dropdown d-flex profile-1">
                     <a href="javascript:void(0)" data-bs-toggle="dropdown" class="nav-link leading-none d-flex">
-                        <img src="{{ auth()->user()->profile }}" alt="profile-user asdasd" class="avatar  profile-user brround cover-image">
+                        @if(auth()->user()->profile)
+                        <img src="{{ auth()->user()->profile }}" alt="profile-user asdasd" class="avatar profile-user brround cover-image">
+                        @else
+                        <p class='avatar profile-user brround cover-image text-dark'>{{ auth()->user()->name[0]; }}</p>
+                        @endif
                     </a>
                     <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                         <div class="drop-heading">

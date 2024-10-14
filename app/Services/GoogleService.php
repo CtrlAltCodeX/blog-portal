@@ -306,7 +306,7 @@ class GoogleService
 
         if ($userListingCount) {
             // If record exists, increment the approved_count
-            $userListingCount->increment('create_count');
+            $userListingCount->increment('approved_count');
             $userListingCount->status = $status; // Update status if needed
             $userListingCount->save();
         } else {
@@ -332,6 +332,8 @@ class GoogleService
             $client = new Google_Client();
 
             $client->setScopes('https://www.googleapis.com/auth/blogger');
+
+            $client->setHttpClient(new \GuzzleHttp\Client(['verify' => false]));
 
             $client->setAccessToken(json_decode($credential->token)->access_token);
 
@@ -373,7 +375,7 @@ class GoogleService
             $data['processed_images'] = [];
             $data['multiple_images'] = [];
 
-            $data['processed_images'] = [];
+            $data['processed_images'] = $data['images'][0];
 
             // if (isset($data['images'])) {
             //     foreach ($data['images'] as $image) {

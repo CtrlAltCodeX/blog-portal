@@ -38,7 +38,7 @@ class WatermarkController extends Controller
             $filepath = explode('/', $path);
 
             foreach ($filepath as $name) {
-                if (strpos($name, '.jpg') !== false || strpos($name, '.png') !== false) {
+                if (strpos($name, '.jpg') !== false || strpos($name, '.png') !== false || strpos($name, '.jpeg') !== false) {
                     $files[$key]['name'] = $name;
                 }
             }

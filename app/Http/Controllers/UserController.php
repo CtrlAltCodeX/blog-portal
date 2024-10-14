@@ -298,9 +298,11 @@ class UserController extends Controller
 
     public function userCounts()
     {
-        // Query for 'Created' status
+        // Initialize query for 'Created' status and group by user
         $countCreated = UserListingCount::with('user')
-            ->where('status', 'Created');
+            ->selectRaw('user_id, sum(create_count) as total_created, sum(approved_count) as total_approved, sum(reject_count) as total_rejected, sum(delete_count) as total_deleted')
+            ->where('status', 'Created')
+            ->groupBy('user_id');
 
         if (request()->has('start_date') && request()->has('end_date')) {
             $startDate = Carbon::parse(request()->start_date);
@@ -319,9 +321,11 @@ class UserController extends Controller
 
         $countCreated = $countCreated->get();
 
-        // Query for 'Edited' status
+        // Initialize query for 'Edited' status and group by user
         $countEdited = UserListingCount::with('user')
-            ->where('status', 'Edited');
+            ->selectRaw('user_id, sum(create_count) as total_created, sum(approved_count) as total_approved, sum(reject_count) as total_rejected, sum(delete_count) as total_deleted')
+            ->where('status', 'Edited')
+            ->groupBy('user_id');
 
         if (request()->has('start_date') && request()->has('end_date')) {
             $startDate = Carbon::parse(request()->start_date);

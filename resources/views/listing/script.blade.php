@@ -116,7 +116,7 @@
             if (!url.includes('https://www.instamojo.com/EXAM360/')) {
                 errorHandling('url', 'Please add instamojo link', false, this);
             } else {
-                errorHandling(fieldId, '', true, this);
+                errorHandling('url', '', true, this);
             }
         });
 
@@ -131,100 +131,112 @@
             },
         });
 
-        $('#form').submit(function(event) {
-            // Reset previous error messages
-            $('.error-message').text('');
+        // $('#form').submit(function(event) {
 
-            // Flag to check if any URL is found
-            var valid = true;
-            var requiredvalid = true;
+        // let totalLength = 0;
+        // let selectedOptions = $('.select2').find('option:selected');
 
-            // Iterate over each input field with the class 'no-url-validation'
-            $('input').each(function() {
-                var inputValue = $(this).val();
-                var urlRegex = /^(http|https):\/\/[^\s\[\]]*$/i;
+        // selectedOptions.each(function() {
+        //     totalLength += $(this).text().trim().length;
+        // });
 
-                if ((urlRegex.test(inputValue) &&
-                        inputValue != 'http://' &&
-                        inputValue != 'url') ||
-                    (inputValue.includes('[') ||
-                        inputValue.includes(']'))
-                ) {
-                    // Display error message
-                    var fieldId = $(this).attr('name');
-                    if (fieldId != 'images[]' && fieldId != 'multipleImages[]' && fieldId != 'url' && fieldId != 'images') {
-                        $(this).css('border', '1px red solid');
+        // if (totalLength < 170) {
+        //     event.preventDefault();
+        //     alert('You must select at least 170 characters in Category.');
+        // }
+        //     // Reset previous error messages
+        //     $('.error-message').text('');
 
-                        $('.' + fieldId).text('Please do not enter URLs.');
-                        valid = false;
-                    }
-                }
+        //     // Flag to check if any URL is found
+        //     var valid = true;
+        //     var requiredvalid = true;
 
-                if (inputValue == '') {
-                    var fieldId = $(this).attr('name');
-                    if (fieldId != 'multipleImages[]' &&
-                        fieldId != 'files' &&
-                        fieldId
-                    ) {
-                        $(this).css('border', '1px red solid');
-                        $('.' + fieldId).text('This field is required');
-                        requiredvalid = false;
-                    }
-                }
-            });
+        //     // Iterate over each input field with the class 'no-url-validation'
+        //     $('input').each(function() {
+        //         var inputValue = $(this).val();
+        //         var urlRegex = /^(http|https):\/\/[^\s\[\]]*$/i;
 
-            $('textarea').each(function() {
-                var textareaValue = $(this).val();
-                var urlRegex = /^(http|https):\/\/[^\s]*$/i;
+        //         if ((urlRegex.test(inputValue) &&
+        //                 inputValue != 'http://' &&
+        //                 inputValue != 'url') ||
+        //             (inputValue.includes('[') ||
+        //                 inputValue.includes(']'))
+        //         ) {
+        //             // Display error message
+        //             var fieldId = $(this).attr('name');
+        //             if (fieldId != 'images[]' && fieldId != 'multipleImages[]' && fieldId != 'url' && fieldId != 'images') {
+        //                 $(this).css('border', '1px red solid');
 
-                if (urlRegex.test(textareaValue)) {
-                    // Display error message
-                    var fieldId = $(this).attr('name');
-                    $('.' + fieldId).text('Please do not enter URLs.');
-                    $(this).css('border', '1px red solid');
+        //                 $('.' + fieldId).text('Please do not enter URLs.');
+        //                 valid = false;
+        //             }
+        //         }
 
-                    valid = false;
-                }
+        //         if (inputValue == '') {
+        //             var fieldId = $(this).attr('name');
+        //             if (fieldId != 'multipleImages[]' &&
+        //                 fieldId != 'files' &&
+        //                 fieldId
+        //             ) {
+        //                 $(this).css('border', '1px red solid');
+        //                 $('.' + fieldId).text('This field is required');
+        //                 requiredvalid = false;
+        //             }
+        //         }
+        //     });
 
-                if (textareaValue == '') {
-                    var fieldId = $(this).attr('name');
-                    if (fieldId) {
-                        $(this).css('border', '1px red solid');
-                        $('.' + fieldId).text('This field is required');
-                        requiredvalid = false;
-                    }
-                }
-            });
+        //     $('textarea').each(function() {
+        //         var textareaValue = $(this).val();
+        //         var urlRegex = /^(http|https):\/\/[^\s]*$/i;
 
-            $('select').each(function() {
-                var textareaValue = $(this).val();
+        //         if (urlRegex.test(textareaValue)) {
+        //             // Display error message
+        //             var fieldId = $(this).attr('name');
+        //             $('.' + fieldId).text('Please do not enter URLs.');
+        //             $(this).css('border', '1px red solid');
 
-                if (textareaValue == '') {
-                    var fieldId = $(this).attr('name');
-                    if (fieldId) {
-                        $(this).css('border', '1px red solid');
-                        $('.' + fieldId).text('This field is required');
-                        requiredvalid = false;
-                    }
-                }
-            });
+        //             valid = false;
+        //         }
 
-            var url = $('#url').val();
-            if (!url.includes('https://www.instamojo.com/EXAM360/')) {
-                $('#url').css('border', '1px red solid');
-                $('.url').text('Please add instamojo link');
-                valid = false;
-            } else {
-                $(this).css('border', '1px solid #e9edf4');
-                $('.url').text('');
-                valid = true;
-            }
+        //         if (textareaValue == '') {
+        //             var fieldId = $(this).attr('name');
+        //             if (fieldId) {
+        //                 $(this).css('border', '1px red solid');
+        //                 $('.' + fieldId).text('This field is required');
+        //                 requiredvalid = false;
+        //             }
+        //         }
+        //     });
 
-            // Prevent form submission if a URL is found
-            if (!valid || !requiredvalid) {
-                event.preventDefault();
-            }
-        });
+        //     $('select').each(function() {
+        //         var textareaValue = $(this).val();
+
+        //         if (textareaValue == '') {
+        //             var fieldId = $(this).attr('name');
+        //             if (fieldId) {
+        //                 $(this).css('border', '1px red solid');
+        //                 $('.' + fieldId).text('This field is required');
+        //                 requiredvalid = false;
+        //             }
+        //         }
+        //     });
+
+        //     var url = $('#url').val();
+        //     if (!url.includes('https://www.instamojo.com/EXAM360/')) {
+        //         $('#url').css('border', '1px red solid');
+        //         $('.url').text('Please add instamojo link');
+        //         valid = false;
+        //     } else {
+        //         $(this).css('border', '1px solid #e9edf4');
+        //         $('.url').text('');
+        //         valid = true;
+        //     }
+
+        //     // Prevent form submission if a URL is found
+        //     if (!valid || !requiredvalid) {
+        //         event.preventDefault();
+        //     }
+        // });
 
         setTimeout(function() {
             calculateFields();
@@ -402,41 +414,41 @@
             totalLength += textLength;
         });
 
-        $('#textLength').html('Total Length: ' + totalLength);
+        $('#textLength').html('<strong>Total Length:</strong> ' + totalLength + ' (Min:170, Max.:188)');
 
 
-        let maxLength = 192;
+        let maxLength = 188;
         $('.select2').on('change', function(event) {
             let totalLength = 0; // Reset total length before recalculating
             let selectedOptions = $(this).find('option:selected');
-        
+
             // Calculate the total length of the selected options
             selectedOptions.each(function() {
                 let optionText = $(this).text().trim();
                 let textLength = optionText.length;
                 totalLength += textLength;
             });
-        
+
             // Check if the total length exceeds the limit
             if (totalLength > maxLength) {
                 let lastSelected = $(this).val()[$(this).val().length - 1];
-                
+
                 $(this).find(`option[value='${lastSelected}']`).prop('selected', false); // Deselect only the last one
                 $(this).trigger('change.select2'); // Trigger the select2 change event to update the UI
-        
+
                 alert('You have reached the maximum limit of 192 characters.');
                 totalLength -= $(this).find(`option[value='${lastSelected}']`).text().trim().length; // Adjust total length after deselecting
             }
-        
+
             // Update the total length in the UI
-            $('#textLength').text('Total Length: ' + totalLength);
+            $('#textLength').html('<strong>Total Length:</strong> ' + totalLength + ' (Min:170, Max.:188)');
         });
     })
 
-    $('#count').html($('.select2').val().length + " Selected");
+    $('#count').html("<strong>Label Selected : </strong>" + $('.select2').val().length);
 
     $('.select2').change(function() {
-        $('#count').html($(this).val().length + " Selected");
+        $('#count').html("<strong>Label Selected : </strong>" + $(this).val().length);
     });
 
     function copyLink() {

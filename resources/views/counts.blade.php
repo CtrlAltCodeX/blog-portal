@@ -42,23 +42,28 @@
 <div>
     <div class="row row-sm">
         <div class="col-lg-12">
+            <h5 align=center class='text-primary'><strong>NOTE: </strong> By Default This Page Will Show Current Month Records If Date Range Not Selected.</h5>
             <div class="card">
                 <div class="card-header justify-content-between">
-                    <h3 class="card-title">Create </h3>
+                    <h3 class="card-title">Record 1 ( Create New Listing )</h3>
 
                     @if(auth()->user()->hasRole('Super Admin'))
                     <form action="{{ route('users.count') }}" method="GET" id='filter'>
                         <div class="d-flex" style="grid-gap:10px;">
-                            <div class="d-flex" style="grid-gap:10px;">
-                                <input type="date" name="start_date" class="form-control" value="{{ request()->start_date }}" />
-                                <input type="date" name="end_date" class="form-control" value="{{ request()->end_date }}" />
+                            <div class="d-flex align-items-center" style="grid-gap:10px;">
+                                <span>Start:</span>
+                                <input type="date" name="start_date" class="form-control " value="{{ request()->start_date }}" />
+                                <span>End:</span>
+                                <input type="date" name="end_date" class="form-control " value="{{ request()->end_date }}" />
                             </div>
                             <select class="form-control" id='user' name="user_id">
-                                <option value="">Select User</option>
+                                <option value="">All User</option>
                                 @foreach($users as $user)
                                 <option value="{{ $user->id }}" {{ request()->user_id == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
                                 @endforeach
                             </select>
+                            
+                            <button type='submit' class='btn btn-primary w-25'>Filter</button>
                         </div>
                     </form>
                     @endif
@@ -69,8 +74,8 @@
                         <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">
                             <thead>
                                 <tr>
-                                    <th>{{ __('Sl') }}</th>
-                                    <th>{{ __('Created') }}</th>
+                                    <th>{{ __('Sl. No.') }}</th>
+                                    <th>{{ __('New Created') }}</th>
                                     <th>{{ __('Approved') }}</th>
                                     <th>{{ __('Rejected') }}</th>
                                     <th>{{ __('Delete') }}</th>
@@ -84,10 +89,10 @@
                                 @forelse($countCreated as $key => $data)
                                 <tr>
                                     <td>{{ ++$key }}</td>
-                                    <td>{{ $data->create_count }}</td>
-                                    <td>{{ $data->approved_count }}</td>
-                                    <td>{{ $data->reject_count }}</td>
-                                    <td>{{ $data->delete_count }}</td>
+                                    <td>{{ $data->total_created }}</td>
+                                    <td>{{ $data->total_approved }}</td>
+                                    <td>{{ $data->total_rejected }}</td>
+                                    <td>{{ $data->total_deleted }}</td>
                                     <td>
                                         <a href="{{ route('profile.listing', ['user' => 'all', 'status' => 0]) }}" target='_blank'>View</a>
                                     </td>
@@ -106,7 +111,7 @@
 
             <div class="card">
                 <div class="card-header justify-content-between">
-                    <h3 class="card-title">Edit</h3>
+                    <h3 class="card-title">Record 2 ( Update Old Listing )</h3>
                 </div>
 
                 <div class="card-body">
@@ -114,8 +119,8 @@
                         <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">
                             <thead>
                                 <tr>
-                                    <th>{{ __('Sl') }}</th>
-                                    <th>{{ __('Created') }}</th>
+                                    <th>{{ __('Sl. No.') }}</th>
+                                    <th>{{ __('Updated / Created') }}</th>
                                     <th>{{ __('Approved') }}</th>
                                     <th>{{ __('Rejected') }}</th>
                                     <th>{{ __('Delete') }}</th>
@@ -129,10 +134,10 @@
                                 @forelse($countEdited as $key => $data)
                                 <tr>
                                     <td>{{ ++$key }}</td>
-                                    <td>{{ $data->create_count }}</td>
-                                    <td>{{ $data->approved_count }}</td>
-                                    <td>{{ $data->reject_count }}</td>
-                                    <td>{{ $data->delete_count }}</td>
+                                    <td>{{ $data->total_created }}</td>
+                                    <td>{{ $data->total_approved }}</td>
+                                    <td>{{ $data->total_rejected }}</td>
+                                    <td>{{ $data->total_deleted }}</td>
                                     <td>
                                         <a href="{{ route('profile.listing', ['user' => 'all', 'status' => 0]) }}" target='_blank'>View</a>
                                     </td>
@@ -152,13 +157,3 @@
     </div>
 </div>
 @endsection
-
-@push('js')
-<script>
-    $(document).ready(function() {
-        $('#user').change(function() {
-            $('#filter').submit();
-        });
-    })
-</script>
-@endpush

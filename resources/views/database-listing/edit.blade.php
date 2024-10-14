@@ -189,7 +189,7 @@
                                 <label for="label" class="form-label">{{ __('Category') }}<span class="text-danger">*</span><span class="text-danger"> ( Publication, 1 Category, 1 Tag, Others ) </span></label>
 
                                 <div class="d-flex flex-column">
-                                    <div id='count'>1 Selected</div>
+                                    <div id='count'><strong>Label Selected</strong> : 1</div>
                                     <div id='textLength'></div>
                                 </div>
                             </div>

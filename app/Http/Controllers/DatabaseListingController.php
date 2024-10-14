@@ -595,18 +595,6 @@ class DatabaseListingController extends Controller
 
         UserListingInfo::create($data);
 
-        // $additionalInfo = UserListingInfo::where('image', request()->images)
-        //     ->where('title', request()->title)
-        //     ->first();
-
-        // if ($additionalInfo) {
-        //     $additionalInfo->update([
-        //         'status' => 0,
-        //         'approved_by' => auth()->user()->id,
-        //         'approved_at' => now()
-        //     ]);
-        // }
-
         $this->updateTheCount('Edited', 'create_count');
 
         session()->flash('success', 'Pending for Approval');

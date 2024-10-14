@@ -72,7 +72,13 @@ class ListingController extends Controller
      */
     public function store(BlogRequest $request)
     {
-        $result = $this->googleService->createPost($request->all(), null, auth()->user()->id);
+        $user = auth()->user()->id;
+
+        if (isset(request()->created_by) && (request()->created_by != auth()->user()->id)) {
+            $user = request()->created_by;
+        }
+
+        $result = $this->googleService->createPost($request->all(), null, $user);
 
         if ($message = $result?->error?->message) {
             session()->flash('error', $message);
@@ -225,7 +231,13 @@ class ListingController extends Controller
      */
     public function update(Request $request, $postId)
     {
-        $data = $this->googleService->updatePost($request->all(), $postId, auth()->user()->id);
+        $user = auth()->user()->id;
+
+        if (isset(request()->created_by) && (request()->created_by != auth()->user()->id)) {
+            $user = request()->created_by;
+        }
+
+        $data = $this->googleService->updatePost($request->all(), $postId, $user);
 
         if (method_exists($data, 'getStatusCode') && $data->getStatusCode() == 500) {
             session()->flash('error', json_decode($data->getContent())->message->error->message);
@@ -233,9 +245,12 @@ class ListingController extends Controller
             return redirect()->route('inventory.index', ['startIndex' => 1, 'category' => 'Product']);
         }
 
-        if ($request->database)  
-            return redirect()->route('database-listing.index', ['status' => 0, 'startIndex' => 1, 'category' => '', 'user' => 'all']);
+        if ($request->edit) {
+            session()->flash('success', 'Post updated successfully');
 
+            return redirect()->route('publish.pending', ['status' => 0, 'startIndex' => 1, 'category' => '', 'user' => 'all']);
+        }
+        
         session()->flash('success', 'Post updated successfully');
 
         return redirect()->route('inventory.index', ['startIndex' => 1, 'category' => 'Product']);
@@ -371,37 +386,5 @@ class ListingController extends Controller
         }
 
         return view('listing.search', compact('googlePosts'));
-    }
-
-    /**
-     * Update or Create Count
-     *
-     * @param string $status
-     * @return void
-     */
-    public function updateTheCount($status)
-    {
-        // Get the current date
-        $currentDate = Carbon::now()->toDateString(); // This will give you 'YYYY-MM-DD' format
-
-        // Check if a record exists for the current date and user
-        $userListingCount = UserListingCount::where('user_id', auth()->user()->id)
-            ->where('status', $status)
-            ->whereDate('created_at', $currentDate)
-            ->first();
-
-        if ($userListingCount) {
-            // If record exists, increment the approved_count
-            $userListingCount->increment('approved_count');
-            $userListingCount->status = $status; // Update status if needed
-            $userListingCount->save();
-        } else {
-            // If no record exists, create a new record
-            UserListingCount::create([
-                'user_id' => auth()->user()->id,
-                'approved_count' => 1,
-                'status' => $status,
-            ]);
-        }
     }
 }
