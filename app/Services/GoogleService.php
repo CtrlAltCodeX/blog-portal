@@ -230,7 +230,7 @@ class GoogleService
      * 
      * @param array $data
      */
-    public function createPost(array $data, $draft = null, $userId)
+    public function createPost(array $data, $draft = null, $userId, $currentUser)
     {
         try {
             $credential = $this->getCredentails();
@@ -282,7 +282,7 @@ class GoogleService
 
                 $additionalInfo->update([
                     'status' => 1,
-                    'approved_by' => $userId,
+                    'approved_by' => $currentUser,
                     'approved_at' => now()
                 ]);
             }
@@ -355,7 +355,7 @@ class GoogleService
      * 
      * @return void
      */
-    public function updatePost($data, $postId, $userId)
+    public function updatePost($data, $postId, $userId, $currentUser)
     {
         try {
             $credential = $this->getCredentails();
@@ -410,7 +410,7 @@ class GoogleService
 
                 $additionalInfo->update([
                     'status' => 1,
-                    'approved_by' => $userId,
+                    'approved_by' => $currentUser,
                     'approved_at' => now()
                 ]);
 

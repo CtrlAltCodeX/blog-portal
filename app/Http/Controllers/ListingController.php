@@ -78,7 +78,7 @@ class ListingController extends Controller
             $user = request()->created_by;
         }
 
-        $result = $this->googleService->createPost($request->all(), null, $user);
+        $result = $this->googleService->createPost($request->all(), null, $user, $user);
 
         if ($message = $result?->error?->message) {
             session()->flash('error', $message);
@@ -237,7 +237,7 @@ class ListingController extends Controller
             $user = request()->created_by;
         }
 
-        $data = $this->googleService->updatePost($request->all(), $postId, $user);
+        $data = $this->googleService->updatePost($request->all(), $postId, $user, $user);
 
         if (method_exists($data, 'getStatusCode') && $data->getStatusCode() == 500) {
             session()->flash('error', json_decode($data->getContent())->message->error->message);

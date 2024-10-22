@@ -56,12 +56,14 @@
                                 <span>End:</span>
                                 <input type="date" name="end_date" class="form-control " value="{{ request()->end_date }}" />
                             </div>
+                            @if(auth()->user()->hasRole('Super Admin'))
                             <select class="form-control" id='user' name="user_id">
                                 <option value="">All User</option>
                                 @foreach($users as $user)
                                 <option value="{{ $user->id }}" {{ request()->user_id == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
                                 @endforeach
                             </select>
+                            @endif
                             
                             <button type='submit' class='btn btn-primary w-25'>Filter</button>
                         </div>

@@ -48,7 +48,8 @@ class UpdateProducts implements ShouldQueue
         $getData['binding'] = $getData->binding_type;
         $getData['url'] = $getData->insta_mojo_url;
         $getData['publication'] = $getData->publisher;
-        $result = app('App\Services\GoogleService')->updatePost($getData->toArray(), $getData->product_id, $this->user);
+        $result = app('App\Services\GoogleService')
+            ->updatePost($getData->toArray(), $getData->product_id, $getData->created_by, $this->user);
 
         if ($result?->error?->code == 401) {
             event(new PublishProducts($this->id, $result->error->message));
