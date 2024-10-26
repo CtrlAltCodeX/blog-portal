@@ -41,7 +41,7 @@ class UpdateProducts implements ShouldQueue
         $getData = Listing::find($this->id);
 
         if (isset($getData->images)) {
-            $getData['images'] = [$getData->images];
+            $getData['images'] = $getData->images;
         }
         $getData['label'] = $getData->categories;
         $getData['pages'] = $getData->no_of_pages;

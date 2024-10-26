@@ -375,7 +375,7 @@ class GoogleService
             $data['processed_images'] = [];
             $data['multiple_images'] = [];
 
-            $data['processed_images'] = $data['images'][0];
+            $data['processed_images'] = $data['images'];
 
             // if (isset($data['images'])) {
             //     foreach ($data['images'] as $image) {
@@ -401,6 +401,8 @@ class GoogleService
             $existingPost->content = view('listing.template', compact('data'))->render();
             $existingPost->setLabels($data['label']);
 
+            $bloggerData = $blogger->posts->update($credential->blog_id, $postId, $existingPost);
+
             if ($data['product_id']) {
                 $listing = Listing::where('product_id', $data['product_id'])
                     ->first();
@@ -419,7 +421,7 @@ class GoogleService
                 $listing->delete();
             }
 
-            return $blogger->posts->update($credential->blog_id, $postId, $existingPost);
+            return $bloggerData;
         } catch (\Google_Service_Exception $e) {
             \Log::error('Blogger API Error: ' . $e->getMessage());
 

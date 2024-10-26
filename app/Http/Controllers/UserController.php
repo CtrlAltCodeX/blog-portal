@@ -6,6 +6,7 @@ use App\Http\Requests\UserRequest;
 use App\Mail\OtpMail;
 use App\Mail\RegisterOtpMail;
 use App\Mail\UserMail;
+use App\Mail\WelcomeMail;
 use App\Models\User;
 use App\Models\UserListingCount;
 use App\Models\UserSession;
@@ -246,9 +247,13 @@ class UserController extends Controller
     {
         $user = User::find($id);
 
+        $status = $user->status;
+
         $user->update(request()->all());
 
         $user->syncRoles(request()->input('roles'));
+
+        if (!$status) Mail::to($user->email)->send(new WelcomeMail($user));
 
         session()->flash('success', __('User updated successfully.'));
 

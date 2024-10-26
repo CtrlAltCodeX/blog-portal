@@ -67,4 +67,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserSession::class);
     }
+
+    public function counts()
+    {
+        return $this->hasMany(UserListingCount::class);
+    }
 }
