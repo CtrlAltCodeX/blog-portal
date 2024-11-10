@@ -178,7 +178,7 @@ class LoginController extends Controller
             $sessionId = session()->getId();
             session()->put('sessionId', $sessionId);
 
-            if (isset($user->allow_sessions)) {
+            if ($user->allow_sessions) {
                 if ($userSession = UserSession::where('user_id', $user->id)->first()) {
                     $userSession->update([
                         'user_id' => $user->id,

@@ -361,7 +361,7 @@ class DatabaseListingController extends Controller
             // ->where('categories', 'LIKE', '%' . request()->category . '%')
             ->whereNotNull('product_id');
 
-        $allCounts = Listing::whereNotNull('product_id')->count();
+        $allCounts = Listing::whereNotNull('product_id');
 
         $pendingCounts = Listing::whereNotNull('product_id')->where('status', 0);
 
@@ -375,9 +375,21 @@ class DatabaseListingController extends Controller
             $googlePosts->where('created_by', auth()->user()->id);
         }
 
+        if (isset(request()->user) && request()->user != 'all') {
+            $googlePosts->where('created_by', request()->user);
+
+            $pendingCounts = $pendingCounts->where('created_by', request()->user);
+
+            $rejectedCounts = $rejectedCounts->where('created_by', request()->user);
+
+            $allCounts = $allCounts->where('created_by', request()->user);
+        }
+
         $pendingCounts = $pendingCounts->count();
 
         $rejectedCounts = $rejectedCounts->count();
+
+        $allCounts = $allCounts->count();
 
         $googlePosts = $googlePosts->paginate(150);
 

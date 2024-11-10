@@ -78,12 +78,14 @@
             </thead>
             <tbody>
                 @foreach($userListingsCount as $key => $user)
+                    @if($user->counts->sum('create_count'))
                     <tr>
                         <td>{{ ++$key }}</td>
                         <td>{{$user->name}}</td>
                         <td>{{$user->email}}</td>
                         <td>{{ $user->counts->sum('create_count') }}</td>
                     </tr>
+                    @endif
                 @endforeach
             </tbody>
         </table>

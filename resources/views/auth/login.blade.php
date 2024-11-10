@@ -88,11 +88,11 @@ $buttonFour = explode(',',$siteSettings?->button_4);
                         <a href="{{ $buttonFour[1] }}" target='_blank'>{{$buttonFour[0]}}</a>
                         @endif
                     </div>
-                    <!--<div class="container-login100-form-btn">-->
-                    <!--    <button type='button' class="login100-form-btn btn-primary" id='without-otp'>-->
-                    <!--        Login without OTP-->
-                    <!--    </button>-->
-                    <!--</div>-->
+                    <div class="container-login100-form-btn">
+                       <button type='button' class="login100-form-btn btn-primary" id='without-otp'>
+                           Login without OTP
+                       </button>
+                    </div>
                     <!-- <div class="text-center pt-3">
                         <p class="text-dark mb-0">Not a member?<a href="{{ route('register') }}" class="text-primary ms-1">Sign UP</a></p>
                     </div> -->

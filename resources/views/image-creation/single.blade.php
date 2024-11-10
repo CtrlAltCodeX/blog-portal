@@ -4,9 +4,9 @@
 
 @php
 if(request()->maker == 'wo-watermark'){
-$formRoute = "/admin/convert/image";
+    $formRoute = "/admin/convert/image";
 } elseif(request()->maker == 'wo-watermark'){
-$formRoute = "/admin/images/watermark/store";
+    $formRoute = "/admin/images/watermark/store";
 }
 @endphp
 
