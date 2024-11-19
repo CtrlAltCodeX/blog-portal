@@ -17,6 +17,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\BackupListingsController;
 use App\Http\Controllers\DatabaseListingController;
 use App\Http\Controllers\ImageMakerController;
+use App\Http\Controllers\PublicationController;
 
 Illuminate\Support\Facades\Auth::routes();
 /*
@@ -344,3 +345,6 @@ Route::get('delete/session/{id}', [UserController::class, 'deleteSessionId'])
 
 Route::get('/assets/images/brand/{filename}', UserController::class)
     ->name('asset.name');
+
+Route::get('/getpublishernames',[PublicationController::class,'getpublishers'])->name('getpublishernames');
+Route::get('/getpublications',[PublicationController::class,'getpublications'])->name('getpublications');
