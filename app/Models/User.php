@@ -35,7 +35,8 @@ class User extends Authenticatable
         'otp',
         'profile',
         'allow_sessions',
-        'posting_rate'
+        'posting_rate',
+        'show_health'
     ];
 
     /**

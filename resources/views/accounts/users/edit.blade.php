@@ -193,7 +193,20 @@
                                     </span>
                                     @enderror
                                 </div>
-                                <div class="form-group col-3"></div>
+
+                                <div class="form-group col-3">
+                                    <label class="form-label">{{ __('Show Health') }}</label>
+                                    <select class="form-control" name="show_health">
+                                        <option value=1 {{ $user->show_health == 1 ? 'selected' : '' }}>Yes</option>
+                                        <option value=0 {{ $user->show_health == 0 ? 'selected' : '' }}>No</option>
+                                    </select>
+
+                                    @error('show_health')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
                                 <div class="form-group col-3"></div>
                                 <div class="form-group col-3"></div>
 
