@@ -14,7 +14,7 @@
 <div>
     <div class="row row-sm">
         <div class="col-lg-12">
-            <div class="card">
+            <!-- <div class="card">
                 <div class="card-header">
                     <h5>Search Products ( M/S )</h5>
                 </div>
@@ -40,6 +40,28 @@
                                 <a href="{{ route('database-listing.create') }}" target="_blank" style="color:#008296;">Item Not Found? Create New Listings (DB)</a>
                             </div>
                         </div>
+                    </form>
+                </div>
+            </div> -->
+            <div class="card">
+                <div class="card-header">
+                    <h5>Search Publishers ( M/S )</h5>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('listing.search') }}" class="text-center">
+                        <label>To Begin Adding New Products</label><br>
+                        <label>
+                            <h3><b>Find The Product in EXAM360`s Catalog</b></h3>
+                        </label>
+                        <br/>
+                        <label>Search Books Using <b>Book Keywords</b> for better Results.</label><br>
+                        <input type="hidden" value="1" name="startIndex" />
+                        <input type="hidden" value="Product" name="category" />
+                        <div class="d-flex align-items-center">
+                            <input type="text" class="form-control" name="q" id="publisher-search" placeholder="Search by Book Name or Descriptions" value="{{ request()->q }}" />
+                            <button type="submit" class="btn btn-primary mt-2 m-2">Search</button>
+                        </div>
+                        <ul id="suggestions" class="list-group position-absolute mt-1 z-10" style="z-index: 100; display: none;"></ul>
                     </form>
                 </div>
             </div>
@@ -222,4 +244,64 @@
     })
 </script>
 
+<script>
+    @push('js')
+<script>
+    $(document).ready(function() {
+        $('#publisher-search').on('input', function() {
+            const query = $(this).val();
+            if (query.length > 0) {
+                $.ajax({
+                    url: "{{ route('getpublishernames') }}",
+                    method: 'GET',
+                    data: { query },
+                    success: function(data) {
+                        const suggestions = $('#suggestions');
+                        suggestions.empty().show();
+                        if (data.length > 0) {
+                            data.forEach(function(item) {
+                                suggestions.append(`<li class="list-group-item suggestion-item">${item}</li>`);
+                            });
+                        } else {
+                            suggestions.append(`<li class="list-group-item">No results found</li>`);
+                        }
+                    }
+                });
+            } else {
+                $('#suggestions').hide();
+            }
+        });
+
+        $(document).on('click', '.suggestion-item', function() {
+            const selectedText = $(this).text();
+            $('#publisher-search').val(selectedText);
+            $('#suggestions').hide();
+        });
+
+        $(document).click(function(event) {
+            if (!$(event.target).closest('#publisher-search, #suggestions').length) {
+                $('#suggestions').hide();
+            }
+        });
+    });
+</script>
 @endpush
+
+</script>
+
+@endpush
+
+<style>
+    #suggestions {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    background: white;
+    cursor: pointer;
+}
+
+#suggestions .suggestion-item:hover {
+    background: #f0f0f0;
+}
+
+</style>

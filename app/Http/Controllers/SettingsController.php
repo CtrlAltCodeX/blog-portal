@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\FieldValidation;
 use App\Models\GoogleCredentail;
 use App\Models\SiteSetting;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Models\Publication;
+use App\Imports\PublicationsImport;
 
 class SettingsController extends Controller
 {
@@ -66,6 +69,14 @@ class SettingsController extends Controller
                 ->storeAs("/public/" . $fileName);
         }
 
+        if (request()->file('upload_file')) {
+            $uploadFileName = "site/" . time() . "_upload_file.xlsx";
+            request()->file('upload_file')
+                ->storeAs("/public/" . $uploadFileName);
+
+            Excel::import(new PublicationsImport, storage_path('app/public/' . $uploadFileName));
+        }        
+
         if (request()->file('product_background_image')) {
             request()->file('product_background_image')
                 ->storePubliclyAs('public/product_background_image.jpg');
@@ -86,6 +97,7 @@ class SettingsController extends Controller
             'listing_button_1_link' => request()->listing_button_1_link,
             'listing_button_2' => request()->listing_button_2,
             'listing_button_2_link' => request()->listing_button_2_link,
+            'upload_file' => $uploadFileName ?? $siteSettings->upload_file ?? '',
         ];
 
         if (!$siteSettings) SiteSetting::create($data);
