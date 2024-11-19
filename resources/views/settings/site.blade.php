@@ -101,6 +101,15 @@ $buttonFour = explode(',',$siteSettings?->button_4);
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <label for="name" class="form-label">{{ __('Upload File') }}<span class="text-danger">*</span></label>
+                    <div class="row mb-5">
+                        <div class="col-lg-3">
+                            <input type="file" class="dropify" data-bs-height="180" id="upload_file" name="upload_file" />
+                        </div>
+                    </div>
+                </div>
+
                 @can('Settings -> Site Update')
                 <button class="btn btn-primary mt-5" id="refresh_token">Save</button>
                 @endcan
