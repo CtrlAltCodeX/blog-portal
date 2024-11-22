@@ -10,11 +10,13 @@ class PublicationsImport implements ToModel, WithHeadingRow
 {
     public function model(array $row)
     {
-        return new Publication([
-            'publication_name' => $row['publication_name'], 
-            'discount_information' => $row['discount_information'],
-            'location' => $row['location'],
-        ]);
+        if ($row['publication_name']) {
+            return new Publication([
+                'publication_name' => $row['publication_name'],
+                'discount_information' => $row['discount_information'],
+                'location' => $row['location'],
+            ]);
+        };
     }
 }
 

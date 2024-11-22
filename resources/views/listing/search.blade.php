@@ -14,7 +14,7 @@
 <div>
     <div class="row row-sm">
         <div class="col-lg-12">
-            <!-- <div class="card">
+            <div class="card">
                 <div class="card-header">
                     <h5>Search Products ( M/S )</h5>
                 </div>
@@ -42,29 +42,8 @@
                         </div>
                     </form>
                 </div>
-            </div> -->
-            <div class="card">
-                <div class="card-header">
-                    <h5>Search Publishers ( M/S )</h5>
-                </div>
-                <div class="card-body">
-                    <form action="{{ route('listing.search') }}" class="text-center">
-                        <label>To Begin Adding New Products</label><br>
-                        <label>
-                            <h3><b>Find The Product in EXAM360`s Catalog</b></h3>
-                        </label>
-                        <br/>
-                        <label>Search Books Using <b>Book Keywords</b> for better Results.</label><br>
-                        <input type="hidden" value="1" name="startIndex" />
-                        <input type="hidden" value="Product" name="category" />
-                        <div class="d-flex align-items-center">
-                            <input type="text" class="form-control" name="q" id="publisher-search" placeholder="Search by Book Name or Descriptions" value="{{ request()->q }}" />
-                            <button type="submit" class="btn btn-primary mt-2 m-2">Search</button>
-                        </div>
-                        <ul id="suggestions" class="list-group position-absolute mt-1 z-10" style="z-index: 100; display: none;"></ul>
-                    </form>
-                </div>
             </div>
+
             @if (request()->q)
             <div class="card">
                 <div class="card-header">
@@ -199,6 +178,63 @@
                 </div>
             </div>
             @endif
+            <div class='row'>
+                <div class='col-md-6'>
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Find Publisher Discount</h5>
+                        </div>
+                        <div class="card-body">
+                            <form action="{{ route('listing.search') }}" class="text-center">
+                                <!--<label>To Begin Adding New Products</label><br>-->
+                                <label>
+                                    <h3><b>Enter Publication Name</b></h3>
+                                </label>
+                                <br />
+                                <label>Write Correct Publisher Name to get Correct Results.</label><br>
+                                <div class="d-flex align-items-center">
+                                    <input type="text" class="form-control" name="p" id="publisher-search" placeholder="Search by Publication Name" value="{{ request()->q }}" />
+                                    <button type="submit" class="btn btn-primary mt-2 m-2">Search</button>
+                                </div>
+                                <ul id="suggestions" class="list-group position-absolute mt-1 z-10" style="z-index: 100; display: none;"></ul>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class='col-md-6'>
+                    @if (request()->p)
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Publisher Discount Results:</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">
+                                    <thead>
+                                        <tr>
+                                            <th>{{ __('Publication Name') }}</th>
+                                            <th>{{ __('Discount Information') }}</th>
+                                            <th>{{ __('Location') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse($publications as $publisher)
+                                        <tr>
+                                            <td>{{ $publisher->publication_name }}</td>
+                                            <td>{{ $publisher->discount_information }} %</td>
+                                            <td>{{ $publisher->location }}</td>
+                                        </tr>
+                                        @empty
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -245,8 +281,6 @@
 </script>
 
 <script>
-    @push('js')
-<script>
     $(document).ready(function() {
         $('#publisher-search').on('input', function() {
             const query = $(this).val();
@@ -254,7 +288,9 @@
                 $.ajax({
                     url: "{{ route('getpublishernames') }}",
                     method: 'GET',
-                    data: { query },
+                    data: {
+                        query
+                    },
                     success: function(data) {
                         const suggestions = $('#suggestions');
                         suggestions.empty().show();
@@ -289,19 +325,16 @@
 
 </script>
 
-@endpush
-
 <style>
     #suggestions {
-    max-height: 200px;
-    overflow-y: auto;
-    border: 1px solid #ddd;
-    background: white;
-    cursor: pointer;
-}
+        max-height: 200px;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        background: white;
+        cursor: pointer;
+    }
 
-#suggestions .suggestion-item:hover {
-    background: #f0f0f0;
-}
-
+    #suggestions .suggestion-item:hover {
+        background: #f0f0f0;
+    }
 </style>

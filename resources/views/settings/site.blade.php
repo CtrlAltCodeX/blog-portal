@@ -102,7 +102,11 @@ $buttonFour = explode(',',$siteSettings?->button_4);
                 </div>
 
                 <div class="form-group">
-                    <label for="name" class="form-label">{{ __('Upload File') }}<span class="text-danger">*</span></label>
+                    <div class='d-flex align-items-center mt-2 cursor-pointer' style="grid-gap: 10px;cursor: pointer;">
+                        <label for="name" class="form-label">{{ __('Publisher Pricing Chart') }}<span class="text-danger">*</span></label>
+                        <a class='text-dark' href="https://listing.exam360.in/storage/Sample%20File.xlsx" title='Download Sample File' download><i class='fa fa-download'></i></a>
+                        <a href="https://listing.exam360.in/storage/site/upload_file.xlsx" title='Download Current File' download><i class='fa fa-download'></i></a>
+                    </div>
                     <div class="row mb-5">
                         <div class="col-lg-3">
                             <input type="file" class="dropify" data-bs-height="180" id="upload_file" name="upload_file" />

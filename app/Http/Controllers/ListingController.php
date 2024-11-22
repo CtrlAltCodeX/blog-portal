@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Services\GoogleService;
 use App\Http\Requests\BlogRequest;
 use App\Models\Listing;
+use App\Models\Publication;
 use App\Models\SiteSetting;
 use App\Models\UserListingCount;
 use App\Models\UserListingInfo;
@@ -385,6 +386,13 @@ class ListingController extends Controller
             $googlePosts = $this->googleService->posts();
         }
 
-        return view('listing.search', compact('googlePosts'));
+        $publications = [];
+
+        if (request()->p) {
+            $publications = Publication::where('publication_name',  request()->p)
+                ->get();
+        }
+
+        return view('listing.search', compact('googlePosts', 'publications'));
     }
 }

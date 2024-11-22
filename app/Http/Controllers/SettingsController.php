@@ -70,12 +70,14 @@ class SettingsController extends Controller
         }
 
         if (request()->file('upload_file')) {
-            $uploadFileName = "site/" . time() . "_upload_file.xlsx";
+            $uploadFileName = "site/upload_file.xlsx";
             request()->file('upload_file')
                 ->storeAs("/public/" . $uploadFileName);
 
+            Publication::truncate();
+
             Excel::import(new PublicationsImport, storage_path('app/public/' . $uploadFileName));
-        }        
+        }
 
         if (request()->file('product_background_image')) {
             request()->file('product_background_image')

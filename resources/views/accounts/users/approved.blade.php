@@ -26,6 +26,15 @@
                     <h4 class="card-title">
                         Users List Status
                     </h4>
+                    
+                    <form action='{{ route("users.index") }}' method='GET' id='countform'>
+                        <input type='hidden' name='page' value='{{ request()->page }}' />
+                        <select class='form-control' name='users' id='count'>
+                            <option value='50' {{ request()->users == 50 ? 'selected' : '' }}>50</option>
+                            <option value='100' {{ request()->users == 100 ? 'selected' : '' }}>100</option>
+                            <option value='150' {{ request()->users == 150 ? 'selected' : '' }}>150</option>
+                        </select>
+                    </form>
 
                     <!-- @can('User create')
                             <a href="{{ route('users.create') }}"
@@ -38,9 +47,11 @@
                         <table class="table text-nowrap text-md-nowrap mb-0" id="basic-datatable">
                             <thead>
                                 <tr>
-                                    <th>{{ __('ID') }}</th>
+                                    <th>{{ __('Sl') }}</th>
+                                    <th>{{ __('System ID') }}</th>
                                     <th>{{ __('Name') }}</th>
                                     <th>{{ __('Email') }}</th>
+                                    <th>{{ __('Mobile') }}</th>
                                     <th>{{ __('Roles') }}</th>
                                     <th>{{ __('Status') }}</th>
                                     <th>{{ __('Actions') }}</th>
@@ -48,11 +59,13 @@
                             </thead>
                             <tbody>
                                 @can('User Details (Main Menu)')
-                                @forelse ($users as $user)
+                                @forelse ($users as $key => $user)
                                 <tr>
+                                    <td>{{ ++$key }}</td>
                                     <td>{{ $user->id }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></td>
+                                    <td>{{ $user->mobile }}</td>
                                     <td>
                                         @foreach ($user->roles as $index => $role)
                                         <span class="badge bg-primary">{{ $role->name }}</span>
@@ -91,3 +104,14 @@
     <!-- End Row -->
 </div>
 @endsection
+
+@push('js')
+<script>
+    $(document).ready(function(){
+         $("#count").on('change', function(){
+             $("#countform").submit();
+         })
+    });
+</script>
+@endpush
+

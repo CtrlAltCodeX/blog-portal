@@ -180,7 +180,7 @@
                                     <option value=0>Multiple</option>
                                 </select>
                             </div>
-
+                            
                             <div class="form-group col-3">
                                 <label for="password" class="form-label">{{ __('Listing Rates (Per Listings)') }}</label>
                                 <input id="price" type="number" class="form-control @error('posting_rate') is-invalid @enderror" name="posting_rate" placeholder="Posting Price" >
@@ -191,7 +191,20 @@
                                 </span>
                                 @enderror
                             </div>
-                            <div class="form-group col-3"></div>
+                            
+                            <div class="form-group col-3">
+                                <label class="form-label">{{ __('Show Health') }}</label>
+                                <select class="form-control" name="show_health">
+                                    <option value=1 >Yes</option>
+                                    <option value=0 >No</option>
+                                </select>
+
+                                @error('show_health')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
                             <div class="form-group col-3"></div>
                             <div class="form-group col-3"></div>
 

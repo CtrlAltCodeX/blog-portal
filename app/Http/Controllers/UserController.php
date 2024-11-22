@@ -3,20 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
-use App\Mail\OtpMail;
-use App\Mail\RegisterOtpMail;
 use App\Mail\UserMail;
-use App\Mail\WelcomeMail;
 use App\Models\User;
-use App\Models\UserListingCount;
 use App\Models\UserSession;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Mail;
+use App\Models\UserListingCount;
+use App\Mail\RegisterOtpMail;
+use App\Mail\WelcomeMail;
 
 class UserController extends Controller
 {
@@ -44,7 +42,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::orderBy('id', 'asc')->paginate(10);
+        $users = User::orderBy('id', 'asc')->paginate(request()->users);
 
         $allUser = User::count();
 
@@ -177,7 +175,7 @@ class UserController extends Controller
     public function verified()
     {
         $users = User::orderBy('id', 'asc')
-            ->paginate(10);
+            ->paginate(request()->users);
 
         return view('accounts.users.approved', compact('users'));
     }
@@ -246,14 +244,18 @@ class UserController extends Controller
     public function updateStatus($id)
     {
         $user = User::find($id);
-
+        
         $status = $user->status;
 
         $user->update(request()->all());
 
         $user->syncRoles(request()->input('roles'));
-
-        if (!$status) Mail::to($user->email)->send(new WelcomeMail($user));
+        
+        if (!$status) {
+            Mail::to($user->email)->send(new WelcomeMail($user));
+            
+            Mail::to('abhishek86478@gmail.com')->send(new WelcomeMail($user));
+        }
 
         session()->flash('success', __('User updated successfully.'));
 
@@ -300,7 +302,7 @@ class UserController extends Controller
 
         return redirect()->back();
     }
-
+    
     public function userCounts()
     {
         // Initialize query for 'Created' status and group by user
@@ -308,47 +310,47 @@ class UserController extends Controller
             ->selectRaw('user_id, sum(create_count) as total_created, sum(approved_count) as total_approved, sum(reject_count) as total_rejected, sum(delete_count) as total_deleted')
             ->where('status', 'Created')
             ->groupBy('user_id');
-
+    
         if (request()->has('start_date') && request()->has('end_date')) {
             $startDate = Carbon::parse(request()->start_date);
             $endDate = Carbon::parse(request()->end_date);
-
+    
             $countCreated->whereBetween('created_at', [$startDate->startOfDay(), $endDate->endOfDay()]);
         }
-
+    
         if (request()->user_id) {
             $countCreated->where('user_id', request()->user_id);
         }
-
+    
         if (!auth()->user()->hasRole('Super Admin')) {
             $countCreated->where('user_id', auth()->user()->id);
         }
-
+    
         $countCreated = $countCreated->get();
-
+    
         // Initialize query for 'Edited' status and group by user
         $countEdited = UserListingCount::with('user')
             ->selectRaw('user_id, sum(create_count) as total_created, sum(approved_count) as total_approved, sum(reject_count) as total_rejected, sum(delete_count) as total_deleted')
             ->where('status', 'Edited')
             ->groupBy('user_id');
-
+    
         if (request()->has('start_date') && request()->has('end_date')) {
             $startDate = Carbon::parse(request()->start_date);
             $endDate = Carbon::parse(request()->end_date);
-
+    
             $countEdited->whereBetween('created_at', [$startDate->startOfDay(), $endDate->endOfDay()]);
         }
-
+    
         if (request()->user_id) {
             $countEdited->where('user_id', request()->user_id);
         }
-
+    
         if (!auth()->user()->hasRole('Super Admin')) {
             $countEdited->where('user_id', auth()->user()->id);
         }
-
+    
         $countEdited = $countEdited->get();
-
+    
         // Get all users
         $users = User::all();
 

@@ -400,6 +400,8 @@ class GoogleService
             $existingPost->title = $data['title'];
             $existingPost->content = view('listing.template', compact('data'))->render();
             $existingPost->setLabels($data['label']);
+            $currentDateTime = Carbon::now()->toIso8601String();
+            $existingPost->published = $currentDateTime;
 
             $bloggerData = $blogger->posts->update($credential->blog_id, $postId, $existingPost);
 

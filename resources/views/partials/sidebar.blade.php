@@ -114,12 +114,12 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         @endcan
 
                         @can('User approved')
-                        <li><a href="{{ route('verified.users') }}" class="slide-item {{ request()->is('admin/users/verified/approved') ? 'active' : '' }}">{{ __('Approved Users') }}</a>
+                        <li><a href="{{ route('verified.users', ['users' => 50]) }}" class="slide-item {{ request()->is('admin/users/verified/approved') ? 'active' : '' }}">{{ __('Approved Users') }}</a>
                         </li>
                         @endcan
 
                         @can('User Details -> All Users List')
-                        <li><a href="{{ route('users.index') }}" class="slide-item {{ (request()->is('admin/users') || request()->is('admin/users/*/edit')) ? 'active' : '' }}">{{ __('All Users List') }}</a>
+                        <li><a href="{{ route('users.index', ['users' => 50]) }}" class="slide-item {{ (request()->is('admin/users') || request()->is('admin/users/*/edit')) ? 'active' : '' }}">{{ __('All Users List') }}</a>
                         </li>
                         @endcan
                     </ul>
