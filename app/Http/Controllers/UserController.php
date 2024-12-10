@@ -141,7 +141,6 @@ class UserController extends Controller
     public function update(UserRequest $request, string $id)
     {
         $user = User::find($id);
-
         $user->update($request->validated());
 
         if (request()->input('roles')) {

@@ -20,11 +20,15 @@ class ProfileController extends Controller
     public function edit()
     {
         $user = auth()->user();
-
         $userCounts = UserListingCount::where('user_id', auth()->user()->id)
             ->first();
-
-        return view('profile.edit', compact('user', 'userCounts'));
+        if($user->account_details_change_limitations ==0)
+        {
+            return view('profile.edit', compact('user', 'userCounts'));
+        }
+        else{
+            return view('profile.view_profiel', compact('user', 'userCounts'));
+        }
     }
 
     /**

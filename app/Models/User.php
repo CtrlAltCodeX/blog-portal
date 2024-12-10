@@ -36,7 +36,10 @@ class User extends Authenticatable
         'profile',
         'allow_sessions',
         'posting_rate',
-        'show_health'
+        'show_health',
+        'otp_feature',
+        'data_transfer',
+        'account_details_change_limitations'
     ];
 
     /**

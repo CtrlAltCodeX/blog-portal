@@ -269,6 +269,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::get('update/status', [DatabaseListingController::class, 'updateStatus'])
         ->name('listing.status');
+
+    Route::post('database/tmp', [DatabaseListingController::class, 'previewTemp'])
+        ->name('database_temp');
     /**
      * Database END
      */
