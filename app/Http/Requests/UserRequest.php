@@ -37,6 +37,9 @@ class UserRequest extends FormRequest
             'allow_sessions' => ['required', 'string'],
             'posting_rate' => ['required'],
             'show_health' => ['required'],
+            'otp_feature'=>['required'],
+            'data_transfer'=>['required'],
+            'account_details_change_limitations'=>['required'],
         ];
 
         if ($this->isMethod('patch') || $this->isMethod('put')) {

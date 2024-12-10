@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Http\Requests\BlogRequest;
 use App\Jobs\PublishProducts;
 use App\Jobs\UpdateProducts;
@@ -15,6 +16,7 @@ use App\Models\UserListingInfo;
 use Illuminate\Support\Facades\Http;
 use App\Services\GoogleService;
 use Carbon\Carbon;
+use Auth;
 
 class DatabaseListingController extends Controller
 {
@@ -87,8 +89,15 @@ class DatabaseListingController extends Controller
         $categories = $response->json()['feed']['category'];
 
         $siteSetting = SiteSetting::first();
-
-        return view('database-listing.create', compact('categories', 'siteSetting'));
+        $user_data_transfer = Auth::user()->data_transfer;
+        if($user_data_transfer == 1)
+        {
+            return view('database-listing.create_tmp', compact('categories', 'siteSetting','user_data_transfer'));
+        }
+        else
+        {
+            return view('database-listing.create', compact('categories', 'siteSetting','user_data_transfer'));
+        }
     }
 
     /**
@@ -146,6 +155,40 @@ class DatabaseListingController extends Controller
         } catch (\Exception $e) {
             session()->flash('error', 'Something went Wrong!!');
 
+            return redirect()->back();
+        }
+    }
+
+
+    public function previewTemp(Request $request)
+    {
+        try{
+            $data = [
+                '_token' => $request->_token,
+                'title' => $request->title,
+                'description' => $request->description,
+                'mrp' => $request->mrp,
+                'selling_price' => $request->selling_price,
+                'publisher' => $request->publication,
+                'author_name' => $request->author_name,
+                'edition' => $request->edition,
+                'categories' => $request->label,
+                'sku' => $request->sku,
+                'language' => $request->language,
+                'no_of_pages' => $request->pages,
+                'condition' => $request->condition,
+                'binding_type' => $request->binding,
+                'insta_mojo_url' => $request->url,
+                'images' => $request->images[0],
+                'multiple_images' => $request->multipleImages,
+                'status' => 0,
+                'created_by' => auth()->user()->id
+                ];
+            return view('database-listing.preview', compact('data'));
+        } 
+        catch (\Exception $e) 
+        {
+            session()->flash('error', 'Something went Wrong!!');
             return redirect()->back();
         }
     }
@@ -604,6 +647,7 @@ class DatabaseListingController extends Controller
             'status_listing' => 'Edited',
             'listings_id' =>  $listing->id
         ];
+
 
         UserListingInfo::create($data);
 

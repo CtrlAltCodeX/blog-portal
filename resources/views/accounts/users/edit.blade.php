@@ -207,6 +207,47 @@
                                     </span>
                                     @enderror
                                 </div>
+
+                                <div class="form-group col-3">
+                                    <label class="form-label">{{ __('OTP Features') }}</label>
+                                    <select class="form-control" name="otp_feature">
+                                        <option value=1 {{ $user->otp_feature == 1 ? 'selected' : '' }}>On</option>
+                                        <option value=0 {{ $user->otp_feature == 0 ? 'selected' : '' }}>Off</option>
+                                    </select>
+
+                                    @error('otp_feature')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                                <div class="form-group col-3">
+                                    <label class="form-label">{{ __('Data Transfer') }}</label>
+                                    <select class="form-control" name="data_transfer">
+                                        <option value=1 {{ $user->data_transfer == 1 ? 'selected' : '' }}>On</option>
+                                        <option value=0 {{ $user->data_transfer == 0 ? 'selected' : '' }}>Off</option>
+                                    </select>
+
+                                    @error('data_transfer')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                                <div class="form-group col-3">
+                                    <label class="form-label">{{ __('Account Details Change Limitations') }}</label>
+                                    <select class="form-control" name="account_details_change_limitations">
+                                        <option value=1 {{ $user->account_details_change_limitations == 1 ? 'selected' : '' }}>On</option>
+                                        <option value=0 {{ $user->account_details_change_limitations == 0 ? 'selected' : '' }}>Off</option>
+                                    </select>
+
+                                    @error('account_details_change_limitations')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+
                                 <div class="form-group col-3"></div>
                                 <div class="form-group col-3"></div>
 
