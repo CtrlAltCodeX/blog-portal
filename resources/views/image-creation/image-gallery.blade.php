@@ -144,7 +144,11 @@
     $(document).ready(function() {
         //______Basic Data Table
         $('#basic-datatable').DataTable({
-            'paging':false
+           "bJQueryUI":true,
+            "bSort":false,
+            "bPaginate":true,
+            "sPaginationType":"full_numbers",
+            "iDisplayLength": 25,
         });
 
         $("#category").on("change", function() {

@@ -103,12 +103,12 @@ class GoogleService
      * 
      * @return array
      */
-    public function posts($status = 'live')
+    public function posts($status,$paging)
     {
         try {
             $posts = [];
             $pageToken = null;
-            $perPage = 150;
+            $perPage = $paging;
             $startIndex = request()->startIndex;
 
             $params = [
@@ -223,6 +223,60 @@ class GoogleService
                 'prevStartIndex' => null
             ];
         }
+    }
+
+    public function exportData($status = 'live')
+    {
+            $posts = [];
+            $pageToken = null;
+            $perPage = 150;
+            $startIndex = request()->startIndex;
+
+            $params = [
+                'orderBy' => 'updated',
+                'status' => $status,
+                'pageToken' => $pageToken,
+                'alt' => 'json'
+            ];
+
+           $params['start-index'] = $startIndex;
+                $params['max-results'] = $perPage;
+                $params['category'] = request()->query('category');
+                $params['q'] = request()->query('q');
+
+                if ((request()->route() && request()->route()->getName() == 'inventory.review')
+                    && !App::runningInConsole()
+                ) {
+                    $params['updated-max'] = $agoDate->format('Y-m-d') . "T00:00:00";
+                }
+
+                if (SiteSetting::first()->url) {
+                    $response = Http::withoutVerifying()->get(SiteSetting::first()->url . '/feeds/posts/default', $params);
+                    $response = json_decode(json_encode($response->json()))->feed;
+                    $posts = $response->entry ?? [];
+                    $filteredPost = $response->entry ?? [];
+
+                    $allCategories = [];
+                    if (isset(request()->category)) {
+                        $filteredPost = [];
+                        foreach ($posts as $key => $post) {
+                            foreach ($post->category as $category) {
+                                $allCategories[$key][] = $category->term;
+                            }
+
+                            if (in_array(request()->category, $allCategories[$key])) {
+                                $filteredPost[$key] = (array) $post;
+                                $filteredPost[$key]['category'] = $allCategories[$key];
+                            }
+                        }
+                    }
+                }
+            
+            return $filteredPost;
+            
+        
+    
+
     }
 
     /**

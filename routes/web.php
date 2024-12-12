@@ -86,7 +86,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     Route::group(['prefix' => 'inventory'], function () {
         Route::get('', [ListingController::class, 'inventory'])
             ->name('inventory.index');
-
+            
         Route::get('review', [ListingController::class, 'reviewInventory'])
             ->name('inventory.review');
 
@@ -240,6 +240,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::get('blog/publish/{id}', [ListingController::class, 'publishBlog'])
         ->name('blog.publish');
+
+         Route::get('review_inventory_export', [ListingController::class, 'inventoryReviewExport'])
+            ->name('review_inventory_export');
     /**
      * Direct Blogger End 
      */
@@ -252,6 +255,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::get('edit/database/{id}', [DatabaseListingController::class, 'editInDB'])
         ->name('listing.edit.database');
+
+    Route::get('copy/database/{id}', [DatabaseListingController::class, 'copyDatabase'])
+        ->name('copy_database');
 
     Route::resource('database-listing', DatabaseListingController::class);
 

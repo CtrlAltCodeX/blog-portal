@@ -43,6 +43,9 @@
         margin-right: 5px;
         margin-top: 8px;
     }
+    .pagination{
+        display: none;
+    }
 </style>
 @endpush
 
@@ -100,6 +103,20 @@
                             </select>
                             @endif
                         </form>
+
+                        <form action="" method="get" id='pagingform'>
+                           <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
+                            <input type="hidden" value="{{ request()->status ?? 0 }}" name='status'>
+                            
+                            <input type="hidden" value="{{ request()->category ?? '' }}" name='category'>
+                            <input type="hidden" value="{{ request()->user ?? 'all' }}" name='user'>
+                            <select class="form-control w-100" id='paging' name="paging">
+                                <option value="25" {{ request()->paging == '25' ? 'selected' : '' }}>25</option>
+                                <option value="50" {{ request()->paging == '50' ? 'selected' : '' }}>50</option>
+                                <option value="100" {{ request()->paging == '100' ? 'selected' : '' }}>100</option>
+                            </select>
+                        </form>
+
                     </div>
                 </div>
 
@@ -175,14 +192,17 @@
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic example">
                                             @can('Pending Listing ( DB ) -> Edit')
-                                            <a href="{{ route('database-listing.edit', $googlePost->id) }}" class="btn btn-sm btn-primary">{{ __('Edit') }}</a>
+                                            <a href="{{ route('database-listing.edit', $googlePost->id) }}" class="btn btn-sm btn-primary padd">{{ __('Edit') }}</a>
                                             @endcan
+
+                                            
+                                            
                                             @can('Pending Listing ( DB ) -> Delete')
                                             <form action="{{ route('database-listing.destroy', $googlePost->id) }}" method="POST" class="ml-2">
                                                 @csrf
                                                 @method('DELETE')
 
-                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this item?')">
+                                                <button type="submit" class="btn btn-sm btn-danger padd" onclick="return confirm('Are you sure you want to delete this item?')">
                                                     {{ __('Delete') }}
                                                 </button>
                                             </form>
@@ -236,12 +256,16 @@
     $(document).ready(function() {
         //______Basic Data Table
         $('#basic-datatable').DataTable({
-            "paging": false
+            "paging":false
         });
 
         $("#category").on("change", function() {
             $("#form").submit();
         })
+
+        $("#paging").on("change", function() {
+            $("#pagingform").submit();
+        });
 
         $("#status").change(function() {
             $("#formStatus").submit();

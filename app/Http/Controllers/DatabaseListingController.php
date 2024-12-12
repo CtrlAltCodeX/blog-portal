@@ -30,8 +30,9 @@ class DatabaseListingController extends Controller
     /**
      * Display the listing of the resources
      */
-    public function index()
+    public function index(Request $request)
     {
+        // dd($request->all());
         $googlePosts = Listing::with('created_by_user')
             ->orderBy('created_at', 'desc')
             ->where('categories', 'LIKE', '%' . request()->category . '%')
@@ -47,8 +48,8 @@ class DatabaseListingController extends Controller
             $googlePosts = $googlePosts->where('created_by', auth()->user()->id);
         }
 
-        $googlePosts = $googlePosts->paginate(150);
-
+        $googlePosts = $googlePosts->paginate($request->paging);
+        // dd($googlePosts);
         $allCounts = Listing::whereNull('product_id')->count();
 
         $pendingCounts = Listing::where('status', 0)
@@ -189,6 +190,63 @@ class DatabaseListingController extends Controller
         catch (\Exception $e) 
         {
             session()->flash('error', 'Something went Wrong!!');
+            return redirect()->back();
+        }
+    }
+
+
+    public function copyDatabase($id)
+    {
+        try{
+            $findListing = Listing::find($id);
+            if(isset($findListing))
+            {
+                $newListing = Listing::create([
+                    'title' => $findListing->title,
+                    'description' => $findListing->description,
+                    'mrp' => $findListing->mrp,
+                    'selling_price' => $findListing->selling_price,
+                    'publisher' => $findListing->publisher,
+                    'author_name' => $findListing->author_name,
+                    'edition' => $findListing->edition,
+                    'categories' => $findListing->categories,
+                    'sku' => $findListing->sku,
+                    'language' => $findListing->language,
+                    'no_of_pages' => $findListing->no_of_pages,
+                    'condition' => $findListing->condition,
+                    'binding_type' => $findListing->binding_type,
+                    'insta_mojo_url' => $findListing->insta_mojo_url,
+                    'images' => $findListing->images,
+                    'multiple_images' => $findListing->multiple_images,
+                    'product_id' => $findListing->product_id??null,
+                    'status' => 0,
+                    'created_by' => auth()->user()->id
+                ]);
+
+                UserListingInfo::create([
+                    'image' => $findListing->images,
+                    'title' => $findListing->title,
+                    'created_by' => auth()->user()->id,
+                    'approved_by' => null,
+                    'approved_at' => null,
+                    'status' => 0,
+                    'status_listing' => 'Created',
+                    'listings_id' => $newListing->id,
+                ]);
+
+                $this->updateTheCount('Created', 'create_count');
+                if ($newListing) {
+                    session()->flash('success', 'Copy Listing created successfully');
+                    return redirect()->back();
+                }
+            }
+            else{
+                session()->flash('error', 'Someting went wrong');
+            }
+        }
+        catch (\Exception $e) {
+            session()->flash('error', 'Something went Wrong!!');
+
             return redirect()->back();
         }
     }
@@ -397,7 +455,7 @@ class DatabaseListingController extends Controller
      *
      * @return void
      */
-    public function getPublishPending()
+    public function getPublishPending(Request $request)
     {
         $googlePosts = Listing::with('created_by_user')
             ->orderBy('created_at', 'desc')
@@ -434,10 +492,9 @@ class DatabaseListingController extends Controller
 
         $allCounts = $allCounts->count();
 
-        $googlePosts = $googlePosts->paginate(150);
+        $googlePosts = $googlePosts->paginate($request->paging);
 
         $users = User::where('status', 1)->get();
-
         return view('database-listing.publish-pending', compact('users', 'allCounts', 'googlePosts', 'pendingCounts', 'rejectedCounts'));
     }
 
@@ -463,7 +520,6 @@ class DatabaseListingController extends Controller
             ->get($url . '/feeds/posts/default?alt=json');
 
         $categories = $response->json()['feed']['category'];
-
         return view('database-listing.publish-edit', compact('listing', 'siteSetting', 'categories'));
     }
 

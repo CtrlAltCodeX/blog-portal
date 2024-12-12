@@ -43,6 +43,9 @@
         margin-right: 5px;
         margin-top: 8px;
     }
+    .pagination{
+        display: none;
+    }
 </style>
 @endpush
 
@@ -98,6 +101,20 @@
                             </select>
                             @endif
                         </form>
+
+                        <form action="" method="get" id='pagingform'>
+                            <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
+                            <input type="hidden" value="{{ request()->status ?? 0 }}" name='status'>
+                            
+                            <input type="hidden" value="{{ request()->category ?? '' }}" name='category'>
+                            <input type="hidden" value="{{ request()->user ?? all }}" name='user'>
+                            <select class="form-control w-100" id='paging' name="paging">
+                                <option value="25" {{ request()->paging == '25' ? 'selected' : '' }}>25</option>
+                                <option value="50" {{ request()->paging == '50' ? 'selected' : '' }}>50</option>
+                                <option value="100" {{ request()->paging == '100' ? 'selected' : '' }}>100</option>
+                            </select>
+                        </form>
+
                     </div>
                 </div>
 
@@ -179,6 +196,7 @@
                                             @can('Pending Listing ( DB ) -> Edit')
                                             <a href="{{ route('publish.edit', $googlePost->id) }}?edit=true" class="btn btn-sm btn-primary">{{ __('Edit') }}</a>
                                             @endcan
+                                            
                                             @can('Pending Listing ( DB ) -> Delete')
                                             <form action="{{ route('database-listing.destroy', $googlePost->id) }}" method="POST" class="ml-2">
                                                 @csrf
@@ -237,13 +255,15 @@
     $(document).ready(function() {
         //______Basic Data Table
         $('#basic-datatable').DataTable({
-            "paging": false
+            "paging":false
         });
 
         $("#category").on("change", function() {
             $("#form").submit();
         })
-
+         $("#paging").on("change", function() {
+            $("#pagingform").submit();
+        });
         $("#status").change(function() {
             $("#formStatus").submit();
         });

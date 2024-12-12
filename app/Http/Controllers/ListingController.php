@@ -13,6 +13,9 @@ use App\Models\UserListingInfo;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Pagination\LengthAwarePaginator;
+use App\Exports\InventoryReviewExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class ListingController extends Controller
 {
@@ -34,7 +37,7 @@ class ListingController extends Controller
      * 
      * @return \Illuminate\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
         if ($this->tokenIsExpired($this->googleService))
             return view('settings.authenticate');
@@ -299,8 +302,10 @@ class ListingController extends Controller
      *
      * @return void
      */
-    public function reviewInventory()
+    public function reviewInventory(Request $request)
     {
+        // dd($request->all());
+        $status = 'live';
         // if ($this->tokenIsExpired($this->googleService)) {
 
         if (!$this->googleService->getCredentails()) return view('settings.authenticate');
@@ -311,8 +316,7 @@ class ListingController extends Controller
         //     return redirect()->to($url);
         // }
 
-        $googlePosts = $this->googleService->posts();
-
+        $googlePosts = $this->googleService->posts($status,$request->paging);
         return view('listing.review-inventory', compact('googlePosts'));
     }
 
@@ -394,5 +398,32 @@ class ListingController extends Controller
         }
 
         return view('listing.search', compact('googlePosts', 'publications'));
+    }
+
+    public function inventoryReviewExport()
+    {
+        
+        return Excel::download(new InventoryReviewExport($this->getInventoryReviewExportFile()), 'review-inventory.xlsx');
+    }
+
+    public function getInventoryReviewExportFile()
+    {
+        $allDataArr = [];
+
+        $googlePosts = $this->googleService->exportData();
+        foreach ($googlePosts as $key => $googlePost) {
+            $productId = explode('-', ((array)$googlePosts[$key]->id)['$t'])[2];
+            $productTitle = ((array)$googlePosts[$key]->title)['$t'];
+            $allDataArr[$key][] = $productId;
+            $allDataArr[$key][] = $productTitle;
+        }
+        $heading = [
+            'Id',
+            'title',
+        ];
+
+        array_unshift($allDataArr, $heading);
+
+        return $allDataArr;
     }
 }

@@ -51,10 +51,10 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         <li><a href="{{ route('database-listing.create') }}" class="slide-item {{ (request()->is('admin/database-listing/create')) ? 'active' : '' }}">{{ __('Create New Listing ( DB )') }}</a></li>
                         @endcan
                         @can('RA | Pending Listing (DB)')
-                        <li><a href="{{ route('database-listing.index', ['status' => 0, 'startIndex' => 1, 'category' => '', 'user' => 'all']) }}" class="slide-item {{ (request()->is('admin/database-listing')) ? 'active' : '' }}">{{ __('RA | Pending Listing (DB)') }}</a></li>
+                        <li><a href="{{ route('database-listing.index', ['status' => 0, 'startIndex' => 1, 'category' => '', 'user' => 'all','paging'=>25]) }}" class="slide-item {{ (request()->is('admin/database-listing')) ? 'active' : '' }}">{{ __('RA | Pending Listing (DB)') }}</a></li>
                         @endcan
                         @can('RA | Updated Listings (MS)')
-                        <li><a href="{{ route('publish.pending', ['status' => 0, 'startIndex' => 1, 'category' => '', 'user' => 'all']) }}" class="slide-item {{ (request()->is('admin/publish/pending')) ? 'active' : '' }}">{{ __('RA | Updated Listings (MS)') }}</a></li>
+                        <li><a href="{{ route('publish.pending', ['status' => 0, 'startIndex' => 1, 'category' => '', 'user' => 'all','paging'=>25]) }}" class="slide-item {{ (request()->is('admin/publish/pending')) ? 'active' : '' }}">{{ __('RA | Updated Listings (MS)') }}</a></li>
                         @endcan
                     </ul>
                 </li>
@@ -93,7 +93,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         @endcan
 
                         @can('Inventory -> Under Review Inventory')
-                        <li><a href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => 3]) }}" class="slide-item {{ request()->is('admin/inventory/review') ? 'active' : '' }}">{{ __('Review Inventory ( M/S )') }}</a></li>
+                        <li><a href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => 3,'paging'=>25]) }}" class="slide-item {{ request()->is('admin/inventory/review') ? 'active' : '' }}">{{ __('Review Inventory ( M/S )') }}</a></li>
                         @endcan
                         @can('Inventory -> Counts Report')
                         <li><a href="{{ route('profile.listing', ['user' => 'all', 'status' => 0, 'status_listing' => 'Created']) }}" class="slide-item {{ (request()->is('admin/profile/listings')) ? 'active' : '' }}">{{ __('Listing Counts Report ( DB )') }}</a></li>

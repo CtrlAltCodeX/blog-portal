@@ -47,6 +47,9 @@
         background-color: grey;
         color: white;
     }
+    .pagination{
+        display: none;
+    }
 </style>
 @endpush
 
@@ -58,6 +61,7 @@
             <div class="card">
                 <div class="card-header justify-content-between">
                     <h3 class="card-title">Review Inventory | Published ( M/S )</h3>
+                    <a href="{{ route('review_inventory_export') }}" class="btn btn-warning btn-icon ml-2 add_icon w-10"><i data-feather="download"></i> Export</a>
                     <form action="" method="get" id='form'>
                         <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
                         <input type="hidden" value="{{ request()->updated_before ?? 3 }}" name='updated_before'>
@@ -69,6 +73,18 @@
                             <option value="stock__demand" {{ request()->category == 'stock__demand' ? 'selected' : '' }}>On Demand Stock (stock__demand)</option>
                             <option value="Stk_l" {{ request()->category == 'Stk_l' ? 'selected' : '' }}>Low Stock (Stk_l)</option>
                             <option value="stock__low" {{ request()->category == 'stock__low' ? 'selected' : '' }}>Low Stock (stock__low)</option>
+                        </select>
+                        <input type="hidden" value="{{ request()->paging ?? 25 }}" name='updated_before'>
+                    </form>
+
+                    <form action="" method="get" id='pagingform'>
+                        <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
+                        <input type="hidden" value="{{ request()->updated_before ?? 3 }}" name='updated_before'>
+                        <input type="hidden" value="{{ request()->category ?? Product }}" name='category'>
+                        <select class="form-control w-100" id='paging' name="paging">
+                            <option value="25" {{ request()->paging == '25' ? 'selected' : '' }}>25</option>
+                            <option value="50" {{ request()->paging == '50' ? 'selected' : '' }}>50</option>
+                            <option value="100" {{ request()->paging == '100' ? 'selected' : '' }}>100</option>
                         </select>
                     </form>
                 </div>
@@ -234,11 +250,15 @@
     $(document).ready(function() {
         //______Basic Data Table
         $('#basic-datatable').DataTable({
-            "paging": false
+            "paging":false
         });
 
         $("#category").on("change", function() {
             $("#form").submit();
+        }); 
+
+        $("#paging").on("change", function() {
+            $("#pagingform").submit();
         });
 
         $("#basic-datatable_wrapper .col-sm-12:first").html('<div class="d-flex"><label class="m-1"><input type="radio" id="six" @if(request()->updated_before == 6) checked=checked @endif name="ago"/>6 Months <span id="count-six">(0)</span></label><label class="m-1"><input type="radio" @if(request()->updated_before == 1) checked=checked @endif id="one" name="ago" />1 Year <span id="count-one">(0)</span></label><label class="m-1"><input type="radio" @if(request()->updated_before == 2) checked=checked @endif id="two" name="ago" />2 Year <span id="count-two">(0)</span></label><label class="m-1"><input type="radio" @if(request()->updated_before == "3Y") checked=checked @endif id="three" name="ago" />3 Year <span id="count-three">(0)</span></label></div>');
