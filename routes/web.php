@@ -18,6 +18,7 @@ use App\Http\Controllers\BackupListingsController;
 use App\Http\Controllers\DatabaseListingController;
 use App\Http\Controllers\ImageMakerController;
 use App\Http\Controllers\PublicationController;
+use App\Http\Controllers\ChatGptController;
 
 Illuminate\Support\Facades\Auth::routes();
 /*
@@ -86,7 +87,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     Route::group(['prefix' => 'inventory'], function () {
         Route::get('', [ListingController::class, 'inventory'])
             ->name('inventory.index');
-            
+
         Route::get('review', [ListingController::class, 'reviewInventory'])
             ->name('inventory.review');
 
@@ -357,3 +358,6 @@ Route::get('/assets/images/brand/{filename}', UserController::class)
 
 Route::get('/getpublishernames',[PublicationController::class,'getpublishers'])->name('getpublishernames');
 Route::get('/getpublications',[PublicationController::class,'getpublications'])->name('getpublications');
+
+Route::get('/get_ai_description',[ChatGptController::class,'openAi'])->name('ai_description');
+Route::post('/get_response_ai_description',[ChatGptController::class,'responseAiDescription'])->name('get_ai_response');
