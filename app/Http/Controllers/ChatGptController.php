@@ -41,6 +41,8 @@ class ChatGptController extends Controller
                     "stop" => ["11."],
                     ])
                   ->json();
+                  // dd($data);
+                  // dd($data['choices'][0]['message'], 200, array(), JSON_PRETTY_PRINT);
                   $user_request = $request->product_info;
                   $assistent_response = $data['choices'][0]['message'];
                 return view('chatGpt.new_request',compact('user_request','assistent_response'));

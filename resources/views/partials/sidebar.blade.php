@@ -86,7 +86,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         <li><a href="{{ route('articles.index') }}" class="slide-item {{ request()->is('admin/articles') ? 'active' : '' }}">{{ __('Blogger Articles') }}</a></li>
                         @endcan
                         @can('Inventory -> Manage Inventory')
-                        <li><a href="{{ route('inventory.index', ['startIndex' => 1, 'category' => 'Product']) }}" class="slide-item {{ request()->is('admin/inventory') ? 'active' : '' }}">{{ __('Manage Inventory ( M/S )') }}</a></li>
+                        <li><a href="{{ route('inventory.index', ['startIndex' => 1, 'category' => 'Product','paging'=>25]) }}" class="slide-item {{ request()->is('admin/inventory') ? 'active' : '' }}">{{ __('Manage Inventory ( M/S )') }}</a></li>
                         @endcan
                         @can('Inventory -> Drafted Inventory')
                         <li><a href="{{ route('inventory.drafted') }}" class="slide-item {{ request()->is('admin/inventory/drafted') ? 'active' : '' }}">{{ __('Drafted Inventory ( M/S )') }}</a></li>

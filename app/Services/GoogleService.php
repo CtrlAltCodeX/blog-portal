@@ -103,7 +103,7 @@ class GoogleService
      * 
      * @return array
      */
-    public function posts($status,$paging)
+    public function posts($status='live',$paging)
     {
         try {
             $posts = [];

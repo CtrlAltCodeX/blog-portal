@@ -41,7 +41,6 @@ class ListingController extends Controller
     {
         if ($this->tokenIsExpired($this->googleService))
             return view('settings.authenticate');
-
         $googlePosts = $this->getPaginatedData(collect($this->googleService->posts()));
 
         return view('listing.index', compact('googlePosts'));
@@ -280,7 +279,7 @@ class ListingController extends Controller
      *
      * @return void
      */
-    public function inventory()
+    public function inventory(Request $request)
     {
         // if ($this->tokenIsExpired($this->googleService)) {
 
@@ -291,8 +290,8 @@ class ListingController extends Controller
 
         //     return redirect()->to($url);
         // }
-
-        $googlePosts = $this->googleService->posts();
+        // dd($request->all());
+        $googlePosts = $this->googleService->posts('live',$request->paging);
 
         return view('listing.live-inventory', compact('googlePosts'));
     }
