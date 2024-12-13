@@ -242,7 +242,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     Route::get('blog/publish/{id}', [ListingController::class, 'publishBlog'])
         ->name('blog.publish');
 
-         Route::get('review_inventory_export', [ListingController::class, 'inventoryReviewExport'])
+    Route::get('review/inventory/export', [ListingController::class, 'inventoryReviewExport'])
             ->name('review_inventory_export');
     /**
      * Direct Blogger End 
@@ -359,5 +359,5 @@ Route::get('/assets/images/brand/{filename}', UserController::class)
 Route::get('/getpublishernames',[PublicationController::class,'getpublishers'])->name('getpublishernames');
 Route::get('/getpublications',[PublicationController::class,'getpublications'])->name('getpublications');
 
-Route::get('/get_ai_description',[ChatGptController::class,'openAi'])->name('ai_description');
-Route::post('/get_response_ai_description',[ChatGptController::class,'responseAiDescription'])->name('get_ai_response');
+Route::get('/get/ai/description',[ChatGptController::class,'openAi'])->name('ai.description');
+Route::post('/get/response/ai/description',[ChatGptController::class,'responseAiDescription'])->name('getai.response');

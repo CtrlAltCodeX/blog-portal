@@ -18,7 +18,7 @@
         </div>
 
         <!-- Row -->
-        <form action="{{ route('get_ai_response') }}" method="POST" enctype='multipart/form-data'>
+        <form action="{{ route('getai.response') }}" method="POST" enctype='multipart/form-data'>
             @csrf
             <div class="row">
                 <div class="col-md-12">
@@ -48,7 +48,7 @@
                             </div>
                             <button type="submit" class="btn btn-primary">Submit</button>
                             <div style="text-align: right;margin-top:20px ;">
-                                <a href="{{ route('ai_description') }}" class="btn btn-danger float-right" id="clear_btn">Clear</a>
+                                <a href="{{ route('ai.description') }}" class="btn btn-danger float-right" id="clear_btn">Clear</a>
                                 <button class="btn btn-dark float-right" id="copy_btn">Copy</button>
                             </div>
                         </div>

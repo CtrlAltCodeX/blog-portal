@@ -17,7 +17,8 @@ class ChatGptController extends Controller
 
     public function responseAiDescription(Request $request)
     {
-        $data = Http::withHeaders([
+       try {
+            $data = Http::withHeaders([
                     'Content-Type' => 'application/json',
                     'Authorization' => 'Bearer '.env('OPENAI_API_KEY'),
                 ])->post(env('OPENAI_API_URL'), [
@@ -29,22 +30,29 @@ class ChatGptController extends Controller
                        ],
                     ],
                     'temperature' => 0.5,
-
                     "max_tokens" => 200,
-
                     "top_p" => 1.0,
-
                     "frequency_penalty" => 0.52,
-
                     "presence_penalty" => 0.5,
-
                     "stop" => ["11."],
-                    ])
-                  ->json();
-                  // dd($data);
-                  // dd($data['choices'][0]['message'], 200, array(), JSON_PRETTY_PRINT);
-                  $user_request = $request->product_info;
-                  $assistent_response = $data['choices'][0]['message'];
-                return view('chatGpt.new_request',compact('user_request','assistent_response'));
+                    ])->json();
+                if(isset($data['error']))
+                {
+                    session()->flash('error', 'Something went Wrong!!');
+                    return redirect()->back();
+                }
+                else
+                {
+                    $user_request = $request->product_info;
+                    $assistent_response = $data['choices'][0]['message'];
+                    
+                    return view('chatGpt.new_request',compact('user_request','assistent_response'));
+                }
+        } 
+        catch (\Exception $e) {
+            session()->flash('error', 'Something went Wrong!!');
+
+            return redirect()->back();
+        }
     }
 }

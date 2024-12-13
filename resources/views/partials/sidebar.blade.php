@@ -155,7 +155,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                     <ul class="slide-menu">
                         <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
                         @can('Settings -> Site Access')
-                        <li><a href="{{ route('ai_description') }}" class="slide-item {{ request()->is('admin/settings/site') ? 'active' : '' }}">{{ __('AI Description') }}</a></li>
+                        <li><a href="{{ route('ai.description') }}" class="slide-item {{ request()->is('admin/settings/site') ? 'active' : '' }}">{{ __('AI Description') }}</a></li>
                         @endcan
                     </ul>
                 </li>
