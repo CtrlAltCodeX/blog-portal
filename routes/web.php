@@ -375,10 +375,6 @@ Route::get('/assets/images/brand/{filename}', UserController::class)
 Route::get('/getpublishernames', [PublicationController::class, 'getpublishers'])->name('getpublishernames');
 Route::get('/getpublications', [PublicationController::class, 'getpublications'])->name('getpublications');
 
-<<<<<<< HEAD
 Route::get('/get/ai/description',[ChatGptController::class,'openAi'])->name('ai.description');
 Route::post('/get/response/ai/description',[ChatGptController::class,'responseAiDescription'])->name('getai.response');
-=======
-Route::get('/get_ai_description', [ChatGptController::class, 'openAi'])->name('ai_description');
-Route::post('/get_response_ai_description', [ChatGptController::class, 'responseAiDescription'])->name('get_ai_response');
->>>>>>> 5faf70d4995b7047f7af1a998c447f3f227fd4bc
+
