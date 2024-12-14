@@ -15,6 +15,7 @@ use App\Services\GoogleService;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\BackupListingsController;
+use App\Http\Controllers\BulkUploadController;
 use App\Http\Controllers\DatabaseListingController;
 use App\Http\Controllers\ImageMakerController;
 use App\Http\Controllers\PublicationController;
@@ -244,6 +245,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::get('review/inventory/export', [ListingController::class, 'inventoryReviewExport'])
             ->name('review_inventory_export');
+
     /**
      * Direct Blogger End 
      */
@@ -323,6 +325,20 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::get('set/session/id', [UserController::class, 'setSessionId'])
         ->name('user.session.id');
+
+    /**
+     * Upload Section
+     */
+    Route::get('/upload-file', [BulkUploadController::class, 'getOptions'])
+        ->name('upload-file.options');
+
+    Route::get('/download-url', [BulkUploadController::class, 'downloadImage']);
+
+    Route::post('/get-upload-file', [BulkUploadController::class, 'import'])
+        ->name('get-upload-file.options');
+
+    Route::post('/import/data', [BulkUploadController::class, 'importData'])
+        ->name('import.data');
     /**
      *  END
      */
@@ -356,8 +372,13 @@ Route::get('delete/session/{id}', [UserController::class, 'deleteSessionId'])
 Route::get('/assets/images/brand/{filename}', UserController::class)
     ->name('asset.name');
 
-Route::get('/getpublishernames',[PublicationController::class,'getpublishers'])->name('getpublishernames');
-Route::get('/getpublications',[PublicationController::class,'getpublications'])->name('getpublications');
+Route::get('/getpublishernames', [PublicationController::class, 'getpublishers'])->name('getpublishernames');
+Route::get('/getpublications', [PublicationController::class, 'getpublications'])->name('getpublications');
 
+<<<<<<< HEAD
 Route::get('/get/ai/description',[ChatGptController::class,'openAi'])->name('ai.description');
 Route::post('/get/response/ai/description',[ChatGptController::class,'responseAiDescription'])->name('getai.response');
+=======
+Route::get('/get_ai_description', [ChatGptController::class, 'openAi'])->name('ai_description');
+Route::post('/get_response_ai_description', [ChatGptController::class, 'responseAiDescription'])->name('get_ai_response');
+>>>>>>> 5faf70d4995b7047f7af1a998c447f3f227fd4bc

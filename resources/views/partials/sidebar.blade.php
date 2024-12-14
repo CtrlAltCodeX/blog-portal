@@ -56,6 +56,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         @can('RA | Updated Listings (MS)')
                         <li><a href="{{ route('publish.pending', ['status' => 0, 'startIndex' => 1, 'category' => '', 'user' => 'all','paging'=>25]) }}" class="slide-item {{ (request()->is('admin/publish/pending')) ? 'active' : '' }}">{{ __('RA | Updated Listings (MS)') }}</a></li>
                         @endcan
+                        <li><a href="{{ route('upload-file.options') }}" class="slide-item {{ (request()->is('admin/upload-file')) ? 'active' : '' }}">{{ __('Bulk Upload') }}</a></li>
                     </ul>
                 </li>
                 @endcan
@@ -149,7 +150,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                     </ul>
                 </li>
                 @endif
-                
+
                 <li class="slide">
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fa-solid fa fa-asterisk"></i><span class="side-menu__label">{{ __('AI') }}</span><i class="angle fe fe-chevron-right"></i></a>
                     <ul class="slide-menu">
