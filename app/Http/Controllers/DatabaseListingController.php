@@ -36,6 +36,7 @@ class DatabaseListingController extends Controller
         $googlePosts = Listing::with('created_by_user')
             ->orderBy('created_at', 'desc')
             ->where('categories', 'LIKE', '%' . request()->category . '%')
+            ->where('is_bulk_upload',0)
             ->whereNull('product_id');
 
         if (request()->user != 'all') {
@@ -50,12 +51,12 @@ class DatabaseListingController extends Controller
 
         $googlePosts = $googlePosts->paginate($request->paging);
         // dd($googlePosts);
-        $allCounts = Listing::whereNull('product_id')->count();
+        $allCounts = Listing::whereNull('product_id')->where('is_bulk_upload',0)->count();
 
-        $pendingCounts = Listing::where('status', 0)
+        $pendingCounts = Listing::where('status', 0)->where('is_bulk_upload',0)
             ->whereNull('product_id');
 
-        $rejectedCounts = Listing::where('status', 2)
+        $rejectedCounts = Listing::where('status', 2)->where('is_bulk_upload',0)
             ->whereNull('product_id');
 
         if (!auth()->user()->hasRole('Super Admin')) {

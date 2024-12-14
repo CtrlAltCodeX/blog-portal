@@ -45,6 +45,7 @@ class BlogRequest extends FormRequest
             'condition' => 'required|string|max:255',
             'pages' => 'required|string',
             'language' => 'required|string|max:255',
+            
         ];
     }
 }

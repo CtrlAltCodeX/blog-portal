@@ -39,6 +39,7 @@ class Listing extends Model
         'error',
         'product_id',
         'url',
+        'is_bulk_upload'
     ];
 
     public function created_by_user()

@@ -1,43 +1,38 @@
 @extends('layouts.master')
 
-@section('title', __('Upload CSV file'))
+@section('title', __('Uploaded CSV file'))
 
 @section('content')
-<form action="{{ route('import.data') }}" method="POST">
-    @csrf
     <div class="card">
         <div class="card-header d-flex justify-content-between">
             <h3 class="card-title">Listing</h3>
-            <button class="btn btn-primary">Save</button>
-            <a href="{{route('view.upload')}}" class="btn btn-info"><i class="fa fa-eye"></i>View Uploaded List</a>
+            <!-- <button class="btn btn-primary">Save</button> -->
         </div>
         <div class="card-body">
             <div class="table-responsive">
                 <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">
                     <thead>
                         <tr>
-                            <th><input type="checkbox" class="check-all" /></th>
                             <th>{{ __('Sl') }}</th>
                             <th>{{ __('Status') }}</th>
                             <th>{{ __('Product name') }}</th>
                             <th>{{ __('Sell Price') }}</th>
                             <th>{{ __('MRP') }}</th>
+                            <th>{{__('Action')}}</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($googlePosts as $key => $googlePost)
+                        @forelse ($listings as $key => $googlePost)
                         <tr>
-                            <td>
-                                <input type="checkbox" name="ids[]" class="checkbox-update" value="{{json_encode($googlePost)}}"/>
-                            </td>
+                            
                             <td>{{ ++$key }}</td>
                             <td>
                                 <span class="text-success"><b>Pending</b></span>
                             </td>
-    
-                            <td style="white-space: normal;">{{ $googlePost['title'] }}</td>
+                            <td style="white-space: normal;"><textarea class="form-control" rows="4" readonly>{{ $googlePost['title'] }}</textarea></td>
                             <td>{{ '₹'.$googlePost['selling_price'] }}</td>
                             <td>{{ '₹'.$googlePost['mrp'] }}</td>
+                            <td><a href="{{ route('bulklisting.edit', $googlePost->id) }}" class="btn btn-sm btn-primary padd">{{ __('Edit') }}</a></td>
                         </tr>
                         @empty
                         @endforelse
@@ -46,7 +41,6 @@
             </div>
         </div>
     </div>
-</form>
 @endsection
 
 @push('js')

@@ -333,12 +333,15 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         ->name('upload-file.options');
 
     Route::get('/download-url', [BulkUploadController::class, 'downloadImage']);
+    Route::get('/edit/bulk/listing/{id}', [BulkUploadController::class, 'edit'])->name('bulklisting.edit');
+    Route::post('/update/bulk/listing', [BulkUploadController::class, 'update'])->name('bulklisting.update');
 
     Route::post('/get-upload-file', [BulkUploadController::class, 'import'])
         ->name('get-upload-file.options');
 
     Route::post('/import/data', [BulkUploadController::class, 'importData'])
         ->name('import.data');
+    Route::get('/view/uploaded/data',[BulkUploadController::class,'viewUploadedFile'])->name('view.upload');
     /**
      *  END
      */
