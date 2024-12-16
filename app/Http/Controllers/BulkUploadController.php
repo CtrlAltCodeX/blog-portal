@@ -10,9 +10,6 @@ use Illuminate\Http\Request;
 use App\Jobs\ImportListingCsv;
 use App\Models\Listing;
 use App\Models\SiteSetting;
-use App\Http\Requests\BlogRequest;
-
-
 
 class BulkUploadController extends Controller
 {
@@ -56,29 +53,29 @@ class BulkUploadController extends Controller
 
     public function importData(Request $request)
     {
-        if(!empty($request->ids))
-        {
-            foreach ($request->ids as $key=> $data) {
+        if (!empty($request->ids)) {
+            foreach ($request->ids as $key => $data) {
                 $data = json_decode($data);
-                $job = ImportListingCsv::dispatch($data,auth()->user()->id);
-                if($job == true)
-                {
+
+                $job = ImportListingCsv::dispatch($data, auth()->user()->id);
+
+                if ($job == true) {
                     session()->flash('success', 'Listing imported successfully');
                     return redirect()->route('view.upload');
-                }else
-                {
+                } else {
                     session()->flash('error', 'Something went Wrong');
+                    return redirect()->route('view.upload');
                 }
             }
-        }
-        else{
+        } else {
             session()->flash('error', 'Please upload file first');
+            return redirect()->route('view.upload');
         }
     }
 
     public function viewUploadedFile()
     {
-        $listings = Listing::where('is_bulk_upload',1)->get();
+        $listings = Listing::where('is_bulk_upload', 1)->get();
         return view('bulk-upload.view_uploaded', compact('listings'));
     }
 
@@ -97,7 +94,7 @@ class BulkUploadController extends Controller
             ->get($url . '/feeds/posts/default?alt=json');
 
         $categories = $response->json()['feed']['category'];
-        return view('bulk-upload.edit',compact('listing','siteSetting','categories'));
+        return view('bulk-upload.edit', compact('listing', 'siteSetting', 'categories'));
     }
 
     public function update(Request $request)
@@ -121,7 +118,7 @@ class BulkUploadController extends Controller
             'images' => $request->images[0],
             'multiple_images' => $request->multipleImages,
             'created_by' => auth()->user()->id,
-            'is_bulk_upload'=>0
+            'is_bulk_upload' => 0
         ];
 
         $listing = Listing::find($request->id);

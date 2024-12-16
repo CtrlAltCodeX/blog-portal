@@ -36,7 +36,7 @@ class DatabaseListingController extends Controller
         $googlePosts = Listing::with('created_by_user')
             ->orderBy('created_at', 'desc')
             ->where('categories', 'LIKE', '%' . request()->category . '%')
-            ->where('is_bulk_upload',0)
+            ->where('is_bulk_upload', 0)
             ->whereNull('product_id');
 
         if (request()->user != 'all') {
@@ -51,12 +51,12 @@ class DatabaseListingController extends Controller
 
         $googlePosts = $googlePosts->paginate($request->paging);
         // dd($googlePosts);
-        $allCounts = Listing::whereNull('product_id')->where('is_bulk_upload',0)->count();
+        $allCounts = Listing::whereNull('product_id')->where('is_bulk_upload', 0)->count();
 
-        $pendingCounts = Listing::where('status', 0)->where('is_bulk_upload',0)
+        $pendingCounts = Listing::where('status', 0)->where('is_bulk_upload', 0)
             ->whereNull('product_id');
 
-        $rejectedCounts = Listing::where('status', 2)->where('is_bulk_upload',0)
+        $rejectedCounts = Listing::where('status', 2)->where('is_bulk_upload', 0)
             ->whereNull('product_id');
 
         if (!auth()->user()->hasRole('Super Admin')) {
@@ -92,13 +92,10 @@ class DatabaseListingController extends Controller
 
         $siteSetting = SiteSetting::first();
         $user_data_transfer = Auth::user()->data_transfer;
-        if($user_data_transfer == 1)
-        {
-            return view('database-listing.create_tmp', compact('categories', 'siteSetting','user_data_transfer'));
-        }
-        else
-        {
-            return view('database-listing.create', compact('categories', 'siteSetting','user_data_transfer'));
+        if ($user_data_transfer == 1) {
+            return view('database-listing.create_tmp', compact('categories', 'siteSetting', 'user_data_transfer'));
+        } else {
+            return view('database-listing.create', compact('categories', 'siteSetting', 'user_data_transfer'));
         }
     }
 
@@ -164,7 +161,7 @@ class DatabaseListingController extends Controller
 
     public function previewTemp(Request $request)
     {
-        try{
+        try {
             $data = [
                 '_token' => $request->_token,
                 'title' => $request->title,
@@ -185,11 +182,10 @@ class DatabaseListingController extends Controller
                 'multiple_images' => $request->multipleImages,
                 'status' => 0,
                 'created_by' => auth()->user()->id
-                ];
+            ];
+
             return view('database-listing.preview', compact('data'));
-        } 
-        catch (\Exception $e) 
-        {
+        } catch (\Exception $e) {
             session()->flash('error', 'Something went Wrong!!');
             return redirect()->back();
         }
@@ -198,10 +194,9 @@ class DatabaseListingController extends Controller
 
     public function copyDatabase($id)
     {
-        try{
+        try {
             $findListing = Listing::find($id);
-            if(isset($findListing))
-            {
+            if (isset($findListing)) {
                 $newListing = Listing::create([
                     'title' => $findListing->title,
                     'description' => $findListing->description,
@@ -219,7 +214,7 @@ class DatabaseListingController extends Controller
                     'insta_mojo_url' => $findListing->insta_mojo_url,
                     'images' => $findListing->images,
                     'multiple_images' => $findListing->multiple_images,
-                    'product_id' => $findListing->product_id??null,
+                    'product_id' => $findListing->product_id ?? null,
                     'status' => 0,
                     'created_by' => auth()->user()->id
                 ]);
@@ -240,12 +235,10 @@ class DatabaseListingController extends Controller
                     session()->flash('success', 'Copy Listing created successfully');
                     return redirect()->back();
                 }
-            }
-            else{
+            } else {
                 session()->flash('error', 'Someting went wrong');
             }
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             session()->flash('error', 'Something went Wrong!!');
 
             return redirect()->back();

@@ -45,17 +45,17 @@ class ImportListingCsv implements ShouldQueue
             'author_name' => $this->data->author_name,
             'edition' => $this->data->edition,
             'categories' => $this->data->categories,
-            'sku' => $this->data->sku??null,
+            'sku' => $this->data->sku ?? null,
             'language' => $this->data->language,
             'no_of_pages' => $this->data->no_of_pages,
-            'condition' => $this->data->condition??null,
-            'binding_type' => $this->data->binding??null,
-            'insta_mojo_url' => $this->data->url??null,
+            'condition' => $this->data->condition ?? null,
+            'binding_type' => $this->data->binding ?? null,
+            'insta_mojo_url' => $this->data->url ?? null,
             'images' => $this->data->images,
-            'multiple_images' => $this->data->multiple_images??null,
+            'multiple_images' => $this->data->multiple_images ?? null,
             'status' => 0,
             'created_by' => $this->user,
-            'is_bulk_upload'=>1
+            'is_bulk_upload' => 1
         ];
 
         $listing = Listing::create($data);
@@ -71,11 +71,11 @@ class ImportListingCsv implements ShouldQueue
             'listings_id' => $listing->id,
         ]);
 
-        $this->updateTheCount('Created', 'create_count');
-        if ($listing) 
-        {
+        // $this->updateTheCount('Created', 'create_count');
+
+        if ($listing) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }

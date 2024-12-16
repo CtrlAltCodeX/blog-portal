@@ -253,7 +253,7 @@ class ListingController extends Controller
 
             return redirect()->route('publish.pending', ['status' => 0, 'startIndex' => 1, 'category' => '', 'user' => 'all']);
         }
-        
+
         session()->flash('success', 'Post updated successfully');
 
         return redirect()->route('inventory.index', ['startIndex' => 1, 'category' => 'Product']);
@@ -291,7 +291,7 @@ class ListingController extends Controller
         //     return redirect()->to($url);
         // }
         // dd($request->all());
-        $googlePosts = $this->googleService->posts('live',$request->paging);
+        $googlePosts = $this->googleService->posts('live', $request->paging);
 
         return view('listing.live-inventory', compact('googlePosts'));
     }
@@ -315,7 +315,7 @@ class ListingController extends Controller
         //     return redirect()->to($url);
         // }
 
-        $googlePosts = $this->googleService->posts($status,$request->paging);
+        $googlePosts = $this->googleService->posts($status, $request->paging);
         return view('listing.review-inventory', compact('googlePosts'));
     }
 
@@ -401,7 +401,6 @@ class ListingController extends Controller
 
     public function inventoryReviewExport()
     {
-        
         return Excel::download(new InventoryReviewExport($this->getInventoryReviewExportFile()), 'review-inventory.xlsx');
     }
 
@@ -417,8 +416,8 @@ class ListingController extends Controller
             $allDataArr[$key][] = $productTitle;
         }
         $heading = [
-            'Id',
-            'title',
+            'Product Id',
+            'Book Name',
         ];
 
         array_unshift($allDataArr, $heading);

@@ -9,7 +9,6 @@
         <div class="card-header d-flex justify-content-between">
             <h3 class="card-title">Listing</h3>
             <button class="btn btn-primary">Save</button>
-            <a href="{{route('view.upload')}}" class="btn btn-info"><i class="fa fa-eye"></i>View Uploaded List</a>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -28,13 +27,13 @@
                         @forelse ($googlePosts as $key => $googlePost)
                         <tr>
                             <td>
-                                <input type="checkbox" name="ids[]" class="checkbox-update" value="{{json_encode($googlePost)}}"/>
+                                <input type="checkbox" name="ids[]" class="checkbox-update" value="{{json_encode($googlePost)}}" />
                             </td>
                             <td>{{ ++$key }}</td>
                             <td>
                                 <span class="text-success"><b>Pending</b></span>
                             </td>
-    
+
                             <td style="white-space: normal;">{{ $googlePost['title'] }}</td>
                             <td>{{ '₹'.$googlePost['selling_price'] }}</td>
                             <td>{{ '₹'.$googlePost['mrp'] }}</td>

@@ -244,7 +244,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         ->name('blog.publish');
 
     Route::get('review/inventory/export', [ListingController::class, 'inventoryReviewExport'])
-            ->name('review_inventory_export');
+        ->name('review_inventory_export');
 
     /**
      * Direct Blogger End 
@@ -333,15 +333,21 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         ->name('upload-file.options');
 
     Route::get('/download-url', [BulkUploadController::class, 'downloadImage']);
-    Route::get('/edit/bulk/listing/{id}', [BulkUploadController::class, 'edit'])->name('bulklisting.edit');
-    Route::post('/update/bulk/listing', [BulkUploadController::class, 'update'])->name('bulklisting.update');
+
+    Route::get('/edit/bulk/listing/{id}', [BulkUploadController::class, 'edit'])
+        ->name('bulklisting.edit');
+
+    Route::post('/update/bulk/listing', [BulkUploadController::class, 'update'])
+        ->name('bulklisting.update');
 
     Route::post('/get-upload-file', [BulkUploadController::class, 'import'])
         ->name('get-upload-file.options');
 
     Route::post('/import/data', [BulkUploadController::class, 'importData'])
         ->name('import.data');
-    Route::get('/view/uploaded/data',[BulkUploadController::class,'viewUploadedFile'])->name('view.upload');
+
+    Route::get('/view/uploaded/data', [BulkUploadController::class, 'viewUploadedFile'])
+        ->name('view.upload');
     /**
      *  END
      */
@@ -375,9 +381,14 @@ Route::get('delete/session/{id}', [UserController::class, 'deleteSessionId'])
 Route::get('/assets/images/brand/{filename}', UserController::class)
     ->name('asset.name');
 
-Route::get('/getpublishernames', [PublicationController::class, 'getpublishers'])->name('getpublishernames');
-Route::get('/getpublications', [PublicationController::class, 'getpublications'])->name('getpublications');
+Route::get('/getpublishernames', [PublicationController::class, 'getpublishers'])
+    ->name('getpublishernames');
+    
+Route::get('/getpublications', [PublicationController::class, 'getpublications'])
+    ->name('getpublications');
 
-Route::get('/get/ai/description',[ChatGptController::class,'openAi'])->name('ai.description');
-Route::post('/get/response/ai/description',[ChatGptController::class,'responseAiDescription'])->name('getai.response');
-
+Route::get('/get/ai/description', [ChatGptController::class, 'openAi'])
+    ->name('ai.description');
+    
+Route::post('/get/ai/description', [ChatGptController::class, 'responseAiDescription'])
+    ->name('getai.response');

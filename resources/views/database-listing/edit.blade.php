@@ -31,7 +31,7 @@
                         <h4 class="card-title">
                             {{ __('Update New Listing ( DB )') }}
                         </h4>
-                        <a href="{{ route('copy_database', $listing->id) }}" class="btn btn-info">{{ __('Copy') }} </a>
+                        <a href="{{ route('copy_database', $listing->id) }}" class="btn btn-info">{{ __('Create Duplicate Listing') }} </a>
 
                         <!-- <button type="submit" class="btn btn-primary float-right">Save</button> -->
                     </div>

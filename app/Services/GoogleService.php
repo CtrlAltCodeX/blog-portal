@@ -103,7 +103,7 @@ class GoogleService
      * 
      * @return array
      */
-    public function posts($status='live',$paging)
+    public function posts($status = 'live', $paging)
     {
         try {
             $posts = [];
@@ -227,56 +227,66 @@ class GoogleService
 
     public function exportData($status = 'live')
     {
-            $posts = [];
-            $pageToken = null;
-            $perPage = 150;
-            $startIndex = request()->startIndex;
+        $posts = [];
+        $pageToken = null;
+        $perPage = 150;
+        $startIndex = request()->startIndex;
 
-            $params = [
-                'orderBy' => 'updated',
-                'status' => $status,
-                'pageToken' => $pageToken,
-                'alt' => 'json'
-            ];
+        $params = [
+            'orderBy' => 'updated',
+            'status' => $status,
+            'pageToken' => $pageToken,
+            'alt' => 'json'
+        ];
 
-           $params['start-index'] = $startIndex;
-                $params['max-results'] = $perPage;
-                $params['category'] = request()->query('category');
-                $params['q'] = request()->query('q');
+        $params['start-index'] = $startIndex;
+        $params['max-results'] = $perPage;
+        $params['category'] = request()->query('category');
+        $params['q'] = request()->query('q');
 
-                if ((request()->route() && request()->route()->getName() == 'inventory.review')
-                    && !App::runningInConsole()
-                ) {
-                    $params['updated-max'] = $agoDate->format('Y-m-d') . "T00:00:00";
-                }
+        if (request()->filled('updated_before')) {
+            // Get the current date
+            $currentDate = Carbon::now();
 
-                if (SiteSetting::first()->url) {
-                    $response = Http::withoutVerifying()->get(SiteSetting::first()->url . '/feeds/posts/default', $params);
-                    $response = json_decode(json_encode($response->json()))->feed;
-                    $posts = $response->entry ?? [];
-                    $filteredPost = $response->entry ?? [];
+            if (
+                request()->query('updated_before') == 1
+                || request()->query('updated_before') == 2
+                || request()->query('updated_before') == "3Y"
+            ) {
+                $updateBefore = request()->query('updated_before');
+                if (request()->query('updated_before') == "3Y") $updateBefore = 3;
+                $agoDate = $currentDate->subYear($updateBefore);
+            } else {
+                // Subtract three months from the current date
+                $agoDate = $currentDate->subMonths(request()->query('updated_before'));
+            }
+        }
 
-                    $allCategories = [];
-                    if (isset(request()->category)) {
-                        $filteredPost = [];
-                        foreach ($posts as $key => $post) {
-                            foreach ($post->category as $category) {
-                                $allCategories[$key][] = $category->term;
-                            }
+        $params['updated-max'] = $agoDate->format('Y-m-d') . "T00:00:00";
 
-                            if (in_array(request()->category, $allCategories[$key])) {
-                                $filteredPost[$key] = (array) $post;
-                                $filteredPost[$key]['category'] = $allCategories[$key];
-                            }
-                        }
+        if (SiteSetting::first()->url) {
+            $response = Http::withoutVerifying()->get(SiteSetting::first()->url . '/feeds/posts/default', $params);
+            $response = json_decode(json_encode($response->json()))->feed;
+            $posts = $response->entry ?? [];
+            $filteredPost = $response->entry ?? [];
+
+            $allCategories = [];
+            if (isset(request()->category)) {
+                $filteredPost = [];
+                foreach ($posts as $key => $post) {
+                    foreach ($post->category as $category) {
+                        $allCategories[$key][] = $category->term;
+                    }
+
+                    if (in_array(request()->category, $allCategories[$key])) {
+                        $filteredPost[$key] = (array) $post;
+                        $filteredPost[$key]['category'] = $allCategories[$key];
                     }
                 }
-            
-            return $filteredPost;
-            
-        
-    
+            }
+        }
 
+        return $filteredPost;
     }
 
     /**

@@ -47,7 +47,8 @@
         background-color: grey;
         color: white;
     }
-    .pagination{
+
+    .pagination {
         display: none;
     }
 </style>
@@ -61,32 +62,38 @@
             <div class="card">
                 <div class="card-header justify-content-between">
                     <h3 class="card-title">Review Inventory | Published ( M/S )</h3>
-                    <a href="{{ route('review_inventory_export') }}" class="btn btn-warning btn-icon ml-2 add_icon w-10"><i data-feather="download"></i> Export</a>
-                    <form action="" method="get" id='form'>
-                        <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
-                        <input type="hidden" value="{{ request()->updated_before ?? 3 }}" name='updated_before'>
-                        <select class="form-control w-100" id='category' name="category">
-                            <option value="Product" {{ request()->category == 'Product' ? 'selected' : '' }}>In Stock</option>
-                            <option value="Stk_o" {{ request()->category == 'Stk_o' ? 'selected' : '' }}>Out of Stock (Stk_o)</option>
-                            <option value="stock__out" {{ request()->category == 'stock__out' ? 'selected' : '' }}>Out of Stock (stock__out)</option>
-                            <option value="Stk_d" {{ request()->category == 'Stk_d' ? 'selected' : '' }}>On Demand Stock (Stk_d)</option>
-                            <option value="stock__demand" {{ request()->category == 'stock__demand' ? 'selected' : '' }}>On Demand Stock (stock__demand)</option>
-                            <option value="Stk_l" {{ request()->category == 'Stk_l' ? 'selected' : '' }}>Low Stock (Stk_l)</option>
-                            <option value="stock__low" {{ request()->category == 'stock__low' ? 'selected' : '' }}>Low Stock (stock__low)</option>
-                        </select>
-                        <input type="hidden" value="{{ request()->paging ?? 25 }}" name='updated_before'>
-                    </form>
+                    <div class="d-flex" style="grid-gap: 10px;;">
+                        <form action="{{ route('review_inventory_export') }}">
+                            <input type="hidden" name="updated_before" value="{{ request()->updated_before }}" />
+                            <button class="btn btn-warning btn-icon ml-2 add_icon w-100"><i data-feather="download"></i> Export</button>
+                        </form>
 
-                    <form action="" method="get" id='pagingform'>
-                        <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
-                        <input type="hidden" value="{{ request()->updated_before ?? 3 }}" name='updated_before'>
-                        <input type="hidden" value="{{ request()->category ?? Product }}" name='category'>
-                        <select class="form-control w-100" id='paging' name="paging">
-                            <option value="25" {{ request()->paging == '25' ? 'selected' : '' }}>25</option>
-                            <option value="50" {{ request()->paging == '50' ? 'selected' : '' }}>50</option>
-                            <option value="100" {{ request()->paging == '100' ? 'selected' : '' }}>100</option>
-                        </select>
-                    </form>
+                        <form action="" method="get" id='form'>
+                            <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
+                            <input type="hidden" value="{{ request()->updated_before ?? 3 }}" name='updated_before'>
+                            <select class="form-control w-100" id='category' name="category">
+                                <option value="Product" {{ request()->category == 'Product' ? 'selected' : '' }}>In Stock</option>
+                                <option value="Stk_o" {{ request()->category == 'Stk_o' ? 'selected' : '' }}>Out of Stock (Stk_o)</option>
+                                <option value="stock__out" {{ request()->category == 'stock__out' ? 'selected' : '' }}>Out of Stock (stock__out)</option>
+                                <option value="Stk_d" {{ request()->category == 'Stk_d' ? 'selected' : '' }}>On Demand Stock (Stk_d)</option>
+                                <option value="stock__demand" {{ request()->category == 'stock__demand' ? 'selected' : '' }}>On Demand Stock (stock__demand)</option>
+                                <option value="Stk_l" {{ request()->category == 'Stk_l' ? 'selected' : '' }}>Low Stock (Stk_l)</option>
+                                <option value="stock__low" {{ request()->category == 'stock__low' ? 'selected' : '' }}>Low Stock (stock__low)</option>
+                            </select>
+                            <input type="hidden" value="{{ request()->paging ?? 25 }}" name='updated_before'>
+                        </form>
+    
+                        <form action="" method="get" id='pagingform' class="w-25">
+                            <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
+                            <input type="hidden" value="{{ request()->updated_before ?? 3 }}" name='updated_before'>
+                            <input type="hidden" value="{{ request()->category ?? Product }}" name='category'>
+                            <select class="form-control w-100" id='paging' name="paging">
+                                <option value="25" {{ request()->paging == '25' ? 'selected' : '' }}>25</option>
+                                <option value="50" {{ request()->paging == '50' ? 'selected' : '' }}>50</option>
+                                <option value="100" {{ request()->paging == '100' ? 'selected' : '' }}>100</option>
+                            </select>
+                        </form>
+                    </div>
                 </div>
 
                 <div class="card-body">
@@ -250,12 +257,12 @@
     $(document).ready(function() {
         //______Basic Data Table
         $('#basic-datatable').DataTable({
-            "paging":false
+            "paging": false
         });
 
         $("#category").on("change", function() {
             $("#form").submit();
-        }); 
+        });
 
         $("#paging").on("change", function() {
             $("#pagingform").submit();
@@ -298,11 +305,11 @@
 
             window.location.href = url.origin + url.pathname + "?" + allParams;
         });
-        
-        setTimeout(function(){
-            getSixMonthOldInventory();    
-        },1000);
-        
+
+        setTimeout(function() {
+            getSixMonthOldInventory();
+        }, 1000);
+
         function getTwoYearOldInventory() {
             $.ajax({
                 type: "GET",
@@ -316,7 +323,7 @@
                 },
                 success: function(result) {
                     $("#count-two").html("(" + result + ")");
-                    
+
                     get3YearOldInventory();
                 },
             });
@@ -337,7 +344,7 @@
                 },
                 success: function(result) {
                     $("#count-one").html("(" + result + ")");
-                    
+
                     getTwoYearOldInventory();
                     // localStorage.setItem('one-year-old', result);
                 },

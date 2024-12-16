@@ -37,9 +37,10 @@ $userInfo = app('App\Models\SiteSetting')->first();
                 </li>
 
                 @can('Listing (Main Menu)')
-                <li class="slide {{ (request()->is('aadmin/listing/*') || request()->is('admin/listing') || request()->is('admin/database-listing') || request()->is('admin/database-listing/*') || request()->is('admin/publish/pending')) ? 'is-expanded' : '' }}">
+                <li class="slide {{ (request()->is('aadmin/listing/*') || request()->is('admin/listing') || request()->is('admin/database-listing') || request()->is('admin/database-listing/*') || request()->is('admin/publish/pending') || request()->is('get/ai/description')) ? 'is-expanded' : '' }}">
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-list"></i><span class="side-menu__label">{{ __('Product Listing') }}</span><i class="angle fe fe-chevron-right"></i></a>
                     <ul class="slide-menu">
+                        <li><a href="{{ route('ai.description') }}" class="slide-item {{ request()->is('get/ai/description') ? 'active' : '' }}">{{ __('E360 AI Bots') }}</a></li>
                         <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
                         @can('Listing -> Search Listing')
                         <li><a href="{{ route('listing.search') }}" class="slide-item {{ (request()->is('admin/search')) ? 'active' : '' }}">{{ __('Search Listing ( M/S )') }}</a></li>
@@ -57,6 +58,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         <li><a href="{{ route('publish.pending', ['status' => 0, 'startIndex' => 1, 'category' => '', 'user' => 'all','paging'=>25]) }}" class="slide-item {{ (request()->is('admin/publish/pending')) ? 'active' : '' }}">{{ __('RA | Updated Listings (MS)') }}</a></li>
                         @endcan
                         <li><a href="{{ route('upload-file.options') }}" class="slide-item {{ (request()->is('admin/upload-file')) ? 'active' : '' }}">{{ __('Bulk Upload') }}</a></li>
+                        <li><a href="{{ route('view.upload') }}" class="slide-item {{ (request()->is('admin/upload-file')) ? 'active' : '' }}">{{ __('View Uploaded List') }}</a></li>
                     </ul>
                 </li>
                 @endcan
@@ -150,16 +152,6 @@ $userInfo = app('App\Models\SiteSetting')->first();
                     </ul>
                 </li>
                 @endif
-
-                <li class="slide">
-                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fa-solid fa fa-asterisk"></i><span class="side-menu__label">{{ __('AI') }}</span><i class="angle fe fe-chevron-right"></i></a>
-                    <ul class="slide-menu">
-                        <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
-                        @can('Settings -> Site Access')
-                        <li><a href="{{ route('ai.description') }}" class="slide-item {{ request()->is('admin/settings/site') ? 'active' : '' }}">{{ __('AI Description') }}</a></li>
-                        @endcan
-                    </ul>
-                </li>
 
                 @if(auth()->user()->can('Settings (Main Menu)'))
                 <li class="slide {{ (request()->is('admin/settings/*') || request()->is('admin/settings') || request()->is('admin/backup/emails') || request()->is('admin/backup/logs')) ? 'is-expanded' : '' }}">
