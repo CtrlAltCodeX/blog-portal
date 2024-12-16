@@ -9,6 +9,7 @@
             <div class="card">
                 <div class="card-header justify-content-between">
                     <h3 class="card-title">Bulk Upload</h3>
+                    <a href="{{route('view.upload')}}" class="btn btn-info"><i class="fa fa-eye"></i>View Uploaded List</a>
                 </div>
 
                 <div class="card-body">

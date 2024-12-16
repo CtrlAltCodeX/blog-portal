@@ -42,7 +42,7 @@
                                 </div>
                                 @if(!empty($assistent_response))
                                     <div class="form-group">
-                                        <textarea class="form-control" id="response">{!! $assistent_response['content'] !!}</textarea>
+                                        <textarea class="form-control" id="response" readonly rows="10">{!! $assistent_response['content'] !!}</textarea>
                                     </div>
                                 @endif
                             </div>
