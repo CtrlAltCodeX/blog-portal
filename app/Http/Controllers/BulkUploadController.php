@@ -143,4 +143,22 @@ class BulkUploadController extends Controller
 
         return redirect()->back();
     }
+
+    public function delete(Request $request)
+    {
+        if($request->formData[0]['value'] == 'Select')
+        {
+            session()->flash('error', 'Please choose the option to perform');
+        }
+        if(!empty($request->formData[1]))
+        {
+            $listing = Listing::whereIn('id',$request->formData[1])->delete();
+            // if(isset)
+            return true;
+        }
+        else{
+            session()->flash('error', 'Something went wrong');
+        }
+    }
+
 }
