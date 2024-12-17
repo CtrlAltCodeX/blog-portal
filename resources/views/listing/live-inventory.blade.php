@@ -35,6 +35,9 @@
     .tooltip:hover .tooltiptext {
         visibility: visible;
     }
+    .pagination{
+        display: none;
+    }
 </style>
 @endpush
 
@@ -59,6 +62,15 @@
                             <option value="stock__low" {{ request()->category == 'stock__low' ? 'selected' : '' }}>Low Stock (stock__low)</option>
                         </select>
                     </form>
+                     <form action="" method="get" id='pagingform'>
+                           <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
+                            <input type="hidden" value="{{ request()->category ?? 'Product' }}" name='category'>
+                            <select class="form-control w-100" id='paging' name="paging">
+                                <option value="25" {{ request()->paging == '25' ? 'selected' : '' }}>25</option>
+                                <option value="50" {{ request()->paging == '50' ? 'selected' : '' }}>50</option>
+                                <option value="100" {{ request()->paging == '100' ? 'selected' : '' }}>100</option>
+                            </select>
+                        </form>
                 </div>
 
                 <div class="card-body">
@@ -231,6 +243,10 @@
         $("#category").on("change", function() {
             $("#form").submit();
         })
+
+         $("#paging").on("change", function() {
+            $("#pagingform").submit();
+        });
     })
 </script>
 

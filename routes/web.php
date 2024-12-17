@@ -347,7 +347,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         ->name('import.data');
 
     Route::get('/view/uploaded/data', [BulkUploadController::class, 'viewUploadedFile'])
-        ->name('view.upload');
+        ->name('view.upload'); 
+
+    Route::get('/delete/uploaded/data', [BulkUploadController::class, 'delete'])
+        ->name('delete.upload.data');
     /**
      *  END
      */

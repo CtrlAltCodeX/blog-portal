@@ -42,7 +42,6 @@ class ListingController extends Controller
         if ($this->tokenIsExpired($this->googleService))
             return view('settings.authenticate');
         $googlePosts = $this->getPaginatedData(collect($this->googleService->posts()));
-
         return view('listing.index', compact('googlePosts'));
     }
 

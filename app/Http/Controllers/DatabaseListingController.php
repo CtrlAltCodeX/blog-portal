@@ -32,7 +32,6 @@ class DatabaseListingController extends Controller
      */
     public function index(Request $request)
     {
-        // dd($request->all());
         $googlePosts = Listing::with('created_by_user')
             ->orderBy('created_at', 'desc')
             ->where('categories', 'LIKE', '%' . request()->category . '%')
@@ -48,9 +47,7 @@ class DatabaseListingController extends Controller
         if (!auth()->user()->hasRole('Super Admin')) {
             $googlePosts = $googlePosts->where('created_by', auth()->user()->id);
         }
-
         $googlePosts = $googlePosts->paginate($request->paging);
-        // dd($googlePosts);
         $allCounts = Listing::whereNull('product_id')->where('is_bulk_upload', 0)->count();
 
         $pendingCounts = Listing::where('status', 0)->where('is_bulk_upload', 0)
@@ -216,7 +213,8 @@ class DatabaseListingController extends Controller
                     'multiple_images' => $findListing->multiple_images,
                     'product_id' => $findListing->product_id ?? null,
                     'status' => 0,
-                    'created_by' => auth()->user()->id
+                    'created_by' => auth()->user()->id,
+                    'is_bulk_upload' => $findListing->is_bulk_upload,
                 ]);
 
                 UserListingInfo::create([
