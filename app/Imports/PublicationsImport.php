@@ -19,4 +19,3 @@ class PublicationsImport implements ToModel, WithHeadingRow
         };
     }
 }
-

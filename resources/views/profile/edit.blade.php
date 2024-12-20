@@ -31,14 +31,16 @@
                             {{ __('Profile update') }}
                         </h4>
 
+                        @if(auth()->user()->account_details_change_limitations)
                         <button type="submit" class="btn btn-primary float-right">Save</button>
+                        @endif
                     </div>
 
                     <div class="card-body">
                         <div>
                             <div class="form-group">
                                 <label for="name" class="form-label">{{ __('Name') }}<span class="text-danger">*</span></label>
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') ?? $user->name }}" autocomplete="name" autofocus placeholder="Admin">
+                                <input id="name" {{ auth()->user()->account_details_change_limitations ? 'disabled' : '' }} type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') ?? $user->name }}" autocomplete="name" autofocus placeholder="Admin">
 
                                 @error('name')
                                 <span class="invalid-feedback" role="alert">
@@ -60,7 +62,7 @@
 
                             <div class="form-group">
                                 <label for="mobile" class="form-label">{{ __('Mobile') }}<span class="text-danger">*</span></label>
-                                <input id="mobile" type="text" class="form-control @error('mobile') is-invalid @enderror" name="mobile" value="{{ old('mobile') ?? $user->mobile }}" autocomplete="mobile" placeholder="Mobile">
+                                <input id="mobile" {{ auth()->user()->account_details_change_limitations ? 'disabled' : '' }} type="text" class="form-control @error('mobile') is-invalid @enderror" name="mobile" value="{{ old('mobile') ?? $user->mobile }}" autocomplete="mobile" placeholder="Mobile">
 
                                 @error('mobile')
                                 <span class="invalid-feedback" role="alert">
@@ -72,7 +74,7 @@
 
                             <div class="form-group">
                                 <label for="father_name" class="form-label">{{ __('Father\'s Name') }}<span class="text-danger">*</span></label>
-                                <input id="father_name" type="text" class="form-control @error('father_name') is-invalid @enderror" name="father_name" value="{{ old('father_name') ?? $user->father_name }}" autocomplete="father_name" placeholder="Father Name">
+                                <input id="father_name" {{ auth()->user()->account_details_change_limitations ? 'disabled' : '' }} type="text" class="form-control @error('father_name') is-invalid @enderror" name="father_name" value="{{ old('father_name') ?? $user->father_name }}" autocomplete="father_name" placeholder="Father Name">
 
                                 @error('father_name')
                                 <span class="invalid-feedback" role="alert">
@@ -83,7 +85,7 @@
 
                             <div class="form-group">
                                 <label for="mother_name" class="form-label">{{ __('Mother\'s Name') }}<span class="text-danger">*</span></label>
-                                <input id="mother_name" type="text" class="form-control @error('mother_name') is-invalid @enderror" name="mother_name" value="{{ old('mother_name') ?? $user->mother_name }}" autocomplete="mother_name" placeholder="Mother Name">
+                                <input id="mother_name" {{ auth()->user()->account_details_change_limitations ? 'disabled' : '' }} type="text" class="form-control @error('mother_name') is-invalid @enderror" name="mother_name" value="{{ old('mother_name') ?? $user->mother_name }}" autocomplete="mother_name" placeholder="Mother Name">
 
                                 @error('mother_name')
                                 <span class="invalid-feedback" role="alert">
@@ -101,7 +103,7 @@
                         <div class="form-group">
                             <label for="account_type" class="form-label">{{ __('Account Type') }}<span class="text-danger">*</span></label>
 
-                            <select class="form-control" disabled name="account_type">
+                            <select class="form-control" disabled name="account_type"{{ auth()->user()->account_details_change_limitations ? 'disabled' : '' }} >
                                 <option value="1" {{ $user->account_type = 1 ? 'selected' : '' }}>Individual</option>
                                 <option value="2" {{ $user->account_type = 2 ? 'selected' : '' }}>Retailer</option>
                                 <option value="3" {{ $user->account_type = 3 ? 'selected' : '' }}>Publisher</option>
@@ -118,7 +120,7 @@
 
                         <div class="form-group">
                             <label for="aadhaar_no" class="form-label">{{ __('Aadhaar Number') }}<span class="text-danger">*</span></label>
-                            <input id="aadhaar_no" type="text" class="form-control @error('aadhaar_no') is-invalid @enderror" name="aadhaar_no" value="{{ old('aadhaar_no') ?? $user->aadhaar_no }}" autocomplete="aadhaar_no" placeholder="Adhaar No.">
+                            <input id="aadhaar_no"{{ auth()->user()->account_details_change_limitations ? 'disabled' : '' }}  type="text" class="form-control @error('aadhaar_no') is-invalid @enderror" name="aadhaar_no" value="{{ old('aadhaar_no') ?? $user->aadhaar_no }}" autocomplete="aadhaar_no" placeholder="Adhaar No.">
 
                             @error('aadhaar_no')
                             <span class="invalid-feedback" role="alert">
@@ -129,7 +131,7 @@
 
                         <div class="form-group">
                             <label for="state" class="form-label">{{ __('State') }}<span class="text-danger">*</span></label>
-                            <input id="state" type="text" class="form-control @error('state') is-invalid @enderror" name="state" value="{{ old('state') ?? $user->state }}" autocomplete="state" placeholder="State">
+                            <input id="state" {{ auth()->user()->account_details_change_limitations ? 'disabled' : '' }} type="text" class="form-control @error('state') is-invalid @enderror" name="state" value="{{ old('state') ?? $user->state }}" autocomplete="state" placeholder="State">
 
                             @error('state')
                             <span class="invalid-feedback" role="alert">
@@ -140,7 +142,7 @@
 
                         <div class="form-group">
                             <label for="pincode" class="form-label">{{ __('Pincode') }}<span class="text-danger">*</span></label>
-                            <input id="pincode" type="text" class="form-control @error('pincode') is-invalid @enderror" name="pincode" value="{{ old('pincode') ?? $user->pincode }}" autocomplete="pincode" placeholder="Pincode">
+                            <input id="pincode" {{ auth()->user()->account_details_change_limitations ? 'disabled' : '' }} type="text" class="form-control @error('pincode') is-invalid @enderror" name="pincode" value="{{ old('pincode') ?? $user->pincode }}" autocomplete="pincode" placeholder="Pincode">
 
                             @error('pincode')
                             <span class="invalid-feedback" role="alert">
@@ -151,7 +153,7 @@
 
                         <div class="form-group">
                             <label for="full_address" class="form-label">{{ __('Full Address') }}<span class="text-danger">*</span></label>
-                            <textarea id="full_address" class="form-control @error('full_address') is-invalid @enderror" name="full_address" autocomplete="full_address" placeholder="Full Address">{{ old('full_address') ?? $user->full_address }}</textarea>
+                            <textarea id="full_address" {{ auth()->user()->account_details_change_limitations ? 'disabled' : '' }} class="form-control @error('full_address') is-invalid @enderror" name="full_address" autocomplete="full_address" placeholder="Full Address">{{ old('full_address') ?? $user->full_address }}</textarea>
 
                             @error('full_address')
                             <span class="invalid-feedback" role="alert">
@@ -162,7 +164,7 @@
 
                         <div class="form-group">
                             <label for="current_password" class="form-label">{{ __('Current Password') }}<span class="text-danger">*</span></label>
-                            <input id="current_password" type="password" class="form-control @error('current_password') is-invalid @enderror" name="current_password" autocomplete="current_password" placeholder="Current Password">
+                            <input id="current_password" {{ auth()->user()->account_details_change_limitations ? 'disabled' : '' }} type="password" class="form-control @error('current_password') is-invalid @enderror" name="current_password" autocomplete="current_password" placeholder="Current Password">
 
                             @error('current_password')
                             <span class="invalid-feedback" role="alert">
@@ -173,7 +175,7 @@
 
                         <div class="form-group">
                             <label for="password" class="form-label">{{ __('New Password') }}<span class="text-danger">*</span></label>
-                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" autocomplete="new-password" placeholder="Confirm Password">
+                            <input id="password" {{ auth()->user()->account_details_change_limitations ? 'disabled' : '' }} type="password" class="form-control @error('password') is-invalid @enderror" name="password" autocomplete="new-password" placeholder="Confirm Password">
 
                             @error('password')
                             <span class="invalid-feedback" role="alert">
@@ -184,7 +186,7 @@
 
                         <div class="form-group">
                             <label for="password_confirmation" class="form-label">{{ __('Confirm New Password') }}<span class="text-danger">*</span></label>
-                            <input id="password_confirmation" type="password" class="form-control @error('password_confirmation') is-invalid @enderror" name="password_confirmation" autocomplete="new-password" placeholder="Confirm Password">
+                            <input id="password_confirmation" {{ auth()->user()->account_details_change_limitations ? 'disabled' : '' }} type="password" class="form-control @error('password_confirmation') is-invalid @enderror" name="password_confirmation" autocomplete="new-password" placeholder="Confirm Password">
 
                             @error('password_confirmation')
                             <span class="invalid-feedback" role="alert">

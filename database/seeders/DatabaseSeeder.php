@@ -44,8 +44,7 @@ class DatabaseSeeder extends Seeder
         Permission::create(['name' => 'Listing (Main Menu)']);
         Permission::create(['name' => 'Listing create']);
         Permission::create(['name' => 'Listing create ( DB )']);
-        Permission::create(['name' => 'RA | Pending Listing (DB)']);
-        Permission::create(['name' => 'RA | Updated Listings (MS)']);
+        Permission::create(['name' => 'Pending Listing ( DB )']);
         Permission::create(['name' => 'Listing publish']);
         Permission::create(['name' => 'Pending Listing ( DB ) -> Reject ( DB )']);
         Permission::create(['name' => 'Pending Listing ( DB ) -> Update ( DB )']);
@@ -66,7 +65,6 @@ class DatabaseSeeder extends Seeder
         Permission::create(['name' => 'Inventory -> Manage Inventory -> Edit']);
         Permission::create(['name' => 'Inventory -> Manage Inventory -> Delete']);
         Permission::create(['name' => 'Inventory -> Listing Counts Report']);
-        Permission::create(['name' => 'Inventory -> Manage Inventory -> Edit ( DB )']);
         
         Permission::create(['name' => 'Settings (Main Menu)']);
         Permission::create(['name' => 'Settings -> Site Access']);

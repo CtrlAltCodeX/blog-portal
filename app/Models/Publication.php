@@ -13,4 +13,8 @@ class Publication extends Model
         'discount_information',
         'location'
     ];
+    
+    protected $casts = [
+        'discount_information' => 'string', // Ensure it's stored as a string
+    ];
 }

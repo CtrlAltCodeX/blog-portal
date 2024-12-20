@@ -427,10 +427,10 @@
             totalLength += textLength;
         });
 
-        $('#textLength').html('<strong>Total Length:</strong> ' + totalLength + ' (Min:170, Max.:188)');
+        $('#textLength').html('<strong>Total Length:</strong> ' + totalLength + ' (Min:170, Max.:184)');
 
 
-        let maxLength = 188;
+        let maxLength = 184;
         $('.select2').on('change', function(event) {
             let totalLength = 0; // Reset total length before recalculating
             let selectedOptions = $(this).find('option:selected');
@@ -449,20 +449,25 @@
                 $(this).find(`option[value='${lastSelected}']`).prop('selected', false); // Deselect only the last one
                 $(this).trigger('change.select2'); // Trigger the select2 change event to update the UI
 
-                alert('You have reached the maximum limit of 192 characters.');
+                alert('You have reached the maximum limit of 184 characters.');
                 totalLength -= $(this).find(`option[value='${lastSelected}']`).text().trim().length; // Adjust total length after deselecting
             }
 
             // Update the total length in the UI
-            $('#textLength').html('<strong>Total Length:</strong> ' + totalLength + ' (Min:170, Max.:188)');
+            $('#textLength').html('<strong>Total Length:</strong> ' + totalLength + ' (Min:170, Max.:184)');
         });
 
         $('#base_url').on('change', function() {
-            const imageUrl = $(this).val();
+            previewImage('base_url');
+        });
+
+        previewImage('base_url');
+
+        function previewImage(element) {
+            const imageUrl = $("#" + element).val();
             const $image = $('#previewImage');
             const $status = $('.image-status');
 
-            console.log(imageUrl);
             // Clear previous content
             $status.empty();
             $image.hide();
@@ -477,14 +482,14 @@
                     $image.show();
 
                     // Check dimensions
-                    if (width === 555 && height === 555) {
+                    if (width === 555 && height === 555 || width === 320 && height === 320) {
                         $('.image-status').show();
                         $('.image-status').css('background-color', 'green');
-                        $status.html('<span style="color: white;">✔ Image Pixel Size is 555x555</span>');
+                        $status.html('<span style="color: white;">✔ Image Size is Perfect</span>');
                     } else {
                         $('.image-status').show();
                         $('.image-status').css('background-color', 'red');
-                        $status.html('<span style="color: white;">✖ Image Pixel Size is not 555x555</span>');
+                        $status.html('<span style="color: white;">✖ Image Pixels Issues Found</span>');
                     }
                 }).on('error', function() {
                     $('.image-status').show();
@@ -496,7 +501,7 @@
                 $('.image-status').css('background-color', 'red');
                 $status.html('<span style="color: white;">✖ Please enter a valid image URL.</span>');
             }
-        });
+        }
     })
 
     $('#count').html("<strong>Label Selected : </strong>" + $('.select2').val().length);

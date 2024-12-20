@@ -11,7 +11,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="theme-color" content="#ffd6d6">
   <!--website-favicon-->
-  <link href="images/favicon.png" rel="icon">
+  <link href="favicon.png" rel="icon">
   <!--plugin-css-->
   <link href="css/bootstrap.min.css" rel="stylesheet">
   <link href="css/plugin.min.css" rel="stylesheet">
@@ -32,7 +32,7 @@
   <!--Start Preloader -->
   <div class="onloadpage" id="page_loader">
     <div class="pre-content">
-      <div class="logo-pre"><img src="images/logo.png" alt="Logo" class="img-fluid" /></div>
+      <div class="logo-pre"><img src="logo.png" alt="Logo" class="img-fluid" /></div>
       <div class="pre-text- text-radius text-light text-animation bg-b">Niwax - Creative Agency & Portfolio HTML Template Are 2 Seconds Away. Have Patience</div>
     </div>
   </div>
@@ -41,7 +41,7 @@
   <header class="nav-bg-w main-header navfix fixed-top">
     <div class="container-fluid m-pad">
       <div class="menu-header">
-        <div class="dsk-logo"><a class="nav-brand" href="digital-agency.html">
+        <div class="dsk-logo"><a class="nav-brand" href="{{ url('/') }}">
             <img src="logo.png" alt="Logo" class="mega-white-logo" />
             <img src="logo.png" alt="Logo" class="mega-darks-logo" width="250px" />
           </a></div>

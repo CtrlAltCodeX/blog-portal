@@ -115,9 +115,13 @@ $getRoles = app('App\Http\Controllers\RoleController');
                                     <th>{{ __('Email') }}</th>
                                     <th>{{ __('Mobile') }}</th>
                                     <th>{{ __('Roles') }}</th>
+                                    <th>{{ __('Listing Rate') }}</th>
+                                    <th>{{ __('Account Health') }}</th>
+                                    <th>{{ __('OTP Features') }}</th>
+                                    <th>{{ __('Data Transfer') }}</th>
+                                    <th>{{ __('A/C Change Limit') }}</th>
                                     <th>{{ __('Session Type') }}</th>
                                     <th>{{ __('Status') }}</th>
-                                    <th>{{ __('Posting Rate') }}</th>
                                     @canany(['User Details -> All Users List -> Edit', 'User delete'])
                                     <th>{{ __('Actions') }}</th>
                                     @endcanany
@@ -140,10 +144,14 @@ $getRoles = app('App\Http\Controllers\RoleController');
                                         @endif
                                         @endforeach
                                     </td>
-                                    <td>{{ $user->allow_sessions ? 'Single' : 'Multiple' }}</td>
-                                    <td><span class="badge bg-{{ $user->status ? 'success' : 'danger' }}">{{ $user->status ? 'Active' : 'Inactive' }}</span>
                                     </td>
                                     <td>₹ {{ $user->posting_rate }}</td>
+                                    <td>{{ $user->show_health ? 'Yes' : 'No' }}</td>
+                                    <td>{{ $user->otp_feature ? 'Yes' : 'No' }}</td>
+                                    <td>{{ $user->data_transfer ? 'Yes' : 'No' }}</td>
+                                    <td>{{ $user->account_details_change_limitations ? 'Yes' : 'No' }}</td>
+                                    <td>{{ $user->allow_sessions ? 'Single' : 'Multiple' }}</td>
+                                    <td><span class="badge bg-{{ $user->status ? 'success' : 'danger' }}">{{ $user->status ? 'Active' : 'Inactive' }}</span>
                                     <td>
                                         <div class="btn-group btn-group-sm" role="group" aria-label="{{ __('Actions') }}">
                                             @can('User Details -> All Users List -> Edit')

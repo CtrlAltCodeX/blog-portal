@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('site_settings', function (Blueprint $table) {
-            $table->string('calc_link')->nullable();
+            $table->string('calc_link');
         });
     }
 

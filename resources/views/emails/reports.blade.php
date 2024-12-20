@@ -66,26 +66,24 @@
 
 <body>
     <div class="email-container">
-        <div class="email-header">User Report</div>
+        <div class="email-header">Userwise Listing Reports</div>
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>User ID</th>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Created Listings</th>
+                    <th>Total Listing (Create/Edit)</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($userListingsCount as $key => $user)
-                    @if($user->counts->sum('create_count'))
                     <tr>
                         <td>{{ ++$key }}</td>
                         <td>{{$user->name}}</td>
                         <td>{{$user->email}}</td>
                         <td>{{ $user->counts->sum('create_count') }}</td>
                     </tr>
-                    @endif
                 @endforeach
             </tbody>
         </table>

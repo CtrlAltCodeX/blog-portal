@@ -18,29 +18,34 @@
             <div style="background:#faf9f6;border-radius:12px">
                 <div style="padding:13px">
                     <p style="text-align:justify"><strong>Dear Team Member's,</strong></p>
+                    <p>Please review your account. This account has been flagged by the AI system due to poor performance and quality issues.</p>
+                    <b>Account Details</b></br>
+                    <ul>
+                        <li><b>User Name</b>: {{ $user->name }}</li>
+                        <li><b>User A/C Email</b>: {{ $user->email }}</li>
+                        <li><b>User A/C Phone No</b>: {{ $user->mobile }}</li>
+                        <li><b>Last 7 Days Total Listings</b>: {{ $count }}</li>
+                    </ul>
                     <p style="text-align:justify">
                         We are writing to inform you that our system has detected a consistent drop in your weekly listing performance. Our automated system requires a minimum of 150 product listings per week for each account to maintain active status. Unfortunately, it appears that your account has fallen short of this threshold.
                         <br/><br/>
 
-                        Important Next Steps <br/>
+                        <b>Important Next Steps - </b><br/>
                         Please take this as an opportunity to rectify your performance within the next 2-3 days. If your listing numbers do not meet the weekly requirement of 150 listings, your account will face automatic deactivation. <br/><br/>
 
-                        Key Notice on Deactivated Accounts <br/>
-                        If your account is deactivated: <br/><br/>
-
+                        <b>Key Notice on Deactivated Accounts - </b> <br/>
+                        
+                        If your account is deactivated: <br/>
                         All pending payments will be held for up to 90 days. <br/><br/>
                         During this period, you may appeal by emailing <a href="mailto:exam360.in@gmail.com">exam360.in@gmail.com</a> with the subject line "Review Deactivated Product Listings Account" and include a clear Plan of Action. <br/>
                         Our team will review your case and inform you of our decision. We reserve the right to block payments if any suspicious activity is detected. <br/><br/>
 
-                        Note: Please do not reply to this email as it is automatically generated. <br/><br/>
+                        <b>Note:</b> Please do not reply to this email as it is automatically generated.<br/><br/>
 
                         We strongly encourage you to take immediate action to improve your listing performance. Your adherence to these requirements is essential to maintain your account's active status. <br/><br/>
 
-                        Thank you for your attention to this matter. <br/><br/>
-
-                        Best regards,
-                        Project Zero, Review Team.</p>
-                    <!-- {{ $count }}, {{ $msg }}</p> -->
+                        Thank you for your attention to this matter.</p>
+                        
                     <p style="text-align:justify"><strong>Best regards,</strong></p>
                     <p style="text-align:justify">EXAM360® (INDIA)<br>Project Zero Team.</p>
                 </div>

@@ -20,9 +20,7 @@
                 <div style="padding:13px">
                     <p style="text-align:justify"><strong>Dear Freelancer's Partners,</strong></p>
                     <p style="text-align:justify">We are pleased to confirm that your freelance account has been successfully created via 3rd Party Leads. Welcome to the team!</p>
-                    <p style="text-align:justify"><strong>Your Login Credentials are as Follows:</strong><br>✦ Email - {{ $user->email }}<br>✦ Password - {{ $user->plain_password }}</p>
-                    <p style="text-align:justify">&nbsp;</p>
-                    <p style="text-align:justify">&nbsp;</p>
+                    <p style="text-align:justify"><strong>Your Login Credentials are as Follows:</strong><br>✦ Email - {{ $user->email }}<br>✦ Password - {{ $user->plain_password }}<br>✦ Login to Listing Portal : <a href="https://listing.exam360.in/">Click Here</a></strong></p>
                     <p style="text-align:justify">&nbsp;</p>
                     <p style="text-align:justify">Please take a moment to review the following terms and conditions that apply to your new account:</p>
                     <p style="text-align:justify"><strong>☛ Task Delivery Standards:</strong> To maintain our company's standards, you are required to deliver a specific volume and quality of tasks on a daily basis. Failure to meet these standards may result in the deactivation of your account at any time.</p>
@@ -32,10 +30,10 @@
                     <p style="text-align:justify"><strong>☛ Agreement to Terms:</strong> If you do not agree with these terms, you are not permitted to perform or deliver any tasks for EXAM360.</p>
                     <p style="text-align:justify">&nbsp;</p>
                     <p style="text-align:justify"><strong>Minimum Work Delivery Requirements:</strong></p>
-                    <p style="text-align:justify"><em><strong>A. Product Listings:</strong></em> You are required to deliver 20 listings per day and a total of 520 listings per month to maintain a healthy account. OR ...</p>
-                    <p style="text-align:justify"><em><strong>B. Review Collections:</strong></em> You must collect a minimum of 5 reviews per day and 130 reviews per month to keep your account in good standing.</p>
+                    <p style="text-align:justify"><em><strong>A. Daily and Weekly Count :</strong></em> You are required to deliver 25 listings per day and a total of 150 listings per week to maintain a healthy account. OR ...</p>
+                    <p style="text-align:justify"><em><strong>B. Weekly and Monthly Counts :</strong></em> You are required to deliver 150 listings per Week and a total of 650 listings per Month to maintain a healthy account.</p>
                     <p><strong>Note:</strong></p>
-                    <p>➽ If you are enrolled in Product Listings, ensure that you follow only the Product Listings Guidelines.<br>➽ Similarly, if you are enrolled in Review Collections, follow only the Review Collections Guidelines.</p>
+                    <p>➽ If you are enrolled in Product Listings, ensure that you follow only the Product Listings Guidelines.<br>➽</p>
                     <p style="text-align:justify"><br>(Note: The monthly target is based on a 26-day working pattern. However, you are welcome to work during holidays if you wish to increase your earnings.)</p>
                     <p style="text-align:justify"><strong>☛ Payments Process:</strong> Payments are processed on a monthly basis. For example, if you joined on January 18th, we will calculate the number of tasks delivered, which have been approved and verified by our internal teams. Based on the approval reports, we will determine your total approved work for January. Payments for this work will be initiated between February 8th and 10th. Please be aware that payments might be delayed due to natural calamities or technical issues beyond our control.</p>
                     <p style="text-align:justify">&nbsp;</p>

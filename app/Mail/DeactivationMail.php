@@ -13,14 +13,16 @@ class DeactivationMail extends Mailable
 
     public $msg;
     public $count;
+    public $user;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($msg, $count)
+    public function __construct($msg, $count, $user)
     {
         $this->msg = $msg;
         $this->count = $count;
+        $this->user = $user;
     }
 
     /**
@@ -29,7 +31,7 @@ class DeactivationMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Urgent Performance Warning: Low Weekly Product Listings',
+            subject: 'Urgent Attention: Performance Issues Flagged',
         );
     }
 
@@ -37,6 +39,7 @@ class DeactivationMail extends Mailable
     {
         return $this->view('emails.deactivation-mail')
             ->with('msg', $this->msg)
-            ->with('count', $this->count);
+            ->with('count', $this->count)
+            ->with('user', $this->user);
     }
 }

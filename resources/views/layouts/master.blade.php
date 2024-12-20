@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="en" dir="ltr">
-
 <head>
 
     <!-- META DATA -->
@@ -115,6 +114,7 @@
 
     <!-- CUSTOM JS -->
     <script src="{{ asset('assets/js/custom.js') }}"></script>
+
     <script>
         var timeOut = "{{env('SESSION_LIFETIME')}}" * 60000;
 
@@ -130,6 +130,7 @@
         }
 
         $(document).ready(function() {
+            
             // Start idle timer
             resetIdleTimer();
 

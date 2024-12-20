@@ -45,9 +45,9 @@
             <h5 align=center class='text-primary'><strong>NOTE: </strong> By Default This Page Will Show Current Month Records If Date Range Not Selected.</h5>
             <div class="card">
                 <div class="card-header justify-content-between">
+                    
                     <h3 class="card-title">Record 1 ( Create New Listing )</h3>
-
-                    @if(auth()->user()->hasRole('Super Admin'))
+                    
                     <form action="{{ route('users.count') }}" method="GET" id='filter'>
                         <div class="d-flex" style="grid-gap:10px;">
                             <div class="d-flex align-items-center" style="grid-gap:10px;">
@@ -68,7 +68,6 @@
                             <button type='submit' class='btn btn-primary w-25'>Filter</button>
                         </div>
                     </form>
-                    @endif
                 </div>
 
                 <div class="card-body">
@@ -82,11 +81,10 @@
                                     <th>{{ __('Rejected') }}</th>
                                     <th>{{ __('Delete') }}</th>
                                     <th>{{ __('View Details') }}</th>
-                                    @if(auth()->user()->hasRole('Super Admin'))
                                     <th>{{ __('User Name') }}</th>
-                                    @endif
                                 </tr>
                             </thead>
+                            
                             <tbody>
                                 @forelse($countCreated as $key => $data)
                                 <tr>
@@ -127,9 +125,7 @@
                                     <th>{{ __('Rejected') }}</th>
                                     <th>{{ __('Delete') }}</th>
                                     <th>{{ __('View Details') }}</th>
-                                    @if(auth()->user()->hasRole('Super Admin'))
                                     <th>{{ __('User Name') }}</th>
-                                    @endif
                                 </tr>
                             </thead>
                             <tbody>

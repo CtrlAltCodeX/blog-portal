@@ -81,7 +81,7 @@
                             </td>
                             <td>
                                 <div class="d-flex" style="grid-gap: 10px;">
-                                    <a target="_blank" href='{{url("/")}}/storage/merchant-file{{strtotime($log->merchant_file)}}.tsv'>
+                                    <a target="_blank" href='{{url("/")}}/storage/merchant-file{{strtotime($log->merchant_file)}}.xlsx'>
                                         <i class="fa fa-google" style="font-size:24px"></i>
                                         <!-- <img src="/google.png" width="25" /> -->
                                     </a>

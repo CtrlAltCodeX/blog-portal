@@ -20,15 +20,12 @@ class ProfileController extends Controller
     public function edit()
     {
         $user = auth()->user();
+
         $userCounts = UserListingCount::where('user_id', auth()->user()->id)
+            ->whereDate('date', date("Y-m-d"))
             ->first();
-        if($user->account_details_change_limitations ==0)
-        {
-            return view('profile.edit', compact('user', 'userCounts'));
-        }
-        else{
-            return view('profile.view_profiel', compact('user', 'userCounts'));
-        }
+
+        return view('profile.edit', compact('user', 'userCounts'));
     }
 
     /**
@@ -88,7 +85,7 @@ class ProfileController extends Controller
         if (request()->status == '0' || request()->status == 1 || request()->status == 2) {
             $userListings = $userListings->where('status', request()->status);
         }
-
+        
         if (request()->status_listing) {
             $userListings = $userListings->where('status_listing', request()->status_listing);
         }
@@ -105,6 +102,14 @@ class ProfileController extends Controller
             $pending = $pending->where('status_listing', request()->status_listing);
             
             $rejected = $rejected->where('status_listing', request()->status_listing);
+        }
+        
+        if (request()->user != "all") {
+            $approved = $approved->where('created_by', request()->user);
+            
+            $pending = $pending->where('created_by', request()->user);
+            
+            $rejected = $rejected->where('created_by', request()->user);
         }
 
         if (request()->from && request()->to) {
@@ -165,7 +170,7 @@ class ProfileController extends Controller
 
         return view('profile.listing', compact('userListings', 'pending', 'rejected', 'approved', 'users'));
     }
-
+    
     public function delete()
     {
         UserListingInfo::whereIn('id', request()->formData[1])->delete();
@@ -174,7 +179,7 @@ class ProfileController extends Controller
 
         return true;
     }
-
+    
     public function singleDelete($id)
     {
         UserListingInfo::find($id)->delete();

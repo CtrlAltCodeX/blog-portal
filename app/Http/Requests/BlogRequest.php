@@ -32,7 +32,7 @@ class BlogRequest extends FormRequest
                 'min:1',
                 function ($attribute, $value, $fail) {
                     if (!in_array('Product', $value)) {
-                        $fail('Category Must Contain Product Tag');
+                        $fail('Category must contain Product Tag');
                     }
                 },
             ],
@@ -45,7 +45,6 @@ class BlogRequest extends FormRequest
             'condition' => 'required|string|max:255',
             'pages' => 'required|string',
             'language' => 'required|string|max:255',
-            
         ];
     }
 }

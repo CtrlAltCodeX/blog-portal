@@ -68,17 +68,12 @@
                                     <div>{{ __('Product Description') }}<span class="text-danger">*</span><span class="text-success"> (Suggestion - Title + Description + Search Key) </span></div>
                                     <div class="d-flex">
                                         <a href='{{ $siteSetting->listing_button_1_link }}' target='_blank'>{{ $siteSetting->listing_button_1 }} | &nbsp;</a><a target='_blank' href="{{ $siteSetting->listing_button_2_link }}"> {{ $siteSetting->listing_button_2 }} | </a>
-                                        <a href='https://www.commontools.org/tool/replace-new-lines-with-commas-40' target='_blank'>&nbsp;Line Remover | </a><a target='_blank' href="https://chat.openai.com"> ChatGPT</a>
+                                        <a href='https://www.commontools.org/tool/replace-new-lines-with-commas-40' target='_blank'>&nbsp;Line Remover | </a>
                                     </div>
                                 </label>
                                 <label for="description" class="form-label d-flex justify-content-between text-danger" style="margin-top: -10px;">
                                     <div>{{ __('Do not use 3rd Party Links/Website Names') }}</div>
                                 </label>
-
-                                <!-- <label for="description" class="form-label d-flex justify-content-between">
-                                    <div>{{ __('Product Description') }}<span class="text-danger">*</span><span class="text-danger"> ( Enter Detail Description without using 3rd party
-                                            link) </span></div><a target='_blank' href="https://chat.openai.com">ChatGPT</a>
-                                </label> -->
 
                                 <textarea type="text" class="form-control @error('description') is-invalid @enderror" name="description" autocomplete="description" autofocus placeholder="Description" rows="10" id='desc'>{{ old('description') }}</textarea>
                                 <span class="error-message desc" style="color:red;"></span>

@@ -10,9 +10,9 @@
         height: 0px !important;
         margin-top: 0px;
     }
-
+    
     .pagination {
-        justify-content: end;
+        justify-content:end;
     }
 </style>
 @endpush
@@ -36,9 +36,9 @@
                                         Newly Created
                                         <input type="radio" {{ request()->status_listing == 'Created' ? 'checked' : '' }} name="status_listing" class='status_listing' value="Created" />
                                     </label>
-
+        
                                     <label>
-                                        Old Updated
+                                        Old Updated 
                                         <input type="radio" {{ request()->status_listing == 'Edited' ? 'checked' : '' }} name="status_listing" value="Edited" class='status_listing' />
                                     </label>
                                 </form>
@@ -81,7 +81,7 @@
                                 </div><input class="form-control fc-datepicker" value="{{ request()->from }}" name="from" placeholder="DD/MM/YYYY" type="text">
                             </div>
                             <div class="input-group w-50">
-                                <label class="m-2">End Date</label>
+                            <label class="m-2">End Date</label>
                                 <div class="input-group-text">
                                     <i class="fa fa-calendar tx-16 lh-0 op-6"></i>
                                 </div><input class="form-control fc-datepicker" value="{{ request()->to }}" name="to" placeholder="DD/MM/YYYY" type="text">
@@ -158,7 +158,7 @@
                             </tbody>
                         </table>
                     </div>
-                    {{ $userListings->links() }}
+                        {{ $userListings->links() }}
                 </div>
             </div>
         </div>
@@ -263,8 +263,8 @@
                 }
             });
         });
-
-        $(".status_listing").click(function() {
+        
+        $(".status_listing").click(function(){
             $('#status_form').submit();
         })
     })

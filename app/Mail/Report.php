@@ -3,13 +3,13 @@
 namespace App\Mail;
 
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Carbon\Carbon;
 
 class Report extends Mailable
 {
@@ -29,7 +29,7 @@ class Report extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Report',
+            subject: 'Weekly Listings Reports: User wise'
         );
     }
 

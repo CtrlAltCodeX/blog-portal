@@ -72,7 +72,7 @@
                                     <div>{{ __('Product Description') }}<span class="text-danger">*</span><span class="text-success"> (Suggestion - Title + Description + Search Key) </span></div>
                                     <div class="d-flex">
                                         <a href='{{ $siteSetting->listing_button_1_link }}' target='_blank'>{{ $siteSetting->listing_button_1 }} | &nbsp;</a><a target='_blank' href="{{ $siteSetting->listing_button_2_link }}"> {{ $siteSetting->listing_button_2 }} | </a>
-                                        <a href='https://www.commontools.org/tool/replace-new-lines-with-commas-40' target='_blank'>&nbsp;Line Remover | </a><a target='_blank' href="https://chat.openai.com"> ChatGPT</a>
+                                        <a href='https://www.commontools.org/tool/replace-new-lines-with-commas-40' target='_blank'>&nbsp;Line Remover | </a>
                                     </div>
                                 </label>
                                 <label for="description" class="form-label d-flex justify-content-between text-danger" style="margin-top: -10px;">
@@ -327,7 +327,7 @@
 
                             <div class="col-md-3 text-right mb-2 d-flex" id='preview' style="justify-content: flex-end;">
                                 <div style="border: 2px solid #ccc;width: 300px;max-height: 300px;height:300px;">
-                                    <img src="" id='previewImage' />
+                                    <img src="{{ (isset($listing->images[0]) && $listing->images[0]!='h') ? $listing->images[0] : $listing->images }}" id='previewImage' />
                                     <div class='image-status' style="text-align: center;padding: 5px;display:none;"></div>
                                 </div>
                             </div>

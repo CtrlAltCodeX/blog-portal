@@ -69,7 +69,7 @@
                             <div class="d-flex">
                                 <div class="mt-2">
                                     <h6 class="">6 Months Old</h6>
-                                    <a target="_blank" href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => 6]) }}">
+                                    <a target="_blank" href="@if(auth()->user()->hasRole('Super Admin')) {{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => 6]) }} @endif">
                                         <h2 class="mb-0 number-font text-success" id='six-month-old'>-</h2>
                                     </a>
                                 </div>
@@ -84,7 +84,7 @@
                             <div class="d-flex">
                                 <div class="mt-2">
                                     <h6 class="">1 Year Old</h6>
-                                    <a target="_blank" href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => 1]) }}">
+                                    <a target="_blank" href="@if(auth()->user()->hasRole('Super Admin')) {{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => 1]) }} @endif">
                                         <h2 class="mb-0 number-font" id='one-year-old'>-</h2>
                                     </a>
                                 </div>
@@ -99,7 +99,7 @@
                             <div class="d-flex">
                                 <div class="mt-2">
                                     <h6 class="">2 Year Old</h6>
-                                    <a target="_blank" href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => 2]) }}">
+                                    <a target="_blank" href="@if(auth()->user()->hasRole('Super Admin')) {{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => 2]) }} @endif">
                                         <h2 class="mb-0 number-font text-warning" id='two-year-old'>-</h2>
                                     </a>
                                 </div>
@@ -114,7 +114,7 @@
                             <div class="d-flex">
                                 <div class="mt-2">
                                     <h6 class="">3 Year Old</h6>
-                                    <a target="_blank" href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => '3Y']) }}">
+                                    <a target="_blank" href="@if(auth()->user()->hasRole('Super Admin')) {{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => '3Y']) }} @endif">
                                         <h2 class="mb-0 number-font text-danger" id='three-year-old'>-</h2>
                                     </a>
                                 </div>
@@ -137,7 +137,7 @@
                     <div class="d-flex">
                         <div class="mt-2">
                             <h6 class="">Listing Pending</h6>
-                            <a target="_blank" href="{{ route('database-listing.index', ['status' => 0, 'startIndex' => 1, 'user' => 'all']) }}">
+                            <a target="_blank" href="@if(auth()->user()->hasRole('Super Admin')) {{ route('database-listing.index', ['status' => 0, 'startIndex' => 1, 'user' => 'all']) }} @endif">
                                 <h2 class="mb-0 number-font" id='pending'>
                                     {{ $pending }}
                                 </h2>
@@ -197,7 +197,7 @@
         <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
             <div class="card overflow-hidden">
                 <div class="card-body">
-                    <a href="{{ route('inventory.index', ['startIndex' => 1, 'category' => 'Product']) }}">
+                    <a href="@if(auth()->user()->hasRole('Super Admin')) {{ route('inventory.index', ['startIndex' => 1, 'category' => 'Product']) }} @endif">
                         <div class="d-flex">
                             <div class="mt-2">
                                 <h6 class="">Total Products</h6>

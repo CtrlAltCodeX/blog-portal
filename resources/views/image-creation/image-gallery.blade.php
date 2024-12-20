@@ -105,6 +105,7 @@
                             </tbody>
                         </table>
                     </div>
+                    
                     {{ $files->links() }}
                 </div>
             </div>
@@ -144,17 +145,13 @@
     $(document).ready(function() {
         //______Basic Data Table
         $('#basic-datatable').DataTable({
-           "bJQueryUI":true,
-            "bSort":false,
-            "bPaginate":true,
-            "sPaginationType":"full_numbers",
-            "iDisplayLength": 25,
+            'paging':false
         });
 
         $("#category").on("change", function() {
             $("#form").submit();
         });
-
+        
         $("#basic-datatable_wrapper .col-sm-12:first").html('<form id="count" action={{route("image.gallery")}} method="GET"><input type="hidden" name="page" value="{{ request()->page }}" /><select class="form-control w-25 count" name="count"><option value="15" {{ request()->count == 15 ? "selected" : "" }}>15</option><option value="25" {{ request()->count == 25 ? "selected" : "" }}>25</option><option value="50"  {{ request()->count == 50 ? "selected" : "" }}>50</option><option value="100"  {{ request()->count == 100 ? "selected" : "" }}>100</option></select></form>');
         
         $('#basic-datatable_wrapper').on('change', '.count', function(){

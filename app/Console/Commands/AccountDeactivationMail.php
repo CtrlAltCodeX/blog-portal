@@ -42,13 +42,13 @@ class AccountDeactivationMail extends Command
                 ->sum('create_count');
 
             if ($currentWeekDataCreated <= 120) {
-                Mail::to($user->email)->send(new DeactivationMail('DEACTIVATION', $currentWeekDataCreated));
+                Mail::to($user->email)->send(new DeactivationMail('DEACTIVATION', $currentWeekDataCreated, $user));
 
-                Mail::to('abhishek86478@gmail.com')->send(new DeactivationMail('DEACTIVATION', $currentWeekDataCreated));
+                Mail::to('abhishek86478@gmail.com')->send(new DeactivationMail('DEACTIVATION', $currentWeekDataCreated, $user));
             } elseif ($currentWeekDataCreated >= 121 && $currentWeekDataCreated <= 149) {
-                Mail::to($user->email)->send(new DeactivationMail('AT RISK', $currentWeekDataCreated));
+                Mail::to($user->email)->send(new DeactivationMail('AT RISK', $currentWeekDataCreated, $user));
 
-                Mail::to('abhishek86478@gmail.com')->send(new DeactivationMail('DEACTIVATION', $currentWeekDataCreated));
+                Mail::to('abhishek86478@gmail.com')->send(new DeactivationMail('DEACTIVATION', $currentWeekDataCreated, $user));
             }
         }
     }
