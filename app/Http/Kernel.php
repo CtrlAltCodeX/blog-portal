@@ -38,7 +38,6 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\CheckStatusMiddleware::class,
             \App\Http\Middleware\CheckSessionValidity::class,
-            \App\Http\Middleware\AuthOtpCheck::class,
         ],
 
         'api' => [

@@ -106,9 +106,13 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
-        $this->validateLogin($request);
-
         $user = User::where('email', request()->email)->first();
+
+        if ($user->otp_feature && !request()->otp_feature) {
+            return $this->authenticateOTP();
+        }
+
+        $this->validateLogin($request);
 
         $oldSessions = $user->sessions->where('expire_at', '<', now());
 
@@ -162,7 +166,7 @@ class LoginController extends Controller
             }
 
             $user = User::where('email', request()->email)->first();
-            
+
             if ($user->verify_browser != null) {
                 $oldBrowsers = json_decode($user->verify_browser);
             } else {
@@ -280,10 +284,10 @@ class LoginController extends Controller
             $user->update(['otp' => $otp]);
 
             $userAgent = request()->header('User-Agent');
-            
+
             $headers = json_decode($user->verify_browser);
-            
-           if ($headers && in_array($userAgent, $headers)) {
+
+            if ($headers && in_array($userAgent, $headers)) {
                 session()->flash('success', 'Please Check the OTP in Registered Email');
 
                 $email = request()->email;

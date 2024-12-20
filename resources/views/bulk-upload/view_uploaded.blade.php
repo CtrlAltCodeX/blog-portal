@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', __('Uploaded CSV file'))
+@section('title', __('Bulk Listing Review'))
 @push('css')
 <style>
     ul {
@@ -37,69 +37,91 @@
 </style>
 @endpush
 @section('content')
-    <div class="card">
-        <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title">Listing</h3>
-            <!-- <button class="btn btn-primary">Save</button> -->
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <div class="row mb-2">
-                    <div class="col-md-5" id='update'></div>
-                </div>
+<div class="card">
+    <div class="card-header d-flex justify-content-between">
+        <h3 class="card-title">Bulk Listing Review</h3>
 
-                <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">
-                    <thead>
-                        <tr>
-                            <th><input type="checkbox" class="check-all" /></th>
-                            <th>{{ __('Sl') }}</th>
-                            <th>{{ __('Status') }}</th>
-                            <th>{{ __('Product name') }}</th>
-                            <th>{{ __('Sell Price') }}</th>
-                            <th>{{ __('MRP') }}</th>
-                            <th>{{__('Action')}}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($listings as $key => $googlePost)
-                        <tr>
-                            <td>
-                                <input type="checkbox" name="ids" class="checkbox-update" value="{{$googlePost['id']}}" />
-                            </td>
-                            
-                            <td>{{ ++$key }}</td>
-                            <td>
-                                <span class="text-success"><b>Pending</b></span>
-                            </td>
-                            <td style="white-space: normal;"><textarea class="form-control" rows="4" readonly>{{ $googlePost['title'] }}</textarea></td>
-                            <td>{{ '₹'.$googlePost['selling_price'] }}</td>
-                            <td>{{ '₹'.$googlePost['mrp'] }}</td>
-                            <td>
-                                <div class="btn-group" role="group" aria-label="Basic example">
-                                    <a href="{{ route('bulklisting.edit', $googlePost->id) }}" class="btn btn-sm btn-primary padd">{{ __('Edit') }}</a>
-                                    <form action="{{ route('database-listing.destroy', $googlePost['id']) }}" method="POST" class="ml-2">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger padd" onclick="return confirm('Are you sure you want to delete this?')">
-                                        {{ __('Delete') }}
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        @empty
-                        @endforelse
-                    </tbody>
-                </table>
+        <form action="" method="GET" id='formType'>
+            <div class="d-flex align-items-center" style="grid-gap:10px;">
+                {{ count($listings) }}
+                <label class="mb-0">
+                    <input type="radio" name="type" value=1 class="type" {{ request()->type == 1 ? 'checked' : ''}} />New Listing
+                </label>
+    
+                <label class="mb-0">
+                    <input type="radio" name="type" value=2 class="type" {{ request()->type == 2 ? 'checked' : ''}} />Update Listing
+                </label>
             </div>
+        </form>
+
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <div class="row mb-2">
+                <div class="col-md-5" id='update'></div>
+            </div>
+
+            <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" class="check-all" /></th>
+                        <th>{{ __('Sl') }}</th>
+                        <th>{{ __('Product ID') }}</th>
+                        <th>{{ __('Product name') }}</th>
+                        <th>{{ __('Sell Price') }}</th>
+                        <th>{{ __('MRP') }}</th>
+                        <th>{{ __('Author Name') }}</th>
+                        <th>{{ __('Language') }}</th>
+                        <th>{{ __('Edition') }}</th>
+                        <th>{{ __('Publisher') }}</th>
+                        <th>{{ __('No of Pages') }}</th>
+                        <th>{{ __('Action') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($listings as $key => $googlePost)
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="ids" class="checkbox-update" value="{{ $googlePost['id'] }}" />
+                        </td>
+                        <td>{{ ++$key }}</td>
+                        <td>{{ $googlePost['product_id'] }}</td>
+                        <td style="white-space: normal;">
+                            <textarea class="form-control" rows="4" readonly>{{ $googlePost['title'] }}</textarea>
+                        </td>
+                        <td>{{ '₹'.$googlePost['selling_price'] }}</td>
+                        <td>{{ '₹'.$googlePost['mrp'] }}</td>
+                        <td>{{ $googlePost['author_name'] }}</td>
+                        <td>{{ $googlePost['language'] }}</td>
+                        <td>{{ $googlePost['edition'] }}</td>
+                        <td>{{ $googlePost['publisher'] }}</td>
+                        <td>{{ $googlePost['no_of_pages'] }}</td>
+                        <td>
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <a href="{{ route('bulklisting.edit', $googlePost->id) }}" class="btn btn-sm btn-primary padd">{{ __('Edit') }}</a>
+                                <form action="{{ route('database-listing.destroy', $googlePost['id']) }}" method="POST" class="ml-2">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger padd" onclick="return confirm('Are you sure you want to delete this?')">
+                                        {{ __('Delete') }}
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
+</div>
 @endsection
 
 @push('js')
 <script>
     $(document).ready(function() {
-         $("#update").html('<form id="update-status" action={{route("view.upload")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status"><option>Select</option> <option value=1>Delete</option></select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div></form>');
+        $("#update").html('<form id="update-status" action={{route("view.upload")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status"><option>Select</option> <option value=1>Delete</option></select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div></form>');
 
         $(".table-responsive").on('click', '.update-status', function(e) {
             e.preventDefault();
@@ -139,6 +161,7 @@
                 }
             }
         });
+
         $('.check-all').click(function() {
             $(".checkbox-update").each(function() {
                 if ($('.check-all').prop('checked') == true) {
@@ -152,6 +175,10 @@
                     }
                 }
             });
+        });
+
+        $(".type").click(function() {
+            $("#formType").submit();
         });
     })
 </script>

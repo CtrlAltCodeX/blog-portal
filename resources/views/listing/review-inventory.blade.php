@@ -65,7 +65,7 @@
                     <div class="d-flex" style="grid-gap: 10px;;">
                         <form action="{{ route('review_inventory_export') }}">
                             <input type="hidden" name="updated_before" value="{{ request()->updated_before }}" />
-                            <button class="btn btn-warning btn-icon ml-2 add_icon w-100"><i data-feather="download"></i> Export</button>
+                            <button class="btn btn-success btn-icon ml-2 add_icon w-100 d-flex align-items-center" style="grid-gap: 10px;"><i class="fa fa-download"></i> Export</button>
                         </form>
 
                         <form action="" method="get" id='form'>
@@ -82,7 +82,7 @@
                             </select>
                             <input type="hidden" value="{{ request()->paging ?? 25 }}" name='updated_before'>
                         </form>
-    
+
                         <form action="" method="get" id='pagingform' class="w-25">
                             <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
                             <input type="hidden" value="{{ request()->updated_before ?? 3 }}" name='updated_before'>

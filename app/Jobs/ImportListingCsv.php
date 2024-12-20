@@ -7,29 +7,18 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-
 use App\Models\Listing;
-use App\Models\UserListingCount;
 use App\Models\UserListingInfo;
-use Carbon\Carbon;
 
 class ImportListingCsv implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $data = [];
-
-    protected $user = 0;
-
 
     /**
      * Create a new job instance.
      */
-    public function __construct($data, $userId)
-    {
-        $this->data = $data;
-        $this->user = $userId;
-    }
+    public function __construct(protected $data, protected $user, protected $postID, protected $image) {}
 
     /**
      * Execute the job.
@@ -51,11 +40,12 @@ class ImportListingCsv implements ShouldQueue
             'condition' => $this->data->condition ?? null,
             'binding_type' => $this->data->binding ?? null,
             'insta_mojo_url' => $this->data->url ?? null,
-            'images' => $this->data->images,
+            'images' => json_encode([$this->image]),
             'multiple_images' => $this->data->multiple_images ?? null,
             'status' => 0,
             'created_by' => $this->user,
-            'is_bulk_upload' => 1
+            'is_bulk_upload' => 1,
+            'product_id' => $this->postID ? $this->postID : ''
         ];
 
         $listing = Listing::create($data);
@@ -71,38 +61,8 @@ class ImportListingCsv implements ShouldQueue
             'listings_id' => $listing->id,
         ]);
 
-        // $this->updateTheCount('Created', 'create_count');
+        if (!$listing) return false;
 
-        if ($listing) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function updateTheCount($status, $column)
-    {
-        // Get the current date
-        $currentDate = Carbon::now()->toDateString(); // This will give you 'YYYY-MM-DD' format
-
-        // Check if a record exists for the current date and user
-        $userListingCount = UserListingCount::where('user_id', auth()->user()->id)
-            ->where('status', $status)
-            ->whereDate('created_at', $currentDate)
-            ->first();
-
-        if ($userListingCount) {
-            // If record exists, increment the approved_count
-            $userListingCount->increment($column);
-            $userListingCount->status = $status; // Update status if needed
-            $userListingCount->save();
-        } else {
-            // If no record exists, create a new record
-            UserListingCount::create([
-                'user_id' => $this->user,
-                $column => 1,
-                'status' => $status,
-            ]);
-        }
+        return true;
     }
 }

@@ -85,7 +85,7 @@
 
                 if (discount <= 100) {
                     var discountedPrice = (mrp * discount) / 100;
-    
+
                     $('#selling_price').val(Math.round(mrp - discountedPrice));
                 } else {
                     $('#discount').val(0);
@@ -103,7 +103,7 @@
 
         $('textarea').on('input', function() {
             var textareaValue = $(this).val();
-            
+
             requiredFields(textareaValue, this);
 
             nameValidate(textareaValue, this);
@@ -134,12 +134,12 @@
         $('#form, #formTest').submit(function(event) {
             var valid = true;
             var requiredvalid = true;
-            
+
             var valuesToCheck = ['Stk_o', 'stock__out', 'stock__onDemand', 'Stk_d']; // Replace with your target values
             var selectedValues = $('.select2').val(); // Get selected values
-            
+
             if (selectedValues) { // Ensure selectedValues is not null
-                valuesToCheck.forEach(function (value) {
+                valuesToCheck.forEach(function(value) {
                     if (selectedValues.includes(value)) { // Use modern `includes` method
                         alert('This Labels are not accepted while update any listing. Value found: ' + value);
                     }
@@ -147,19 +147,19 @@
             } else {
                 console.log('No values selected.');
             }
-            
+
             let totalLength = 0;
             let selectedOptions = $('.select2').find('option:selected');
-        
+
             selectedOptions.each(function() {
                 totalLength += $(this).text().trim().length;
             });
-        
+
             if (totalLength < 170) {
                 event.preventDefault();
                 alert('You must select at least 170 characters in Category.');
             }
-            
+
             // Reset previous error messages
             $('.error-message').text('');
 
@@ -314,14 +314,14 @@
             var errors = [];
             var normalString = '';
             var validateFields = JSON.parse(localStorage.getItem('validate'));
-            validateFields.forEach(function(value){
-                if(value.name){
+            validateFields.forEach(function(value) {
+                if (value.name) {
                     var nameToCheck = value.name.toLowerCase();
                     if (val.toLowerCase().includes(nameToCheck)) {
                         // console.log(val);
                         errors.push(value.name);
                         normalString = errors.join(", ");
-                        errorHandling(fieldId, 'Words not allowed - '+errors, false, currentElement)
+                        errorHandling(fieldId, 'Words not allowed - ' + errors, false, currentElement)
                     }
                 }
             });
@@ -369,12 +369,12 @@
                 $(currentElement).val($(currentElement).val().substring(0, 50));
             }
         }
-        
+
         function minLimit(currentElement) {
             var fieldId = $(currentElement).attr('name');
             var minLength = Number($(currentElement).attr('minlength')); // Get the maximum length allowed
             var currentLength = $(currentElement).val().length;
-            if(currentLength < minLength) {
+            if (currentLength < minLength) {
                 errorHandling(fieldId, 'Minmum 75 Character requried', false, currentElement);
             }
         }
@@ -404,7 +404,7 @@
                     var tempDiv = document.createElement('div');
                     tempDiv.innerHTML = contents;
                     var innerHTML = contents;
-                    if(tempDiv.querySelector('h1')){
+                    if (tempDiv.querySelector('h1')) {
                         var innerHTML = tempDiv.querySelector('h1').innerHTML;
                     }
 
@@ -418,7 +418,7 @@
                 }
             }
         });
-        
+
         let totalLength = 0;
         let selectedOptions = $(".select2").find('option:selected');
         selectedOptions.each(function() {
@@ -427,38 +427,78 @@
             totalLength += textLength;
         });
 
-         $('#textLength').html('<strong>Total Length:</strong> ' + totalLength + ' (Min:170, Max.:188)');
+        $('#textLength').html('<strong>Total Length:</strong> ' + totalLength + ' (Min:170, Max.:188)');
 
 
         let maxLength = 188;
         $('.select2').on('change', function(event) {
             let totalLength = 0; // Reset total length before recalculating
             let selectedOptions = $(this).find('option:selected');
-        
+
             // Calculate the total length of the selected options
             selectedOptions.each(function() {
                 let optionText = $(this).text().trim();
                 let textLength = optionText.length;
                 totalLength += textLength;
             });
-        
+
             // Check if the total length exceeds the limit
             if (totalLength > maxLength) {
                 let lastSelected = $(this).val()[$(this).val().length - 1];
-                
+
                 $(this).find(`option[value='${lastSelected}']`).prop('selected', false); // Deselect only the last one
                 $(this).trigger('change.select2'); // Trigger the select2 change event to update the UI
-        
+
                 alert('You have reached the maximum limit of 192 characters.');
                 totalLength -= $(this).find(`option[value='${lastSelected}']`).text().trim().length; // Adjust total length after deselecting
             }
-        
+
             // Update the total length in the UI
             $('#textLength').html('<strong>Total Length:</strong> ' + totalLength + ' (Min:170, Max.:188)');
         });
 
+        $('#base_url').on('change', function() {
+            const imageUrl = $(this).val();
+            const $image = $('#previewImage');
+            const $status = $('.image-status');
+
+            console.log(imageUrl);
+            // Clear previous content
+            $status.empty();
+            $image.hide();
+
+            // Validate URL and load image
+            if (imageUrl) {
+                $image.attr('src', imageUrl).on('load', function() {
+                    const width = this.naturalWidth;
+                    const height = this.naturalHeight;
+
+                    // Show the image
+                    $image.show();
+
+                    // Check dimensions
+                    if (width === 555 && height === 555) {
+                        $('.image-status').show();
+                        $('.image-status').css('background-color', 'green');
+                        $status.html('<span style="color: white;">✔ Image Pixel Size is 555x555</span>');
+                    } else {
+                        $('.image-status').show();
+                        $('.image-status').css('background-color', 'red');
+                        $status.html('<span style="color: white;">✖ Image Pixel Size is not 555x555</span>');
+                    }
+                }).on('error', function() {
+                    $('.image-status').show();
+                    $('.image-status').css('background-color', 'red');
+                    $status.html('<span style="color: white;">✖ Failed to load image. Check the URL.</span>');
+                });
+            } else {
+                $('.image-status').show();
+                $('.image-status').css('background-color', 'red');
+                $status.html('<span style="color: white;">✖ Please enter a valid image URL.</span>');
+            }
+        });
     })
-    
+
     $('#count').html("<strong>Label Selected : </strong>" + $('.select2').val().length);
 
     $('.select2').change(function() {

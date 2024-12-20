@@ -10,6 +10,9 @@ use Illuminate\Http\Request;
 use App\Jobs\ImportListingCsv;
 use App\Models\Listing;
 use App\Models\SiteSetting;
+use App\Models\UserListingInfo;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Facades\Image;
 
 class BulkUploadController extends Controller
 {
@@ -21,7 +24,7 @@ class BulkUploadController extends Controller
     public function import()
     {
         request()->validate([
-            'csv_file' => 'required|mimes:csv,txt|max:2048',
+            'csv_file' => 'required|max:2048',
         ]);
 
         // Load the data using the Import class
@@ -35,20 +38,24 @@ class BulkUploadController extends Controller
         return view('bulk-upload.listing', compact('googlePosts'));
     }
 
-    public function downloadImage()
+    public function downloadImage($imageURL)
     {
         $response = Http::withOptions(['verify' => false])
-            ->get('https://m.media-amazon.com/images/I/7144vU5aPZL._AC_SL1500_.jpg');
+            ->get($imageURL);
 
         if ($response->successful()) {
-            $filename = basename('asda.jpg'); // Get the filename from the URL
+            $filename = basename(time() . '.jpg'); // Get the filename from the URL
             $path = 'images/' . $filename; // Define the storage path
             Storage::disk('public')->put($path, $response->body());
 
-            return response()->json(['message' => 'Image downloaded successfully', 'path' => $path]);
-        }
+            $background = (new ImageManager())->canvas(555, 555, '#ffffff');
 
-        return response()->json(['message' => 'Failed to download the image'], 400);
+            $background->insert(Image::make(storage_path('app/public/images/' . $filename))->resize(390, 520), 'center');
+
+            $background->save(storage_path('app/public/images/' . $filename));
+
+            return $path;
+        }
     }
 
     public function importData(Request $request)
@@ -57,31 +64,48 @@ class BulkUploadController extends Controller
             foreach ($request->ids as $key => $data) {
                 $data = json_decode($data);
 
-                $job = ImportListingCsv::dispatch($data, auth()->user()->id);
+                $images = $this->downloadImage($data->images);
+
+                $postId = isset($data->p_id) ? sprintf("%.0f", $data->p_id) : null;
+
+                $job = ImportListingCsv::dispatch($data, auth()->user()->id, $postId, $images);
 
                 if ($job == true) {
                     session()->flash('success', 'Listing imported successfully');
-                    return redirect()->route('view.upload');
+
+                    return redirect()->route('upload-file.options');
                 } else {
                     session()->flash('error', 'Something went Wrong');
+
                     return redirect()->route('view.upload');
                 }
             }
         } else {
             session()->flash('error', 'Please upload file first');
+
             return redirect()->route('view.upload');
         }
     }
 
     public function viewUploadedFile()
     {
-        $listings = Listing::where('is_bulk_upload', 1)->get();
+        if (request()->type == 1) {
+            $listings = Listing::where('is_bulk_upload', 1)
+                ->whereNull('product_id')
+                ->get();
+        } else if (request()->type == 2) {
+            $listings = Listing::where('is_bulk_upload', 1)
+                ->whereNotNull('product_id')
+                ->get();
+        }
+
         return view('bulk-upload.view_uploaded', compact('listings'));
     }
 
     public function edit($id)
     {
         $listing = Listing::find($id);
+
         $siteSetting = SiteSetting::first();
 
         if (!$url = $this->getSiteBaseUrl()) {
@@ -94,6 +118,7 @@ class BulkUploadController extends Controller
             ->get($url . '/feeds/posts/default?alt=json');
 
         $categories = $response->json()['feed']['category'];
+
         return view('bulk-upload.edit', compact('listing', 'siteSetting', 'categories'));
     }
 
@@ -146,19 +171,17 @@ class BulkUploadController extends Controller
 
     public function delete(Request $request)
     {
-        if($request->formData[0]['value'] == 'Select')
-        {
+        if ($request->formData[0]['value'] == 'Select') {
             session()->flash('error', 'Please choose the option to perform');
         }
-        if(!empty($request->formData[1]))
-        {
-            $listing = Listing::whereIn('id',$request->formData[1])->delete();
-            // if(isset)
+
+        if (!empty($request->formData[1])) {
+            Listing::whereIn('id', $request->formData[1])
+                ->delete();
+
             return true;
-        }
-        else{
+        } else {
             session()->flash('error', 'Something went wrong');
         }
     }
-
 }

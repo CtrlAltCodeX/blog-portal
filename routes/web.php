@@ -20,6 +20,7 @@ use App\Http\Controllers\DatabaseListingController;
 use App\Http\Controllers\ImageMakerController;
 use App\Http\Controllers\PublicationController;
 use App\Http\Controllers\ChatGptController;
+use App\Http\Controllers\HomeController;
 
 Illuminate\Support\Facades\Auth::routes();
 /*
@@ -52,6 +53,7 @@ Route::post('registers/store', [UserController::class, 'register'])
     ->name('register.store');
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function () {
+
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
@@ -329,28 +331,40 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     /**
      * Upload Section
      */
-    Route::get('/upload-file', [BulkUploadController::class, 'getOptions'])
+    Route::get('upload-file', [BulkUploadController::class, 'getOptions'])
         ->name('upload-file.options');
 
-    Route::get('/download-url', [BulkUploadController::class, 'downloadImage']);
+    Route::get('download-url', [BulkUploadController::class, 'downloadImage']);
 
-    Route::get('/edit/bulk/listing/{id}', [BulkUploadController::class, 'edit'])
+    Route::get('edit/bulk/listing/{id}', [BulkUploadController::class, 'edit'])
         ->name('bulklisting.edit');
 
-    Route::post('/update/bulk/listing', [BulkUploadController::class, 'update'])
+    Route::post('update/bulk/listing', [BulkUploadController::class, 'update'])
         ->name('bulklisting.update');
 
-    Route::post('/get-upload-file', [BulkUploadController::class, 'import'])
+    Route::post('get-upload-file', [BulkUploadController::class, 'import'])
         ->name('get-upload-file.options');
 
-    Route::post('/import/data', [BulkUploadController::class, 'importData'])
+    Route::post('import/data', [BulkUploadController::class, 'importData'])
         ->name('import.data');
 
-    Route::get('/view/uploaded/data', [BulkUploadController::class, 'viewUploadedFile'])
-        ->name('view.upload'); 
+    Route::get('view/uploaded/data', [BulkUploadController::class, 'viewUploadedFile'])
+        ->name('view.upload');
 
-    Route::get('/delete/uploaded/data', [BulkUploadController::class, 'delete'])
+    Route::get('delete/uploaded/data', [BulkUploadController::class, 'delete'])
         ->name('delete.upload.data');
+
+    Route::get('/getpublishernames', [PublicationController::class, 'getpublishers'])
+        ->name('getpublishernames');
+
+    Route::get('/getpublications', [PublicationController::class, 'getpublications'])
+        ->name('getpublications');
+
+    Route::get('/get/ai/description', [ChatGptController::class, 'openAi'])
+        ->name('ai.description');
+
+    Route::post('/get/ai/description', [ChatGptController::class, 'responseAiDescription'])
+        ->name('getai.response');
     /**
      *  END
      */
@@ -368,10 +382,6 @@ Route::group(['prefix' => 'password'], function () {
     Route::post('update', [ResetPasswordController::class, 'updatePassword'])->name('password.update');
 });
 
-Route::get('/', function () {
-    return redirect()->route('dashboard');
-});
-
 Route::get('/check-session-status', function () {
     session()->put('expire_error', 'Your session has expired. Please log in again.');
 
@@ -384,14 +394,5 @@ Route::get('delete/session/{id}', [UserController::class, 'deleteSessionId'])
 Route::get('/assets/images/brand/{filename}', UserController::class)
     ->name('asset.name');
 
-Route::get('/getpublishernames', [PublicationController::class, 'getpublishers'])
-    ->name('getpublishernames');
-    
-Route::get('/getpublications', [PublicationController::class, 'getpublications'])
-    ->name('getpublications');
-
-Route::get('/get/ai/description', [ChatGptController::class, 'openAi'])
-    ->name('ai.description');
-    
-Route::post('/get/ai/description', [ChatGptController::class, 'responseAiDescription'])
-    ->name('getai.response');
+Route::get('', [HomeController::class, 'index'])
+    ->name('home');

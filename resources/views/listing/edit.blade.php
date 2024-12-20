@@ -207,133 +207,157 @@
                         </div>
 
                         <div class="row">
-                            <div class="form-group col-md-4">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <label for="sku" class="form-label">
-                                        {{ __('SKU') }}
-                                        <span class="text-danger">*</span>
-                                        <span class="text-danger"> ( Short Code )</span>
-                                    </label>
-                                    <span class="charCount">0/30</span>
-                                </div>
-                                <input maxlength="30" id="sku" type="text" class="form-control @error('sku') is-invalid @enderror" name="sku" value="{{ old('sku') ?? $allInfo['sku'] }}" autocomplete="sku" autofocus placeholder="SKU">
-                                <span class="error-message sku" style="color:red;"></span>
-
-                                @error('sku')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="form-group col-md-4">
-                                <label for="language" class="form-label">{{ __('Language') }}<span class="text-danger">*</span></label>
-                                <input id="language" type="text" class="form-control @error('language') is-invalid @enderror" name="language" value="{{ old('language') ?? $allInfo['lang']}}" autocomplete="language" autofocus placeholder="Language">
-                                <span class="error-message language" style="color:red;"></span>
-
-                                @error('language')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="form-group col-md-4">
-                                <label for="pages" class="form-label">{{ __('No. of Pages') }}</label>
-                                <input id="pages" type="text" class="form-control @error('pages') is-invalid @enderror" name="pages" value="{{ old('pages') ?? $allInfo['page_no'] }}" autocomplete="pages" autofocus placeholder="No. of Pages">
-                                <span class="error-message pages" style="color:red;"></span>
-
-                                @error('pages')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="form-group col-md-4">
-                                <label for="condition" class="form-label">{{ __('Condition') }}<span class="text-danger">*</span></label>
-
-                                <select class="form-control @error('condition') is-invalid @enderror" name="condition" value="{{ old('condition') }}">
-                                    <option value="">--Select--</option>
-                                    <option value="New" {{ $allInfo['condition'] == 'New' ? 'selected' : '' }}>New</option>
-                                    <option value="Like New" {{ $allInfo['condition'] == 'Like New' ? 'selected' : '' }}>Like New</option>
-                                    <option value="Old" {{ $allInfo['condition'] == 'Old' ? 'selected' : '' }}>Old</option>
-                                </select>
-
-                                <!-- <input id="condition" type="text" class="form-control @error('condition') is-invalid @enderror" name="condition" value="{{ old('condition') ?? $allInfo['condition'] }}" autocomplete="condition" autofocus placeholder="condition Type"> -->
-                                <span class="error-message condition" style="color:red;"></span>
-
-                                @error('condition')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="form-group col-md-4">
-                                <label for="binding" class="form-label">{{ __('Binding Type') }}<span class="text-danger">*</span></label>
-                                <select class="form-control @error('binding') is-invalid @enderror" name="binding" value="{{ old('binding') }}">
-                                    <option value="">--Select--</option>
-                                    <option value="Hardcover" {{ $allInfo['binding'] == 'Hardcover' ? 'selected' : '' }}>Hardcover</option>
-                                    <option value="Paperback" {{ $allInfo['binding'] == 'Paperback' ? 'selected' : '' }}>Paperback</option>
-                                </select>
-                                <!-- <input id="binding" type="text" class="form-control @error('binding') is-invalid @enderror" name="binding" value="{{ old('binding') ?? $allInfo['binding'] }}" autocomplete="binding" autofocus placeholder="binding"> -->
-                                <span class="error-message binding" style="color:red;"></span>
-
-                                @error('binding')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="form-group col-md-4">
-                                <label for="url" class="form-label d-flex justify-content-between">{{ __('Insta Mojo URL') }}<span onclick="copyLink()" id='copylink' style="cursor:pointer;">Copy</span></label>
-                                <input id="url" type="url" class="form-control @error('url') is-invalid @enderror" name="url" value="{{ old('url') ?? $allInfo['url'] }}" autocomplete="url" autofocus placeholder="Insta Mojo Url">
-                                <span class="error-message url" style="color:red;"></span>
-
-                                @error('url')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row" id="addUrls">
-                            <div class="form-group col-md-4">
-                                <label for="url" class="form-label">{{ __('Base Image URL') }}</label>
-                                <input type="text" class="form-control @error('images') is-invalid @enderror" name="images[]" value="{{ old('images') ?? $allInfo['baseimg'] }}" autocomplete="images" autofocus placeholder="Base URL">
-                                <span class="error-message images" style="color:red;"></span>
-
-                                @error('images')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                            @foreach($allInfo['multiple'] as $key => $images)
-                            @if($key == 0) @continue; @endif
-                            <div class="form-group col-md-4">
-                                <label for="url" class="form-label">{{ __('Additional Image URL') }}</label>
-                                <div class="input-group align-items-center">
-                                    <input type="text" class="form-control @error('multipleImages') is-invalid @enderror" name="multipleImages[]" value="{{ old('multipleImages') ?? $images }}" autocomplete="multipleImages" autofocus placeholder="Additional Image URL">
-                                    <div class="input-group-append">
-                                        <img src="/assets/images/cross.png" class="removeFileInput" style="width:25px;margin-left:5px;" />
+                            <div class="col-md-9">
+                                <div class="row" id="addUrls">
+                                    <!-- SKU -->
+                                    <div class="col-md-4">
+                                        <div>
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <label for="sku" class="form-label">
+                                                    {{ __('SKU') }}
+                                                    <span class="text-danger">*</span>
+                                                    <span class="text-danger">( Short Code )</span>
+                                                </label>
+                                                <span class="charCount">0/30</span>
+                                            </div>
+                                            <input maxlength="30" id="sku" type="text" class="form-control @error('sku') is-invalid @enderror" name="sku" value="{{ old('sku') ?? $allInfo['sku'] }}" autocomplete="sku" autofocus placeholder="SKU">
+                                            <span class="error-message sku" style="color:red;"></span>
+                                            @error('sku')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
                                     </div>
+
+                                    <!-- Language -->
+                                    <div class="col-md-4">
+                                        <div>
+                                            <label for="language" class="form-label">{{ __('Language') }}<span class="text-danger">*</span></label>
+                                            <input id="language" type="text" class="form-control @error('language') is-invalid @enderror" name="language" value="{{ old('language') ?? $allInfo['lang'] }}" autocomplete="language" autofocus placeholder="Language">
+                                            <span class="error-message language" style="color:red;"></span>
+                                            @error('language')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <!-- Pages -->
+                                    <div class="col-md-4">
+                                        <div>
+                                            <label for="pages" class="form-label">{{ __('No. of Pages') }}</label>
+                                            <input id="pages" type="text" class="form-control @error('pages') is-invalid @enderror" name="pages" value="{{ old('pages') ?? $allInfo['page_no'] }}" autocomplete="pages" autofocus placeholder="No. of Pages">
+                                            <span class="error-message pages" style="color:red;"></span>
+                                            @error('pages')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <!-- Condition -->
+                                    <div class="col-md-4">
+                                        <div>
+                                            <label for="condition" class="form-label">{{ __('Condition') }}<span class="text-danger">*</span></label>
+                                            <select class="form-control @error('condition') is-invalid @enderror" name="condition">
+                                                <option value="">--Select--</option>
+                                                <option value="New" {{ $allInfo['condition'] == 'New' ? 'selected' : '' }}>New</option>
+                                                <option value="Like New" {{ $allInfo['condition'] == 'Like New' ? 'selected' : '' }}>Like New</option>
+                                                <option value="Old" {{ $allInfo['condition'] == 'Old' ? 'selected' : '' }}>Old</option>
+                                            </select>
+                                            <span class="error-message condition" style="color:red;"></span>
+                                            @error('condition')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <!-- Binding Type -->
+                                    <div class="col-md-4">
+                                        <div>
+                                            <label for="binding" class="form-label">{{ __('Binding Type') }}<span class="text-danger">*</span></label>
+                                            <select class="form-control @error('binding') is-invalid @enderror" name="binding">
+                                                <option value="">--Select--</option>
+                                                <option value="Hardcover" {{ $allInfo['binding'] == 'Hardcover' ? 'selected' : '' }}>Hardcover</option>
+                                                <option value="Paperback" {{ $allInfo['binding'] == 'Paperback' ? 'selected' : '' }}>Paperback</option>
+                                            </select>
+                                            <span class="error-message binding" style="color:red;"></span>
+                                            @error('binding')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <!-- Insta Mojo URL -->
+                                    <div class="col-md-4">
+                                        <div>
+                                            <label for="url" class="form-label d-flex justify-content-between">
+                                                {{ __('Insta Mojo URL') }}
+                                                <span onclick="copyLink()" id="copylink" style="cursor:pointer;">Copy</span>
+                                            </label>
+                                            <input id="url" type="url" class="form-control @error('url') is-invalid @enderror" name="url" value="{{ old('url') ?? $allInfo['url'] }}" autocomplete="url" autofocus placeholder="Insta Mojo URL">
+                                            <span class="error-message url" style="color:red;"></span>
+                                            @error('url')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <!-- Base Image URL -->
+                                    <div class="col-md-4">
+                                        <div>
+                                            <label for="base_url" class="form-label">{{ __('Base Image URL') }}</label>
+                                            <input id="base_url" type="text" class="form-control @error('images') is-invalid @enderror" name="images[]" value="{{ old('images') ?? $allInfo['baseimg'] }}" autocomplete="images" autofocus placeholder="Base URL">
+                                            <span class="error-message images" style="color:red;"></span>
+                                            @error('images')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                        <button type="button" id="addFileInput" class="btn btn-primary mt-2">Add More Images</button>
+                                    </div>
+
+                                    <!-- Additional Images -->
+                                    @foreach($allInfo['multiple'] as $key => $images)
+                                    @if($key == 0) @continue; @endif
+                                    <div class="col-md-4">
+                                        <div>
+                                            <label class="form-label">{{ __('Additional Image URL') }}</label>
+                                            <div class="input-group align-items-center">
+                                                <input type="text" class="form-control @error('multipleImages') is-invalid @enderror" name="multipleImages[]" value="{{ old('multipleImages') ?? $images }}" autocomplete="multipleImages" autofocus placeholder="Additional Image URL">
+                                                <div class="input-group-append">
+                                                    <img src="/assets/images/cross.png" class="removeFileInput" style="width:25px;margin-left:5px; cursor:pointer;" />
+                                                </div>
+                                            </div>
+                                            <span class="error-message multipleImages" style="color:red;"></span>
+                                        </div>
+                                    </div>
+                                    @endforeach
+
                                 </div>
-                                <span class="error-message multipleImages" style="color:red;"></span>
                             </div>
-                            @endforeach
+
+                            <!-- Preview Section -->
+                            <div class="col-md-3 text-right mb-2 d-flex" id='preview' style="justify-content: flex-end;" >
+                                <div style="border: 2px solid #ccc;width: 300px;max-height: 300px;height:300px;">
+                                    <img src="" id='previewImage' />
+                                    <div class='image-status' style="text-align: center;padding: 5px;display:none;"></div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-4">
-                                <button type='button' id='addFileInput' class="btn btn-primary">Add More Images</button>
-                            </div>
-                        </div>
 
-                        <div style="text-align: right;">
+                        <div style="text-align: right;margin-top: 30px;">
                             <button type="submit" class="btn btn-success float-right">Update & Publish</button>
                         </div>
                     </div>

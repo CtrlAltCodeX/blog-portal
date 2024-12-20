@@ -26,8 +26,11 @@ class Controller extends BaseController
             $updatedTime = new Carbon($credential->updated_at);
             $currentTime = Carbon::now();
             $expirationDateTime = $updatedTime->addSeconds($data->expires_in);
-
-            if ($currentTime->greaterThanOrEqualTo($expirationDateTime)) return true;
+            if ($currentTime->greaterThanOrEqualTo($expirationDateTime)) {
+                return false;
+            } else {
+                return true;
+            }
         } else {
             return true;
         }

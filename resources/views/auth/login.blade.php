@@ -11,7 +11,7 @@ $buttonFour = explode(',',$siteSettings?->button_4);
 @endphp
 
 @section('content')
-<form method="POST" action="{{ route('verify.otp') }}" id='form'>
+<form method="POST" action="{{ route('login') }}" id='form'>
     @csrf
 
     <span class="login100-form-title pb-5">
@@ -74,7 +74,7 @@ $buttonFour = explode(',',$siteSettings?->button_4);
                             Login To Get OTP
                         </button>
                     </div>
-                    <div class="d-grid mt-3 justify-content-center" style="grid-gap: 10px;grid-template-columns: auto auto auto auto;">
+                    <div class="d-grid mt-3 justify-content-center" style="grid-gap: 10px;grid-template-columns: auto auto;">
                         @if($buttonOne[0])
                         <a href="{{ $buttonOne[1] }}" target='_blank'>{{$buttonOne[0]}}</a>
                         @endif
@@ -87,11 +87,6 @@ $buttonFour = explode(',',$siteSettings?->button_4);
                         @if($buttonFour[0])
                         <a href="{{ $buttonFour[1] }}" target='_blank'>{{$buttonFour[0]}}</a>
                         @endif
-                    </div>
-                    <div class="container-login100-form-btn">
-                       <button type='button' class="login100-form-btn btn-primary" id='without-otp'>
-                           Login without OTP
-                       </button>
                     </div>
                     <!-- <div class="text-center pt-3">
                         <p class="text-dark mb-0">Not a member?<a href="{{ route('register') }}" class="text-primary ms-1">Sign UP</a></p>

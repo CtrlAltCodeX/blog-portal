@@ -176,8 +176,8 @@
 
                                 <select class="form-control" name="allow_sessions">
                                     <option value="">--Select--</option>
-                                    <option value=1>Single</option>
-                                    <option value=0>Multiple</option>
+                                    <option value=1>Single Session</option>
+                                    <option value=0>Multiple Sessions</option>
                                 </select>
                             </div>
                             
@@ -193,10 +193,10 @@
                             </div>
                             
                             <div class="form-group col-3">
-                                <label class="form-label">{{ __('Show Health') }}</label>
+                                <label class="form-label">{{ __('Show Account Health') }}</label>
                                 <select class="form-control" name="show_health">
-                                    <option value=1 >Yes</option>
-                                    <option value=0 >No</option>
+                                    <option value=1 >Yes - Display Account Rating</option>
+                                    <option value=0 >No - For Freshers</option>
                                 </select>
 
                                 @error('show_health')
@@ -208,8 +208,8 @@
                             <div class="form-group col-3">
                                 <label class="form-label">{{ __('OTP Features') }}</label>
                                 <select class="form-control" name="otp_feature">
-                                    <option value=1 >On</option>
-                                    <option value=0 >Off</option>
+                                    <option value=1 >On - Login Via OTP</option>
+                                    <option value=0 >Off - No OTP Required</option>
                                 </select>
 
                                 @error('otp_feature')
@@ -221,8 +221,8 @@
                             <div class="form-group col-3">
                                 <label class="form-label">{{ __('Data Transfer') }}</label>
                                 <select class="form-control" name="data_transfer">
-                                    <option value=1 >On</option>
-                                    <option value=0 >Off</option>
+                                    <option value=1 >On - Working Mode</option>
+                                    <option value=0 >Off - Practice Mode</option>
                                 </select>
 
                                 @error('data_transfer')
@@ -235,8 +235,8 @@
                             <div class="form-group col-3">
                                 <label class="form-label">{{ __('Account Details Change Limitations') }}</label>
                                 <select class="form-control" name="account_details_change_limitations">
-                                    <option value=1 >On</option>
-                                    <option value=0 >Off</option>
+                                    <option value=1 >On - No Changes Allowed</option>
+                                    <option value=0 >Off - User Can Change</option>
                                 </select>
 
                                 @error('account_details_change_limitations')

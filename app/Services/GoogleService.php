@@ -332,6 +332,8 @@ class GoogleService
 
             if ($draft == 4) $isDraft = ['isDraft' => 1];
 
+            $created = $blogger->posts->insert($credential->blog_id, $post, $isDraft);
+
             if (isset($data['id']) || isset($data['database'])) {
                 $id = isset($data['id']) ? $data['id'] : $data['database'];
 
@@ -351,7 +353,7 @@ class GoogleService
                 ]);
             }
 
-            return $blogger->posts->insert($credential->blog_id, $post, $isDraft);
+            return $created;
         } catch (\Google_Service_Exception $e) {
             return json_decode($e->getMessage());
         }

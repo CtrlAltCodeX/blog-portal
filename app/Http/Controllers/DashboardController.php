@@ -28,7 +28,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        if ($this->tokenIsExpired($this->googleService)) {
+        if (!$this->tokenIsExpired($this->googleService)) {
             session()->flash('message', 'Please authenticate with Google');
 
             return view('settings.error');

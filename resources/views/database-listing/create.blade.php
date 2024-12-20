@@ -196,7 +196,7 @@
                                 <label for="label" class="form-label">{{ __('Category') }}<span class="text-danger">*</span><span class="text-danger"> ( Publication, 1 Category, 1 Tag, Others ) </span></label>
 
                                 <div class="d-flex flex-column">
-                                <div id='count'><strong>Label Selected</strong> : 1</div>
+                                    <div id='count'><strong>Label Selected</strong> : 1</div>
                                     <div id='textLength'></div>
                                 </div>
                             </div>
@@ -219,117 +219,123 @@
                         </div>
 
                         <div class="row">
-                            <div class="form-group col-md-4">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <label for="sku" class="form-label">
-                                        {{ __('SKU') }}
-                                        <span class="text-danger">*</span>
-                                        <span class="text-danger"> ( Short Code )</span>
-                                    </label>
-                                    <span class="charCount">0/30</span>
+                            <div class="col-md-9">
+                                <div class="row" id="addUrls">
+                                    <div class="form-group col-md-4">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <label for="sku" class="form-label">
+                                                {{ __('SKU') }}
+                                                <span class="text-danger">*</span>
+                                                <span class="text-danger"> ( Short Code )</span>
+                                            </label>
+                                            <span class="charCount">0/30</span>
+                                        </div>
+                                        <input maxlength="30" id="sku" type="text" class="form-control @error('sku') is-invalid @enderror" name="sku" value="{{ old('sku') }}" autocomplete="sku" autofocus placeholder="SKU">
+                                        <span class="error-message sku" style="color:red;"></span>
+
+                                        @error('sku')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="language" class="form-label">{{ __('Language') }}<span class="text-danger">*</span></label>
+                                        <input id="language" type="text" class="form-control @error('language') is-invalid @enderror" name="language" value="{{ old('language') }}" autocomplete="language" autofocus placeholder="Language">
+                                        <span class="error-message language" style="color:red;"></span>
+
+                                        @error('language')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="pages" class="form-label">{{ __('No. of Pages') }}</label>
+                                        <input id="pages" type="text" class="form-control @error('pages') is-invalid @enderror" name="pages" value="{{ old('pages') }}" autocomplete="pages" autofocus placeholder="No. of Pages">
+                                        <span class="error-message pages" style="color:red;"></span>
+
+                                        @error('pages')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="condition" class="form-label">{{ __('Condition') }}<span class="text-danger">*</span></label>
+                                        <select class="form-control @error('condition') is-invalid @enderror" name="condition" value="{{ old('condition') }}">
+                                            <option value="">--Select--</option>
+                                            <option {{ old('condition') == 'New' ? 'selected' : '' }} value="New">New</option>
+                                            <option {{ old('condition') == 'Like New' ? 'selected' : '' }} value="Like New">Like New</option>
+                                            <option {{ old('condition') == 'Old' ? 'selected' : '' }} value="Old">Old</option>
+                                        </select>
+                                        <span class="error-message condition" style="color:red;"></span>
+
+                                        @error('condition')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="binding" class="form-label">{{ __('Binding Type') }}<span class="text-danger">*</span></label>
+                                        <select class="form-control @error('binding') is-invalid @enderror" name="binding" value="{{ old('binding') }}">
+                                            <option value="">--Select--</option>
+                                            <option {{ old('binding') == 'Hardcover' ? 'selected' : '' }} value="Hardcover">Hardcover</option>
+                                            <option {{ old('binding') == 'Paperback' ? 'selected' : '' }} value="Paperback">Paperback</option>
+                                        </select>
+                                        <span class="error-message binding" style="color:red;"></span>
+                                        @error('binding')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="url" class="form-label d-flex justify-content-between">{{ __('Insta Mojo URL') }}<span onclick="copyLink()" id='copylink' style="cursor:pointer;">Copy</span></label>
+                                        <input id="url" type="url" class="form-control @error('url') is-invalid @enderror" name="url" value="{{ old('url') }}" autocomplete="url" autofocus placeholder="Insta Mojo url">
+                                        <span class="error-message url" style="color:red;"></span>
+
+                                        @error('url')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="url" class="form-label">{{ __('Main Image URL') }}</label>
+                                        <input id="base_url" type="text" value="{{ old('images')[0]??'' }}" class="form-control @error('images') is-invalid @enderror" name="images[]" autocomplete="images" autofocus placeholder="Base URL">
+                                        <span class="error-message base_url" style="color:red;"></span>
+
+                                        @error('images')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                        <button type='button' id='addFileInput' class="btn btn-primary mt-2">Add More Images</button>
+                                    </div>
+
                                 </div>
-                                <input maxlength="30" id="sku" type="text" class="form-control @error('sku') is-invalid @enderror" name="sku" value="{{ old('sku') }}" autocomplete="sku" autofocus placeholder="SKU">
-                                <span class="error-message sku" style="color:red;"></span>
-
-                                @error('sku')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
                             </div>
 
-                            <div class="form-group col-md-4">
-                                <label for="language" class="form-label">{{ __('Language') }}<span class="text-danger">*</span></label>
-                                <input id="language" type="text" class="form-control @error('language') is-invalid @enderror" name="language" value="{{ old('language') }}" autocomplete="language" autofocus placeholder="Language">
-                                <span class="error-message language" style="color:red;"></span>
-
-                                @error('language')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="form-group col-md-4">
-                                <label for="pages" class="form-label">{{ __('No. of Pages') }}</label>
-                                <input id="pages" type="text" class="form-control @error('pages') is-invalid @enderror" name="pages" value="{{ old('pages') }}" autocomplete="pages" autofocus placeholder="No. of Pages">
-                                <span class="error-message pages" style="color:red;"></span>
-
-                                @error('pages')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="form-group col-md-4">
-                                <label for="condition" class="form-label">{{ __('Condition') }}<span class="text-danger">*</span></label>
-                                <select class="form-control @error('condition') is-invalid @enderror" name="condition" value="{{ old('condition') }}">
-                                    <option value="">--Select--</option>
-                                    <option {{ old('condition') == 'New' ? 'selected' : '' }} value="New">New</option>
-                                    <option {{ old('condition') == 'Like New' ? 'selected' : '' }} value="Like New">Like New</option>
-                                    <option {{ old('condition') == 'Old' ? 'selected' : '' }} value="Old">Old</option>
-                                </select>
-                                <span class="error-message condition" style="color:red;"></span>
-
-                                @error('condition')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="form-group col-md-4">
-                                <label for="binding" class="form-label">{{ __('Binding Type') }}<span class="text-danger">*</span></label>
-                                <select class="form-control @error('binding') is-invalid @enderror" name="binding" value="{{ old('binding') }}">
-                                    <option value="">--Select--</option>
-                                    <option {{ old('binding') == 'Hardcover' ? 'selected' : '' }} value="Hardcover">Hardcover</option>
-                                    <option {{ old('binding') == 'Paperback' ? 'selected' : '' }} value="Paperback">Paperback</option>
-                                </select>
-                                <span class="error-message binding" style="color:red;"></span>
-                                @error('binding')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="form-group col-md-4">
-                                <label for="url" class="form-label d-flex justify-content-between">{{ __('Insta Mojo URL') }}<span onclick="copyLink()" id='copylink' style="cursor:pointer;">Copy</span></label>
-                                <input id="url" type="url" class="form-control @error('url') is-invalid @enderror" name="url" value="{{ old('url') }}" autocomplete="url" autofocus placeholder="Insta Mojo url">
-                                <span class="error-message url" style="color:red;"></span>
-
-                                @error('url')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
+                            <div class="col-md-3 text-right mb-2 d-flex" id='preview' style="justify-content: flex-end;" >
+                                <div style="border: 2px solid #ccc;width: 300px;max-height: 300px;height:300px;">
+                                    <img src="" id='previewImage' />
+                                    <div class='image-status' style="text-align: center;padding: 5px;display:none;"></div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="row" id="addUrls">
-                            <div class="form-group col-md-4">
-                                <label for="url" class="form-label">{{ __('Main Image URL') }}</label>
-                                <input id="url" type="text" value="{{ old('images')[0]??'' }}" class="form-control @error('images') is-invalid @enderror" name="images[]" autocomplete="images" autofocus placeholder="Base URL">
-                                <span class="error-message base_url" style="color:red;"></span>
-
-                                @error('images')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-4">
-                                <button type='button' id='addFileInput' class="btn btn-primary">Add More Images</button>
-                            </div>
-                        </div>
-                        <div style="text-align: right;">
+                        <div style="text-align: right;margin-top: 30px;">
                             <button type="submit" class="btn btn-success float-right">Confirm & Save ( DB )</button>
                         </div>
-                       
+
                     </div>
                 </div>
             </div>
@@ -394,7 +400,7 @@
             $("#multipleImagesform").submit();
         });
 
-        
+
     })
 </script>
 @endpush

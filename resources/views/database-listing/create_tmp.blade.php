@@ -222,7 +222,7 @@
                                 <button type='button' id='addFileInput' class="btn btn-primary">Add More Images</button>
                             </div>
                         </div>
-                        @if($user_data_transfer == 1)
+                        @if(!$user_data_transfer)
                             <div style="text-align: right;">
                                 <button class="btn btn-success float-right"><i class="fa fa-eye"></i> Preview</button>
                             </div>

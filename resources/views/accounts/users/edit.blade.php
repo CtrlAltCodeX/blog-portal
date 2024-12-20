@@ -178,8 +178,8 @@
 
                                     <select class="form-control" name="allow_sessions">
                                         <option value="">--Select--</option>
-                                        <option value=1 {{ $user->allow_sessions == 1 ? 'selected' : '' }}>Single</option>
-                                        <option value=0 {{ $user->allow_sessions == 0 ? 'selected' : '' }}>Multiple</option>
+                                        <option value=1 {{ $user->allow_sessions == 1 ? 'selected' : '' }}>Single Session</option>
+                                        <option value=0 {{ $user->allow_sessions == 0 ? 'selected' : '' }}>Multiple Sessions</option>
                                     </select>
                                 </div>
 
@@ -197,8 +197,8 @@
                                 <div class="form-group col-3">
                                     <label class="form-label">{{ __('Show Health') }}</label>
                                     <select class="form-control" name="show_health">
-                                        <option value=1 {{ $user->show_health == 1 ? 'selected' : '' }}>Yes</option>
-                                        <option value=0 {{ $user->show_health == 0 ? 'selected' : '' }}>No</option>
+                                        <option value=1 {{ $user->show_health == 1 ? 'selected' : '' }}>Yes - Display Account Rating</option>
+                                        <option value=0 {{ $user->show_health == 0 ? 'selected' : '' }}>No - For Freshers</option>
                                     </select>
 
                                     @error('show_health')
@@ -211,8 +211,8 @@
                                 <div class="form-group col-3">
                                     <label class="form-label">{{ __('OTP Features') }}</label>
                                     <select class="form-control" name="otp_feature">
-                                        <option value=1 {{ $user->otp_feature == 1 ? 'selected' : '' }}>On</option>
-                                        <option value=0 {{ $user->otp_feature == 0 ? 'selected' : '' }}>Off</option>
+                                        <option value=1 {{ $user->otp_feature == 1 ? 'selected' : '' }}>On - Login Via OTP</option>
+                                        <option value=0 {{ $user->otp_feature == 0 ? 'selected' : '' }}>Off  - No OTP Required</option>
                                     </select>
 
                                     @error('otp_feature')
@@ -224,8 +224,8 @@
                                 <div class="form-group col-3">
                                     <label class="form-label">{{ __('Data Transfer') }}</label>
                                     <select class="form-control" name="data_transfer">
-                                        <option value=1 {{ $user->data_transfer == 1 ? 'selected' : '' }}>On</option>
-                                        <option value=0 {{ $user->data_transfer == 0 ? 'selected' : '' }}>Off</option>
+                                        <option value=1 {{ $user->data_transfer == 1 ? 'selected' : '' }}>On - Working Mode</option>
+                                        <option value=0 {{ $user->data_transfer == 0 ? 'selected' : '' }}>Off - Practice Mode</option>
                                     </select>
 
                                     @error('data_transfer')
@@ -237,8 +237,8 @@
                                 <div class="form-group col-3">
                                     <label class="form-label">{{ __('Account Details Change Limitations') }}</label>
                                     <select class="form-control" name="account_details_change_limitations">
-                                        <option value=1 {{ $user->account_details_change_limitations == 1 ? 'selected' : '' }}>On</option>
-                                        <option value=0 {{ $user->account_details_change_limitations == 0 ? 'selected' : '' }}>Off</option>
+                                        <option value=1 {{ $user->account_details_change_limitations == 1 ? 'selected' : '' }}>On - No Changes Allowed</option>
+                                        <option value=0 {{ $user->account_details_change_limitations == 0 ? 'selected' : '' }}>Off - User Can Change</option>
                                     </select>
 
                                     @error('account_details_change_limitations')

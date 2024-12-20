@@ -32,6 +32,7 @@
                     </div>
                     <input type="hidden" value="{{ request()->email }}" name="email" />
                     <input type="hidden" value="{{ request()->password }}" name="password" />
+                    <input type="hidden" value=1 name="otp_feature" />
 
                     <div class="wrap-input100 validate-input input-group is-invalid">
                         <input type="text" class="form-control" name="otp" placeholder="Enter OTP...." autocomplete="email" autofocus>

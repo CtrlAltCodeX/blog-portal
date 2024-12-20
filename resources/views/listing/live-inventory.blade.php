@@ -35,7 +35,8 @@
     .tooltip:hover .tooltiptext {
         visibility: visible;
     }
-    .pagination{
+
+    .pagination {
         display: none;
     }
 </style>
@@ -46,24 +47,25 @@
 <div>
     <div class="row row-sm">
         <div class="col-lg-12">
-            
+
             <div class="card">
                 <div class="card-header justify-content-between">
                     <h3 class="card-title">Manage Inventory | Published ( M/S )</h3>
-                    <form action="" method="get" id='form'>
-                        <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
-                        <select class="form-control w-100" id='category' name="category">
-                            <option value="">In Stock</option>
-                            <option value="Stk_o" {{ request()->category == 'Stk_o' ? 'selected' : '' }}>Out of Stock (Stk_o)</option>
-                            <option value="stock__out" {{ request()->category == 'stock__out' ? 'selected' : '' }}>Out of Stock (stock__out)</option>
-                            <option value="Stk_d" {{ request()->category == 'Stk_d' ? 'selected' : '' }}>On Demand Stock (Stk_d)</option>
-                            <option value="stock__demand" {{ request()->category == 'stock__demand' ? 'selected' : '' }}>On Demand Stock (stock__demand)</option>
-                            <option value="Stk_l" {{ request()->category == 'Stk_l' ? 'selected' : '' }}>Low Stock (Stk_l)</option>
-                            <option value="stock__low" {{ request()->category == 'stock__low' ? 'selected' : '' }}>Low Stock (stock__low)</option>
-                        </select>
-                    </form>
-                     <form action="" method="get" id='pagingform'>
-                           <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
+                    <div class="d-flex">
+                        <form action="" method="get" id='form'>
+                            <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
+                            <select class="form-control w-100" id='category' name="category">
+                                <option value="">In Stock</option>
+                                <option value="Stk_o" {{ request()->category == 'Stk_o' ? 'selected' : '' }}>Out of Stock (Stk_o)</option>
+                                <option value="stock__out" {{ request()->category == 'stock__out' ? 'selected' : '' }}>Out of Stock (stock__out)</option>
+                                <option value="Stk_d" {{ request()->category == 'Stk_d' ? 'selected' : '' }}>On Demand Stock (Stk_d)</option>
+                                <option value="stock__demand" {{ request()->category == 'stock__demand' ? 'selected' : '' }}>On Demand Stock (stock__demand)</option>
+                                <option value="Stk_l" {{ request()->category == 'Stk_l' ? 'selected' : '' }}>Low Stock (Stk_l)</option>
+                                <option value="stock__low" {{ request()->category == 'stock__low' ? 'selected' : '' }}>Low Stock (stock__low)</option>
+                            </select>
+                        </form>
+                        <form action="" method="get" id='pagingform' class="ml-2">
+                            <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
                             <input type="hidden" value="{{ request()->category ?? 'Product' }}" name='category'>
                             <select class="form-control w-100" id='paging' name="paging">
                                 <option value="25" {{ request()->paging == '25' ? 'selected' : '' }}>25</option>
@@ -71,6 +73,7 @@
                                 <option value="100" {{ request()->paging == '100' ? 'selected' : '' }}>100</option>
                             </select>
                         </form>
+                    </div>
                 </div>
 
                 <div class="card-body">
@@ -94,19 +97,19 @@
                             <tbody>
                                 @forelse ($googlePosts['paginator'] as $key => $googlePost)
                                 @php
-                                    $doc = new \DOMDocument();
-                                    if(((array)($googlePost->content))['$t']){
-                                    @$doc->loadHTML(((array)($googlePost->content))['$t']);
-                                    }
-                                    $td = $doc->getElementsByTagName('td');
-                                    $price = explode('-', $td->item(1)->textContent ?? '');
-                                    $selling = $price[0]??0;
-                                    $mrp = $price[1]??0;
-                                    $image = $doc->getElementsByTagName("img")?->item(0)?->getAttribute('src');
-                                    $productId = explode('-', ((array)$googlePosts['paginator'][$key]->id)['$t'])[2];
-                                    $productTitle = ((array)$googlePosts['paginator'][$key]->title)['$t'];
-                                    $published = ((array)$googlePosts['paginator'][$key]->published)['$t'];
-                                    $updated = ((array)$googlePosts['paginator'][$key]->updated)['$t'];
+                                $doc = new \DOMDocument();
+                                if(((array)($googlePost->content))['$t']){
+                                @$doc->loadHTML(((array)($googlePost->content))['$t']);
+                                }
+                                $td = $doc->getElementsByTagName('td');
+                                $price = explode('-', $td->item(1)->textContent ?? '');
+                                $selling = $price[0]??0;
+                                $mrp = $price[1]??0;
+                                $image = $doc->getElementsByTagName("img")?->item(0)?->getAttribute('src');
+                                $productId = explode('-', ((array)$googlePosts['paginator'][$key]->id)['$t'])[2];
+                                $productTitle = ((array)$googlePosts['paginator'][$key]->title)['$t'];
+                                $published = ((array)$googlePosts['paginator'][$key]->published)['$t'];
+                                $updated = ((array)$googlePosts['paginator'][$key]->updated)['$t'];
                                 @endphp
                                 <tr>
                                     <td>{{ request()->startIndex++ }}</td>
@@ -244,7 +247,7 @@
             $("#form").submit();
         })
 
-         $("#paging").on("change", function() {
+        $("#paging").on("change", function() {
             $("#pagingform").submit();
         });
     })

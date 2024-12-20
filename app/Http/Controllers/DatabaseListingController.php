@@ -89,7 +89,7 @@ class DatabaseListingController extends Controller
 
         $siteSetting = SiteSetting::first();
         $user_data_transfer = Auth::user()->data_transfer;
-        if ($user_data_transfer == 1) {
+        if (!$user_data_transfer) {
             return view('database-listing.create_tmp', compact('categories', 'siteSetting', 'user_data_transfer'));
         } else {
             return view('database-listing.create', compact('categories', 'siteSetting', 'user_data_transfer'));
@@ -452,13 +452,19 @@ class DatabaseListingController extends Controller
         $googlePosts = Listing::with('created_by_user')
             ->orderBy('created_at', 'desc')
             // ->where('categories', 'LIKE', '%' . request()->category . '%')
-            ->whereNotNull('product_id');
+            ->whereNotNull('product_id')
+            ->where('is_bulk_upload', 0);
 
-        $allCounts = Listing::whereNotNull('product_id');
+        $allCounts = Listing::whereNotNull('product_id')
+            ->where('is_bulk_upload', 0);
 
-        $pendingCounts = Listing::whereNotNull('product_id')->where('status', 0);
+        $pendingCounts = Listing::whereNotNull('product_id')
+            ->where('status', 0)
+            ->where('is_bulk_upload', 0);
 
-        $rejectedCounts = Listing::whereNotNull('product_id')->where('status', 2);
+        $rejectedCounts = Listing::whereNotNull('product_id')
+            ->where('status', 2)
+            ->where('is_bulk_upload', 0);
 
         if (!auth()->user()->hasRole('Super Admin')) {
             $pendingCounts = $pendingCounts->where('created_by', auth()->user()->id);
@@ -487,6 +493,7 @@ class DatabaseListingController extends Controller
         $googlePosts = $googlePosts->paginate($request->paging);
 
         $users = User::where('status', 1)->get();
+
         return view('database-listing.publish-pending', compact('users', 'allCounts', 'googlePosts', 'pendingCounts', 'rejectedCounts'));
     }
 

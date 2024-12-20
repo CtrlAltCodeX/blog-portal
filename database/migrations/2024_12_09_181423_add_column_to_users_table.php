@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('otp_feature')->default(0);
-            $table->string('data_transfer')->default(0);
-            $table->string('account_details_change_limitations')->default(0);
+            $table->string('otp_feature')->default(1);
+            $table->string('data_transfer')->default(1);
+            $table->string('account_details_change_limitations')->default(1);
         });
     }
 
