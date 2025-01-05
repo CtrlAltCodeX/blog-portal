@@ -9,6 +9,10 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Listing;
 use App\Models\UserListingInfo;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Facades\Image;
 
 class ImportListingCsv implements ShouldQueue
 {
@@ -18,18 +22,20 @@ class ImportListingCsv implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(protected $data, protected $user, protected $postID, protected $image) {}
+    public function __construct(protected $data, protected $user, protected $postID, protected $key) {}
 
     /**
      * Execute the job.
      */
     public function handle()
     {
+        $images = $this->downloadImage($this->data->images);
+
         $data = [
             'title' => $this->data->title,
             'description' => $this->data->description,
-            'mrp' => $this->data->mrp,
-            'selling_price' => $this->data->selling_price,
+            'mrp' => ($this->data->mrp != 'Not found') ? $this->data->mrp : null,
+            'selling_price' => ($this->data->selling_price != 'Not found') ? $this->data->selling_price : null,
             'publisher' => $this->data->publisher,
             'author_name' => $this->data->author_name,
             'edition' => $this->data->edition,
@@ -40,12 +46,12 @@ class ImportListingCsv implements ShouldQueue
             'condition' => $this->data->condition ?? null,
             'binding_type' => $this->data->binding ?? null,
             'insta_mojo_url' => $this->data->url ?? null,
-            'images' => json_encode([$this->image]),
+            'images' => json_encode([$images]),
             'multiple_images' => $this->data->multiple_images ?? null,
             'status' => 0,
             'created_by' => $this->user,
             'is_bulk_upload' => 1,
-            'product_id' => $this->postID ? $this->postID : ''
+            'product_id' => $this->postID ? $this->postID : null
         ];
 
         $listing = Listing::create($data);
@@ -64,5 +70,25 @@ class ImportListingCsv implements ShouldQueue
         if (!$listing) return false;
 
         return true;
+    }
+
+    public function downloadImage($imageURL)
+    {
+        $response = Http::withOptions(['verify' => false])
+            ->get($imageURL);
+
+        if ($response->successful()) {
+            $filename = basename($this->key . "_" . time() . '.jpg'); // Get the filename from the URL
+            $path = 'images/' . $filename; // Define the storage path
+            Storage::disk('public')->put($path, $response->body());
+
+            $background = (new ImageManager())->canvas(555, 555, '#ffffff');
+
+            $background->insert(Image::make(storage_path('app/public/images/' . $filename))->resize(390, 520), 'center');
+
+            $background->save(storage_path('app/public/images/' . $filename));
+
+            return $path;
+        }
     }
 }

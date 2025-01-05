@@ -38,53 +38,25 @@ class BulkUploadController extends Controller
         return view('bulk-upload.listing', compact('googlePosts'));
     }
 
-    public function downloadImage($imageURL)
-    {
-        $response = Http::withOptions(['verify' => false])
-            ->get($imageURL);
-
-        if ($response->successful()) {
-            $filename = basename(time() . '.jpg'); // Get the filename from the URL
-            $path = 'images/' . $filename; // Define the storage path
-            Storage::disk('public')->put($path, $response->body());
-
-            $background = (new ImageManager())->canvas(555, 555, '#ffffff');
-
-            $background->insert(Image::make(storage_path('app/public/images/' . $filename))->resize(390, 520), 'center');
-
-            $background->save(storage_path('app/public/images/' . $filename));
-
-            return $path;
-        }
-    }
-
     public function importData(Request $request)
     {
         if (!empty($request->ids)) {
             foreach ($request->ids as $key => $data) {
                 $data = json_decode($data);
 
-                $images = $this->downloadImage($data->images);
-
                 $postId = isset($data->p_id) ? sprintf("%.0f", $data->p_id) : null;
 
-                $job = ImportListingCsv::dispatch($data, auth()->user()->id, $postId, $images);
-
-                if ($job == true) {
-                    session()->flash('success', 'Listing imported successfully');
-
-                    return redirect()->route('upload-file.options');
-                } else {
-                    session()->flash('error', 'Something went Wrong');
-
-                    return redirect()->route('view.upload');
-                }
+                $job = ImportListingCsv::dispatch($data, auth()->user()->id, $postId, $key);
             }
         } else {
             session()->flash('error', 'Please upload file first');
 
             return redirect()->route('view.upload');
         }
+        
+        session()->flash('success', 'Listing imported successfully');
+        
+        return redirect()->route('upload-file.options');
     }
 
     public function viewUploadedFile()

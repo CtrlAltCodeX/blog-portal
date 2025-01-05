@@ -3,10 +3,10 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>Exam360</title>
-  <meta name="description" content="Creative Agency, Marketing Agency Template">
-  <meta name="keywords" content="Creative Agency, Marketing Agency">
-  <meta name="author" content="rajesh-doot">
+  <title>EXAM360: How to list products on EXAM360 ?</title>
+  <meta name="description" content="Discover EXAM360, your trusted e-commerce online book store! Buy a wide range of books at unbeatable manufacturer prices. Explore affordable options for academic, competitive exams, and more!">
+  <meta name="keywords" content="Exam360, online books store, buy books online, books at manufacturer price, cheap books online, academic books, competitive exam books, e-books, school books, college textbooks, affordable books, exam preparation books, study material, reference books, educational books, discount books, book store online, entrance exam books, exam guide books, exam360 books.">
+  <meta name="author" content="EXAM360 (INDIA)">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="theme-color" content="#ffd6d6">
@@ -33,7 +33,7 @@
   <div class="onloadpage" id="page_loader">
     <div class="pre-content">
       <div class="logo-pre"><img src="logo.png" alt="Logo" class="img-fluid" /></div>
-      <div class="pre-text- text-radius text-light text-animation bg-b">Niwax - Creative Agency & Portfolio HTML Template Are 2 Seconds Away. Have Patience</div>
+      <div class="pre-text- text-radius text-light text-animation bg-b">EXAM360 (INDIA) Allows to List Your Product & Grow Your Business with EXAM360’s Supplier Program. Join Now!</div>
     </div>
   </div>
   <!--End Preloader -->
@@ -43,17 +43,17 @@
       <div class="menu-header">
         <div class="dsk-logo"><a class="nav-brand" href="{{ url('/') }}">
             <img src="logo.png" alt="Logo" class="mega-white-logo" />
-            <img src="logo.png" alt="Logo" class="mega-darks-logo" width="250px" />
+            <img src="logo.png" alt="Logo" class="mega-darks-logo" width="250px" style="max-width: 70%;max-height: 60%;" />
           </a></div>
         <div class="custom-nav" role="navigation">
-          <ul class="nav-list onepge">
+          <ul class="nav-list onepge" style='grid-gap:10px;'>
             <li><a href="#home" class="menu-links">Home</a></li>
             <li><a href="#about" class="menu-links">About</a></li>
-            <li><a href="#services" class="menu-links">Services</a></li>
-            <li><a href="#work" class="menu-links">Work</a></li>
-            <li><a href="#clients" class="menu-links">Clients</a></li>
-            <li><a href="#review" class="menu-links">Review</a></li>
-            <li><a href="{{ route('login') }}" class="btn-br bg-btn5 btshad-b2 lnk">Login <span class="circle"></span></a> </li>
+            <li><a href="#review" class="menu-links">Reviews</a></li>
+            <li><a href="#contact" class="menu-links">Contact</a></li>
+            <li><a href="https://support.exam360.in/freelance-partner" class="menu-links">FREELANCE</a></li>
+            <li><a href="{{ route('register') }}" class="btn-br bg-btn5 btshad-b2 lnk">Signup <span class="circle"></span></a> </li>
+            <li><a href="{{ route('login') }}" class="btn-br bg-btn5 btshad-b2 lnk">Office Login <span class="circle"></span></a> </li>
           </ul>
         </div>
         <div class="mobile-menu2">
@@ -67,11 +67,12 @@
       <nav id="main-nav">
         <ul class="first-nav">
           <li><a href="#home" class="menu-links">Home</a></li>
-          <li><a href="#about" class="menu-links">About</a></li>
-          <li><a href="#services" class="menu-links">Services</a></li>
-          <li><a href="#work" class="menu-links">Work</a></li>
-          <li><a href="#clients" class="menu-links">Clients</a></li>
-          <li><a href="#review" class="menu-links">Review</a></li>
+            <li><a href="#about" class="menu-links">About</a></li>
+            <li><a href="#review" class="menu-links">Reviews</a></li>
+            <li><a href="#contact" class="menu-links">Contact</a></li>
+            <li><a href="https://support.exam360.in/freelance-partner">FREELANCE</a></li>
+            <li><a href="{{ route('register') }}" class="btn-br bg-btn5 btshad-b2 lnk">Signup <span class="circle"></span></a> </li>
+            <li><a href="{{ route('login') }}" class="btn-br bg-btn5 btshad-b2 lnk">Office Login <span class="circle"></span></a> </li>
         </ul>
         <ul class="bottom-nav">
           <li class="prb">
@@ -85,7 +86,7 @@
             </a>
           </li>
           <li class="prb">
-            <a href="mailto:somewebmedia@gmail.com">
+            <a href="mailto:exam360.in@gmail.com">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                 <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
                 <path d="M0 0h24v24H0z" fill="none" />
@@ -111,10 +112,10 @@
         <div class="row">
           <div class="col-lg-6 v-center">
             <div class="header-heading">
-              <span class="title- wow fadeInUp" data-wow-delay=".1s">Hi there, I am Deo Jones</span>
-              <h1 class="wow fadeInUp" data-wow-delay=".2s"><span>Freelance</span> Web Designer</h1>
-              <p class="wow fadeInUp" data-wow-delay=".4s">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse faucibus, risus sit amet auctor sodales, justo erat tempor eros.</p>
-              <a href="#contact" class="btn-main bg-btn lnk wow fadeInUp" data-wow-delay=".6s">Hire Me <i class="fas fa-chevron-right fa-icon"></i><span class="circle"></span></a>
+              <span class="title- wow fadeInUp" data-wow-delay=".1s">Start Selling Today</span>
+              <h1 class="wow fadeInUp" data-wow-delay=".2s"><span>List Your Products</span> On EXAM360</h1>
+              <p class="wow fadeInUp" data-wow-delay=".4s">Product listing on Exam360 includes detailed product information like category, brand, features, specifications, images, and price for easy shopping.</p>
+              <a href="#contact" class="btn-main bg-btn lnk wow fadeInUp" data-wow-delay=".6s">Connect with us <i class="fas fa-chevron-right fa-icon"></i><span class="circle"></span></a>
             </div>
           </div>
           <div class="col-lg-6 wow fadeIn" data-wow-delay=".4s">
@@ -133,12 +134,11 @@
       <div class="row">
         <div class="col-lg-6">
           <div class="common-heading text-l">
-            <span>Creative Web Designer</span>
-            <h2 class="mb20">Deo Jones</h2>
-            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type
-              specimen book. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry. is simply dummy text of the printing and typesetting industry. </p>
+            <span>PARTNERS WITH EXAM360</span>
+            <h2 class="mb20">We Care Our Partner's</h2>
+            <p>Say goodbye to the hassle of endless policies and frequent penalties from typical e-commerce. Partner with EXAM360 for a seamless, thriving business journey. We focus on supporting your growth and success, creating a win-win situation for both of us. Together, let’s make your business flourish! </p>
             <div class="follow-label mt30">
-              <h6>Follow Me</h6>
+              <h6>Follow Us</h6>
               <a href="javascript:void(0)" target="blank" class="wow bounceIn" data-wow-delay=".2s"><i class="fab fa-facebook"></i></a>
               <a href="javascript:void(0)" target="blank" class="wow bounceIn" data-wow-delay=".4s"><i class="fab fa-instagram"></i></a>
               <a href="javascript:void(0)" target="blank" class="wow bounceIn" data-wow-delay=".6s"><i class="fab fa-dribbble"></i></a>
@@ -151,32 +151,32 @@
             <div class="counter-no mb20 wow bounceIn" data-wow-delay=".2s">
               <div class="hexagon hexa1" data-tilt data-tilt-max="20" data-tilt-speed="1000">
                 <div class="counter-number">
-                  <span class="counter">450</span><span>+</span>
-                  <p>Happy Clients</p>
+                  <span class="counter">3</span><span>L</span>
+                  <p>Customers Base</p>
                 </div>
               </div>
             </div>
             <div class="counter-no mb20  wow bounceIn" data-wow-delay=".4s">
               <div class="hexagon hexa2" data-tilt data-tilt-max="20" data-tilt-speed="1000">
                 <div class="counter-number">
-                  <span class="counter">380</span><span>+</span>
-                  <p>Projects Complete</p>
+                  <span class="counter">100</span><span>+</span>
+                  <p>Associate Partners</p>
                 </div>
               </div>
             </div>
             <div class="counter-no mt20  wow bounceIn" data-wow-delay=".6s">
               <div class="hexagon hexa3" data-tilt data-tilt-max="20" data-tilt-speed="1000">
                 <div class="counter-number">
-                  <span class="counter">2200</span>
-                  <p>Sales</p>
+                  <span class="counter">6</span><span>L</span>
+                  <p>Package Shipped</p>
                 </div>
               </div>
             </div>
             <div class="counter-no mt20  wow bounceIn" data-wow-delay=".8s">
               <div class="hexagon hexa4" data-tilt data-tilt-max="20" data-tilt-speed="1000">
                 <div class="counter-number">
-                  <span class="counter">10</span><span>y</span>
-                  <p>Experience</p>
+                  <span class="counter">10</span><span>Yrs.</span>
+                  <p>E-com Experience</p>
                 </div>
               </div>
             </div>
@@ -335,53 +335,50 @@
       <div class="row">
         <div class="col-lg-5 v-center">
           <div class="common-heading text-l">
-            <span>Clients Testimonial</span>
-            <h2 class="mb0">What clients say about my services.</h2>
+            <span>Our Reviews Are Not Paid !!</span>
+            <h2 class="mb0">What Our Genuine & valuable customer's say about us?</h2>
           </div>
         </div>
         <div class="col-lg-7">
           <div class="owl-carousel testimonial-card-a pl25">
             <div class="testimonial-card">
               <div class="t-text">
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type
-                  specimen book. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since.</p>
+                <p>I'm a PhD student and this is my genuine review. Exam360 team had genuineness and selling in affordable price. You can 100% believe and go ahead. I purchased three GATE exam related books and I was happy to their service. They are gradually speeding up the delivery service and in future I believe their service will get reputation. (Order Id - 671DEC41645C6665348894, Order Value - 1946, Order Date - 27 Oct 2024 For Future Reference).</p>
               </div>
               <div class="client-thumbs mt30">
                 <div class="media v-center">
                   <div class="user-image bdr-radius"><img src="images/user-thumb/girl.jpg" alt="girl" class="img-fluid" /></div>
                   <div class="media-body user-info v-center">
-                    <h5>Moana Smile</h5>
-                    <p>CEO of Niwax, <small>Jaipur, India</small></p>
+                    <h5>KETHAVATH HEMANTH NAIK</h5>
+                    <p>PHD Student, <small>Kerala, India</small></p>
                   </div>
                 </div>
               </div>
             </div>
             <div class="testimonial-card">
               <div class="t-text">
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type
-                  specimen book. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since.</p>
+                <p>My honest review for this app or Exam360 Company system is above to five Star. Salute to you Sir for this amazing mindset who cares about Students 🙏. ~ 🙌🖤. Note - This Review is given by one of our valuable customers who made a purcase for the very first time from us which is given are as follows - Order Date: 22 July 2024, Order Id: 669E59222B999920508708 For Future Reference.</p>
               </div>
               <div class="client-thumbs mt30">
                 <div class="media v-center">
-                  <div class="user-image bdr-radius"><img src="images/user-thumb/girl.jpg" alt="girl" class="img-fluid" /></div>
+                  <div class="user-image bdr-radius"><img src="images/user-thumb/GirlA.jpg" alt="girl" class="img-fluid" /></div>
                   <div class="media-body user-info">
-                    <h5>Moana Smile</h5>
-                    <p>CEO of Niwax, <small>Jaipur, India</small></p>
+                    <h5>Sachin Yadav</h5>
+                    <p>Student, <small>Rajasthan, India</small></p>
                   </div>
                 </div>
               </div>
             </div>
             <div class="testimonial-card">
               <div class="t-text">
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type
-                  specimen book. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since.</p>
+                <p>Very cheap and genuine books are available here from ***** and *****. Everything is good here but work will have to be done only on the delivery system. And the packaging of the book will have to be a little advanced. This is a small problem, if you want to solve all these problems then there will be no better app than this. love you For Bengal ♥️.</p>
               </div>
               <div class="client-thumbs mt30">
                 <div class="media v-center">
-                  <div class="user-image bdr-radius"><img src="images/user-thumb/girl.jpg" alt="girl" class="img-fluid" /></div>
+                  <div class="user-image bdr-radius"><img src="images/user-thumb/boyA.png" alt="girl" class="img-fluid" /></div>
                   <div class="media-body user-info">
-                    <h5>Moana Smile</h5>
-                    <p>CEO of Niwax, <small>Jaipur, India</small></p>
+                    <h5>Rahul Kumar Mandal</h5>
+                    <p>Customer <small>West Bengal, India</small></p>
                   </div>
                 </div>
               </div>
@@ -403,19 +400,20 @@
             <p class="mb60 mt20">We will catch you as early as we receive the message</p>
           </div>
           <div class="form-block">
-            <form action="#" method="post" name="feedback-form">
+            <form action="{{ route('support.mail') }}" method="post" name="feedback-form">
+              @csrf
               <div class="fieldsets row">
                 <div class="col-md-6"><input type="text" placeholder="Full Name" name="name"></div>
                 <div class="col-md-6"><input type="email" placeholder="Email Address" name="email"></div>
               </div>
               <div class="fieldsets row">
-                <div class="col-md-6"><input type="number" placeholder="Contact Number" name="phone"></div>
+                <div class="col-md-6"><input type="number" placeholder="Contact Number" name="number"></div>
                 <div class="col-md-6"><input type="text" placeholder="Subject" name="subject"></div>
               </div>
               <div class="fieldsets"><textarea placeholder="Message" name="message"></textarea></div>
               <div class="custom-control custom-checkbox">
                 <input type="checkbox" class="custom-control-input" id="customCheck" name="example1" checked="checked">
-                <label class="custom-control-label" for="customCheck">I agree to the <a href="javascript:void(0)">Terms &amp; Conditions</a> of Business Name.</label>
+                <label class="custom-control-label" for="customCheck">I agree to the <a href="https://support.exam360.in/Page/Terms%20&%20Conditions">Terms &amp; Conditions</a> of EXAM360® (INDIA).</label>
               </div>
               <div class="fieldsets mt20"> <button type="submit" name="submit" class="lnk btn-main bg-btn">Submit <i class="fas fa-chevron-right fa-icon"></i><span class="circle"></span></button> </div>
               <p class="trm"><i class="fas fa-lock"></i>We hate spam, and we respect your privacy.</p>
@@ -440,7 +438,7 @@
           <div class="col-lg-6">
             <div class="email-subs">
               <h3>Get New Insights Weekly</h3>
-              <p>News letter dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt. Enter your email</p>
+              <p>Subscribe now for weekly updates! Stay informed with the latest news and insights—don’t miss out. Subscribe today!</p>
             </div>
           </div>
           <div class="col-lg-6 v-center">
@@ -466,12 +464,12 @@
           <div class="col-lg-12 col-sm-12 text-center">
             <a class="navbar-brand img-ctr" href=""> <img src="logo.png" alt="Logo" width="250" /></a>
             <ul class="footer-link-v2 link-hover mt30">
-              <li><a href="#">Home</a></li>
-              <li><a href="#">About us</a></li>
-              <li><a href="#">Services</a></li>
-              <li><a href="#">Portfolio</a></li>
-              <li><a href="#">Blogs</a></li>
-              <li><a href="#">Contact Us</a></li>
+              <li><a href="https://listing.exam360.in/">Home</a></li>
+              <li><a href="https://support.exam360.in/partners_programme">Supply Partner</a></li>
+              <li><a href="https://support.exam360.in/Page/Fullfilment%20Partner">Fulfilment Partner</a></li>
+              <li><a href="https://support.exam360.in/freelance-partner">Freelance Partner</a></li>
+              <li><a href="https://support.exam360.in/Page/Affiliate%20Partner">Affiliate Partner</a></li>
+              <li><a href="https://support.exam360.in/">Contact Support</a></li>
             </ul>
           </div>
         </div>
@@ -484,18 +482,15 @@
           <div class="row">
             <div class="col-lg-12">
               <div class="footer-social-media-icons">
-                <a href="javascript:void(0)" target="blank"><i class="fab fa-facebook"></i></a>
-                <a href="javascript:void(0)" target="blank"><i class="fab fa-twitter"></i></a>
-                <a href="javascript:void(0)" target="blank"><i class="fab fa-instagram"></i></a>
-                <a href="javascript:void(0)" target="blank"><i class="fab fa-linkedin"></i></a>
-                <a href="javascript:void(0)" target="blank"><i class="fab fa-youtube"></i></a>
-                <a href="javascript:void(0)" target="blank"><i class="fab fa-pinterest-p"></i></a>
-                <a href="javascript:void(0)" target="blank"><i class="fab fa-vimeo-v"></i></a>
-                <a href="javascript:void(0)" target="blank"><i class="fab fa-dribbble"></i></a>
-                <a href="javascript:void(0)" target="blank"><i class="fab fa-behance"></i></a>
+                <a href="https://www.facebook.com/exam360.in/" target="blank"><i class="fab fa-facebook"></i></a>
+                <a href="https://x.com/exam360official" target="blank"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.instagram.com/exam360official/" target="blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.linkedin.com/company/exam360/" target="blank"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.youtube.com/channel/UCowbUxJW2_90e7kwHCQCYzQ" target="blank"><i class="fab fa-youtube"></i></a>
+                <a href="https://in.pinterest.com/exam360_official/" target="blank"><i class="fab fa-pinterest-p"></i></a>
               </div>
               <div class="footer-">
-                <p>© 2020-2023. All Rights Reserved By <a href="https://themeforest.net/user/rajesh-doot/portfolio" target="blank">Rajesh Doot</a></p>
+                <p>© 2015-2025. All Rights Reserved By <a href="https://support.exam360.in/" target="blank">EXAM360® (INDIA)</a></p>
               </div>
             </div>
           </div>

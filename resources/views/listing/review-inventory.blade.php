@@ -97,7 +97,11 @@
                 </div>
 
                 <div class="card-body">
-                    <span class="d-flex mb-4 alert-msg text-center">Alert: If any products are showing as 2 years or 3 years old, you must update the listings immediately and maintain these items at zero to avoid any disruption. Otherwise, we may have to remove you from this section.</span>
+                    <span class="d-flex justify-content-center mb-4 alert-msg text-center align-items-center" style='grid-gap:5px;'>
+                        <i class='fa fa-warning'></i>
+                        <strong>Alert:</strong>
+                        <span>First, click on "3 Years," then update the listings. Next, proceed to "2 Years" & Finally Hit "1 Year"</span>
+                    </span>
                     <hr />
                     <div class="table-responsive">
                         <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">

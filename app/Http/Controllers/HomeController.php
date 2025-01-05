@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SupportMail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class HomeController extends Controller
 {
@@ -24,5 +26,16 @@ class HomeController extends Controller
     public function index()
     {
         return view('home');
+    }
+
+    public function supportMail()
+    {
+        $data = request()->all();
+
+        foreach (['exam360.in@gmail.com', 'abhishek86478@gmail.com'] as $mail) {
+            Mail::to($mail)->send(new SupportMail($data));
+        }
+        
+        return redirect()->back();
     }
 }

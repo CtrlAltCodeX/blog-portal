@@ -365,6 +365,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::post('/get/ai/description', [ChatGptController::class, 'responseAiDescription'])
         ->name('getai.response');
+
+    Route::post('/support/mail', [HomeController::class, 'supportMail'])
+        ->name('support.mail');
     /**
      *  END
      */

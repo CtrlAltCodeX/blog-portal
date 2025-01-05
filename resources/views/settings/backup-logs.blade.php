@@ -81,22 +81,46 @@
                             </td>
                             <td>
                                 <div class="d-flex" style="grid-gap: 10px;">
-                                    <a target="_blank" href='{{url("/")}}/storage/merchant-file{{strtotime($log->merchant_file)}}.xlsx'>
+                                    @php
+                                    $directory = storage_path('app/public');
+                                    $dateToCheck = date("Y-m-d", strtotime($log->started));
+                                    $filesByDate = collect(File::files($directory))->filter(function ($file) use ($dateToCheck) {
+                                        $lastModified = date('Y-m-d', File::lastModified($file));
+                                        
+                                        return $lastModified === $dateToCheck;
+                                    });
+                                    @endphp
+                                    
+                                    @foreach($filesByDate as $file)
+                                    @if($file->getFilename() == 'facebook-file.csv' || $file->getFilename() == 'merchant-file.xlsx' || str_contains($file->getFilename(), 'backup-file')) @continue; @endif
+                                    <a target="_blank" href='{{url("/")}}/storage/{{ $file->getFilename() }}'>
+                                        @if(str_contains($file->getFilename(), 'merchant-file'))
                                         <i class="fa fa-google" style="font-size:24px"></i>
-                                        <!-- <img src="/google.png" width="25" /> -->
-                                    </a>
-                                    <a target="_blank" href='{{url("/")}}/storage/facebook-file{{strtotime($log->facebook_file)}}.csv'>
+                                        @elseif(str_contains($file->getFilename(), 'facebook-file'))
                                         <i class="fa fa-facebook" style="font-size:24px"></i>
-                                        <!-- <img src="/facebook.png" width="25" /> -->
-                                    </a>
-                                    <a target="_blank" href='{{url("/")}}/storage/report-{{strtotime($log->export_file)}}.xlsx'>
+                                        @elseif(str_contains($file->getFilename(), 'report'))
                                         <i class="fa fa-file-excel-o" style="font-size:24px"></i>
-                                        <!-- <img src="/excel.png" width="25" /> -->
-                                    </a>
-                                    <a target="_blank" href='{{url("/")}}/storage/export-file{{strtotime($log->export_file)}}.sql'>
+                                        @elseif(str_contains($file->getFilename(), 'export-file'))
                                         <i class="fa fa-database" style="font-size:24px"></i>
-                                        <!-- <img src="/sql.png" width="25" /> -->
+                                        @endif
                                     </a>
+                                    @endforeach
+                                    <!--<a target="_blank" href='{{url("/")}}/storage/merchant-file{{strtotime($log->merchant_file)}}.xlsx'>-->
+                                    <!--    <i class="fa fa-google" style="font-size:24px"></i>-->
+                                        <!-- <img src="/google.png" width="25" /> -->
+                                    <!--</a>-->
+                                    <!--<a target="_blank" href='{{url("/")}}/storage/facebook-file{{strtotime($log->facebook_file)}}.csv'>-->
+                                    <!--    <i class="fa fa-facebook" style="font-size:24px"></i>-->
+                                        <!-- <img src="/facebook.png" width="25" /> -->
+                                    <!--</a>-->
+                                    <!--<a target="_blank" href='{{url("/")}}/storage/report-{{strtotime($log->export_file)}}.xlsx'>-->
+                                    <!--    <i class="fa fa-file-excel-o" style="font-size:24px"></i>-->
+                                        <!-- <img src="/excel.png" width="25" /> -->
+                                    <!--</a>-->
+                                    <!--<a target="_blank" href='{{url("/")}}/storage/export-file{{strtotime($log->export_file)}}.sql'>-->
+                                    <!--    <i class="fa fa-database" style="font-size:24px"></i>-->
+                                        <!-- <img src="/sql.png" width="25" /> -->
+                                    <!--</a>-->
                                 </div>
                             </td>
                             <td>

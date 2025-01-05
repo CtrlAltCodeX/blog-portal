@@ -43,9 +43,6 @@
         margin-right: 5px;
         margin-top: 8px;
     }
-    .pagination{
-        display: none;
-    }
 </style>
 @endpush
 
