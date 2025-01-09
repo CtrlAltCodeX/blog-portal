@@ -27,5 +27,15 @@ class BackupListing extends Model
         'insta_mojo_url',
         'base_url',
         'url',
+        'isbn_10',
+        'isbn_13',
+        'publish_year',
+        'weight',
+        'reading_age',
+        'country_origin',
+        'genre',
+        'manufacturer',
+        'importer',
+        'packer',
     ];
 }

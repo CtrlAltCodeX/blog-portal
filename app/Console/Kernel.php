@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('backup:listing')->dailyAt("23:00");
         $schedule->command('queue:work --tries=3')->everyFiveMinutes();
         $schedule->command('send:report')->weeklyOn(1, '00:00');
-        $schedule->command('app:account-deactivation-mail')->weeklyOn(1, '09:00');
+        $schedule->command('app:account-deactivation-mail')->dailyAt('09:00');
     }
 
     /**

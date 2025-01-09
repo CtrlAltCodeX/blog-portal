@@ -170,7 +170,15 @@
                                         @else {{ 'In Stock' }}
                                         @endif
                                     </td>
-                                    <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $googlePost->images }}" alt="Product Image" /></td>
+                                    @php
+                                        if(isset($googlePost->images)) {
+                                            $image = json_decode($googlePost->images)[0];
+                                        } else {
+                                            $image = '/public/dummy.jpg';
+                                        }
+
+                                    @endphp
+                                    <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{$image}}" alt="Product Image" /></td>
                                     <td>{{ $googlePost->title }}</td>
                                     <td>{{ '₹'.$googlePost->selling_price }}</td>
                                     <td>{{ '₹'.$googlePost->mrp }}</td>

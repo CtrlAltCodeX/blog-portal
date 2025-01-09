@@ -31,7 +31,9 @@
                         <h4 class="card-title">
                             {{ __('Update New Listing ( DB )') }}
                         </h4>
+                        @can('Create Duplicate Listing Button')
                         <a href="{{ route('copy_database', $listing->id) }}" class="btn btn-info">{{ __('Create Duplicate Listing') }} </a>
+                        @endcan
 
                         <!-- <button type="submit" class="btn btn-primary float-right">Save</button> -->
                     </div>
@@ -64,12 +66,17 @@
                                     <div>{{ __('Product Description') }}<span class="text-danger">*</span><span class="text-success"> (Suggestion - Title + Description + Search Key) </span></div>
                                     <div class="d-flex">
                                         <a href='{{ $siteSetting->listing_button_1_link }}' target='_blank'>{{ $siteSetting->listing_button_1 }} | &nbsp;</a><a target='_blank' href="{{ $siteSetting->listing_button_2_link }}"> {{ $siteSetting->listing_button_2 }} | </a>
-                                        <a href='https://www.commontools.org/tool/replace-new-lines-with-commas-40' target='_blank'>&nbsp;Line Remover | </a>
+                                        <a href='https://www.commontools.org/tool/replace-new-lines-with-commas-40' target='_blank'>&nbsp;Line Remover</a>
                                     </div>
                                 </label>
                                 <label for="description" class="form-label d-flex justify-content-between text-danger" style="margin-top: -10px;">
                                     <div>{{ __('Do not use 3rd Party Links/Website Names') }}</div>
                                 </label>
+
+                                <!-- <label for="description" class="form-label d-flex justify-content-between">
+                                    <div>{{ __('Product Description') }}<span class="text-danger">*</span><span class="text-danger"> ( Enter Detail Description without using 3rd party
+                                            link) </span></div><a target='_blank' href="https://chat.openai.com">ChatGPT</a>
+                                </label> -->
                                 <textarea class="form-control @error('description') is-invalid @enderror" name="description" placeholder="Description" rows="10" id='desc'>{!! old('description') ?? $listing->description !!}</textarea>
                                 <span class="error-message desc" style="color:red;"></span>
 
@@ -108,7 +115,8 @@
                                 <label for="selling_price" class="form-label d-flex justify-content-between">
                                     <div>{{ __('Selling Price') }}<span class="text-danger">*</span></div>
                                     <div>
-                                        <a href='{{ $siteSetting->calc_link }}' target='_blank'>Calculator |</a><a target='_blank' href="https://docs.google.com/spreadsheets/d/1uSqo6RhsLHaVcVrkEjO_SmOWiXqWBC-aV1LvsowgsL0/"> Disc. Info.</a>
+                                        <a href='{{ $siteSetting->calc_link }}' target='_blank'>Calculator</a>
+                                        <!--<a target='_blank' href="https://docs.google.com/spreadsheets/d/1uSqo6RhsLHaVcVrkEjO_SmOWiXqWBC-aV1LvsowgsL0/"> Disc. Info.</a>-->
 
                                     </div>
                                 </label>
@@ -194,7 +202,7 @@
                             </label>
                             <select class="form-control select2  @error('label') is-invalid @enderror" data-placeholder="Choose Label" multiple name="label[]">
                                 @foreach ($categories as $categoryData)
-                                <option value="{{ $categoryData['term'] }}" @foreach($listing->categories as $label) @if($categoryData['term']==$label) selected @endif @endforeach>
+                                <option value="{{ $categoryData['term'] }}" @if($listing->categories) @foreach($listing->categories as $label) @if($categoryData['term']==$label) selected @endif @endforeach @endif>
                                     {{ $categoryData['term'] }}
                                 </option>
                                 @endforeach
@@ -210,6 +218,60 @@
                         <div class="row">
                             <div class="col-md-9">
                                 <div class="row" id="addUrls">
+                                    <div class="col-md-4">
+                                        <div class="">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <label for="sku" class="form-label">
+                                                    {{ __('ISBN 10') }}
+                                                </label>
+                                            </div>
+                                            <input type="text" class="form-control " name="isbn_10" value="{{ $listing['isbn_10'] }}" autofocus placeholder="ISBN 10">
+                                            <span class="error-message isbn_10" style="color:red;"></span>
+
+                                            @error('isbn_10')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <label for="sku" class="form-label">
+                                                    {{ __('ISBN 13') }}
+                                                </label>
+                                            </div>
+                                            <input id="isbn_13" type="text" class="form-control @error('isbn_13') is-invalid @enderror" name="isbn_13" value="{{ $listing['isbn_13'] }}" autofocus placeholder="ISBN 13">
+                                            <span class="error-message isbn_13" style="color:red;"></span>
+
+                                            @error('isbn_13')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <label for="publish_year" class="form-label">
+                                                    {{ __('Publish Year') }}
+                                                </label>
+                                            </div>
+                                            <input type="month" class="form-control @error('publish_year') is-invalid @enderror" name="publish_year" value="{{ $listing['publish_year'] }}">
+                                            <span class="error-message publish_year" style="color:red;"></span>
+
+                                            @error('publish_year')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    
                                     <div class="form-group col-md-4">
                                         <div class="d-flex align-items-center justify-content-between">
                                             <label for="sku" class="form-label">
@@ -254,7 +316,7 @@
                                     </div>
 
                                     <div class="form-group col-md-4">
-                                        <label for="condition" class="form-label">{{ __('Condition') }}<span class="text-danger">*</span></label>
+                                        <label for="condition" class="form-label">{{ __('Product Condition') }}<span class="text-danger">*</span></label>
 
                                         <select class="form-control @error('condition') is-invalid @enderror" name="condition" value="{{ old('condition') }}">
                                             <option value="">--Select--</option>
@@ -289,6 +351,104 @@
                                         </span>
                                         @enderror
                                     </div>
+                                    
+                                    <div class="col-md-4">
+                                        <div class="">
+                                            <label for="weight" class="form-label d-flex justify-content-between">{{ __('Weight (grams)') }}</label>
+                                            <input type="number" class="form-control @error('weight') is-invalid @enderror" name="weight" value="{{ $listing['weight'] }}" autocomplete="weight" autofocus placeholder="Weight (g)">
+                                            <span class="error-message weight" style="color:red;"></span>
+
+                                            @error('weight')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="">
+                                            <label for="reading_age" class="form-label d-flex justify-content-between">{{ __('Reading Age') }}</label>
+                                            <input style="background-color: #e9f85c;" id="reading_age" type="text" class="form-control @error('reading_age') is-invalid @enderror" name="reading_age" value="{{ $listing['reading_age']??'Not Applicable' }}" autocomplete="reading_age" autofocus placeholder="Reading Age">
+                                            <span class="error-message reading_age" style="color:red;"></span>
+
+                                            @error('reading_age')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="">
+                                            <label for="country_origin" class="form-label d-flex justify-content-between">{{ __('Country of Origin') }}</label>
+                                            <input style="background-color: #e9f85c;" id="country_origin" type="country_origin" class="form-control @error('country_origin') is-invalid @enderror" name="country_origin" value="{{ $listing['country_origin']??'India' }}" autocomplete="country_origin" autofocus placeholder="Country of Origin">
+                                            <span class="error-message country_origin" style="color:red;"></span>
+
+                                            @error('country_origin')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="">
+                                            <label for="genre" class="form-label d-flex justify-content-between">{{ __('Genre') }}</label>
+                                            <input id="genre" type="genre" class="form-control @error('genre') is-invalid @enderror" name="genre" value="{{ $listing['genre']??'Books' }}" autocomplete="genre" autofocus placeholder="Genre">
+                                            <span class="error-message genre" style="color:red;"></span>
+
+                                            @error('genre')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="">
+                                            <label for="manufacturer" class="form-label d-flex justify-content-between">{{ __('Manufacturer') }}</label>
+                                            <input style="background-color: #e9f85c;" id="manufacturer" type="manufacturer" class="form-control @error('manufacturer') is-invalid @enderror" name="manufacturer" value="{{ $listing['manufacturer']??'As Per Publisher' }}" autocomplete="manufacturer" autofocus placeholder="Manufacturer">
+                                            <span class="error-message manufacturer" style="color:red;"></span>
+
+                                            @error('manufacturer')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="">
+                                            <label for="importer" class="form-label d-flex justify-content-between">{{ __('Importer') }}</label>
+                                            <input style="background-color: #e9f85c;" id="importer" type="importer" class="form-control @error('importer') is-invalid @enderror" name="importer" value="{{ $listing['importer']??'Not Applicable' }}" autocomplete="importer" autofocus placeholder="Importer">
+                                            <span class="error-message importer" style="color:red;"></span>
+
+                                            @error('importer')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="">
+                                            <label for="packer" class="form-label d-flex justify-content-between">{{ __('Packer') }}</label>
+                                            <input style="background-color: #e9f85c;" id="packer" type="packer" class="form-control @error('packer') is-invalid @enderror" name="packer" value="{{ $listing['packer']??'Fullfilled by Supplier' }}" autocomplete="packer" autofocus placeholder="Packer">
+                                            <span class="error-message packer" style="color:red;"></span>
+
+                                            @error('packer')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
 
                                     <div class="form-group col-md-4">
                                         <label for="url" class="form-label d-flex justify-content-between">{{ __('Insta Mojo URL') }}<span onclick="copyLink()" id='copylink' style="cursor:pointer;">Copy</span></label>
@@ -304,8 +464,14 @@
 
                                     <div class="form-group col-md-4">
                                         <label for="url" class="form-label">{{ __('Main Image URL') }}</label>
-                                        <input id="base_url" type="text" value="{{ $listing->images }}" class="form-control @error('images') is-invalid @enderror" name="images[]" autocomplete="images" autofocus placeholder="Base URL">
-                                        <span class="error-message images" style="color:red;"></span>
+                                        <div class="d-flex justify-content-between align-items-center" style="grid-gap: 10px;">
+                                            <input id="base_url" type="text" value="{{ (!$listing->is_bulk_upload && $listing->images) ? json_decode($listing->images)[0] : '' }}" class="form-control @error('images') is-invalid @enderror" name="images[]" autocomplete="images" autofocus placeholder="Base URL">
+                                            @if($listing->is_bulk_upload && isset($listing->images))
+                                            <a href="{{ url('/') }}/storage/{{ json_decode($listing->images)[0] }}" download=""><i class="fa fa-download"></i></a>
+                                            @endif
+                                        </div>
+                                        <!-- <input id="base_url" type="text" value="{{ $listing->images }}" class="form-control @error('images') is-invalid @enderror" name="images[]" autocomplete="images" autofocus placeholder="Base URL">
+                                        <span class="error-message images" style="color:red;"></span> -->
 
                                         @error('base_url')
                                         <span class="invalid-feedback" role="alert">
@@ -313,8 +479,7 @@
                                         </span>
                                         @enderror
 
-                                        <button type='button' id='addFileInput' class="btn btn-primary mt-2">Add More
-                                            Images</button>
+                                        <button type='button' id='addFileInput' class="btn btn-primary mt-2">Add More Images</button>
                                     </div>
                                 </div>
                             </div>

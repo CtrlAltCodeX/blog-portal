@@ -12,7 +12,7 @@
     }
 
     .alert-msg {
-        background-color: grey;
+        background-color: #808007;
         color: white;
     }
 </style>
@@ -39,7 +39,7 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <span class="d-flex justify-content-center mb-4 alert-msg">Alert: Please refrain from creating duplicate listings repeatedly. Prior to creating any new listings, ensure to first check the product in 'Search Listing (M/S)'.</span>
+                        <span class="d-flex justify-content-center mb-4 alert-msg text-center align-items-center" style='grid-gap:5px;'><i class='fa fa-warning'></i><strong>Alert:</strong> Please refrain from creating duplicate listings repeatedly. Prior to creating any new listings, ensure to first check the product in 'Search Listing (M/S)'.</span>
                         <hr />
 
                         <div id="progressBar" class="text-end"></div>
@@ -92,7 +92,8 @@
                                 <label for="selling_price" class="form-label d-flex justify-content-between">
                                     <div>{{ __('Selling Price') }}<span class="text-danger">*</span></div>
                                     <div>
-                                        <a href='{{ $siteSetting->calc_link }}' target='_blank'>Calculator |</a><a target='_blank' href="https://docs.google.com/spreadsheets/d/1uSqo6RhsLHaVcVrkEjO_SmOWiXqWBC-aV1LvsowgsL0/"> Disc. Info.</a>
+                                        <a href='{{ $siteSetting->calc_link }}' target='_blank'>Calculator</a>
+                                        <!--<a target='_blank' href="https://docs.google.com/spreadsheets/d/1uSqo6RhsLHaVcVrkEjO_SmOWiXqWBC-aV1LvsowgsL0/"> Disc. Info.</a>-->
                                     </div>
                                 </label>
                                 <input id="selling_price" type="number" class="form-control" name="selling_price" value="{{ old('selling_price') }}" autocomplete="selling_price" autofocus placeholder="Selling Price">

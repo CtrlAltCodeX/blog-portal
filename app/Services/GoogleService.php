@@ -103,7 +103,7 @@ class GoogleService
      * 
      * @return array
      */
-    public function posts($status = 'live', $paging)
+    public function posts($status = 'live', $paging = 150)
     {
         try {
             $posts = [];
@@ -331,7 +331,7 @@ class GoogleService
             if (request()->isDraft) $isDraft = ['isDraft' => request()->isDraft];
 
             if ($draft == 4) $isDraft = ['isDraft' => 1];
-
+            
             $created = $blogger->posts->insert($credential->blog_id, $post, $isDraft);
 
             if (isset($data['id']) || isset($data['database'])) {
@@ -471,7 +471,7 @@ class GoogleService
 
             $bloggerData = $blogger->posts->update($credential->blog_id, $postId, $existingPost);
 
-            if ($data['product_id']) {
+            if (isset($data['product_id'])) {
                 $listing = Listing::where('product_id', $data['product_id'])
                     ->first();
 

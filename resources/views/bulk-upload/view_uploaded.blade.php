@@ -98,7 +98,11 @@
                         <td>{{ $googlePost['no_of_pages'] }}</td>
                         <td>
                             <div class="btn-group" role="group" aria-label="Basic example">
+                                @can('Product Listing > Bulk Listing Review (Edit)')
                                 <a href="{{ route('bulklisting.edit', $googlePost->id) }}" class="btn btn-sm btn-primary padd">{{ __('Edit') }}</a>
+                                @endcan
+                                
+                                @can('Product Listing > Bulk Listing Review (Delete)')
                                 <form action="{{ route('database-listing.destroy', $googlePost['id']) }}" method="POST" class="ml-2">
                                     @csrf
                                     @method('DELETE')
@@ -106,6 +110,7 @@
                                         {{ __('Delete') }}
                                     </button>
                                 </form>
+                                @endcan
                             </div>
                         </td>
                     </tr>

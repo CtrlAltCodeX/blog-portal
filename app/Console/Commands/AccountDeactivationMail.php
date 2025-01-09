@@ -30,7 +30,7 @@ class AccountDeactivationMail extends Command
     public function handle()
     {
         $startOfWeek = \Carbon\Carbon::now()->subDays(7);
-        $endOfWeek = \Carbon\Carbon::yesterday();
+        $endOfWeek = \Carbon\Carbon::now()->subDays(1);
 
         $users = User::where('status', 1)
             ->where('show_health', 1)

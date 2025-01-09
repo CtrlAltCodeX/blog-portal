@@ -104,7 +104,7 @@ class ListingController extends Controller
      */
     public function edit($postId)
     {
-        if ($this->tokenIsExpired($this->googleService)) {
+        if (!$this->tokenIsExpired($this->googleService)) {
             $url = $this->googleService->refreshToken($this->googleService->getCredentails()->toArray());
             request()->session()->put('page_url', request()->url());
 
@@ -126,9 +126,9 @@ class ListingController extends Controller
         $span = $doc->getElementsByTagName('span');
 
         $edition_author_lang = explode(',', $td->item(7)->textContent ?? '');
-        $author_name = $edition_author_lang[0];
-        $edition = $edition_author_lang[1] ?? '';
-        $lang = $edition_author_lang[2] ?? '';
+        // $author_name = $edition_author_lang[0];
+        // $edition = $edition_author_lang[1] ?? '';
+        // $lang = $edition_author_lang[2] ?? '';
 
         $bindingType = explode(',', $td->item(9)->textContent ?? '');
         $binding = $bindingType[0] ?? '';
@@ -138,6 +138,31 @@ class ListingController extends Controller
 
         $sku = '';
         $publication = '';
+        $isbn10 = '';
+        $isbn13 = '';
+        $publishyear = '';
+        $weight = '';
+        $age = '';
+        $origin = '';
+        $genre = '';
+        $manufacturer = '';
+        $importer = '';
+        $packer = '';
+        $lang = '';
+        $edition = '';
+        $author_name = '';
+
+        if (count($edition_author_lang) > 1) {
+            $author_name = $edition_author_lang[0];
+            $edition = $edition_author_lang[1] ?? '';
+            $lang = $edition_author_lang[2] ?? '';
+        }
+
+        if (count($bindingType) > 1) {
+            $binding = $bindingType[0] ?? '';
+            $condition = $bindingType[1] ?? '';
+        }
+
         for ($i = 0; $i < $td->length; $i++) {
             if ($td->item($i)->getAttribute('itemprop') == 'sku') {
                 $sku = trim($td->item($i)->textContent);
@@ -145,6 +170,66 @@ class ListingController extends Controller
 
             if ($td->item($i)->getAttribute('itemprop') == 'color') {
                 $publication = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'isbn10') {
+                $isbn10 = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'isbn13') {
+                $isbn13 = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'publishyear') {
+                $publishyear = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'weight') {
+                $weight = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'age') {
+                $age = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'origin') {
+                $origin = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'genre') {
+                $genre = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'manufacturer') {
+                $manufacturer = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'importer') {
+                $importer = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'packer') {
+                $packer = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'language') {
+                $lang = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'edition') {
+                $edition = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'author') {
+                $author_name = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'condition') {
+                $condition = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'binding') {
+                $binding = trim($td->item($i)->textContent);
             }
         }
 
@@ -209,6 +294,16 @@ class ListingController extends Controller
             'url' => trim($instaUrl),
             'binding' => trim($binding),
             'condition' => trim($condition),
+            'isbn_10' => trim($isbn10),
+            'isbn_13' => trim($isbn13),
+            'publish_year' => trim($publishyear),
+            'weight' => trim($weight),
+            'reading_age' => trim($age),
+            'country_origin' => trim($origin),
+            'genre' => trim($genre),
+            'manufacturer' => trim($manufacturer),
+            'importer' => trim($importer),
+            'packer' => trim($packer),
         ];
 
         if (!$url = $this->getSiteBaseUrl()) {

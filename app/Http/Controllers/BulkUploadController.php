@@ -46,7 +46,7 @@ class BulkUploadController extends Controller
 
                 $postId = isset($data->p_id) ? sprintf("%.0f", $data->p_id) : null;
 
-                $job = ImportListingCsv::dispatch($data, auth()->user()->id, $postId, $key);
+                ImportListingCsv::dispatch($data, auth()->user()->id, $postId, $key);
             }
         } else {
             session()->flash('error', 'Please upload file first');
@@ -91,7 +91,7 @@ class BulkUploadController extends Controller
 
         $categories = $response->json()['feed']['category'];
 
-        return view('bulk-upload.edit', compact('listing', 'siteSetting', 'categories'));
+        return view('database-listing.edit', compact('listing', 'siteSetting', 'categories'));
     }
 
     public function update(Request $request)

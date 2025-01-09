@@ -31,7 +31,7 @@ class DeactivationMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Urgent Attention: Performance Issues Flagged',
+            subject: 'Urgent Actions Required: Performance Issues Flagged | Freelance Partner',
         );
     }
 

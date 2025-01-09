@@ -11,7 +11,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="theme-color" content="#ffd6d6">
   <!--website-favicon-->
-  <link href="favicon.png" rel="icon">
+  <link rel="shortcut icon" type="image/x-icon" href="assets/images/brand/favicon.ico" />
   <!--plugin-css-->
   <link href="css/bootstrap.min.css" rel="stylesheet">
   <link href="css/plugin.min.css" rel="stylesheet">
@@ -76,7 +76,7 @@
         </ul>
         <ul class="bottom-nav">
           <li class="prb">
-            <a href="tel:+11111111111">
+            <a href="tel:+917370005777">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 384">
                 <path d="M353.188,252.052c-23.51,0-46.594-3.677-68.469-10.906c-10.719-3.656-23.896-0.302-30.438,6.417l-43.177,32.594
 								c-50.073-26.729-80.917-57.563-107.281-107.26l31.635-42.052c8.219-8.208,11.167-20.198,7.635-31.448
@@ -298,8 +298,8 @@
       <div class="row justify-content-center">
         <div class="col-lg-8">
           <div class="common-heading">
-            <span>Happy customers</span>
-            <h2>Some of My Clients</h2>
+            <span>Partner's Brand</span>
+            <h2>Some of the Top Notch Brands Associated With Us</h2>
           </div>
         </div>
       </div>

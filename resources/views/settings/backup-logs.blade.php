@@ -85,8 +85,10 @@
                                     $directory = storage_path('app/public');
                                     $dateToCheck = date("Y-m-d", strtotime($log->started));
                                     $filesByDate = collect(File::files($directory))->filter(function ($file) use ($dateToCheck) {
+                                        // Get the file's last modified time
                                         $lastModified = date('Y-m-d', File::lastModified($file));
                                         
+                                        // Check if the date matches
                                         return $lastModified === $dateToCheck;
                                     });
                                     @endphp

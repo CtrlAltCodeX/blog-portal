@@ -178,6 +178,8 @@
                 </div>
             </div>
             @endif
+            
+            @can('Product Listing > Search Listing (M/S) > Discount')
             <div class='row'>
                 <div class='col-md-6'>
                     <div class="card">
@@ -235,6 +237,7 @@
                     @endif
                 </div>
             </div>
+            @endcan
         </div>
     </div>
 </div>

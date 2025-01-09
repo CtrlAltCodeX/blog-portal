@@ -39,7 +39,17 @@ class Listing extends Model
         'error',
         'product_id',
         'url',
-        'is_bulk_upload'
+        'is_bulk_upload',
+        'isbn_10',
+        'isbn_13',
+        'publish_year',
+        'weight',
+        'reading_age',
+        'country_origin',
+        'genre',
+        'manufacturer',
+        'importer',
+        'packer',
     ];
 
     public function created_by_user()

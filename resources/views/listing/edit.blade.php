@@ -31,7 +31,10 @@
                             {{ __('Update Listing') }}
                         </h4>
 
-                        <!-- <button type="submit" class="btn btn-primary float-right">Save</button> -->
+                        @can('Create Duplicate Listing Button')
+                        <button type='submit' class="btn btn-info duplicate_listing">Create Duplicate Listing</button>
+                        <!-- <a href="{{ route('copy_database', $post->id) }}" class="btn btn-info duplicate_listing">{{ __('Create Duplicate Listing') }} </a> -->
+                        @endcan
                     </div>
 
                     <div class="card-body">
@@ -62,7 +65,7 @@
                                     <div>{{ __('Product Description') }}<span class="text-danger">*</span><span class="text-success"> (Suggestion - Title + Description + Search Key) </span></div>
                                     <div class="d-flex">
                                         <a href='{{ $siteSetting->listing_button_1_link }}' target='_blank'>{{ $siteSetting->listing_button_1 }} | &nbsp;</a><a target='_blank' href="{{ $siteSetting->listing_button_2_link }}"> {{ $siteSetting->listing_button_2 }} | </a>
-                                        <a href='https://www.commontools.org/tool/replace-new-lines-with-commas-40' target='_blank'>&nbsp;Line Remover | </a>
+                                        <a href='https://www.commontools.org/tool/replace-new-lines-with-commas-40' target='_blank'>&nbsp;Line Remover</a>
                                     </div>
                                 </label>
                                 <label for="description" class="form-label d-flex justify-content-between text-danger" style="margin-top: -10px;">
@@ -108,7 +111,8 @@
                                 <label for="selling_price" class="form-label d-flex justify-content-between">
                                     <div>{{ __('Selling Price') }}<span class="text-danger">*</span></div>
                                     <div>
-                                        <a href='{{ $siteSetting->calc_link }}' target='_blank'>Calculator |</a><a target='_blank' href="https://docs.google.com/spreadsheets/d/1uSqo6RhsLHaVcVrkEjO_SmOWiXqWBC-aV1LvsowgsL0/"> Disc. Info.</a>
+                                        <a href='{{ $siteSetting->calc_link }}' target='_blank'>Calculator</a>
+                                        <!--<a target='_blank' href="https://docs.google.com/spreadsheets/d/1uSqo6RhsLHaVcVrkEjO_SmOWiXqWBC-aV1LvsowgsL0/"> Disc. Info.</a>-->
 
                                     </div>
                                 </label>
@@ -209,6 +213,68 @@
                         <div class="row">
                             <div class="col-md-9">
                                 <div class="row" id="addUrls">
+                                    <div class="col-md-4">
+                                        <div class="">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <label for="sku" class="form-label">
+                                                    {{ __('ISBN 10') }}
+                                                </label>
+                                            </div>
+                                            <input type="text" class="form-control " name="isbn_10" value="{{ $allInfo['isbn_10'] }}" autofocus placeholder="ISBN 10">
+                                            <span class="error-message isbn_10" style="color:red;"></span>
+
+                                            @error('isbn_10')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <label for="sku" class="form-label">
+                                                    {{ __('ISBN 13') }}
+                                                </label>
+                                            </div>
+                                            <input id="isbn_13" type="text" class="form-control @error('isbn_13') is-invalid @enderror" name="isbn_13" value="{{ $allInfo['isbn_13'] }}" autofocus placeholder="ISBN 13">
+                                            <span class="error-message isbn_13" style="color:red;"></span>
+
+                                            @error('isbn_13')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <label for="publish_year" class="form-label">
+                                                    {{ __('Publish Year') }}
+                                                </label>
+                                            </div>
+                                            @php
+                                            $currentMonthYear = date('Y-m'); // Generate current year and month in "YYYY-MM" format
+                                            @endphp
+
+                                            <input
+                                                type="month"
+                                                class="form-control @error('publish_year') is-invalid @enderror"
+                                                name="publish_year"
+                                                value="{{ old('publish_year', $allInfo['publish_year'] ?? $currentMonthYear) }}">
+                                            <span class="error-message publish_year" style="color:red;"></span>
+
+                                            @error('publish_year')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
                                     <!-- SKU -->
                                     <div class="col-md-4">
                                         <div>
@@ -261,7 +327,7 @@
                                     <!-- Condition -->
                                     <div class="col-md-4">
                                         <div>
-                                            <label for="condition" class="form-label">{{ __('Condition') }}<span class="text-danger">*</span></label>
+                                            <label for="condition" class="form-label">{{ __('Product Condition') }}<span class="text-danger">*</span></label>
                                             <select class="form-control @error('condition') is-invalid @enderror" name="condition">
                                                 <option value="">--Select--</option>
                                                 <option value="New" {{ $allInfo['condition'] == 'New' ? 'selected' : '' }}>New</option>
@@ -288,6 +354,104 @@
                                             </select>
                                             <span class="error-message binding" style="color:red;"></span>
                                             @error('binding')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="">
+                                            <label for="weight" class="form-label d-flex justify-content-between">{{ __('Weight (grams)') }}</label>
+                                            <input type="number" class="form-control @error('weight') is-invalid @enderror" name="weight" value="{{ $allInfo['weight'] }}" autocomplete="weight" autofocus placeholder="Weight (g)">
+                                            <span class="error-message weight" style="color:red;"></span>
+
+                                            @error('weight')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="">
+                                            <label for="reading_age" class="form-label d-flex justify-content-between">{{ __('Reading Age') }}</label>
+                                            <input style="background-color: #e9f85c;" id="reading_age" type="text" class="form-control @error('reading_age') is-invalid @enderror" name="reading_age" value="{{ $allInfo['reading_age']??'Above 10 Years' }}" autocomplete="reading_age" autofocus placeholder="Reading Age">
+                                            <span class="error-message reading_age" style="color:red;"></span>
+
+                                            @error('reading_age')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="">
+                                            <label for="country_origin" class="form-label d-flex justify-content-between">{{ __('Country of Origin') }}</label>
+                                            <input style="background-color: #e9f85c;" id="country_origin" type="country_origin" class="form-control @error('country_origin') is-invalid @enderror" name="country_origin" value="{{ $allInfo['country_origin']??'India' }}" autocomplete="country_origin" autofocus placeholder="Country of Origin">
+                                            <span class="error-message country_origin" style="color:red;"></span>
+
+                                            @error('country_origin')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="">
+                                            <label for="genre" class="form-label d-flex justify-content-between">{{ __('Genre') }}</label>
+                                            <input id="genre" type="genre" class="form-control @error('genre') is-invalid @enderror" name="genre" value="{{ $allInfo['genre']??'Books' }}" autocomplete="genre" autofocus placeholder="Genre">
+                                            <span class="error-message genre" style="color:red;"></span>
+
+                                            @error('genre')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="">
+                                            <label for="manufacturer" class="form-label d-flex justify-content-between">{{ __('Manufacturer') }}</label>
+                                            <input style="background-color: #e9f85c;" id="manufacturer" type="manufacturer" class="form-control @error('manufacturer') is-invalid @enderror" name="manufacturer" value="{{ $allInfo['manufacturer']??'As Per Publisher' }}" autocomplete="manufacturer" autofocus placeholder="Manufacturer">
+                                            <span class="error-message manufacturer" style="color:red;"></span>
+
+                                            @error('manufacturer')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="">
+                                            <label for="importer" class="form-label d-flex justify-content-between">{{ __('Importer') }}</label>
+                                            <input style="background-color: #e9f85c;" id="importer" type="importer" class="form-control @error('importer') is-invalid @enderror" name="importer" value="{{ $allInfo['importer']??'Not Applicable' }}" autocomplete="importer" autofocus placeholder="Importer">
+                                            <span class="error-message importer" style="color:red;"></span>
+
+                                            @error('importer')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="">
+                                            <label for="packer" class="form-label d-flex justify-content-between">{{ __('Packer') }}</label>
+                                            <input style="background-color: #e9f85c;" id="packer" type="packer" class="form-control @error('packer') is-invalid @enderror" name="packer" value="{{ $allInfo['packer']??'Fullfilled by Supplier' }}" autocomplete="packer" autofocus placeholder="Packer">
+                                            <span class="error-message packer" style="color:red;"></span>
+
+                                            @error('packer')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -348,7 +512,7 @@
                             </div>
 
                             <!-- Preview Section -->
-                            <div class="col-md-3 text-right mb-2 d-flex" id='preview' style="justify-content: flex-end;" >
+                            <div class="col-md-3 text-right mb-2 d-flex" id='preview' style="justify-content: flex-end;">
                                 <div style="border: 2px solid #ccc;width: 300px;max-height: 300px;height:300px;">
                                     <img src="{{ old('images') ?? $allInfo['baseimg'] }}" id='previewImage' />
                                     <div class='image-status' style="text-align: center;padding: 5px;display:none;"></div>
@@ -462,7 +626,15 @@
             $("#form").attr('action', "{{ route('listing.publish.database', $post->id??$productId) }}");
 
             $("#form").submit();
-        })
+        });
+
+        $(".duplicate_listing").click(function(e) {
+            e.preventDefault();
+            $("#form").attr("action", "{{ route('listing.publish.database', $post->id) }}");
+            $("#form").append("<input type='hidden' name='duplicate' value=1 />");
+            $("input[name=_method]").val("POST");
+            $("#form").submit();
+        });
     });
 </script>
 

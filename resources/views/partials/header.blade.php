@@ -11,8 +11,8 @@ $currentMonthDataCreated = $count->whereMonth('created_at', \Carbon\Carbon::now(
 ->where('user_id', auth()->user()->id)
 ->sum('create_count');
 
-$startOfWeek = \Carbon\Carbon::now()->subDays(7);
-$endOfWeek = \Carbon\Carbon::yesterday();
+$startOfWeek = \Carbon\Carbon::now()->subDays(8);
+$endOfWeek = \Carbon\Carbon::now()->subDays(1);
 
 $currentWeekDataCreated = $count->whereBetween('created_at', [$startOfWeek, $endOfWeek])
 ->where('user_id', auth()->user()->id)
@@ -28,11 +28,11 @@ $googleService = app('App\Services\GoogleService');
             <a aria-label="Hide Sidebar" class="app-sidebar__toggle" data-bs-toggle="sidebar" href="javascript:void(0)"></a>
             @if(app('App\Http\Controllers\Controller')->tokenIsExpired($googleService)) 
             <span class="p-1 text-white" style="background-color: green;border-radius: 5px;">
-                Connected
+                Developer Connected
             </span>
             @else   
             <span class="p-1 text-white" style="background-color: red;border-radius: 5px;">
-                Disconnect
+                Developer Disconnect
             </span>
             @endif
             <!-- sidebar-toggle-->
@@ -62,10 +62,11 @@ $googleService = app('App\Services\GoogleService');
                     <div class="collapse navbar-collapse" id="navbarSupportedContent-4">
                         @if(!auth()->user()->hasRole('Super Admin') && auth()->user()->show_health)
                         <label style="margin-right: 10px;font-family: system-ui;"><strong>ACCOUNT HEALTH:</strong>
+                        <a href="/account_health.jpeg" target="_blank">
                             @if($currentWeekDataCreated <= 120)
-                                <span style="border: 1px solid red;padding: 5px;background-color: red;color: white;box-shadow: 1px 1px 3px black;">DEACTIVATION</span>
+                                <span style="border: 1px solid red;padding: 5px;background-color: red;color: white;box-shadow: 1px 1px 3px black;">AT RISK</span>
                                 @elseif($currentWeekDataCreated >= 121 && $currentWeekDataCreated <= 149)
-                                    <span style="border: 1px solid orange;padding: 5px;background-color: orange;color: black;box-shadow: 1px 1px 3px black;">AT RISK</span>
+                                    <span style="border: 1px solid orange;padding: 5px;background-color: orange;color: black;box-shadow: 1px 1px 3px black;">REVIEW</span>
                                     @elseif($currentWeekDataCreated >= 150 && $currentWeekDataCreated <= 199)
                                         <span style="border: 1px solid yellow;padding: 5px;background-color: yellow;color: black;box-shadow: 1px 1px 3px black;">AVERAGE</span>
                                         @elseif($currentWeekDataCreated >= 200 && $currentWeekDataCreated <= 349)
@@ -73,6 +74,7 @@ $googleService = app('App\Services\GoogleService');
                                             @elseif($currentWeekDataCreated >= 350)
                                             <span style="border: 1px solid green;padding: 5px;background-color: green;color: white;box-shadow: 1px 1px 3px black;">EXCELLENT</span>
                                             @endif
+                            </a>
                         </label>
                         @endif
 

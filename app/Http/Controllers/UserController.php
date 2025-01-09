@@ -32,7 +32,7 @@ class UserController extends Controller
     function __construct()
     {
         $this->middleware('role_or_permission:User Details (Main Menu)|User create|User Details -> All Users List -> Edit|User delete', ['only' => ['index', 'show']]);
-        $this->middleware('role_or_permission:User create', ['only' => ['create', 'store']]);
+        $this->middleware('role_or_permission:User New create', ['only' => ['create', 'store']]);
         $this->middleware('role_or_permission:User Details -> All Users List -> Edit', ['only' => ['edit', 'update']]);
         $this->middleware('role_or_permission:User delete', ['only' => ['destroy']]);
     }
@@ -76,7 +76,7 @@ class UserController extends Controller
 
         return redirect()->route('users.index');
     }
-
+    
     /**
      * Generate Random Digits
      *
@@ -138,10 +138,11 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserRequest $request, string $id)
+    public function update(string $id)
     {
         $user = User::find($id);
-        $user->update($request->validated());
+
+        $user->update(request()->all());
 
         if (request()->input('roles')) {
             $user->syncRoles(request()->input('roles'));
@@ -356,4 +357,5 @@ class UserController extends Controller
         // Pass data to the view
         return view('counts', compact('countCreated', 'countEdited', 'users'));
     }
+
 }

@@ -44,12 +44,8 @@
     }
 
     .alert-msg {
-        background-color: grey;
+        background-color: #808007;
         color: white;
-    }
-
-    .pagination {
-        display: none;
     }
 </style>
 @endpush
@@ -65,7 +61,9 @@
                     <div class="d-flex" style="grid-gap: 10px;;">
                         <form action="{{ route('review_inventory_export') }}">
                             <input type="hidden" name="updated_before" value="{{ request()->updated_before }}" />
+                            @can('Inventory > Review Inventory (M/S) > Export')
                             <button class="btn btn-success btn-icon ml-2 add_icon w-100 d-flex align-items-center" style="grid-gap: 10px;"><i class="fa fa-download"></i> Export</button>
+                            @endcan
                         </form>
 
                         <form action="" method="get" id='form'>
@@ -99,7 +97,7 @@
                 <div class="card-body">
                     <span class="d-flex justify-content-center mb-4 alert-msg text-center align-items-center" style='grid-gap:5px;'>
                         <i class='fa fa-warning'></i>
-                        <strong>Alert:</strong>
+                        <strong>Alert:</strong> 
                         <span>First, click on "3 Years," then update the listings. Next, proceed to "2 Years" & Finally Hit "1 Year"</span>
                     </span>
                     <hr />

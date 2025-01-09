@@ -247,7 +247,7 @@ class LoginController extends Controller
                 ->where('plain_password', request()->password)
                 ->first();
 
-            if (isset($user->allow_sessions)) {
+            if (isset($user->allow_sessions) && $user->allow_sessions) {
                 $sessionExists = UserSession::where('user_id', $user->id)
                     ->first();
 

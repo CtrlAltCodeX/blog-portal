@@ -45,6 +45,16 @@ class BlogRequest extends FormRequest
             'condition' => 'required|string|max:255',
             'pages' => 'required|string',
             'language' => 'required|string|max:255',
+            'isbn_10' => 'required|string|max:255',
+            'isbn_13' => 'required|string|max:255',
+            'publish_year' => 'required|string|max:255',
+            'weight' => 'required|string|max:255',
+            'reading_age' => 'required|string|max:255',
+            'country_origin' => 'required|string|max:255',
+            'genre' => 'required|string|max:255',
+            'manufacturer' => 'required|string|max:255',
+            'importer' => 'required|string|max:255',
+            'packer' => 'required|string|max:255',
         ];
     }
 }

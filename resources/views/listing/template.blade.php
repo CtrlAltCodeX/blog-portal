@@ -74,29 +74,76 @@ width="320"
             <table class="detail-ui-grid">
                 <tbody>
                     <tr>
-                        <td class="detailsku">SKU, Publisher</td>
+                        <td class="detailsku">SKU / BOOK Code:</td>
                         <td itemprop="sku">{{ $data["sku"] }}</td>
                     </tr>
                     <tr>
-                        <td class="detailcolor">Publisher</td>
+                        <td class="detailcolor">Publisher:</td>
                         <td itemprop="color">{{ $data["publication"] }}</td>
                     </tr>
                     <tr>
-                        <td class="detailguide">Author, Edition</td>
-                        <td>
-                            {{ $data["author_name"] }}, {{ $data["edition"] }},
-                            {{ $data["language"] }}
-                        </td>
+                        <td class="detailguide">Author:</td>
+                        <td itemprop="author">{{ $data["author_name"] }}</td>
                     </tr>
                     <tr>
-                        <td class="detailfrom">Binding, Type</td>
-                        <td>
-                            {{ $data["binding"] }}, {{ $data["condition"] }}
-                        </td>
+                        <td class="detailfrom">Binding Type:</td>
+                        <td itemprop="binding">{{ $data["binding"] }}</td>
                     </tr>
                     <tr>
-                        <td class="detailcoupon">No. of Pages</td>
+                        <td class="detailcoupon">No. of Pages:</td>
                         <td>{{ $data["pages"] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="detailisbn10">ISBN-10:</td>
+                        <td itemprop="isbn10">{{ $data["isbn_10"] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="detailisbn13">ISBN-13:</td>
+                        <td itemprop="isbn13">{{ $data["isbn_13"] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="detailedition">Edition:</td>
+                        <td itemprop="edition">{{ $data["edition"] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="detaillanguage">Language:</td>
+                        <td itemprop="language">{{ $data["language"] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="detailpublishyear">Publish Year:</td>
+                        <td itemprop="publishyear">{{ $data["publish_year"] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="weight">Weight (g):</td>
+                        <td itemprop="weight">{{ $data["weight"] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="detailcondition">Product Condition:</td>
+                        <td itemprop="condition">{{ $data["condition"] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="readingage">Reading Age:</td>
+                        <td itemprop="age">{{ $data["reading_age"] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="detailsku">Country of Origin:</td>
+                        <td itemprop="origin">{{ $data["country_origin"] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="genre">Genre:</td>
+                        <td itemprop="genre">{{ $data["genre"] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="manufacturer">Manufacturer:</td>
+                        <td itemprop="manufacturer">{{ $data["manufacturer"] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="importer">Importer:</td>
+                        <td itemprop="importer">{{ $data["importer"] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="packer">Packer:</td>
+                        <td itemprop="packer">{{ $data["packer"] }}</td>
                     </tr>
                 </tbody>
             </table>

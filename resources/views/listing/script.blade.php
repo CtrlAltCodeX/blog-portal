@@ -65,6 +65,19 @@
                 limit(this);
             }
 
+            if (inputName == 'isbn_10' ||
+                inputName == 'isbn_13'
+            ) {
+                const validPattern = /^[a-zA-Z0-9\-]*$/; // Regex for allowed characters
+                const inputValue = $(this).val();
+
+                if (!validPattern.test(inputValue)) {
+                    // If the value doesn't match the pattern, remove invalid characters
+                    errorHandling(inputName, 'Only alphabets, numbers, and hyphens are allowed', false, $(this))
+                    $(this).val(inputValue.replace(/[^a-zA-Z0-9\-]/g, ''));
+                }
+            }
+
             if (inputName != 'images[]') {
                 requiredFields(inputValue, this);
             }
@@ -80,17 +93,7 @@
             if (inputName == 'discount' ||
                 inputName == 'mrp'
             ) {
-                var discount = parseInt($('#discount').val());
-                var mrp = parseInt($("#mrp").val());
-
-                if (discount <= 100) {
-                    var discountedPrice = (mrp * discount) / 100;
-
-                    $('#selling_price').val(Math.round(mrp - discountedPrice));
-                } else {
-                    $('#discount').val(0);
-                }
-
+                setSellingPrice();
             }
 
             if (inputName == 'selling_price') {
@@ -184,12 +187,12 @@
                     }
                 }
 
+                var notRequiredFields = ['multipleImages[]', 'files', 'isbn_10', 'isbn_13', 'isbn_10', 'reading_age', 'country_origin', 'genre', 'manufacturer', 'importer', 'discount'];
+
                 if (inputValue == '') {
                     var fieldId = $(this).attr('name');
-                    if (fieldId != 'multipleImages[]' &&
-                        fieldId != 'files' &&
-                        fieldId
-                    ) {
+                    if (fieldId && !notRequiredFields.includes(fieldId)) {
+                        console.log(fieldId);
                         $(this).css('border', '1px red solid');
                         $('.' + fieldId).text('This field is required');
                         requiredvalid = false;
@@ -266,6 +269,10 @@
             calculateFields();
         });
 
+        $("#publication").on('input', function() {
+            $('#manufacturer').val($(this).val());
+        });
+
         function calculateFields() {
             var totalFields = $(".fields input.form-control").length + $(".fields select.form-control").length + $("textarea").length;
             var filledFields = 0;
@@ -298,11 +305,11 @@
         }
 
         function requiredFields(val, currentElement) {
+            var notRequiredFields = ['multipleImages[]', 'files', 'isbn_10', 'isbn_13', 'isbn_10', 'reading_age', 'country_origin', 'genre', 'manufacturer', 'importer', 'discount']; // Add more fields as needed
+
             var fieldId = $(currentElement).attr('name');
-            if (val == '') {
-                if (fieldId != 'multipleImages[]' && fieldId != 'files') {
-                    errorHandling(fieldId, 'This field is required', false, currentElement);
-                }
+            if (fieldId && !notRequiredFields.includes(fieldId) && !val) {
+                errorHandling(fieldId, 'This field is required', false, currentElement);
             } else {
                 errorHandling(fieldId, '', true, currentElement);
             }
@@ -388,6 +395,19 @@
                 $(currentElement).css('border', '1px solid #e9edf4');
                 $('.' + element).text(msg);
                 $(".fields .btn").attr('disabled', false);
+            }
+        }
+
+        function setSellingPrice() {
+            var discount = parseInt($('#discount').val());
+            var mrp = parseInt($("#mrp").val());
+
+            if (discount <= 100) {
+                var discountedPrice = (mrp * discount) / 100;
+
+                $('#selling_price').val(Math.round(mrp - discountedPrice));
+            } else {
+                $('#discount').val(0);
             }
         }
 

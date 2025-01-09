@@ -35,7 +35,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="form-group col-3">
-                                <label for="name" class="form-label">{{ __('Candidate Name') }}</label>
+                                <label for="name" class="form-label">{{ __('Candidate Name') }}<span class='text-danger'>*</span></label>
                                 <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" autocomplete="name" autofocus placeholder="Name">
 
                                 @error('name')
@@ -45,7 +45,7 @@
                                 @enderror
                             </div>
                             <div class="form-group col-3">
-                                <label for="email" class="form-label">{{ __('Email') }}</label>
+                                <label for="email" class="form-label">{{ __('Email') }}<span class='text-danger'>*</span></label>
 
                                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" autocomplete="email" placeholder="Email">
 
@@ -57,7 +57,7 @@
                             </div>
 
                             <div class="form-group col-3">
-                                <label for="mobile" class="form-label">{{ __('Phone No.') }}</label>
+                                <label for="mobile" class="form-label">{{ __('Phone No.') }}<span class='text-danger'>*</span></label>
                                 <input id="mobile" type="number" class="form-control @error('mobile') is-invalid @enderror" name="mobile" value="{{ old('mobile') }}" autocomplete="mobile" autofocus placeholder="Mobile....">
 
                                 @error('mobile')
@@ -68,7 +68,7 @@
                             </div>
 
                             <div class="form-group col-3">
-                                <label for="account_type" class="form-label">{{ __('Account Type') }}</label>
+                                <label for="account_type" class="form-label">{{ __('Account Type') }}<span class='text-danger'>*</span></label>
                                 <select class="form-control" name="account_type">
                                     <option value="">--Select--</option>
                                     <option value=1>Individual</option>
@@ -85,7 +85,7 @@
                             </div>
 
                             <div class="form-group col-3">
-                                <label for="aadhaar_no" class="form-label">{{ __('Aadhaar No.') }}</label>
+                                <label for="aadhaar_no" class="form-label">{{ __('Aadhaar No.') }}<span class='text-danger'>*</span></label>
                                 <input id="aadhaar_no" type="number" class="form-control @error('aadhaar_no') is-invalid @enderror" name="aadhaar_no" value="{{ old('aadhaar_no') }}" autocomplete="aadhaar_no" autofocus placeholder="Aadhaar No">
 
                                 @error('aadhaar_no')
@@ -96,7 +96,7 @@
                             </div>
 
                             <div class="form-group col-3">
-                                <label for="father_name" class="form-label">{{ __('Father name') }}</label>
+                                <label for="father_name" class="form-label">{{ __('Father name') }}<span class='text-danger'>*</span></label>
                                 <input id="father_name" type="text" class="form-control @error('father_name') is-invalid @enderror" name="father_name" value="{{ old('father_name') }}" autocomplete="father_name" autofocus placeholder="Father name">
 
                                 @error('father_name')
@@ -107,7 +107,7 @@
                             </div>
 
                             <div class="form-group col-3">
-                                <label for="mother_name" class="form-label">{{ __('Mother name') }}</label>
+                                <label for="mother_name" class="form-label">{{ __('Mother name') }}<span class='text-danger'>*</span></label>
                                 <input id="mother_name" type="text" class="form-control @error('mother_name') is-invalid @enderror" name="mother_name" value="{{ old('mother_name') }}" autocomplete="mother_name" autofocus placeholder="Mother name">
 
                                 @error('mother_name')
@@ -118,7 +118,7 @@
                             </div>
 
                             <div class="form-group col-3">
-                                <label for="state" class="form-label">{{ __('State') }}</label>
+                                <label for="state" class="form-label">{{ __('State') }}<span class='text-danger'>*</span></label>
                                 <input id="state" type="text" class="form-control @error('state') is-invalid @enderror" name="state" value="{{ old('state') }}" autocomplete="state" autofocus placeholder="State">
 
                                 @error('state')
@@ -129,7 +129,7 @@
                             </div>
 
                             <div class="form-group col-3">
-                                <label for="pincode" class="form-label">{{ __('Pincode') }}</label>
+                                <label for="pincode" class="form-label">{{ __('Pincode') }}<span class='text-danger'>*</span></label>
                                 <input id="pincode" type="number" class="form-control @error('pincode') is-invalid @enderror" name="pincode" value="{{ old('pincode') }}" autocomplete="pincode" autofocus placeholder="Pincode">
 
                                 @error('pincode')
@@ -140,7 +140,7 @@
                             </div>
 
                             <div class="form-group col-3">
-                                <label for="password" class="form-label">{{ __('Password') }}</label>
+                                <label for="password" class="form-label">{{ __('Password') }}<span class='text-danger'>*</span></label>
 
                                 <div class="wrap-input100 validate-input input-group" id="Password-toggle">
                                     <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
@@ -160,7 +160,7 @@
                             </div>
 
                             <div class="form-group col-3">
-                                <label for="password_confirmation" class="form-label">{{ __('Confirm Password') }}</label>
+                                <label for="password_confirmation" class="form-label">{{ __('Confirm Password') }}<span class='text-danger'>*</span></label>
 
                                 <div class="wrap-input100 validate-input input-group" id="Password-toggle1">
                                     <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
@@ -172,7 +172,7 @@
                             </div>
 
                             <div class="form-group col-3">
-                                <label for="sessions" class="form-label">{{ __('Allow Sessions') }}</label>
+                                <label for="sessions" class="form-label">{{ __('Allow Sessions') }}<span class='text-danger'>*</span></label>
 
                                 <select class="form-control" name="allow_sessions">
                                     <option value="">--Select--</option>
@@ -182,7 +182,7 @@
                             </div>
                             
                             <div class="form-group col-3">
-                                <label for="password" class="form-label">{{ __('Listing Rates (Per Listings)') }}</label>
+                                <label for="password" class="form-label">{{ __('Listing Rates (Per Listings)') }}<span class='text-danger'>*</span></label>
                                 <input id="price" type="number" class="form-control @error('posting_rate') is-invalid @enderror" name="posting_rate" placeholder="Posting Price" >
 
                                 @error('posting_rate')
@@ -193,7 +193,7 @@
                             </div>
                             
                             <div class="form-group col-3">
-                                <label class="form-label">{{ __('Show Account Health') }}</label>
+                                <label class="form-label">{{ __('Show Account Health') }}<span class='text-danger'>*</span></label>
                                 <select class="form-control" name="show_health">
                                     <option value=1 >Yes - Display Account Rating</option>
                                     <option value=0 >No - For Freshers</option>
@@ -206,7 +206,7 @@
                                 @enderror
                             </div>
                             <div class="form-group col-3">
-                                <label class="form-label">{{ __('OTP Features') }}</label>
+                                <label class="form-label">{{ __('OTP Features') }}<span class='text-danger'>*</span></label>
                                 <select class="form-control" name="otp_feature">
                                     <option value=1 >On - Login Via OTP</option>
                                     <option value=0 >Off - No OTP Required</option>
@@ -219,7 +219,7 @@
                                 @enderror
                             </div>
                             <div class="form-group col-3">
-                                <label class="form-label">{{ __('Data Transfer') }}</label>
+                                <label class="form-label">{{ __('Data Transfer') }}<span class='text-danger'>*</span></label>
                                 <select class="form-control" name="data_transfer">
                                     <option value=1 >On - Working Mode</option>
                                     <option value=0 >Off - Practice Mode</option>
@@ -233,7 +233,7 @@
                             </div>
 
                             <div class="form-group col-3">
-                                <label class="form-label">{{ __('Account Details Change Limitations') }}</label>
+                                <label class="form-label">{{ __('Account Details Change Limitations') }}<span class='text-danger'>*</span></label>
                                 <select class="form-control" name="account_details_change_limitations">
                                     <option value=1 >On - No Changes Allowed</option>
                                     <option value=0 >Off - User Can Change</option>
@@ -249,7 +249,7 @@
                             <div class="form-group col-3"></div>
 
                             <div class="form-group col-6">
-                                <label for="name" class="form-label">{{ __('Full Address') }}</label>
+                                <label for="name" class="form-label">{{ __('Full Address') }}<span class='text-danger'>*</span></label>
                                 <textarea class="form-control" name="full_address" cols=10 rows=5></textarea>
 
                                 @error('full_address')

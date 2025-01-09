@@ -64,7 +64,7 @@
                                     <div>{{ __('Product Description') }}<span class="text-danger">*</span><span class="text-success"> (Suggestion - Title + Description + Search Key) </span></div>
                                     <div class="d-flex">
                                         <a href='{{ $siteSetting->listing_button_1_link }}' target='_blank'>{{ $siteSetting->listing_button_1 }} | &nbsp;</a><a target='_blank' href="{{ $siteSetting->listing_button_2_link }}"> {{ $siteSetting->listing_button_2 }} | </a>
-                                        <a href='https://www.commontools.org/tool/replace-new-lines-with-commas-40' target='_blank'>&nbsp;Line Remover | </a>
+                                        <a href='https://www.commontools.org/tool/replace-new-lines-with-commas-40' target='_blank'>&nbsp;Line Remover | </a><a target='_blank' href="https://chat.openai.com"> ChatGPT</a>
                                     </div>
                                 </label>
                                 <label for="description" class="form-label d-flex justify-content-between text-danger" style="margin-top: -10px;">
@@ -350,16 +350,18 @@
                         </div>
 
                         <div style="text-align: right;">
-                            @can('Pending Listing ( DB ) -> Update ( DB )')
+                            @can('Product Listing > Bulk Listing Review (Save to DB)')
                             <button class="btn btn-warning float-right" id='update'>Update ( DB )</button>
                             @endcan
 
                             @if(!$listing->product_id)
-                            @can('Pending Listing ( DB ) -> Publish to Website')
+                            @can('Product Listing > Bulk Listing Review (Publish To Website)')
                             <button class="btn btn-success float-right" id='publish'>Publish to Website</button>
                             @endcan
                             @elseif($listing->product_id)
+                            @can('Product Listing > Bulk Listing Review (Publish To Website)')
                             <button class="btn btn-success float-right" id='publish'>Update to Website</button>
+                            @endcan
                             @endif
                         </div>
                     </div>

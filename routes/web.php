@@ -255,7 +255,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     /**
      * Database
      */
-    Route::post('publish/database/{id}', [DatabaseListingController::class, 'publshInDB'])
+    Route::post('publish/database', [DatabaseListingController::class, 'publshInDB'])
         ->name('listing.publish.database');
 
     Route::get('edit/database/{id}', [DatabaseListingController::class, 'editInDB'])
@@ -365,7 +365,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::post('/get/ai/description', [ChatGptController::class, 'responseAiDescription'])
         ->name('getai.response');
-
+        
     Route::post('/support/mail', [HomeController::class, 'supportMail'])
         ->name('support.mail');
     /**

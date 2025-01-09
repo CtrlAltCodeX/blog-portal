@@ -118,10 +118,20 @@ class DatabaseListingController extends Controller
                 'condition' => $request->condition,
                 'binding_type' => $request->binding,
                 'insta_mojo_url' => $request->url,
-                'images' => $request->images[0],
+                'images' => json_encode($request->images),
                 'multiple_images' => $request->multipleImages,
                 'status' => 0,
-                'created_by' => auth()->user()->id
+                'created_by' => auth()->user()->id,
+                'isbn_10' => $request->isbn_10,
+                'isbn_13' => $request->isbn_13,
+                'publish_year' => $request->publish_year,
+                'weight' => $request->weight,
+                'reading_age' => $request->reading_age,
+                'country_origin' => $request->country_origin,
+                'genre' => $request->genre,
+                'manufacturer' => $request->manufacturer,
+                'importer' => $request->importer,
+                'packer' => $request->packer,
             ];
 
             $listing = Listing::create($data);
@@ -193,6 +203,7 @@ class DatabaseListingController extends Controller
     {
         try {
             $findListing = Listing::find($id);
+
             if (isset($findListing)) {
                 $newListing = Listing::create([
                     'title' => $findListing->title,
@@ -209,12 +220,22 @@ class DatabaseListingController extends Controller
                     'condition' => $findListing->condition,
                     'binding_type' => $findListing->binding_type,
                     'insta_mojo_url' => $findListing->insta_mojo_url,
-                    'images' => $findListing->images,
+                    'images' => json_encode($findListing->images),
                     'multiple_images' => $findListing->multiple_images,
                     'product_id' => $findListing->product_id ?? null,
                     'status' => 0,
                     'created_by' => auth()->user()->id,
                     'is_bulk_upload' => $findListing->is_bulk_upload,
+                    'isbn_10' => $findListing->isbn10,
+                    'isbn_13' => $findListing->isbn13,
+                    'publish_year' => $findListing->publishyear,
+                    'weight' => $findListing->weight,
+                    'reading_age' => $findListing->age,
+                    'country_origin' => $findListing->origin,
+                    'genre' => $findListing->genre,
+                    'manufacturer' => $findListing->manufacturer,
+                    'importer' => $findListing->importer,
+                    'packer' => $findListing->packer,
                 ]);
 
                 UserListingInfo::create([
@@ -233,8 +254,6 @@ class DatabaseListingController extends Controller
                     session()->flash('success', 'Copy Listing created successfully');
                     return redirect()->back();
                 }
-            } else {
-                session()->flash('error', 'Someting went wrong');
             }
         } catch (\Exception $e) {
             session()->flash('error', 'Something went Wrong!!');
@@ -287,9 +306,20 @@ class DatabaseListingController extends Controller
             'condition' => $request->condition,
             'binding_type' => $request->binding,
             'insta_mojo_url' => $request->url,
-            'images' => $request->images[0],
+            'images' => json_encode($request->images),
             'multiple_images' => $request->multipleImages,
-            'created_by' => auth()->user()->id
+            'created_by' => auth()->user()->id,
+            'isbn_10' => $request->isbn_10,
+            'isbn_13' => $request->isbn_13,
+            'publish_year' => $request->publish_year,
+            'weight' => $request->weight,
+            'reading_age' => $request->reading_age,
+            'country_origin' => $request->country_origin,
+            'genre' => $request->genre,
+            'manufacturer' => $request->manufacturer,
+            'importer' => $request->importer,
+            'packer' => $request->packer,
+            'is_bulk_upload' => 0
         ];
 
         $listing = Listing::find($id);
@@ -556,13 +586,13 @@ class DatabaseListingController extends Controller
         $updated = ((array)$products->updated)['$t'];
 
         $edition_author_lang = explode(',', $td->item(7)->textContent ?? '');
-        $author_name = $edition_author_lang[0];
-        $edition = $edition_author_lang[1] ?? '';
-        $lang = $edition_author_lang[2] ?? '';
+        // $author_name = $edition_author_lang[0];
+        // $edition = $edition_author_lang[1] ?? '';
+        // $lang = $edition_author_lang[2] ?? '';
 
         $bindingType = explode(',', $td->item(9)->textContent ?? '');
-        $binding = $bindingType[0] ?? '';
-        $condition = $bindingType[1] ?? '';
+        // $binding = $bindingType[0] ?? '';
+        // $condition = $bindingType[1] ?? '';
 
         $page_no = $td->item(11)->textContent ?? '';
 
@@ -576,6 +606,33 @@ class DatabaseListingController extends Controller
 
         $sku = '';
         $publication = '';
+        $isbn10 = '';
+        $isbn13 = '';
+        $publishyear = '';
+        $weight = '';
+        $age = '';
+        $origin = '';
+        $genre = '';
+        $manufacturer = '';
+        $importer = '';
+        $packer = '';
+        $lang = '';
+        $edition = '';
+        $author_name = '';
+        $condition = '';
+        $binding = '';
+
+        if (count($edition_author_lang) > 1) {
+            $author_name = $edition_author_lang[0];
+            $edition = $edition_author_lang[1] ?? '';
+            $lang = $edition_author_lang[2] ?? '';
+        }
+
+        if (count($bindingType) > 1) {
+            $binding = $bindingType[0] ?? '';
+            $condition = $bindingType[1] ?? '';
+        }
+
         for ($i = 0; $i < $td->length; $i++) {
             if ($td->item($i)->getAttribute('itemprop') == 'sku') {
                 $sku = trim($td->item($i)->textContent);
@@ -583,6 +640,66 @@ class DatabaseListingController extends Controller
 
             if ($td->item($i)->getAttribute('itemprop') == 'color') {
                 $publication = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'isbn10') {
+                $isbn10 = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'isbn13') {
+                $isbn13 = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'publishyear') {
+                $publishyear = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'weight') {
+                $weight = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'age') {
+                $age = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'origin') {
+                $origin = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'genre') {
+                $genre = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'manufacturer') {
+                $manufacturer = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'importer') {
+                $importer = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'packer') {
+                $packer = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'language') {
+                $lang = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'edition') {
+                $edition = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'author') {
+                $author_name = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'condition') {
+                $condition = trim($td->item($i)->textContent);
+            }
+
+            if ($td->item($i)->getAttribute('itemprop') == 'binding') {
+                $binding = trim($td->item($i)->textContent);
             }
         }
 
@@ -646,6 +763,16 @@ class DatabaseListingController extends Controller
             'status' => 0,
             'baseimg' => $image ?? '',
             'multiple_images' => $images ?? '',
+            'isbn_10' => trim($isbn10),
+            'isbn_13' => trim($isbn13),
+            'publish_year' => trim($publishyear),
+            'weight' => trim($weight),
+            'reading_age' => trim($age),
+            'country_origin' => trim($origin),
+            'genre' => trim($genre),
+            'manufacturer' => trim($manufacturer),
+            'importer' => trim($importer),
+            'packer' => trim($packer),
         ];
 
         $response = Http::withoutVerifying()
@@ -665,7 +792,7 @@ class DatabaseListingController extends Controller
     /**
      * Edit the post in Database
      */
-    public function publshInDB($id)
+    public function publshInDB()
     {
         $allInfo = [
             'product_id' => trim(request()->database),
@@ -683,32 +810,46 @@ class DatabaseListingController extends Controller
             'binding_type' => trim(request()->binding),
             'condition' => trim(request()->condition),
             'insta_mojo_url' => trim(request()->url),
-            'images' => request()->images ?? "",
+            'images' => json_encode(request()->images) ?? "",
             'multiple_images' => request()->multipleImages ? json_encode(request()->multipleImages) : null,
             'url' => request()->product_url,
             'created_by' => auth()->user()->id,
             'status' => 0,
+            'product_id' => null,
+            'isbn_10' => trim(request()->isbn_10),
+            'isbn_13' => trim(request()->isbn_13),
+            'publish_year' => trim(request()->publish_year),
+            'weight' => trim(request()->weight),
+            'reading_age' => trim(request()->reading_age),
+            'country_origin' => trim(request()->country_origin),
+            'genre' => trim(request()->genre),
+            'manufacturer' => trim(request()->manufacturer),
+            'importer' => trim(request()->importer),
+            'packer' => trim(request()->packer),
         ];
 
         $listing = Listing::create($allInfo);
+ 
+        if (!isset(request()->duplicate)) {
+            $data = [
+                'image' => $listing->images[0],
+                'title' => $listing->title,
+                'created_by' => auth()->user()->id,
+                'approved_by' => null,
+                'approved_at' => null,
+                'status' => 0,
+                'status_listing' => 'Edited',
+                'listings_id' =>  $listing->id
+            ];
 
-        $data = [
-            'image' => $listing->images[0],
-            'title' => $listing->title,
-            'created_by' => auth()->user()->id,
-            'approved_by' => null,
-            'approved_at' => null,
-            'status' => 0,
-            'status_listing' => 'Edited',
-            'listings_id' =>  $listing->id
-        ];
+            UserListingInfo::create($data);
 
+            $this->updateTheCount('Edited', 'create_count');
 
-        UserListingInfo::create($data);
-
-        $this->updateTheCount('Edited', 'create_count');
-
-        session()->flash('success', 'Pending for Approval');
+            session()->flash('success', 'Pending for Approval');
+        } else {
+            session()->flash('success', 'Listing created successfully');
+        }
 
         return redirect()->route('inventory.index', ['startIndex' => '1', 'category' => 'Product']);
     }

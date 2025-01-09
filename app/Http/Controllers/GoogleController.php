@@ -50,9 +50,9 @@ class GoogleController extends Controller
     {
         $this->googleService->handleGoogleCallback($request->all());
 
-        if (request()->session()->get('page_url')) {
-            return redirect()->to(request()->session()->get('page_url'));
-        }
+        // if (request()->session()->get('page_url')) {
+        //     return redirect()->to(request()->session()->get('page_url'));
+        // }
 
         return redirect()->route('settings.blog')->with('success', 'Authenticated successfully');
     }

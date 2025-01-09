@@ -29,7 +29,10 @@ class ImportListingCsv implements ShouldQueue
      */
     public function handle()
     {
-        $images = $this->downloadImage($this->data->images);
+        $images = [];
+        if ($this->data->images) {
+            $images = $this->downloadImage($this->data->images);
+        }
 
         $data = [
             'title' => $this->data->title,
@@ -39,19 +42,30 @@ class ImportListingCsv implements ShouldQueue
             'publisher' => $this->data->publisher,
             'author_name' => $this->data->author_name,
             'edition' => $this->data->edition,
-            'categories' => $this->data->categories,
+            'categories' => null,
             'sku' => $this->data->sku ?? null,
             'language' => $this->data->language,
             'no_of_pages' => $this->data->no_of_pages,
             'condition' => $this->data->condition ?? null,
             'binding_type' => $this->data->binding ?? null,
             'insta_mojo_url' => $this->data->url ?? null,
-            'images' => json_encode([$images]),
+            'images' => count($images) ? json_encode([$images]) : null,
             'multiple_images' => $this->data->multiple_images ?? null,
             'status' => 0,
             'created_by' => $this->user,
             'is_bulk_upload' => 1,
-            'product_id' => $this->postID ? $this->postID : null
+            'product_id' => $this->postID ? $this->postID : null,
+            'isbn_10' => $this->data->ISBN_10 ?? null,
+            'isbn_13' => $this->data->ISBN_13 ?? null,
+            'condition' => $this->data->condition ?? null,
+            'binding' => $this->data->binding_type ?? null,
+            'weight' => $this->data->weight ?? null,
+            'reading_age' => $this->data->reading_age ?? null,
+            'country_origin' => $this->data->country_origin ?? null,
+            'genre' => $this->data->genre ?? null,
+            'manufacturer' => $this->data->manufacturer ?? null,
+            'importer' => $this->data->importer ?? null,
+            'packer' => $this->data->packer ?? null,
         ];
 
         $listing = Listing::create($data);

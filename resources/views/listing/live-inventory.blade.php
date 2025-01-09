@@ -35,10 +35,6 @@
     .tooltip:hover .tooltiptext {
         visibility: visible;
     }
-
-    .pagination {
-        display: none;
-    }
 </style>
 @endpush
 
