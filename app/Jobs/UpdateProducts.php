@@ -41,13 +41,14 @@ class UpdateProducts implements ShouldQueue
         $getData = Listing::find($this->id);
 
         if (isset($getData->images)) {
-            $getData['images'] = $getData->images;
+            $getData['images'] = json_decode($getData->images);
         }
         $getData['label'] = $getData->categories;
         $getData['pages'] = $getData->no_of_pages;
         $getData['binding'] = $getData->binding_type;
         $getData['url'] = $getData->insta_mojo_url;
         $getData['publication'] = $getData->publisher;
+
         $result = app('App\Services\GoogleService')
             ->updatePost($getData->toArray(), $getData->product_id, $getData->created_by, $this->user);
 

@@ -30,11 +30,12 @@
                         <h4 class="card-title">
                             {{ __('Update Listing') }}
                         </h4>
-
+                        
                         @can('Create Duplicate Listing Button')
                         <button type='submit' class="btn btn-info duplicate_listing">Create Duplicate Listing</button>
                         <!-- <a href="{{ route('copy_database', $post->id) }}" class="btn btn-info duplicate_listing">{{ __('Create Duplicate Listing') }} </a> -->
                         @endcan
+                        <!-- <button type="submit" class="btn btn-primary float-right">Save</button> -->
                     </div>
 
                     <div class="card-body">
@@ -257,13 +258,13 @@
                                                 </label>
                                             </div>
                                             @php
-                                            $currentMonthYear = date('Y-m'); // Generate current year and month in "YYYY-MM" format
+                                                $currentMonthYear = date('Y-m'); // Generate current year and month in "YYYY-MM" format
                                             @endphp
-
-                                            <input
-                                                type="month"
-                                                class="form-control @error('publish_year') is-invalid @enderror"
-                                                name="publish_year"
+                                            
+                                            <input 
+                                                type="month" 
+                                                class="form-control @error('publish_year') is-invalid @enderror" 
+                                                name="publish_year" 
                                                 value="{{ old('publish_year', $allInfo['publish_year'] ?? $currentMonthYear) }}">
                                             <span class="error-message publish_year" style="color:red;"></span>
 
@@ -274,7 +275,7 @@
                                             @enderror
                                         </div>
                                     </div>
-
+                                    
                                     <!-- SKU -->
                                     <div class="col-md-4">
                                         <div>
@@ -360,7 +361,7 @@
                                             @enderror
                                         </div>
                                     </div>
-
+                                    
                                     <div class="col-md-4">
                                         <div class="">
                                             <label for="weight" class="form-label d-flex justify-content-between">{{ __('Weight (grams)') }}</label>
@@ -512,7 +513,7 @@
                             </div>
 
                             <!-- Preview Section -->
-                            <div class="col-md-3 text-right mb-2 d-flex" id='preview' style="justify-content: flex-end;">
+                            <div class="col-md-3 text-right mb-2 d-flex" id='preview' style="justify-content: flex-end;" >
                                 <div style="border: 2px solid #ccc;width: 300px;max-height: 300px;height:300px;">
                                     <img src="{{ old('images') ?? $allInfo['baseimg'] }}" id='previewImage' />
                                     <div class='image-status' style="text-align: center;padding: 5px;display:none;"></div>
@@ -626,8 +627,8 @@
             $("#form").attr('action', "{{ route('listing.publish.database', $post->id??$productId) }}");
 
             $("#form").submit();
-        });
-
+        })
+        
         $(".duplicate_listing").click(function(e) {
             e.preventDefault();
             $("#form").attr("action", "{{ route('listing.publish.database', $post->id) }}");

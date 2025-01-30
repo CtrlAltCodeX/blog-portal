@@ -106,7 +106,11 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
-        $user = User::where('email', request()->email)->first();
+        if (!$user = User::where('email', request()->email)->first()) {
+            session()->flash('error', 'Opps! Email Or Password Mismatch');
+
+            return redirect()->route('login');
+        }
 
         if ($user->otp_feature && !request()->otp_feature) {
             return $this->authenticateOTP();

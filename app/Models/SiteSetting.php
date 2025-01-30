@@ -24,6 +24,8 @@ class SiteSetting extends Model
         'listing_button_1_link',
         'listing_button_2',
         'listing_button_2_link',
-        'upload_file'
+        'upload_file',
+        'term_and_condition',
+        'policy',
     ];
 }

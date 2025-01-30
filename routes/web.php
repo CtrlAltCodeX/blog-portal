@@ -60,6 +60,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     Route::get('posts', [DashboardController::class, 'getStats'])
         ->name('get.posts.count');
 
+    Route::get('term/condition', [SettingsController::class, 'getTermCondition'])
+        ->name('get.term_condition');
+
+    Route::get('policies', [SettingsController::class, 'getPolicies'])
+        ->name('get.policies');
+
     /**
      * Profile 
      */
@@ -136,6 +142,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
         Route::post('update/site', [SettingsController::class, 'update'])
             ->name('settings.site.update');
+
+        Route::get('policies/term', [SettingsController::class, 'termNcondition'])
+            ->name('settings.policies');
+
+        Route::post('policies/term', [SettingsController::class, 'saveAndUpdateTermNcondition'])
+            ->name('settings.policies.save');
 
         Route::group(['prefix' => 'keywords'], function () {
             Route::get('validate', [SettingsController::class, 'FieldsValidate'])
@@ -365,7 +377,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::post('/get/ai/description', [ChatGptController::class, 'responseAiDescription'])
         ->name('getai.response');
-        
+
     Route::post('/support/mail', [HomeController::class, 'supportMail'])
         ->name('support.mail');
     /**

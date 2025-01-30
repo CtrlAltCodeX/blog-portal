@@ -526,6 +526,7 @@
                             @else
                             <button class="btn btn-warning float-right" id='update'>Request for update</button>
                             @endif
+                            <button class="btn btn-warning float-right" id='update_db'>Update (DB) </button>
                         </div>
                     </div>
                 </div>
@@ -566,6 +567,14 @@
             $("input[name=_method]").val("POST");
             $("#formTest").submit();
         });
+
+        @if(isset($listing->id))
+        $("#update_db").click(function(e) {
+            e.preventDefault();
+            $("#formTest").attr("action", "{{ route('database-listing.update', $listing->id) }}");
+            $("#formTest").submit();
+        });
+        @endif
     });
 </script>
 

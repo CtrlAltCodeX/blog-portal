@@ -188,4 +188,34 @@ class SettingsController extends Controller
     {
         return FieldValidation::select('name', 'links', 'allowed')->get();
     }
+
+    public function termNcondition()
+    {
+        $siteSettings = SiteSetting::find(1);
+
+        return view('settings.term-policies', compact('siteSettings'));
+    }
+
+    public function saveAndUpdateTermNcondition()
+    {
+        $siteSettings = SiteSetting::find(1);
+
+        $siteSettings->update(request()->all());
+
+        return redirect()->back();
+    }
+
+    public function getTermCondition()
+    {
+        $siteSettings = SiteSetting::find(1);
+
+        return view('settings.term-condition', compact('siteSettings'));
+    }
+
+    public function getPolicies()
+    {
+        $siteSettings = SiteSetting::find(1);
+
+        return view('settings.policy', compact('siteSettings'));
+    }
 }

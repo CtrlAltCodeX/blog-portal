@@ -174,6 +174,10 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         <li><a href="{{ route('settings.site') }}" class="slide-item {{ request()->is('admin/settings/site') ? 'active' : '' }}">{{ __('Site Settings') }}</a></li>
                         @endcan
 
+                        @can('Settings -> Site Access')
+                        <li><a href="{{ route('settings.policies') }}" class="slide-item {{ request()->is('admin/settings/site') ? 'active' : '' }}">{{ __('Term & Condition / Policies ') }}</a></li>
+                        @endcan
+
                         @can('Settings -> Backup E-Mail')
                         <li><a href="{{ route('settings.emails') }}" class="slide-item {{ request()->is('admin/backup/emails') ? 'active' : '' }}">{{ __('Backup E-Mail') }}</a></li>
                         @endcan

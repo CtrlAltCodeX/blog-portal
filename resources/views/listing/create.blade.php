@@ -518,30 +518,6 @@
                 </div>
             </form>
         </div>
-
-        <!-- <div class="col-md-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="form-group">
-                        <div id="fileInputContainer">
-                            <div class="form-group"></div>
-                            <label for="fileInput1" class="mt-2">Images<span class="text-danger">*</span>( Multiple Images )</label>
-                            <div class="form-group mt-2" @error('multipleImages') style="border: red 2px dotted;" @enderror>
-                                <form action="{{ route('convert.image') }}" method="post" enctype="multipart/form-data" id='multipleImagesform'>
-                                    @csrf
-                                    <input id="multipleFiles" type="file" class="dropify @error('multipleImages') is-invalid @enderror" name="multipleImages[]" multiple>
-                                    <div id='multiImagesDownload' style="display: none;">
-                                        <a href='#' class="w-100 d-flex justify-content-end my-4" id='downloadMultipleImage'>
-                                            <img src="/downlod-icon.png" />
-                                        </a>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
     </div>
 </div>
 </div>

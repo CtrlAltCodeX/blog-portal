@@ -20,17 +20,47 @@ $currentWeekDataCreated = $count->whereBetween('created_at', [$startOfWeek, $end
 
 $googleService = app('App\Services\GoogleService');
 
+$siteSettings = app('App\Models\SiteSetting');
+
 @endphp
+
+@push('css')
+<style>
+    .tooltip {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black;
+    }
+
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 120px;
+        background-color: black;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+
+        /* Position the tooltip */
+        position: absolute;
+        z-index: 1;
+    }
+
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+    }
+</style>
+@endpush
 <!-- app-Header -->
 <div class="app-header header sticky">
     <div class="container-fluid main-container">
         <div class="d-flex">
             <a aria-label="Hide Sidebar" class="app-sidebar__toggle" data-bs-toggle="sidebar" href="javascript:void(0)"></a>
-            @if(app('App\Http\Controllers\Controller')->tokenIsExpired($googleService)) 
+            @if(app('App\Http\Controllers\Controller')->tokenIsExpired($googleService))
             <span class="p-1 text-white" style="background-color: green;border-radius: 5px;">
                 Developer Connected
             </span>
-            @else   
+            @else
             <span class="p-1 text-white" style="background-color: red;border-radius: 5px;">
                 Developer Disconnect
             </span>
@@ -62,28 +92,38 @@ $googleService = app('App\Services\GoogleService');
                     <div class="collapse navbar-collapse" id="navbarSupportedContent-4">
                         @if(!auth()->user()->hasRole('Super Admin') && auth()->user()->show_health)
                         <label style="margin-right: 10px;font-family: system-ui;"><strong>ACCOUNT HEALTH:</strong>
-                        <a href="/account_health.jpeg" target="_blank">
-                            @if($currentWeekDataCreated <= 120)
-                                <span style="border: 1px solid red;padding: 5px;background-color: red;color: white;box-shadow: 1px 1px 3px black;">AT RISK</span>
-                                @elseif($currentWeekDataCreated >= 121 && $currentWeekDataCreated <= 149)
-                                    <span style="border: 1px solid orange;padding: 5px;background-color: orange;color: black;box-shadow: 1px 1px 3px black;">REVIEW</span>
-                                    @elseif($currentWeekDataCreated >= 150 && $currentWeekDataCreated <= 199)
-                                        <span style="border: 1px solid yellow;padding: 5px;background-color: yellow;color: black;box-shadow: 1px 1px 3px black;">AVERAGE</span>
-                                        @elseif($currentWeekDataCreated >= 200 && $currentWeekDataCreated <= 349)
-                                            <span style="border: 1px solid lightgreen;padding: 5px;background-color: lightgreen;color: black;box-shadow: 1px 1px 3px black;">GOOD</span>
-                                            @elseif($currentWeekDataCreated >= 350)
-                                            <span style="border: 1px solid green;padding: 5px;background-color: green;color: white;box-shadow: 1px 1px 3px black;">EXCELLENT</span>
-                                            @endif
+                            <a href="/account_health.jpeg" target="_blank">
+                                @if($currentWeekDataCreated <= 120)
+                                    <span style="border: 1px solid red;padding: 5px;background-color: red;color: white;box-shadow: 1px 1px 3px black;">AT RISK</span>
+                                    @elseif($currentWeekDataCreated >= 121 && $currentWeekDataCreated <= 149)
+                                        <span style="border: 1px solid orange;padding: 5px;background-color: orange;color: black;box-shadow: 1px 1px 3px black;">REVIEW</span>
+                                        @elseif($currentWeekDataCreated >= 150 && $currentWeekDataCreated <= 199)
+                                            <span style="border: 1px solid yellow;padding: 5px;background-color: yellow;color: black;box-shadow: 1px 1px 3px black;">AVERAGE</span>
+                                            @elseif($currentWeekDataCreated >= 200 && $currentWeekDataCreated <= 349)
+                                                <span style="border: 1px solid lightgreen;padding: 5px;background-color: lightgreen;color: black;box-shadow: 1px 1px 3px black;">GOOD</span>
+                                                @elseif($currentWeekDataCreated >= 350)
+                                                <span style="border: 1px solid green;padding: 5px;background-color: green;color: white;box-shadow: 1px 1px 3px black;">EXCELLENT</span>
+                                                @endif
                             </a>
                         </label>
                         @endif
+
+                        <div style="font-size: 15px;display: flex;grid-gap: 10px;">
+                            <a href="{{ route('get.term_condition') }}" title="Term and Condition">
+                                <i class="fa fa-info"></i>
+                            </a>
+
+                            <a href="{{ route('get.policies') }}" title="Policy">
+                                <i class="fa fa-info"></i>
+                            </a>
+                        </div>
 
                         <div class="dropdown d-flex profile-1">
                             <a href="javascript:void(0)" data-bs-toggle="dropdown" class="nav-link leading-none d-flex">
                                 @if(auth()->user()->profile)
                                 <img src="{{ auth()->user()->profile }}" alt="profile-user asdasd" class="avatar profile-user brround cover-image">
                                 @else
-                                <p class='avatar profile-user brround cover-image text-dark'>{{ auth()->user()->name[0]; }}</p>
+                                <p class='avatar profile-user brround cover-image text-dark mb-0'>{{ auth()->user()->name[0]; }}</p>
                                 @endif
                             </a>
                             <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
