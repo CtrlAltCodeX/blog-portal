@@ -175,7 +175,7 @@
 
                             <div class="form-group col-md-4">
                                 <div class="d-flex align-items-center justify-content-between">
-                                    <label for="edition" class="form-label">{{ __('Edition') }}</label>
+                                    <label for="edition" class="form-label">{{ __('Edition') }}<span class="text-danger">*</span></label>
                                     <span class="charCount">0/20</span>
                                 </div>
 
@@ -225,7 +225,7 @@
                                         <div class="">
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <label for="sku" class="form-label">
-                                                    {{ __('ISBN 10') }}
+                                                    {{ __('ISBN 10') }}<span class="text-danger">*</span>
                                                 </label>
                                             </div>
                                             <input type="text" class="form-control " name="isbn_10" value="{{ $listing->isbn_10 }}" autofocus placeholder="ISBN 10">
@@ -243,7 +243,7 @@
                                         <div class="">
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <label for="sku" class="form-label">
-                                                    {{ __('ISBN 13') }}
+                                                    {{ __('ISBN 13') }}<span class="text-danger">*</span>
                                                 </label>
                                             </div>
                                             <input id="isbn_13" type="text" class="form-control @error('isbn_13') is-invalid @enderror" name="isbn_13" value="{{ $listing->isbn_13 }}" autofocus placeholder="ISBN 13">
@@ -261,7 +261,7 @@
                                         <div class="">
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <label for="publish_year" class="form-label">
-                                                    {{ __('Publish Year') }}
+                                                    {{ __('Publish Year') }}<span class="text-danger">*</span>
                                                 </label>
                                             </div>
                                             <input type="month" class="form-control @error('publish_year') is-invalid @enderror" name="publish_year" value="{{ $listing->publish_year }}">
@@ -307,7 +307,7 @@
                                     </div>
 
                                     <div class="form-group col-md-4">
-                                        <label for="pages" class="form-label">{{ __('No. of Pages') }}</label>
+                                        <label for="pages" class="form-label">{{ __('No. of Pages') }}<span class="text-danger">*</span></label>
                                         <input id="pages" type="text" class="form-control @error('pages') is-invalid @enderror" name="pages" value="{{ old('pages') ?? $listing->no_of_pages }}" autocomplete="pages" autofocus placeholder="No. of Pages">
                                         <span class="error-message pages" style="color:red;"></span>
 
@@ -356,7 +356,7 @@
 
                                     <div class="col-md-4">
                                         <div class="">
-                                            <label for="weight" class="form-label d-flex justify-content-between">{{ __('Weight (grams)') }}</label>
+                                            <label for="weight" class="form-label d-flex">{{ __('Weight (grams)') }}<span class="text-danger">*</span></label>
                                             <input type="number" class="form-control @error('weight') is-invalid @enderror" name="weight" value="{{ $listing->weight }}" autocomplete="weight" autofocus placeholder="Weight (g)">
                                             <span class="error-message weight" style="color:red;"></span>
 
@@ -370,8 +370,15 @@
 
                                     <div class="col-md-4">
                                         <div class="">
-                                            <label for="reading_age" class="form-label d-flex justify-content-between">{{ __('Reading Age') }}</label>
-                                            <input style="background-color: #e9f85c;" id="reading_age" type="text" class="form-control @error('reading_age') is-invalid @enderror" name="reading_age" value="{{ $listing->reading_age??'Above 10 Years' }}" autocomplete="reading_age" autofocus placeholder="Reading Age">
+                                            <label for="reading_age" class="form-label d-flex">{{ __('Reading Age') }}<span class="text-danger">*</span></label>
+                                            <!-- <input style="background-color: #e9f85c;" id="reading_age" type="text" class="form-control @error('reading_age') is-invalid @enderror" name="reading_age" value="{{ $listing->reading_age??'Above 10 Years' }}" autocomplete="reading_age" autofocus placeholder="Reading Age"> -->
+                                            <select class="form-control @error('reading_age') is-invalid @enderror" name="reading_age">
+                                    <option value="">--Select--</option>
+                                    <option value="Above 18 Years" {{ $listing->reading_age == 'Above 18 Years' ? 'selected' : '' }}>Above 18 Years</option>
+                                    <option value="Above 10 Years" {{ $listing->reading_age == 'Above 10 Years' ? 'selected' : '' }}>Above 10 Years</option>
+                                    <option value="Above 5 Years" {{ $listing->reading_age == 'Above 5 Years' ? 'selected' : '' }}>Above 5 Years</option>
+                                    <option value="Above 3 Years" {{ $listing->reading_age == 'Above 3 Years' ? 'selected' : '' }}>Above 3 Years</option>
+                                </select>      
                                             <span class="error-message reading_age" style="color:red;"></span>
 
                                             @error('reading_age')
@@ -384,8 +391,8 @@
 
                                     <div class="col-md-4">
                                         <div class="">
-                                            <label for="country_origin" class="form-label d-flex justify-content-between">{{ __('Country of Origin') }}</label>
-                                            <input style="background-color: #e9f85c;" id="country_origin" type="country_origin" class="form-control @error('country_origin') is-invalid @enderror" name="country_origin" value="{{ $listing->country_origin??'India' }}" autocomplete="country_origin" autofocus placeholder="Country of Origin">
+                                            <label for="country_origin" class="form-label d-flex">{{ __('Country of Origin') }}<span class="text-danger">*</span></label>
+                                            <input style="background-color: #e9f85c;" id="country_origin" type="country_origin" class="form-control @error('country_origin') is-invalid @enderror" name="country_origin" value="{{ $listing->country_origin??'India' }}" autocomplete="country_origin" autofocus placeholder="Country of Origin" readonly>
                                             <span class="error-message country_origin" style="color:red;"></span>
 
                                             @error('country_origin')
@@ -398,8 +405,70 @@
 
                                     <div class="col-md-4">
                                         <div class="">
-                                            <label for="genre" class="form-label d-flex justify-content-between">{{ __('Genre') }}</label>
-                                            <input id="genre" type="genre" class="form-control @error('genre') is-invalid @enderror" name="genre" value="{{ $listing->genre??'Books' }}" autocomplete="genre" autofocus placeholder="Genre">
+                                            <label for="genre" class="form-label d-flex ">{{ __('Genre') }}<span class="text-danger">*</span></label>
+                                            <!-- <input id="genre" type="genre" class="form-control @error('genre') is-invalid @enderror" name="genre" value="{{ $listing->genre??'Books' }}" autocomplete="genre" autofocus placeholder="Genre"> -->
+                                            <select class="form-control @error('genre') is-invalid @enderror" name="genre">
+    <option value="">--Select--</option>
+    <option value="Fantasy" {{ $listing->genre == 'Fantasy' ? 'selected' : '' }}>Fantasy</option>
+    <option value="Horror" {{ $listing->genre == 'Horror' ? 'selected' : '' }}>Horror</option>
+    <option value="Romance" {{ $listing->genre == 'Romance' ? 'selected' : '' }}>Romance</option>
+    <option value="Science fiction" {{ $listing->genre == 'Science fiction' ? 'selected' : '' }}>Science fiction</option>
+    <option value="Adventure fiction" {{ $listing->genre == 'Adventure fiction' ? 'selected' : '' }}>Adventure fiction</option>
+    <option value="Fiction" {{ $listing->genre == 'Fiction' ? 'selected' : '' }}>Fiction</option>
+    <option value="Mystery" {{ $listing->genre == 'Mystery' ? 'selected' : '' }}>Mystery</option>
+    <option value="Fairy tale" {{ $listing->genre == 'Fairy tale' ? 'selected' : '' }}>Fairy tale</option>
+    <option value="Thriller" {{ $listing->genre == 'Thriller' ? 'selected' : '' }}>Thriller</option>
+    <option value="Young adult" {{ $listing->genre == 'Young adult' ? 'selected' : '' }}>Young adult</option>
+    <option value="Historical" {{ $listing->genre == 'Historical' ? 'selected' : '' }}>Historical</option>
+    <option value="Literary fiction" {{ $listing->genre == 'Literary fiction' ? 'selected' : '' }}>Literary fiction</option>
+    <option value="Comedy" {{ $listing->genre == 'Comedy' ? 'selected' : '' }}>Comedy</option>
+    <option value="Crime" {{ $listing->genre == 'Crime' ? 'selected' : '' }}>Crime</option>
+    <option value="Short story" {{ $listing->genre == 'Short story' ? 'selected' : '' }}>Short story</option>
+    <option value="Classics" {{ $listing->genre == 'Classics' ? 'selected' : '' }}>Classics</option>
+    <option value="Drama" {{ $listing->genre == 'Drama' ? 'selected' : '' }}>Drama</option>
+    <option value="Dystopian Fiction" {{ $listing->genre == 'Dystopian Fiction' ? 'selected' : '' }}>Dystopian Fiction</option>
+    <option value="Gothic fiction" {{ $listing->genre == 'Gothic fiction' ? 'selected' : '' }}>Gothic fiction</option>
+    <option value="Graphic novel" {{ $listing->genre == 'Graphic novel' ? 'selected' : '' }}>Graphic novel</option>
+    <option value="Magic realism" {{ $listing->genre == 'Magic realism' ? 'selected' : '' }}>Magic realism</option>
+    <option value="Mystery and suspense" {{ $listing->genre == 'Mystery and suspense' ? 'selected' : '' }}>Mystery and suspense</option>
+    <option value="Paranormal romance" {{ $listing->genre == 'Paranormal romance' ? 'selected' : '' }}>Paranormal romance</option>
+    <option value="School Books" {{ $listing->genre == 'School Books' ? 'selected' : '' }}>School Books</option>
+    <option value="NCERT Books" {{ $listing->genre == 'NCERT Books' ? 'selected' : '' }}>NCERT Books</option>
+    <option value="Competitive Books" {{ $listing->genre == 'Competitive Books' ? 'selected' : '' }}>Competitive Books</option>
+    <option value="Medical Books" {{ $listing->genre == 'Medical Books' ? 'selected' : '' }}>Medical Books</option>
+    <option value="Dental Books" {{ $listing->genre == 'Dental Books' ? 'selected' : '' }}>Dental Books</option>
+    <option value="Action & Adventure" {{ $listing->genre == 'Action & Adventure' ? 'selected' : '' }}>Action & Adventure</option>
+    <option value="Arts, Film & Photography" {{ $listing->genre == 'Arts, Film & Photography' ? 'selected' : '' }}>Arts, Film & Photography</option>
+    <option value="Biographies, Diaries & True Accounts" {{ $listing->genre == 'Biographies, Diaries & True Accounts' ? 'selected' : '' }}>Biographies, Diaries & True Accounts</option>
+    <option value="Business & Economics" {{ $listing->genre == 'Business & Economics' ? 'selected' : '' }}>Business & Economics</option>
+    <option value="Children's Books" {{ $listing->genre == "Children's Books" ? 'selected' : '' }}>Children's Books</option>
+    <option value="Comics & Graphic Novels" {{ $listing->genre == 'Comics & Graphic Novels' ? 'selected' : '' }}>Comics & Graphic Novels</option>
+    <option value="Computers & Internet" {{ $listing->genre == 'Computers & Internet' ? 'selected' : '' }}>Computers & Internet</option>
+    <option value="Crafts, Hobbies & Home" {{ $listing->genre == 'Crafts, Hobbies & Home' ? 'selected' : '' }}>Crafts, Hobbies & Home</option>
+    <option value="Crime, Thriller & Mystery" {{ $listing->genre == 'Crime, Thriller & Mystery' ? 'selected' : '' }}>Crime, Thriller & Mystery</option>
+    <option value="Engineering Books" {{ $listing->genre == 'Engineering Books' ? 'selected' : '' }}>Engineering Books</option>
+    <option value="Exam Preparation" {{ $listing->genre == 'Exam Preparation' ? 'selected' : '' }}>Exam Preparation</option>
+    <option value="Health, Family & Personal Development" {{ $listing->genre == 'Health, Family & Personal Development' ? 'selected' : '' }}>Health, Family & Personal Development</option>
+    <option value="Health, Fitness & Nutrition" {{ $listing->genre == 'Health, Fitness & Nutrition' ? 'selected' : '' }}>Health, Fitness & Nutrition</option>
+    <option value="Historical Fiction" {{ $listing->genre == 'Historical Fiction' ? 'selected' : '' }}>Historical Fiction</option>
+    <option value="History" {{ $listing->genre == 'History' ? 'selected' : '' }}>History</option>
+    <option value="Humour" {{ $listing->genre == 'Humour' ? 'selected' : '' }}>Humour</option>
+    <option value="Language, Linguistics & Writing" {{ $listing->genre == 'Language, Linguistics & Writing' ? 'selected' : '' }}>Language, Linguistics & Writing</option>
+    <option value="Law" {{ $listing->genre == 'Law' ? 'selected' : '' }}>Law</option>
+    <option value="Literature & Fiction" {{ $listing->genre == 'Literature & Fiction' ? 'selected' : '' }}>Literature & Fiction</option>
+    <option value="Maps & Atlases" {{ $listing->genre == 'Maps & Atlases' ? 'selected' : '' }}>Maps & Atlases</option>
+    <option value="Medicine & Health Sciences" {{ $listing->genre == 'Medicine & Health Sciences' ? 'selected' : '' }}>Medicine & Health Sciences</option>
+    <option value="Politics" {{ $listing->genre == 'Politics' ? 'selected' : '' }}>Politics</option>
+    <option value="Reference" {{ $listing->genre == 'Reference' ? 'selected' : '' }}>Reference</option>
+    <option value="Religion & Spirituality" {{ $listing->genre == 'Religion & Spirituality' ? 'selected' : '' }}>Religion & Spirituality</option>
+    <option value="Science & Mathematics" {{ $listing->genre == 'Science & Mathematics' ? 'selected' : '' }}>Science & Mathematics</option>
+    <option value="Science Fiction & Fantasy" {{ $listing->genre == 'Science Fiction & Fantasy' ? 'selected' : '' }}>Science Fiction & Fantasy</option>
+    <option value="Sports" {{ $listing->genre == 'Sports' ? 'selected' : '' }}>Sports</option>
+    <option value="Teen & Young Adult" {{ $listing->genre == 'Teen & Young Adult' ? 'selected' : '' }}>Teen & Young Adult</option>
+    <option value="Textbooks & Study Guides" {{ $listing->genre == 'Textbooks & Study Guides' ? 'selected' : '' }}>Textbooks & Study Guides</option>
+    <option value="Travel & Tourism" {{ $listing->genre == 'Travel & Tourism' ? 'selected' : '' }}>Travel & Tourism</option>
+</select>
+
                                             <span class="error-message genre" style="color:red;"></span>
 
                                             @error('genre')
@@ -412,7 +481,7 @@
 
                                     <div class="col-md-4">
                                         <div class="">
-                                            <label for="manufacturer" class="form-label d-flex justify-content-between">{{ __('Manufacturer') }}</label>
+                                            <label for="manufacturer" class="form-label d-flex ">{{ __('Manufacturer') }}<span class="text-danger">*</span></label>
                                             <input style="background-color: #e9f85c;" id="manufacturer" type="manufacturer" class="form-control @error('manufacturer') is-invalid @enderror" name="manufacturer" value="{{ $listing->manufacturer??'As Per Publisher' }}" autocomplete="manufacturer" autofocus placeholder="Manufacturer">
                                             <span class="error-message manufacturer" style="color:red;"></span>
 
@@ -426,7 +495,7 @@
 
                                     <div class="col-md-4">
                                         <div class="">
-                                            <label for="importer" class="form-label d-flex justify-content-between">{{ __('Importer') }}</label>
+                                            <label for="importer" class="form-label d-flex">{{ __('Importer') }}<span class="text-danger">*</span></label>
                                             <input style="background-color: #e9f85c;" id="importer" type="importer" class="form-control @error('importer') is-invalid @enderror" name="importer" value="{{ $listing->importer??'Not Applicable' }}" autocomplete="importer" autofocus placeholder="Importer">
                                             <span class="error-message importer" style="color:red;"></span>
 
@@ -440,7 +509,7 @@
 
                                     <div class="col-md-4">
                                         <div class="">
-                                            <label for="packer" class="form-label d-flex justify-content-between">{{ __('Packer') }}</label>
+                                            <label for="packer" class="form-label d-flex ">{{ __('Packer') }}<span class="text-danger">*</span></label>
                                             <input style="background-color: #e9f85c;" id="packer" type="packer" class="form-control @error('packer') is-invalid @enderror" name="packer" value="{{ $listing->packer??'Fullfilled by Supplier' }}" autocomplete="packer" autofocus placeholder="Packer">
                                             <span class="error-message packer" style="color:red;"></span>
 
@@ -453,8 +522,8 @@
                                     </div>
 
                                     <div class="form-group col-md-4">
-                                        <label for="url" class="form-label d-flex justify-content-between">{{ __('Insta Mojo URL') }}<span onclick="copyLink()" id='copylink' style="cursor:pointer;">Copy</span></label>
-                                        <input id="url" type="url" class="form-control @error('url') is-invalid @enderror" name="url" value="{{ old('url') ?? $listing->insta_mojo_url }}" autocomplete="url" autofocus placeholder="Insta Mojo Url">
+                                    <label for="url" class="form-label d-flex justify-content-between w-100"> <span>{{ __('Insta Mojo URL') }}<span class="text-danger">*</span></span> <span onclick="copyLink()" id="copylink" style="cursor:pointer; color:blue;">Copy</span> </label>
+                                    <input id="url" type="url" class="form-control @error('url') is-invalid @enderror" name="url" value="{{ old('url') ?? $listing->insta_mojo_url }}" autocomplete="url" autofocus placeholder="Insta Mojo Url">
                                         <span class="error-message url" style="color:red;"></span>
 
                                         @error('url')

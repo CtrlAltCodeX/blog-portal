@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Http;
 use App\Services\GoogleService;
 use Carbon\Carbon;
 use Auth;
+use App\Models\WeightVSCourier;
 
 class DatabaseListingController extends Controller
 {
@@ -86,13 +87,13 @@ class DatabaseListingController extends Controller
             ->get($url . '/feeds/posts/default?alt=json');
 
         $categories = $response->json()['feed']['category'];
-
+        $publications  = WeightVSCourier::all();
         $siteSetting = SiteSetting::first();
         $user_data_transfer = Auth::user()->data_transfer;
         if (!$user_data_transfer) {
             return view('database-listing.create_tmp', compact('categories', 'siteSetting', 'user_data_transfer'));
         } else {
-            return view('database-listing.create', compact('categories', 'siteSetting', 'user_data_transfer'));
+            return view('database-listing.create', compact('categories', 'siteSetting', 'user_data_transfer','publications'));
         }
     }
 
@@ -426,6 +427,11 @@ class DatabaseListingController extends Controller
                     ]);
                 }
             }
+        }else if (request()->publish == 6) {
+          
+            Listing::whereIn('id', request()->ids)->delete();
+            UserListingInfo::whereIn('listings_id', request()->ids)->delete();
+            return response()->json(['success' => true, 'message' => 'Products deleted successfully.']);
         } else {
             $listings = Listing::whereIn('id', request()->formData[1])
                 ->get();

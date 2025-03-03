@@ -7,7 +7,11 @@ use App\Models\GoogleCredentail;
 use App\Models\SiteSetting;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Publication;
+use App\Models\PurchesPriceWeightCourier;
+use App\Models\WeightVSCourier;
 use App\Imports\PublicationsImport;
+use App\Imports\PurchesPriceWeightCourierImport;
+use App\Imports\WeightVSCourierImport;
 
 class SettingsController extends Controller
 {
@@ -77,6 +81,21 @@ class SettingsController extends Controller
             Publication::truncate();
 
             Excel::import(new PublicationsImport, storage_path('app/public/' . $uploadFileName));
+        }
+
+
+        if (request()->file('purches_file')) {
+            $filePath = "site/purches_price_weight.xlsx";
+            request()->file('purches_file')->storeAs("/public/" . $filePath);
+            PurchesPriceWeightCourier::truncate();
+            Excel::import(new PurchesPriceWeightCourierImport, storage_path('app/public/' . $filePath));
+        }
+
+        if (request()->file('weight_file')) {
+            $filePath = "site/weight_vs_courier.xlsx";
+            request()->file('weight_file')->storeAs("/public/" . $filePath);
+            WeightVSCourier::truncate();
+            Excel::import(new WeightVSCourierImport, storage_path('app/public/' . $filePath));
         }
 
         if (request()->file('product_background_image')) {

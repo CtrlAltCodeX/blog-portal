@@ -74,7 +74,20 @@
                                         @endif
                                         @endforeach
                                     </td>
-                                    <td><span class="badge bg-{{ $user->status ? 'success' : 'danger' }}">{{ $user->status ? 'Active' : 'Inactive' }}</span>
+                                    <td>
+    @php
+        $statusLabels = [
+            0 => ['label' => 'Inactive', 'color' => 'danger'],
+            1 => ['label' => 'Active', 'color' => 'success'],
+            2 => ['label' => 'Suspended', 'color' => 'warning'],
+            3 => ['label' => 'Blocked', 'color' => 'dark']
+        ];
+    @endphp
+
+    <span class="badge bg-{{ $statusLabels[$user->status]['color'] }}">
+        {{ $statusLabels[$user->status]['label'] }}
+    </span>
+</td>
                                     </td>
                                     <td class="btn-group-sm">
                                         <a href="{{ route('edit.users.status', $user->id) }}" class="btn btn-primary">{{ __('EDIT') }}</a>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Mail\OtpMail;
+use App\Mail\StatusNotificationMail;
 use App\Models\User;
 use App\Models\UserSession;
 use App\Providers\RouteServiceProvider;
@@ -106,6 +107,7 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
+        // echo "hi";die;
         if (!$user = User::where('email', request()->email)->first()) {
             session()->flash('error', 'Opps! Email Or Password Mismatch');
 
@@ -124,21 +126,18 @@ class LoginController extends Controller
             $session->delete();
         }
 
-        // if (
-        //     $user
-        //     && $user->allow_sessions
-        //     && $user->sessions->where('expire_at', '>', now())->first()
-        // ) {
-        //     session()->flash('error', 'You are already Logged in other Device');
+        if ($user->status == 2) {
+            $subject = "Urgent: Your Account Has Been Suspended Due to Unusual Activities";
+            $body = "We regret to inform you that your account has been Suspended due to unusual activities detected on our platform. This decision has been made to ensure the safety and integrity of our users and services.";
+            Mail::to($user->email)->send(new StatusNotificationMail('SUSPEND', $subject, $body));
+        } 
+        else if ($user->status == 3) {
+            $subject = "Important Notice: Your Account Has Been Permanently Blocked";
+            $body = "We regret to inform you that your account has been permanently blocked due to unusual activities detected on our platform. This decision has been made to ensure the safety and integrity of our users and services. ";
+            Mail::to($user->email)->send(new StatusNotificationMail('BLOCKED', $subject, $body));
+        }
+    
 
-        //     return redirect()->route('login');
-        // } else if (
-        //     $user
-        //     && !$user->allow_sessions
-        //     && $user = $user->sessions->where('expire_at', '<', now())->first()
-        // ) {
-        //     $user->delete();
-        // }
 
         if (request()->otp) {
             $verifyOtp = User::where('email', request()->email)
@@ -152,9 +151,7 @@ class LoginController extends Controller
             }
         }
 
-        // If the class is using the ThrottlesLogins trait, we can automatically throttle
-        // the login attempts for this application. We'll key this by the username and
-        // the IP address of the client making these requests into this application.
+       
         if (
             method_exists($this, 'hasTooManyLoginAttempts') &&
             $this->hasTooManyLoginAttempts($request)
@@ -213,9 +210,7 @@ class LoginController extends Controller
             return $this->sendLoginResponse($request);
         }
 
-        // If the login attempt was unsuccessful we will increment the number of attempts
-        // to login and redirect the user back to the login form. Of course, when this
-        // user surpasses their maximum number of attempts they will get locked out.
+       
         $this->incrementLoginAttempts($request);
 
         return $this->sendFailedLoginResponse($request);

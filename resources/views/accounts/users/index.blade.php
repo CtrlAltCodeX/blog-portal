@@ -151,8 +151,20 @@ $getRoles = app('App\Http\Controllers\RoleController');
                                     <td>{{ $user->data_transfer ? 'Yes' : 'No' }}</td>
                                     <td>{{ $user->account_details_change_limitations ? 'Yes' : 'No' }}</td>
                                     <td>{{ $user->allow_sessions ? 'Single' : 'Multiple' }}</td>
-                                    <td><span class="badge bg-{{ $user->status ? 'success' : 'danger' }}">{{ $user->status ? 'Active' : 'Inactive' }}</span>
                                     <td>
+    @php
+        $statusLabels = [
+            0 => ['label' => 'Inactive', 'color' => 'danger'],
+            1 => ['label' => 'Active', 'color' => 'success'],
+            2 => ['label' => 'Suspended', 'color' => 'warning'],
+            3 => ['label' => 'Blocked', 'color' => 'dark']
+        ];
+    @endphp
+
+    <span class="badge bg-{{ $statusLabels[$user->status]['color'] }}">
+        {{ $statusLabels[$user->status]['label'] }}
+    </span>
+</td>                                    <td>
                                         <div class="btn-group btn-group-sm" role="group" aria-label="{{ __('Actions') }}">
                                             @can('User Details -> All Users List -> Edit')
                                             <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary">{{ __('EDIT') }}</a>

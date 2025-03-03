@@ -8,6 +8,8 @@ use App\Http\Requests\BlogRequest;
 use App\Models\Listing;
 use App\Models\Publication;
 use App\Models\SiteSetting;
+use App\Models\WeightVSCourier;
+use App\Models\PurchesPriceWeightCourier;
 use App\Models\UserListingCount;
 use App\Models\UserListingInfo;
 use Carbon\Carbon;
@@ -63,9 +65,39 @@ class ListingController extends Controller
         $categories = $response->json()['feed']['category'];
 
         $siteSetting = SiteSetting::first();
+        $publications  = WeightVSCourier::all();
 
-        return view('listing.create', compact('categories', 'siteSetting'));
+     
+
+        return view('listing.create', compact('categories', 'siteSetting','publications'));
     }
+
+
+    public function getPriceRecords(Request $request)
+    {
+        $price = $request->query('price');
+    
+        if (!$price) {
+            return response()->json(['error' => 'Price parameter is required'], 400);
+        }
+    
+        // Ensure price is a valid number
+        if (!is_numeric($price)) {
+            return response()->json(['error' => 'Price must be a numeric value'], 400);
+        }
+    
+        // Check if table and columns exist
+        try {
+            $records = PurchesPriceWeightCourier::where('min', '<=', $price)
+                ->where('max', '>=', $price)
+                ->get();
+                
+            return response()->json($records);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
 
     /**
      * Store the resources

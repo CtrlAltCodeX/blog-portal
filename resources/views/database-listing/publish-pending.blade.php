@@ -269,7 +269,7 @@
             $("#form").submit();
         });
 
-        $("#basic-datatable_wrapper .col-sm-12:first").html('@can("Pending Listing ( DB ) -> Publish to Website")<form id="update-status" action={{route("listing.status")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status" id="status"><option value="">Select</option><option value=0>Pending</option><option value=2>Reject</option><option value=5>Update to Website</option></select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div><span class="text-danger m-2">Note: Bulk Approve Listings must configure with Google Authenticator</span></form> @endcan');
+        $("#basic-datatable_wrapper .col-sm-12:first").html('@can("Pending Listing ( DB ) -> Publish to Website")<form id="update-status" action={{route("listing.status")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status" id="status"><option value="">Select</option><option value=0>Pending</option><option value=2>Reject</option><option value=5>Update to Website</option><option value=6>Delete</option></select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div><span class="text-danger m-2">Note: Bulk Approve Listings must configure with Google Authenticator</span></form> @endcan');
 
         $("#basic-datatable_wrapper").on('click', '.update-status', function(e) {
             e.preventDefault();
