@@ -282,8 +282,8 @@ class DatabaseListingController extends Controller
             ->get($url . '/feeds/posts/default?alt=json');
 
         $categories = $response->json()['feed']['category'];
-
-        return view('database-listing.edit', compact('listing', 'siteSetting', 'categories'));
+        $publications  = WeightVSCourier::all();
+        return view('database-listing.edit', compact('listing', 'siteSetting', 'categories','publications'));
     }
 
     /**

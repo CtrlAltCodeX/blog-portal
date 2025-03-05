@@ -407,7 +407,7 @@
                                         <div class="">
                                             <label for="genre" class="form-label d-flex ">{{ __('Genre') }}<span class="text-danger">*</span></label>
                                             <!-- <input id="genre" type="genre" class="form-control @error('genre') is-invalid @enderror" name="genre" value="{{ $listing->genre??'Books' }}" autocomplete="genre" autofocus placeholder="Genre"> -->
-                                            <select class="form-control @error('genre') is-invalid @enderror" name="genre">
+                                            <select class="genre form-control @error('genre') is-invalid @enderror" name="genre">
     <option value="">--Select--</option>
     <option value="Fantasy" {{ $listing->genre == 'Fantasy' ? 'selected' : '' }}>Fantasy</option>
     <option value="Horror" {{ $listing->genre == 'Horror' ? 'selected' : '' }}>Horror</option>

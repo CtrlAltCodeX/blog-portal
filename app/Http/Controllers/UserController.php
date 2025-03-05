@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Models\UserListingCount;
 use App\Mail\RegisterOtpMail;
 use App\Mail\WelcomeMail;
-
+use App\Mail\StatusNotificationMail;
 class UserController extends Controller
 {
 
@@ -243,6 +243,7 @@ class UserController extends Controller
      */
     public function updateStatus($id)
     {
+       
         $user = User::find($id);
         
         $status = $user->status;
@@ -255,6 +256,17 @@ class UserController extends Controller
             Mail::to($user->email)->send(new WelcomeMail($user));
             
             Mail::to('abhishek86478@gmail.com')->send(new WelcomeMail($user));
+        }
+
+          if ($user->status == 2) {
+            $subject = "Urgent: Your Account Has Been Suspended Due to Unusual Activities";
+            $body = "We regret to inform you that your account has been Suspended due to unusual activities detected on our platform. This decision has been made to ensure the safety and integrity of our users and services.";
+            Mail::to($user->email)->send(new StatusNotificationMail('SUSPEND', $subject, $body));
+        } 
+        else if ($user->status == 3) {
+            $subject = "Important Notice: Your Account Has Been Permanently Blocked";
+            $body = "We regret to inform you that your account has been permanently blocked due to unusual activities detected on our platform. This decision has been made to ensure the safety and integrity of our users and services. ";
+            Mail::to($user->email)->send(new StatusNotificationMail('BLOCKED', $subject, $body));
         }
 
         session()->flash('success', __('User updated successfully.'));

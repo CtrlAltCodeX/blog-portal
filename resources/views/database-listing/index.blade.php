@@ -275,6 +275,7 @@
         $("#user").change(function() {
             $("#form").submit();
         });
+       
 
         $("#basic-datatable_wrapper .col-sm-12:first").html('@can("Pending Listing ( DB ) -> Publish to Website")<form id="update-status" action={{route("listing.status")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status" id="status"><option value="">Select</option><option value=0>Pending</option><option value=2>Reject</option><option value=3>Publish to Website</option><option value=4>Save to Draft</option><option value=6>Delete</option></select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div><span class="text-danger m-2">Note: Bulk Approve Listings must configure with Google Authenticator</span></form> @endcan');
 
@@ -288,12 +289,22 @@
 
                 return true;
             }
+            let selectedValue =$('#status').val();
 
             if (ids.length <= 0) {
                 alert('Please select the listing')
                 return true;
             }
            
+
+            if (selectedValue == "6") { 
+            let confirmDelete = confirm("Are you sure you want to DELETE the selected listings?");
+            if (!confirmDelete) {
+                return; 
+            }
+        }
+
+     
             $.ajax({
                 type: "GET",
                 url: "{{ route('listing.status') }}",

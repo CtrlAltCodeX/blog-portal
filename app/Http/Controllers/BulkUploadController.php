@@ -13,6 +13,7 @@ use App\Models\SiteSetting;
 use App\Models\UserListingInfo;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Facades\Image;
+use App\Models\WeightVSCourier;
 
 class BulkUploadController extends Controller
 {
@@ -91,7 +92,9 @@ class BulkUploadController extends Controller
 
         $categories = $response->json()['feed']['category'];
 
-        return view('database-listing.edit', compact('listing', 'siteSetting', 'categories'));
+        $publications  = WeightVSCourier::all();
+
+        return view('database-listing.edit', compact('listing', 'siteSetting', 'categories','publications'));
     }
 
     public function update(Request $request)

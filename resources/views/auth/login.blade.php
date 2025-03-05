@@ -96,9 +96,41 @@ $buttonFour = explode(',',$siteSettings?->button_4);
         </div>
     </div>
 </form>
+@if(session('blocked'))
+<div id="modal" style="display: flex; position: fixed; inset: 0; align-items: center; justify-content: center; z-index: 50; background-color: rgba(0, 0, 0, 0.5);">
+    <div style="background-color: white; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); width: 40%; margin: auto; padding: 24px; position: relative; text-align: center;">
+        <h2 id="modalTitle" style="font-size: 1.5rem; font-weight: bold; margin-bottom: 16px;">
+            Your account is {!! session('blocked') !!}
+        </h2>
+        <p style="font-size: 1rem; color: #4B5563; margin-bottom: 20px;">
+            Your account has been {!! session('blocked') !!}. Contact support to reactivate your account .
+        </p>
+        <button id="infoButton" style="background-color: #007BFF; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem;">
+            OPEN SUPPORT
+        </button>
+        <button id="closeModal" style="background: none; border: none; cursor: pointer; color: #6B7280; position: absolute; top: 10px; right: 10px; font-size: 1.2rem;">
+            X
+        </button>
+    </div>
+</div>
+
+@endif
+
 @endsection
 
 @push('js')
+
+
+<script>
+    document.getElementById('infoButton').addEventListener('click', function() {
+        window.location.href = 'https://your-support-url.com'; 
+    });
+
+    document.getElementById('closeModal').addEventListener('click', function() {
+        document.getElementById('modal').style.display = 'none';
+    });
+</script>
+
 <script>
     $(document).ready(function() {
         $('#without-otp').click(function(e) {

@@ -282,10 +282,21 @@
                 return true;
             }
 
+            let selectedValue =$('#status').val();
+
             if (ids.length <= 0) {
                 alert('Please select the listing')
                 return true;
             }
+
+            
+            if (selectedValue == "6") { 
+            let confirmDelete = confirm("Are you sure you want to DELETE the selected listings?");
+            if (!confirmDelete) {
+                return; 
+            }
+        }
+
 
             $.ajax({
                 type: "GET",

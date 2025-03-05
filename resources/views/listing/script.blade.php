@@ -1,5 +1,6 @@
 <script>
     $(document).ready(function() {
+        $(".genre").select2();
         // Counter to keep track of the number of file input fields
         var fileInputCounter = 2; // Start from 2 since the first one is already visible
 

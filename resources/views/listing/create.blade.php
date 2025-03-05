@@ -101,46 +101,6 @@
                 </div>
 
 
-                <!-- weight and couriers -->
-
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="form-group col-md-4">
-                            <label for="pub_name" class="form-label">{{ __('Select Publication') }}</label>
-                            <select class="form-control" name="pub_name" id="pub_name">
-    <option value="">--Select Publication--</option>
-    @foreach($publications as $pub)
-        <option value="{{ $pub->id }}">{{ $pub->pub_name }}</option>
-    @endforeach
-</select>
-
-
-                            </div>
-
-                            <div class="form-group col-md-4">
-                <label for="book_name" class="form-label">{{ __('Select Book Type') }}</label>
-                <select class="form-control" name="book_name" id="book_name">
-                    <option value="">-- Select Book --</option>
-                </select>
-            </div>
-
-
-            <div class="form-group col-md-4">
-    <label class="form-label">{{ __('Selling Prices') }}</label>
-    <div class="selling-prices">
-        <strong>Min Profit:</strong> <span id="selling_price1">--</span> <br>
-        <strong>Max Profit:</strong> <span id="selling_price2">--</span>
-    </div>
-</div>
-
-                           
-                        </div>
-                    </div>
-                </div>
-
-
-
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
@@ -184,6 +144,51 @@
                     </div>
                 </div>
 
+
+                
+
+                <!-- weight and couriers -->
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                            <label for="pub_name" class="form-label">{{ __('Select Publication') }}</label>
+                            <select class="genre form-control" name="pub_name" id="pub_name">
+    <option value="">--Select Publication--</option>
+    @foreach($publications as $pub)
+        <option value="{{ $pub->id }}">{{ $pub->pub_name }}</option>
+    @endforeach
+</select>
+
+
+                            </div>
+
+                            <div class="form-group col-md-4">
+                <label for="book_name" class="form-label">{{ __('Select Book Type') }}</label>
+                <select class="form-control" name="book_name" id="book_name">
+                    <option value="">-- Select Book --</option>
+                </select>
+            </div>
+
+
+            <div class="form-group col-md-4">
+    <label class="form-label">{{ __('Selling Prices') }}</label>
+    <div class="selling-prices">
+        <strong>Min Profit:</strong> <span id="selling_price1">--</span> <br>
+        <strong>Max Profit:</strong> <span id="selling_price2">--</span>
+    </div>
+</div>
+
+                           
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
@@ -463,7 +468,7 @@
                                     <div class="col-md-4">
                                         <div class="">
                                             <label for="genre" class="form-label d-flex ">{{ __('Genre') }} <span class="text-danger">*</span></label>
-                                            <select class="form-control @error('genre') is-invalid @enderror" name="genre" value="{{ old('genre') }}">
+                                            <select  class=" genre form-control @error('genre') is-invalid @enderror" name="genre" value="{{ old('genre') }}">
     <option value="">--Select--</option>
     <option value="Fantasy">Fantasy</option>
     <option value="Horror">Horror</option>
