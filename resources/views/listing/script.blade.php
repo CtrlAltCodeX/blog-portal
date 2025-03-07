@@ -557,45 +557,55 @@
     }
 
     $(document).ready(function() {
-        const publications = @json($publications);
-        const $pubDropdown = $("#pub_name");
-        const $bookDropdown = $("#book_name");
-        const $mrpInput = $("#mrp");
-        let discount = 0,
-            locationDis = 0;
+    const publications = @json($publications);
+    const $pubDropdown = $("#pub_name");
+    const $bookDropdown = $("#book_name");
+    const $mrpInput = $("#mrp");
+    let discount = 0,
+        locationDis = 0,
+        enteredMRP = 0; 
 
-        // Jab Publication select ho
-        $pubDropdown.on("change", function() {
-            const selectedPub = publications.find(pub => pub.id == $(this).val());
-            $bookDropdown.html('<option value="">-- Select Book --</option>'); // Reset Books
+    // Jab Publication select ho
+    $pubDropdown.on("change", function() {
+        const selectedPub = publications.find(pub => pub.id == $(this).val());
+        $bookDropdown.html('<option value="">-- Select Book --</option>'); 
 
-            if (selectedPub) {
-                for (let i = 1; i <= 6; i++) {
-                    const bookType = selectedPub[`book_type_${i}`];
-                    if (bookType) {
-                        $bookDropdown.append(`<option value="book_discount_${i}">${bookType}</option>`);
-                    }
+        if (selectedPub) {
+            for (let i = 1; i <= 6; i++) {
+                const bookType = selectedPub[`book_type_${i}`];
+                if (bookType) {
+                    $bookDropdown.append(`<option value="book_discount_${i}">${bookType}</option>`);
                 }
             }
-        });
+        }
 
-        // Jab Book select ho
-        $bookDropdown.on("change", function() {
-            const selectedPub = publications.find(pub => pub.id == $pubDropdown.val());
-            if (selectedPub && $(this).val()) {
-                discount = parseInt(selectedPub[$(this).val()]) || 0;
-                locationDis = parseInt(selectedPub.location_dis) || 0;
-                calculatePrice();
-            }
-        });
+        calculatePrice(); 
+    });
 
-        // Jab MRP change ho to calculation update ho
-        $mrpInput.on("input", calculatePrice);
+    // Jab Book select ho
+    $bookDropdown.on("change", function() {
+        const selectedPub = publications.find(pub => pub.id == $pubDropdown.val());
+        if (selectedPub && $(this).val()) {
+            discount = parseInt(selectedPub[$(this).val()]) || 0;
+            locationDis = parseInt(selectedPub.location_dis) || 0;
+        }
+        calculatePrice();
+    });
+
+    // Jab MRP change ho to naye value store karo aur calculation karo
+    $mrpInput.on("input", function() {
+        enteredMRP = parseInt($(this).val()) || 0;
+        calculatePrice();
+    });
+
+
 
         function calculatePrice() {
             const mrp = parseInt($mrpInput.val()) || 0;
             const locationDiscount = (locationDis / 100) * mrp;
             const finalPrice = mrp - (discount - locationDiscount);
+            console.log("mrp",mrp)
+            console.log("finalPrice",finalPrice)
 
             if (mrp && locationDiscount && finalPrice > 0) {
                 $.get("{{ route('listing.getPriceRecords') }}", {
@@ -604,6 +614,7 @@
                 .done(function(data) {
                     if (!data.length) {
                         console.error("No data received.");
+                        alert("No data according to"+finalPrice)
                         return;
                     }
 
