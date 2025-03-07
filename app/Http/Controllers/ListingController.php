@@ -67,8 +67,6 @@ class ListingController extends Controller
         $siteSetting = SiteSetting::first();
         $publications  = WeightVSCourier::all();
 
-     
-
         return view('listing.create', compact('categories', 'siteSetting','publications'));
     }
 
@@ -350,7 +348,9 @@ class ListingController extends Controller
 
         $siteSetting = SiteSetting::first();
 
-        return view('listing.edit', compact('post', 'categories', 'allInfo', 'labels', 'siteSetting'));
+        $publications  = WeightVSCourier::all();
+        
+        return view('listing.edit', compact('post', 'categories', 'allInfo', 'labels', 'siteSetting', 'publications'));
     }
 
     /**

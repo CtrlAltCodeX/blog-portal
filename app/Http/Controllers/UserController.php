@@ -16,6 +16,7 @@ use App\Models\UserListingCount;
 use App\Mail\RegisterOtpMail;
 use App\Mail\WelcomeMail;
 use App\Mail\StatusNotificationMail;
+
 class UserController extends Controller
 {
 
@@ -76,7 +77,7 @@ class UserController extends Controller
 
         return redirect()->route('users.index');
     }
-    
+
     /**
      * Generate Random Digits
      *
@@ -243,30 +244,32 @@ class UserController extends Controller
      */
     public function updateStatus($id)
     {
-       
         $user = User::find($id);
-        
+
         $status = $user->status;
 
         $user->update(request()->all());
 
         $user->syncRoles(request()->input('roles'));
-        
+
         if (!$status) {
             Mail::to($user->email)->send(new WelcomeMail($user));
-            
+
             Mail::to('abhishek86478@gmail.com')->send(new WelcomeMail($user));
         }
 
-          if ($user->status == 2) {
+        if ($user->status == 2) {
             $subject = "Urgent: Your Account Has Been Suspended Due to Unusual Activities";
             $body = "We regret to inform you that your account has been Suspended due to unusual activities detected on our platform. This decision has been made to ensure the safety and integrity of our users and services.";
             Mail::to($user->email)->send(new StatusNotificationMail('SUSPEND', $subject, $body));
-        } 
-        else if ($user->status == 3) {
+            Mail::to('abhishek86478@gmail.com')->send(new StatusNotificationMail('SUSPEND', $subject, $body));
+
+        } else if ($user->status == 3) {
             $subject = "Important Notice: Your Account Has Been Permanently Blocked";
             $body = "We regret to inform you that your account has been permanently blocked due to unusual activities detected on our platform. This decision has been made to ensure the safety and integrity of our users and services. ";
             Mail::to($user->email)->send(new StatusNotificationMail('BLOCKED', $subject, $body));
+            Mail::to('abhishek86478@gmail.com')->send(new StatusNotificationMail('BLOCKED', $subject, $body));
+
         }
 
         session()->flash('success', __('User updated successfully.'));
@@ -314,7 +317,7 @@ class UserController extends Controller
 
         return redirect()->back();
     }
-    
+
     public function userCounts()
     {
         // Initialize query for 'Created' status and group by user
@@ -322,52 +325,51 @@ class UserController extends Controller
             ->selectRaw('user_id, sum(create_count) as total_created, sum(approved_count) as total_approved, sum(reject_count) as total_rejected, sum(delete_count) as total_deleted')
             ->where('status', 'Created')
             ->groupBy('user_id');
-    
+
         if (request()->has('start_date') && request()->has('end_date')) {
             $startDate = Carbon::parse(request()->start_date);
             $endDate = Carbon::parse(request()->end_date);
-    
+
             $countCreated->whereBetween('created_at', [$startDate->startOfDay(), $endDate->endOfDay()]);
         }
-    
+
         if (request()->user_id) {
             $countCreated->where('user_id', request()->user_id);
         }
-    
+
         if (!auth()->user()->hasRole('Super Admin')) {
             $countCreated->where('user_id', auth()->user()->id);
         }
-    
+
         $countCreated = $countCreated->get();
-    
+
         // Initialize query for 'Edited' status and group by user
         $countEdited = UserListingCount::with('user')
             ->selectRaw('user_id, sum(create_count) as total_created, sum(approved_count) as total_approved, sum(reject_count) as total_rejected, sum(delete_count) as total_deleted')
             ->where('status', 'Edited')
             ->groupBy('user_id');
-    
+
         if (request()->has('start_date') && request()->has('end_date')) {
             $startDate = Carbon::parse(request()->start_date);
             $endDate = Carbon::parse(request()->end_date);
-    
+
             $countEdited->whereBetween('created_at', [$startDate->startOfDay(), $endDate->endOfDay()]);
         }
-    
+
         if (request()->user_id) {
             $countEdited->where('user_id', request()->user_id);
         }
-    
+
         if (!auth()->user()->hasRole('Super Admin')) {
             $countEdited->where('user_id', auth()->user()->id);
         }
-    
+
         $countEdited = $countEdited->get();
-    
+
         // Get all users
         $users = User::all();
 
         // Pass data to the view
         return view('counts', compact('countCreated', 'countEdited', 'users'));
     }
-
 }

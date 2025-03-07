@@ -43,13 +43,9 @@
 </head>
 <body>
 
-<div class="email-container">
+<div class="">
     <h2>{{ strtoupper($status) }}</h2>
-
-    <p class="bold">SUBJECT:</p>
-    <p>{{ $subject }}</p>
-
-    <p class="bold">BODY:</p>
+    
     <p class="content">
         Dear Freelancer's,<br><br>
         {{ $body }}
@@ -65,9 +61,9 @@
     </p>
 
     <p >We appreciate your cooperation in this matter.</p>
-    <p style="text-align: center;">
+    <a href="https://support.exam360.in" style="text-align: center;">
         CONTACT SUPPORT TEAM
-    </p>
+    </a>
 
     <div class="footer">
         <p>Best regards,</p>

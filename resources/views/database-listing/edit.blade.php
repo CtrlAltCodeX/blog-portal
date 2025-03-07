@@ -133,6 +133,43 @@
                 </div>
 
                 <div class="card">
+                    <div class="card-body" style="background-color: antiquewhite;">
+                        <h4>PRICE CALCULATION</h4>
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label for="pub_name" class="form-label">{{ __('Publication') }}</label>
+                                <select class="genre form-control" name="pub_name" id="pub_name">
+                                    <option value="">--Publication--</option>
+                                    @foreach($publications as $pub)
+                                    <option value="{{ $pub->id }}">{{ $pub->pub_name }}</option>
+                                    @endforeach
+                                </select>
+
+
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label for="book_name" class="form-label">{{ __('Book Type') }}</label>
+                                <select class="form-control" name="book_name" id="book_name">
+                                    <option value="">-- Select Book --</option>
+                                </select>
+                            </div>
+
+
+                            <div class="form-group col-md-4">
+                                <label class="form-label">{{ __('Selling Prices') }}</label>
+                                <div class="selling-prices">
+                                    <strong>Min Selling Price:</strong> <span id="selling_price1">--</span> <br>
+                                    <strong>Max Selling Price:</strong> <span id="selling_price2">--</span>
+                                </div>
+                            </div>
+
+                           
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
                     <div class="card-body">
                         <div class="row">
                             <div class="form-group col-md-4">
@@ -222,7 +259,7 @@
                                         <div class="">
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <label for="sku" class="form-label">
-                                                    {{ __('ISBN 10') }}  <span class="text-danger">*</span>
+                                                    {{ __('ISBN 10') }} <span class="text-danger">*</span>
                                                 </label>
                                             </div>
                                             <input type="text" class="form-control " name="isbn_10" value="{{ $listing['isbn_10'] }}" autofocus placeholder="ISBN 10">
@@ -240,7 +277,7 @@
                                         <div class="">
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <label for="sku" class="form-label">
-                                                    {{ __('ISBN 13') }}  <span class="text-danger">*</span>
+                                                    {{ __('ISBN 13') }} <span class="text-danger">*</span>
                                                 </label>
                                             </div>
                                             <input id="isbn_13" type="text" class="form-control @error('isbn_13') is-invalid @enderror" name="isbn_13" value="{{ $listing['isbn_13'] }}" autofocus placeholder="ISBN 13">
@@ -258,7 +295,7 @@
                                         <div class="">
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <label for="publish_year" class="form-label">
-                                                    {{ __('Publish Year') }}  <span class="text-danger">*</span>
+                                                    {{ __('Publish Year') }} <span class="text-danger">*</span>
                                                 </label>
                                             </div>
                                             <input type="month" class="form-control @error('publish_year') is-invalid @enderror" name="publish_year" value="{{ $listing['publish_year'] }}">
@@ -271,7 +308,7 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    
+
                                     <div class="form-group col-md-4">
                                         <div class="d-flex align-items-center justify-content-between">
                                             <label for="sku" class="form-label">
@@ -304,7 +341,7 @@
                                     </div>
 
                                     <div class="form-group col-md-4">
-                                        <label for="pages" class="form-label">{{ __('No. of Pages') }}  <span class="text-danger">*</span></label>
+                                        <label for="pages" class="form-label">{{ __('No. of Pages') }} <span class="text-danger">*</span></label>
                                         <input id="pages" type="text" class="form-control @error('pages') is-invalid @enderror" name="pages" value="{{ old('pages') ?? $listing->no_of_pages }}" autocomplete="pages" autofocus placeholder="No. of Pages">
                                         <span class="error-message pages" style="color:red;"></span>
 
@@ -351,10 +388,10 @@
                                         </span>
                                         @enderror
                                     </div>
-                                    
+
                                     <div class="col-md-4">
                                         <div class="">
-                                            <label for="weight" class="form-label d-flex">{{ __('Weight (grams)') }}  <span class="text-danger">*</span></label>
+                                            <label for="weight" class="form-label d-flex">{{ __('Weight (grams)') }} <span class="text-danger">*</span></label>
                                             <input type="number" class="form-control @error('weight') is-invalid @enderror" name="weight" value="{{ $listing['weight'] }}" autocomplete="weight" autofocus placeholder="Weight (g)">
                                             <span class="error-message weight" style="color:red;"></span>
 
@@ -368,16 +405,16 @@
 
                                     <div class="col-md-4">
                                         <div class="">
-                                            <label for="reading_age" class="form-label d-flex ">{{ __('Reading Age') }}  <span class="text-danger">*</span></label>
- 
-                                <select class="form-control @error('reading_age') is-invalid @enderror" name="reading_age">
-                                    <option value="">--Select--</option>
-                                    <option value="Above 18 Years" {{ $listing->reading_age == 'Above 18 Years' ? 'selected' : '' }}>Above 18 Years</option>
-                                    <option value="Above 10 Years" {{ $listing->reading_age == 'Above 10 Years' ? 'selected' : '' }}>Above 10 Years</option>
-                                    <option value="Above 5 Years" {{ $listing->reading_age == 'Above 5 Years' ? 'selected' : '' }}>Above 5 Years</option>
-                                    <option value="Above 3 Years" {{ $listing->reading_age == 'Above 3 Years' ? 'selected' : '' }}>Above 3 Years</option>
-                                </select>                                         
-                                        <span class="error-message reading_age" style="color:red;"></span>
+                                            <label for="reading_age" class="form-label d-flex ">{{ __('Reading Age') }} <span class="text-danger">*</span></label>
+
+                                            <select class="form-control @error('reading_age') is-invalid @enderror" name="reading_age">
+                                                <option value="">--Select--</option>
+                                                <option value="Above 18 Years" {{ $listing->reading_age == 'Above 18 Years' ? 'selected' : '' }}>Above 18 Years</option>
+                                                <option value="Above 10 Years" {{ $listing->reading_age == 'Above 10 Years' ? 'selected' : '' }}>Above 10 Years</option>
+                                                <option value="Above 5 Years" {{ $listing->reading_age == 'Above 5 Years' ? 'selected' : '' }}>Above 5 Years</option>
+                                                <option value="Above 3 Years" {{ $listing->reading_age == 'Above 3 Years' ? 'selected' : '' }}>Above 3 Years</option>
+                                            </select>
+                                            <span class="error-message reading_age" style="color:red;"></span>
 
                                             @error('reading_age')
                                             <span class="invalid-feedback" role="alert">
@@ -403,68 +440,68 @@
 
                                     <div class="col-md-4">
                                         <div class="">
-                                            <label for="genre" class="form-label d-flex ">{{ __('Genre') }}  <span class="text-danger">*</span></label>
+                                            <label for="genre" class="form-label d-flex ">{{ __('Genre') }} <span class="text-danger">*</span></label>
                                             <select class="genre form-control @error('genre') is-invalid @enderror" name="genre">
-    <option value="">--Select--</option>
-    <option value="Fantasy" {{ $listing->genre == 'Fantasy' ? 'selected' : '' }}>Fantasy</option>
-    <option value="Horror" {{ $listing->genre == 'Horror' ? 'selected' : '' }}>Horror</option>
-    <option value="Romance" {{ $listing->genre == 'Romance' ? 'selected' : '' }}>Romance</option>
-    <option value="Science fiction" {{ $listing->genre == 'Science fiction' ? 'selected' : '' }}>Science fiction</option>
-    <option value="Adventure fiction" {{ $listing->genre == 'Adventure fiction' ? 'selected' : '' }}>Adventure fiction</option>
-    <option value="Fiction" {{ $listing->genre == 'Fiction' ? 'selected' : '' }}>Fiction</option>
-    <option value="Mystery" {{ $listing->genre == 'Mystery' ? 'selected' : '' }}>Mystery</option>
-    <option value="Fairy tale" {{ $listing->genre == 'Fairy tale' ? 'selected' : '' }}>Fairy tale</option>
-    <option value="Thriller" {{ $listing->genre == 'Thriller' ? 'selected' : '' }}>Thriller</option>
-    <option value="Young adult" {{ $listing->genre == 'Young adult' ? 'selected' : '' }}>Young adult</option>
-    <option value="Historical" {{ $listing->genre == 'Historical' ? 'selected' : '' }}>Historical</option>
-    <option value="Literary fiction" {{ $listing->genre == 'Literary fiction' ? 'selected' : '' }}>Literary fiction</option>
-    <option value="Comedy" {{ $listing->genre == 'Comedy' ? 'selected' : '' }}>Comedy</option>
-    <option value="Crime" {{ $listing->genre == 'Crime' ? 'selected' : '' }}>Crime</option>
-    <option value="Short story" {{ $listing->genre == 'Short story' ? 'selected' : '' }}>Short story</option>
-    <option value="Classics" {{ $listing->genre == 'Classics' ? 'selected' : '' }}>Classics</option>
-    <option value="Drama" {{ $listing->genre == 'Drama' ? 'selected' : '' }}>Drama</option>
-    <option value="Dystopian Fiction" {{ $listing->genre == 'Dystopian Fiction' ? 'selected' : '' }}>Dystopian Fiction</option>
-    <option value="Gothic fiction" {{ $listing->genre == 'Gothic fiction' ? 'selected' : '' }}>Gothic fiction</option>
-    <option value="Graphic novel" {{ $listing->genre == 'Graphic novel' ? 'selected' : '' }}>Graphic novel</option>
-    <option value="Magic realism" {{ $listing->genre == 'Magic realism' ? 'selected' : '' }}>Magic realism</option>
-    <option value="Mystery and suspense" {{ $listing->genre == 'Mystery and suspense' ? 'selected' : '' }}>Mystery and suspense</option>
-    <option value="Paranormal romance" {{ $listing->genre == 'Paranormal romance' ? 'selected' : '' }}>Paranormal romance</option>
-    <option value="School Books" {{ $listing->genre == 'School Books' ? 'selected' : '' }}>School Books</option>
-    <option value="NCERT Books" {{ $listing->genre == 'NCERT Books' ? 'selected' : '' }}>NCERT Books</option>
-    <option value="Competitive Books" {{ $listing->genre == 'Competitive Books' ? 'selected' : '' }}>Competitive Books</option>
-    <option value="Medical Books" {{ $listing->genre == 'Medical Books' ? 'selected' : '' }}>Medical Books</option>
-    <option value="Dental Books" {{ $listing->genre == 'Dental Books' ? 'selected' : '' }}>Dental Books</option>
-    <option value="Action & Adventure" {{ $listing->genre == 'Action & Adventure' ? 'selected' : '' }}>Action & Adventure</option>
-    <option value="Arts, Film & Photography" {{ $listing->genre == 'Arts, Film & Photography' ? 'selected' : '' }}>Arts, Film & Photography</option>
-    <option value="Biographies, Diaries & True Accounts" {{ $listing->genre == 'Biographies, Diaries & True Accounts' ? 'selected' : '' }}>Biographies, Diaries & True Accounts</option>
-    <option value="Business & Economics" {{ $listing->genre == 'Business & Economics' ? 'selected' : '' }}>Business & Economics</option>
-    <option value="Children's Books" {{ $listing->genre == "Children's Books" ? 'selected' : '' }}>Children's Books</option>
-    <option value="Comics & Graphic Novels" {{ $listing->genre == 'Comics & Graphic Novels' ? 'selected' : '' }}>Comics & Graphic Novels</option>
-    <option value="Computers & Internet" {{ $listing->genre == 'Computers & Internet' ? 'selected' : '' }}>Computers & Internet</option>
-    <option value="Crafts, Hobbies & Home" {{ $listing->genre == 'Crafts, Hobbies & Home' ? 'selected' : '' }}>Crafts, Hobbies & Home</option>
-    <option value="Crime, Thriller & Mystery" {{ $listing->genre == 'Crime, Thriller & Mystery' ? 'selected' : '' }}>Crime, Thriller & Mystery</option>
-    <option value="Engineering Books" {{ $listing->genre == 'Engineering Books' ? 'selected' : '' }}>Engineering Books</option>
-    <option value="Exam Preparation" {{ $listing->genre == 'Exam Preparation' ? 'selected' : '' }}>Exam Preparation</option>
-    <option value="Health, Family & Personal Development" {{ $listing->genre == 'Health, Family & Personal Development' ? 'selected' : '' }}>Health, Family & Personal Development</option>
-    <option value="Health, Fitness & Nutrition" {{ $listing->genre == 'Health, Fitness & Nutrition' ? 'selected' : '' }}>Health, Fitness & Nutrition</option>
-    <option value="Historical Fiction" {{ $listing->genre == 'Historical Fiction' ? 'selected' : '' }}>Historical Fiction</option>
-    <option value="History" {{ $listing->genre == 'History' ? 'selected' : '' }}>History</option>
-    <option value="Humour" {{ $listing->genre == 'Humour' ? 'selected' : '' }}>Humour</option>
-    <option value="Language, Linguistics & Writing" {{ $listing->genre == 'Language, Linguistics & Writing' ? 'selected' : '' }}>Language, Linguistics & Writing</option>
-    <option value="Law" {{ $listing->genre == 'Law' ? 'selected' : '' }}>Law</option>
-    <option value="Literature & Fiction" {{ $listing->genre == 'Literature & Fiction' ? 'selected' : '' }}>Literature & Fiction</option>
-    <option value="Maps & Atlases" {{ $listing->genre == 'Maps & Atlases' ? 'selected' : '' }}>Maps & Atlases</option>
-    <option value="Medicine & Health Sciences" {{ $listing->genre == 'Medicine & Health Sciences' ? 'selected' : '' }}>Medicine & Health Sciences</option>
-    <option value="Politics" {{ $listing->genre == 'Politics' ? 'selected' : '' }}>Politics</option>
-    <option value="Reference" {{ $listing->genre == 'Reference' ? 'selected' : '' }}>Reference</option>
-    <option value="Religion & Spirituality" {{ $listing->genre == 'Religion & Spirituality' ? 'selected' : '' }}>Religion & Spirituality</option>
-    <option value="Science & Mathematics" {{ $listing->genre == 'Science & Mathematics' ? 'selected' : '' }}>Science & Mathematics</option>
-    <option value="Science Fiction & Fantasy" {{ $listing->genre == 'Science Fiction & Fantasy' ? 'selected' : '' }}>Science Fiction & Fantasy</option>
-    <option value="Sports" {{ $listing->genre == 'Sports' ? 'selected' : '' }}>Sports</option>
-    <option value="Teen & Young Adult" {{ $listing->genre == 'Teen & Young Adult' ? 'selected' : '' }}>Teen & Young Adult</option>
-    <option value="Textbooks & Study Guides" {{ $listing->genre == 'Textbooks & Study Guides' ? 'selected' : '' }}>Textbooks & Study Guides</option>
-    <option value="Travel & Tourism" {{ $listing->genre == 'Travel & Tourism' ? 'selected' : '' }}>Travel & Tourism</option>
-</select>
+                                                <option value="">--Select--</option>
+                                                <option value="Fantasy" {{ $listing->genre == 'Fantasy' ? 'selected' : '' }}>Fantasy</option>
+                                                <option value="Horror" {{ $listing->genre == 'Horror' ? 'selected' : '' }}>Horror</option>
+                                                <option value="Romance" {{ $listing->genre == 'Romance' ? 'selected' : '' }}>Romance</option>
+                                                <option value="Science fiction" {{ $listing->genre == 'Science fiction' ? 'selected' : '' }}>Science fiction</option>
+                                                <option value="Adventure fiction" {{ $listing->genre == 'Adventure fiction' ? 'selected' : '' }}>Adventure fiction</option>
+                                                <option value="Fiction" {{ $listing->genre == 'Fiction' ? 'selected' : '' }}>Fiction</option>
+                                                <option value="Mystery" {{ $listing->genre == 'Mystery' ? 'selected' : '' }}>Mystery</option>
+                                                <option value="Fairy tale" {{ $listing->genre == 'Fairy tale' ? 'selected' : '' }}>Fairy tale</option>
+                                                <option value="Thriller" {{ $listing->genre == 'Thriller' ? 'selected' : '' }}>Thriller</option>
+                                                <option value="Young adult" {{ $listing->genre == 'Young adult' ? 'selected' : '' }}>Young adult</option>
+                                                <option value="Historical" {{ $listing->genre == 'Historical' ? 'selected' : '' }}>Historical</option>
+                                                <option value="Literary fiction" {{ $listing->genre == 'Literary fiction' ? 'selected' : '' }}>Literary fiction</option>
+                                                <option value="Comedy" {{ $listing->genre == 'Comedy' ? 'selected' : '' }}>Comedy</option>
+                                                <option value="Crime" {{ $listing->genre == 'Crime' ? 'selected' : '' }}>Crime</option>
+                                                <option value="Short story" {{ $listing->genre == 'Short story' ? 'selected' : '' }}>Short story</option>
+                                                <option value="Classics" {{ $listing->genre == 'Classics' ? 'selected' : '' }}>Classics</option>
+                                                <option value="Drama" {{ $listing->genre == 'Drama' ? 'selected' : '' }}>Drama</option>
+                                                <option value="Dystopian Fiction" {{ $listing->genre == 'Dystopian Fiction' ? 'selected' : '' }}>Dystopian Fiction</option>
+                                                <option value="Gothic fiction" {{ $listing->genre == 'Gothic fiction' ? 'selected' : '' }}>Gothic fiction</option>
+                                                <option value="Graphic novel" {{ $listing->genre == 'Graphic novel' ? 'selected' : '' }}>Graphic novel</option>
+                                                <option value="Magic realism" {{ $listing->genre == 'Magic realism' ? 'selected' : '' }}>Magic realism</option>
+                                                <option value="Mystery and suspense" {{ $listing->genre == 'Mystery and suspense' ? 'selected' : '' }}>Mystery and suspense</option>
+                                                <option value="Paranormal romance" {{ $listing->genre == 'Paranormal romance' ? 'selected' : '' }}>Paranormal romance</option>
+                                                <option value="School Books" {{ $listing->genre == 'School Books' ? 'selected' : '' }}>School Books</option>
+                                                <option value="NCERT Books" {{ $listing->genre == 'NCERT Books' ? 'selected' : '' }}>NCERT Books</option>
+                                                <option value="Competitive Books" {{ $listing->genre == 'Competitive Books' ? 'selected' : '' }}>Competitive Books</option>
+                                                <option value="Medical Books" {{ $listing->genre == 'Medical Books' ? 'selected' : '' }}>Medical Books</option>
+                                                <option value="Dental Books" {{ $listing->genre == 'Dental Books' ? 'selected' : '' }}>Dental Books</option>
+                                                <option value="Action & Adventure" {{ $listing->genre == 'Action & Adventure' ? 'selected' : '' }}>Action & Adventure</option>
+                                                <option value="Arts, Film & Photography" {{ $listing->genre == 'Arts, Film & Photography' ? 'selected' : '' }}>Arts, Film & Photography</option>
+                                                <option value="Biographies, Diaries & True Accounts" {{ $listing->genre == 'Biographies, Diaries & True Accounts' ? 'selected' : '' }}>Biographies, Diaries & True Accounts</option>
+                                                <option value="Business & Economics" {{ $listing->genre == 'Business & Economics' ? 'selected' : '' }}>Business & Economics</option>
+                                                <option value="Children's Books" {{ $listing->genre == "Children's Books" ? 'selected' : '' }}>Children's Books</option>
+                                                <option value="Comics & Graphic Novels" {{ $listing->genre == 'Comics & Graphic Novels' ? 'selected' : '' }}>Comics & Graphic Novels</option>
+                                                <option value="Computers & Internet" {{ $listing->genre == 'Computers & Internet' ? 'selected' : '' }}>Computers & Internet</option>
+                                                <option value="Crafts, Hobbies & Home" {{ $listing->genre == 'Crafts, Hobbies & Home' ? 'selected' : '' }}>Crafts, Hobbies & Home</option>
+                                                <option value="Crime, Thriller & Mystery" {{ $listing->genre == 'Crime, Thriller & Mystery' ? 'selected' : '' }}>Crime, Thriller & Mystery</option>
+                                                <option value="Engineering Books" {{ $listing->genre == 'Engineering Books' ? 'selected' : '' }}>Engineering Books</option>
+                                                <option value="Exam Preparation" {{ $listing->genre == 'Exam Preparation' ? 'selected' : '' }}>Exam Preparation</option>
+                                                <option value="Health, Family & Personal Development" {{ $listing->genre == 'Health, Family & Personal Development' ? 'selected' : '' }}>Health, Family & Personal Development</option>
+                                                <option value="Health, Fitness & Nutrition" {{ $listing->genre == 'Health, Fitness & Nutrition' ? 'selected' : '' }}>Health, Fitness & Nutrition</option>
+                                                <option value="Historical Fiction" {{ $listing->genre == 'Historical Fiction' ? 'selected' : '' }}>Historical Fiction</option>
+                                                <option value="History" {{ $listing->genre == 'History' ? 'selected' : '' }}>History</option>
+                                                <option value="Humour" {{ $listing->genre == 'Humour' ? 'selected' : '' }}>Humour</option>
+                                                <option value="Language, Linguistics & Writing" {{ $listing->genre == 'Language, Linguistics & Writing' ? 'selected' : '' }}>Language, Linguistics & Writing</option>
+                                                <option value="Law" {{ $listing->genre == 'Law' ? 'selected' : '' }}>Law</option>
+                                                <option value="Literature & Fiction" {{ $listing->genre == 'Literature & Fiction' ? 'selected' : '' }}>Literature & Fiction</option>
+                                                <option value="Maps & Atlases" {{ $listing->genre == 'Maps & Atlases' ? 'selected' : '' }}>Maps & Atlases</option>
+                                                <option value="Medicine & Health Sciences" {{ $listing->genre == 'Medicine & Health Sciences' ? 'selected' : '' }}>Medicine & Health Sciences</option>
+                                                <option value="Politics" {{ $listing->genre == 'Politics' ? 'selected' : '' }}>Politics</option>
+                                                <option value="Reference" {{ $listing->genre == 'Reference' ? 'selected' : '' }}>Reference</option>
+                                                <option value="Religion & Spirituality" {{ $listing->genre == 'Religion & Spirituality' ? 'selected' : '' }}>Religion & Spirituality</option>
+                                                <option value="Science & Mathematics" {{ $listing->genre == 'Science & Mathematics' ? 'selected' : '' }}>Science & Mathematics</option>
+                                                <option value="Science Fiction & Fantasy" {{ $listing->genre == 'Science Fiction & Fantasy' ? 'selected' : '' }}>Science Fiction & Fantasy</option>
+                                                <option value="Sports" {{ $listing->genre == 'Sports' ? 'selected' : '' }}>Sports</option>
+                                                <option value="Teen & Young Adult" {{ $listing->genre == 'Teen & Young Adult' ? 'selected' : '' }}>Teen & Young Adult</option>
+                                                <option value="Textbooks & Study Guides" {{ $listing->genre == 'Textbooks & Study Guides' ? 'selected' : '' }}>Textbooks & Study Guides</option>
+                                                <option value="Travel & Tourism" {{ $listing->genre == 'Travel & Tourism' ? 'selected' : '' }}>Travel & Tourism</option>
+                                            </select>
 
                                             <span class="error-message genre" style="color:red;"></span>
 
@@ -519,8 +556,8 @@
                                     </div>
 
                                     <div class="form-group col-md-4">
-                                    <label for="url" class="form-label d-flex justify-content-between w-100"> <span>{{ __('Insta Mojo URL') }}<span class="text-danger">*</span></span> <span onclick="copyLink()" id="copylink" style="cursor:pointer; color:blue;">Copy</span> </label>
-                                    <input id="url" type="url" class="form-control @error('url') is-invalid @enderror" name="url" value="{{ old('url') ?? $listing->insta_mojo_url }}" autocomplete="url" autofocus placeholder="Insta Mojo Url">
+                                        <label for="url" class="form-label d-flex justify-content-between w-100"> <span>{{ __('Insta Mojo URL') }}<span class="text-danger">*</span></span> <span onclick="copyLink()" id="copylink" style="cursor:pointer; color:blue;">Copy</span> </label>
+                                        <input id="url" type="url" class="form-control @error('url') is-invalid @enderror" name="url" value="{{ old('url') ?? $listing->insta_mojo_url }}" autocomplete="url" autofocus placeholder="Insta Mojo Url">
                                         <span class="error-message url" style="color:red;"></span>
 
                                         @error('url')
@@ -552,7 +589,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-3 text-right mb-2 d-flex" id='preview' style="justify-content: flex-end;" >
+                            <div class="col-md-3 text-right mb-2 d-flex" id='preview' style="justify-content: flex-end;">
                                 <div style="border: 2px solid #ccc;width: 300px;max-height: 300px;height:300px;">
                                     <img src="{{ $listing->images }}" id='previewImage' />
                                     <div class='image-status' style="text-align: center;padding: 5px;display:none;"></div>

@@ -54,10 +54,10 @@
                 <div class="card-header justify-content-between">
                     <h3 class="card-title">Pending Listings ( DB )</h3>
 
-                    <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center justify-content-between" style="grid-gap: 10px;">
                         
                         <form action="" method="get" id='form' style="margin-left: 10px;" class="d-flex align-items-center justify-content-end">
-                        <div>
+                        <div class="w-50">
                             <a href="{{ route('database-listing.index', ['status' => '', 'category' => 'Product', 'startIndex' => 1, 'user' => request()->user]) }}" class="btn btn-light position-relative me-2 mb-2 btn-sm"> All
                                 ( {{$allCounts}} )
                                 <!--<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">-->
@@ -114,6 +114,13 @@
                             </select>
                         </form>
 
+                        <select class="form-control w-25" id='issue_dropdown'>
+                            <option value="">Select</option>
+                            <option value=2>All</option>
+                            <option value=1>Correct Listing</option>
+                            <option value=3>Error Listing (Astric)</option>
+                        </select>
+
                     </div>
                 </div>
 
@@ -131,6 +138,7 @@
                                     <th>{{ __('Image') }}</th>
                                     <th>{{ __('Product name') }}</th>
                                     <th>{{ __('Sell Price') }}</th>
+                                    <th>{{ __('Dis.') }}</th>
                                     <th>{{ __('MRP') }}</th>
                                     <th>{{ __('Labels') }}</th>
                                     <th>{{ __('Created By') }}</th>
@@ -143,9 +151,12 @@
                             </thead>
                             <tbody>
                                 @forelse ($googlePosts as $key => $googlePost)
-                                <tr id='{{$googlePost->id}}'>
+                                <tr id='{{$googlePost->id}}' class="@if(abs($googlePost->selling_price - $googlePost->mrp) >= 0 && abs($googlePost->selling_price - $googlePost->mrp) <= 10) astric @else accurate @endif">
                                     <td>
                                         <input type="checkbox" name="ids" class="checkbox-update" value="{{$googlePost->id}}" />
+                                        @if(abs($googlePost->selling_price - $googlePost->mrp) >= 0 && abs($googlePost->selling_price - $googlePost->mrp) <= 10)
+                                            <span style="color: red;font-size:25px">*</span>
+                                        @endif
                                     </td>
                                     <td>{{ ++$key }}</td>
                                     <td class="status">{{substr($googlePost->error, 0, 20)}}</td>
@@ -170,13 +181,22 @@
                                         @else {{ 'In Stock' }}
                                         @endif
                                     </td>
-                                    @php
-                                            $image = '/public/dummy.jpg';
-
-                                    @endphp
-                                    <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{$image}}" alt="Product Image" /></td>
+                                    <td><img onerror="this.onerror=null;this.src='/dummy.jpg';" src="" alt="Product Image" /></td>
                                     <td>{{ $googlePost->title }}</td>
-                                    <td>{{ '₹'.$googlePost->selling_price }}</td>
+                                    <td>{{ '₹'.$googlePost->selling_price }}
+                                    </td>
+                                    <td>
+                                        @php
+                                            $discount = $googlePost->mrp > 0 
+                                                        ? round((($googlePost->mrp - $googlePost->selling_price) / $googlePost->mrp) * 100, 2)
+                                                        : 0;
+                                        @endphp
+                                        @if($discount > 0)
+                                            {{ $discount . '%' }}
+                                        @else
+                                            0%
+                                        @endif
+                                    </td>
                                     <td>{{ '₹'.$googlePost->mrp }}</td>
                                     @php
                                     $categories = collect($googlePost->categories??[])->toArray();
@@ -195,8 +215,6 @@
                                             @can('Pending Listing ( DB ) -> Edit')
                                             <a href="{{ route('database-listing.edit', $googlePost->id) }}" class="btn btn-sm btn-primary padd">{{ __('Edit') }}</a>
                                             @endcan
-
-                                            
                                             
                                             @can('Pending Listing ( DB ) -> Delete')
                                             <form action="{{ route('database-listing.destroy', $googlePost->id) }}" method="POST" class="ml-2">
@@ -275,7 +293,6 @@
         $("#user").change(function() {
             $("#form").submit();
         });
-       
 
         $("#basic-datatable_wrapper .col-sm-12:first").html('@can("Pending Listing ( DB ) -> Publish to Website")<form id="update-status" action={{route("listing.status")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status" id="status"><option value="">Select</option><option value=0>Pending</option><option value=2>Reject</option><option value=3>Publish to Website</option><option value=4>Save to Draft</option><option value=6>Delete</option></select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div><span class="text-danger m-2">Note: Bulk Approve Listings must configure with Google Authenticator</span></form> @endcan');
 
@@ -289,22 +306,21 @@
 
                 return true;
             }
-            let selectedValue =$('#status').val();
+
+            let selectedValue = $('#status').val();
 
             if (ids.length <= 0) {
                 alert('Please select the listing')
                 return true;
             }
-           
 
-            if (selectedValue == "6") { 
-            let confirmDelete = confirm("Are you sure you want to DELETE the selected listings?");
-            if (!confirmDelete) {
-                return; 
+            if (selectedValue == 6) {
+                let confirmDelete = confirm("Are you sure you want to DELETE the selected listings?");
+                if (!confirmDelete) {
+                    return;
+                }
             }
-        }
-
-     
+           
             $.ajax({
                 type: "GET",
                 url: "{{ route('listing.status') }}",
@@ -350,6 +366,19 @@
                     }
                 }
             });
+        });
+
+        $("#issue_dropdown").change(function() {
+            if($(this).val() == 1) {
+                $(".astric").hide();
+                $(".accurate").show();
+            } else if($(this).val() == 2) {
+                $(".accurate").show();
+                $(".astric").show();
+            } else if($(this).val() == 3) {
+                $(".accurate").hide();
+                $(".astric").show();
+            }
         });
     })
 </script>

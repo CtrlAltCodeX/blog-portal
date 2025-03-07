@@ -27,7 +27,7 @@ class WatermarkController extends Controller
     {
         $request->validate([
             // 'title' => 'required|string|max:255',
-            'file' => 'required|file|mimes:jpeg,png,jpg,gif',
+            'file' => 'required|file|mimes:jpeg,png,jpg',
         ]);
 
         $siteSettings = SiteSetting::first();

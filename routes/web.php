@@ -247,8 +247,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
      * Direct Blogger
      */
     Route::resource('listing', ListingController::class);
-    Route::get('getPriceRecords', [ListingController::class, 'getPriceRecords'])->name('listing.getPriceRecords');;
 
+    Route::get('getPriceRecords', [ListingController::class, 'getPriceRecords'])->name('listing.getPriceRecords');
 
     Route::get('articles', [DatabaseListingController::class, 'articles'])
         ->name('articles.index');

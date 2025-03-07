@@ -37,12 +37,11 @@
                             <div class="form-group col-3">
                                 <label for="status" class="form-label">{{ __('Status') }}</label>
                                 <select id="status" class="form-control @error('status') is-invalid @enderror" name="status">
-    <option value="0" {{ $user->status == 0 ? 'selected' : '' }}>{{ __('Inactive') }}</option>
-    <option value="1" {{ $user->status == 1 ? 'selected' : '' }}>{{ __('Active') }}</option>
-    <option value="2" {{ $user->status == 2 ? 'selected' : '' }}>{{ __('Suspend') }}</option>
-    <option value="3" {{ $user->status == 3 ? 'selected' : '' }}>{{ __('Blocked') }}</option>
-</select>
-
+                                    <option value="0" {{ $user->status == 0 ? 'selected' : '' }}>{{ __('Inactive') }}</option>
+                                    <option value="1" {{ $user->status == 1 ? 'selected' : '' }}>{{ __('Active') }}</option>
+                                    <option value="2" {{ $user->status == 2 ? 'selected' : '' }}>{{ __('Suspend') }}</option>
+                                    <option value="3" {{ $user->status == 3 ? 'selected' : '' }}>{{ __('Blocked') }}</option>
+                                </select>
 
                                 @error('status')
                                 <span class="invalid-feedback" role="alert">

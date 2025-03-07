@@ -149,43 +149,7 @@
 
                 <!-- weight and couriers -->
 
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="form-group col-md-4">
-                            <label for="pub_name" class="form-label">{{ __('Select Publication') }}</label>
-                            <select class="genre form-control" name="pub_name" id="pub_name">
-    <option value="">--Select Publication--</option>
-    @foreach($publications as $pub)
-        <option value="{{ $pub->id }}">{{ $pub->pub_name }}</option>
-    @endforeach
-</select>
-
-
-                            </div>
-
-                            <div class="form-group col-md-4">
-                <label for="book_name" class="form-label">{{ __('Select Book Type') }}</label>
-                <select class="form-control" name="book_name" id="book_name">
-                    <option value="">-- Select Book --</option>
-                </select>
-            </div>
-
-
-            <div class="form-group col-md-4">
-    <label class="form-label">{{ __('Selling Prices') }}</label>
-    <div class="selling-prices">
-        <strong>Min Profit:</strong> <span id="selling_price1">--</span> <br>
-        <strong>Max Profit:</strong> <span id="selling_price2">--</span>
-    </div>
-</div>
-
-                           
-                        </div>
-                    </div>
-                </div>
-
-
+                
 
 
                 
@@ -239,6 +203,43 @@
                                 </span>
                                 @enderror
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body" style="background-color: antiquewhite;">
+                        <h4>PRICE CALCULATION</h4>
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label for="pub_name" class="form-label">{{ __('Publication') }}</label>
+                                <select class="genre form-control" name="pub_name" id="pub_name">
+                                    <option value="">--Publication--</option>
+                                    @foreach($publications as $pub)
+                                    <option value="{{ $pub->id }}">{{ $pub->pub_name }}</option>
+                                    @endforeach
+                                </select>
+
+
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label for="book_name" class="form-label">{{ __('Book Type') }}</label>
+                                <select class="form-control" name="book_name" id="book_name">
+                                    <option value="">-- Select Book --</option>
+                                </select>
+                            </div>
+
+
+                            <div class="form-group col-md-4">
+                                <label class="form-label">{{ __('Selling Prices') }}</label>
+                                <div class="selling-prices">
+                                    <strong>Min Selling Price:</strong> <span id="selling_price1">--</span> <br>
+                                    <strong>Max Selling Price:</strong> <span id="selling_price2">--</span>
+                                </div>
+                            </div>
+
+                           
                         </div>
                     </div>
                 </div>
@@ -468,69 +469,69 @@
                                     <div class="col-md-4">
                                         <div class="">
                                             <label for="genre" class="form-label d-flex ">{{ __('Genre') }} <span class="text-danger">*</span></label>
-                                            <select  class=" genre form-control @error('genre') is-invalid @enderror" name="genre" value="{{ old('genre') }}">
-    <option value="">--Select--</option>
-    <option value="Fantasy">Fantasy</option>
-    <option value="Horror">Horror</option>
-    <option value="Romance">Romance</option>
-    <option value="Science fiction">Science fiction</option>
-    <option value="Adventure fiction">Adventure fiction</option>
-    <option value="Fiction">Fiction</option>
-    <option value="Mystery">Mystery</option>
-    <option value="Fairy tale">Fairy tale</option>
-    <option value="Thriller">Thriller</option>
-    <option value="Young adult">Young adult</option>
-    <option value="Historical">Historical</option>
-    <option value="Literary fiction">Literary fiction</option>
-    <option value="Comedy">Comedy</option>
-    <option value="Crime">Crime</option>
-    <option value="Short story">Short story</option>
-    <option value="Classics">Classics</option>
-    <option value="Drama">Drama</option>
-    <option value="Dystopian Fiction">Dystopian Fiction</option>
-    <option value="Gothic fiction">Gothic fiction</option>
-    <option value="Graphic novel">Graphic novel</option>
-    <option value="Magic realism">Magic realism</option>
-    <option value="Mystery and suspense">Mystery and suspense</option>
-    <option value="Paranormal romance">Paranormal romance</option>
-    <option value="School Books">School Books</option>
-    <option value="NCERT Books">NCERT Books</option>
-    <option value="Competitive Books">Competitive Books</option>
-    <option value="Medical Books">Medical Books</option>
-    <option value="Dental Books">Dental Books</option>
-    <option value="Action & Adventure">Action & Adventure</option>
-    <option value="Arts, Film & Photography">Arts, Film & Photography</option>
-    <option value="Biographies, Diaries & True Accounts">Biographies, Diaries & True Accounts</option>
-    <option value="Business & Economics">Business & Economics</option>
-    <option value="Children's Books">Children's Books</option>
-    <option value="Comics & Graphic Novels">Comics & Graphic Novels</option>
-    <option value="Computers & Internet">Computers & Internet</option>
-    <option value="Crafts, Hobbies & Home">Crafts, Hobbies & Home</option>
-    <option value="Crime, Thriller & Mystery">Crime, Thriller & Mystery</option>
-    <option value="Engineering Books">Engineering Books</option>
-    <option value="Exam Preparation">Exam Preparation</option>
-    <option value="Health, Family & Personal Development">Health, Family & Personal Development</option>
-    <option value="Health, Fitness & Nutrition">Health, Fitness & Nutrition</option>
-    <option value="Historical Fiction">Historical Fiction</option>
-    <option value="History">History</option>
-    <option value="Humour">Humour</option>
-    <option value="Language, Linguistics & Writing">Language, Linguistics & Writing</option>
-    <option value="Law">Law</option>
-    <option value="Literature & Fiction">Literature & Fiction</option>
-    <option value="Maps & Atlases">Maps & Atlases</option>
-    <option value="Medicine & Health Sciences">Medicine & Health Sciences</option>
-    <option value="Politics">Politics</option>
-    <option value="Reference">Reference</option>
-    <option value="Religion & Spirituality">Religion & Spirituality</option>
-    <option value="Science & Mathematics">Science & Mathematics</option>
-    <option value="Science Fiction & Fantasy">Science Fiction & Fantasy</option>
-    <option value="Sciences, Technology & Medicine">Sciences, Technology & Medicine</option>
-    <option value="Society & Social Sciences">Society & Social Sciences</option>
-    <option value="Sports">Sports</option>
-    <option value="Teen & Young Adult">Teen & Young Adult</option>
-    <option value="Textbooks & Study Guides">Textbooks & Study Guides</option>
-    <option value="Travel & Tourism">Travel & Tourism</option>
-</select>
+                                            <select class=" genre form-control @error('genre') is-invalid @enderror" name="genre" value="{{ old('genre') }}">
+                                                <option value="">--Select--</option>
+                                                <option value="Fantasy">Fantasy</option>
+                                                <option value="Horror">Horror</option>
+                                                <option value="Romance">Romance</option>
+                                                <option value="Science fiction">Science fiction</option>
+                                                <option value="Adventure fiction">Adventure fiction</option>
+                                                <option value="Fiction">Fiction</option>
+                                                <option value="Mystery">Mystery</option>
+                                                <option value="Fairy tale">Fairy tale</option>
+                                                <option value="Thriller">Thriller</option>
+                                                <option value="Young adult">Young adult</option>
+                                                <option value="Historical">Historical</option>
+                                                <option value="Literary fiction">Literary fiction</option>
+                                                <option value="Comedy">Comedy</option>
+                                                <option value="Crime">Crime</option>
+                                                <option value="Short story">Short story</option>
+                                                <option value="Classics">Classics</option>
+                                                <option value="Drama">Drama</option>
+                                                <option value="Dystopian Fiction">Dystopian Fiction</option>
+                                                <option value="Gothic fiction">Gothic fiction</option>
+                                                <option value="Graphic novel">Graphic novel</option>
+                                                <option value="Magic realism">Magic realism</option>
+                                                <option value="Mystery and suspense">Mystery and suspense</option>
+                                                <option value="Paranormal romance">Paranormal romance</option>
+                                                <option value="School Books">School Books</option>
+                                                <option value="NCERT Books">NCERT Books</option>
+                                                <option value="Competitive Books">Competitive Books</option>
+                                                <option value="Medical Books">Medical Books</option>
+                                                <option value="Dental Books">Dental Books</option>
+                                                <option value="Action & Adventure">Action & Adventure</option>
+                                                <option value="Arts, Film & Photography">Arts, Film & Photography</option>
+                                                <option value="Biographies, Diaries & True Accounts">Biographies, Diaries & True Accounts</option>
+                                                <option value="Business & Economics">Business & Economics</option>
+                                                <option value="Children's Books">Children's Books</option>
+                                                <option value="Comics & Graphic Novels">Comics & Graphic Novels</option>
+                                                <option value="Computers & Internet">Computers & Internet</option>
+                                                <option value="Crafts, Hobbies & Home">Crafts, Hobbies & Home</option>
+                                                <option value="Crime, Thriller & Mystery">Crime, Thriller & Mystery</option>
+                                                <option value="Engineering Books">Engineering Books</option>
+                                                <option value="Exam Preparation">Exam Preparation</option>
+                                                <option value="Health, Family & Personal Development">Health, Family & Personal Development</option>
+                                                <option value="Health, Fitness & Nutrition">Health, Fitness & Nutrition</option>
+                                                <option value="Historical Fiction">Historical Fiction</option>
+                                                <option value="History">History</option>
+                                                <option value="Humour">Humour</option>
+                                                <option value="Language, Linguistics & Writing">Language, Linguistics & Writing</option>
+                                                <option value="Law">Law</option>
+                                                <option value="Literature & Fiction">Literature & Fiction</option>
+                                                <option value="Maps & Atlases">Maps & Atlases</option>
+                                                <option value="Medicine & Health Sciences">Medicine & Health Sciences</option>
+                                                <option value="Politics">Politics</option>
+                                                <option value="Reference">Reference</option>
+                                                <option value="Religion & Spirituality">Religion & Spirituality</option>
+                                                <option value="Science & Mathematics">Science & Mathematics</option>
+                                                <option value="Science Fiction & Fantasy">Science Fiction & Fantasy</option>
+                                                <option value="Sciences, Technology & Medicine">Sciences, Technology & Medicine</option>
+                                                <option value="Society & Social Sciences">Society & Social Sciences</option>
+                                                <option value="Sports">Sports</option>
+                                                <option value="Teen & Young Adult">Teen & Young Adult</option>
+                                                <option value="Textbooks & Study Guides">Textbooks & Study Guides</option>
+                                                <option value="Travel & Tourism">Travel & Tourism</option>
+                                            </select>
 
                                             @error('genre')
                                             <span class="invalid-feedback" role="alert">
@@ -597,7 +598,7 @@
                                     </div>
 
                                     <div class="col-md-4">
-                                        <div class="" >
+                                        <div class="">
                                             <div class="">
                                                 <label for="url" class="form-label">{{ __('Main Image URL') }}</label>
                                                 <input id="base_url" type="text" class="form-control @error('images') is-invalid @enderror" name="images[]" autocomplete="images" autofocus placeholder="Base URL">
@@ -616,7 +617,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-3 text-right mb-2 d-flex" id='preview' style="justify-content: flex-end;" >
+                            <div class="col-md-3 text-right mb-2 d-flex" id='preview' style="justify-content: flex-end;">
                                 <div style="border: 2px solid #ccc;width: 300px;max-height: 300px;height:300px;">
                                     <img src="" id='previewImage' />
                                     <div class='image-status' style="text-align: center;padding: 5px;display:none;"></div>
@@ -668,11 +669,4 @@
         })
     })
 </script>
-
-
-<script>
-   
-
-</script>
-
 @endpush

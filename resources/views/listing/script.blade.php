@@ -1,6 +1,7 @@
 <script>
     $(document).ready(function() {
         $(".genre").select2();
+        
         // Counter to keep track of the number of file input fields
         var fileInputCounter = 2; // Start from 2 since the first one is already visible
 
@@ -116,12 +117,12 @@
         })
 
         $('#url').on('input', function() {
-            // var url = $(this).val();
-            // if (!url.includes('https://www.instamojo.com/EXAM360/')) {
-            //     errorHandling('url', 'Please add instamojo link', false, this);
-            // } else {
-            //     errorHandling(fieldId, '', true, this);
-            // }
+            var url = $(this).val();
+            if (!url.includes('https://www.instamojo.com/EXAM360/')) {
+                errorHandling('url', 'Please add instamojo link', false, this);
+            } else {
+                errorHandling(fieldId, '', true, this);
+            }
         });
 
         $.ajax({
@@ -159,10 +160,12 @@
                 totalLength += $(this).text().trim().length;
             });
 
-            if (totalLength < 0) {
+            @if(!auth()->user()->hasRole('Super Admin'))
+            if (totalLength < 170) {
                 event.preventDefault();
                 alert('You must select at least 170 characters in Category.');
             }
+            @endif
 
             // Reset previous error messages
             $('.error-message').text('');
@@ -188,7 +191,7 @@
                     }
                 }
 
-                var notRequiredFields = ['multipleImages[]', 'files', 'discount'];
+                var notRequiredFields = ['multipleImages[]', 'files', 'isbn_10', 'isbn_13', 'isbn_10', 'reading_age', 'country_origin', 'genre', 'manufacturer', 'importer', 'discount'];
 
                 if (inputValue == '') {
                     var fieldId = $(this).attr('name');
@@ -272,7 +275,7 @@
 
         $("#publication").on('input', function() {
             $('#manufacturer').val($(this).val());
-             $('#importer').val($(this).val());
+            $('#importer').val($(this).val());
         });
 
         function calculateFields() {
@@ -307,7 +310,7 @@
         }
 
         function requiredFields(val, currentElement) {
-            var notRequiredFields = ['multipleImages[]', 'files', 'isbn_10', 'isbn_13', 'isbn_10', 'reading_age', 'country_origin', 'genre', 'manufacturer', 'importer', 'discount']; // Add more fields as needed
+            var notRequiredFields = ['multipleImages[]', 'images', 'files', 'isbn_10', 'isbn_13', 'isbn_10', 'reading_age', 'country_origin', 'genre', 'manufacturer', 'importer', 'discount']; // Add more fields as needed
 
             var fieldId = $(currentElement).attr('name');
             if (fieldId && !notRequiredFields.includes(fieldId) && !val) {
@@ -320,17 +323,26 @@
         function nameValidate(val, currentElement) {
             var fieldId = $(currentElement).attr('name');
 
+            function extractInnerText(html) {
+                var div = document.createElement('div');
+                div.innerHTML = html;
+                return div.textContent || div.innerText || "";
+            }
+
+            // Extract inner text from the input value
+            var innerText = extractInnerText(val);
             var errors = [];
             var normalString = '';
             var validateFields = JSON.parse(localStorage.getItem('validate'));
             validateFields.forEach(function(value) {
                 if (value.name) {
                     var nameToCheck = value.name.toLowerCase();
-                    if (val.toLowerCase().includes(nameToCheck)) {
-                        // console.log(val);
+                    // Split innerText into words and check for exact match
+                    var words = innerText.toLowerCase().split(/\b/); // Split by word boundaries
+                    if (words.includes(nameToCheck)) {
                         errors.push(value.name);
                         normalString = errors.join(", ");
-                        errorHandling(fieldId, 'Words not allowed - ' + errors, false, currentElement)
+                        errorHandling(fieldId, 'Words not allowed - ' + errors, false, currentElement);
                     }
                 }
             });
@@ -451,7 +463,6 @@
 
         $('#textLength').html('<strong>Total Length:</strong> ' + totalLength + ' (Min:170, Max.:184)');
 
-
         let maxLength = 184;
         $('.select2').on('change', function(event) {
             let totalLength = 0; // Reset total length before recalculating
@@ -545,94 +556,80 @@
         }, 500)
     }
 
+    $(document).ready(function() {
+        const publications = @json($publications);
+        const $pubDropdown = $("#pub_name");
+        const $bookDropdown = $("#book_name");
+        const $mrpInput = $("#mrp");
+        let discount = 0,
+            locationDis = 0;
 
+        // Jab Publication select ho
+        $pubDropdown.on("change", function() {
+            const selectedPub = publications.find(pub => pub.id == $(this).val());
+            $bookDropdown.html('<option value="">-- Select Book --</option>'); // Reset Books
 
-    document.addEventListener("DOMContentLoaded", function() {
-    const publications = @json($publications);
-    const pubDropdown = document.getElementById("pub_name");
-    const bookDropdown = document.getElementById("book_name");
-    const mrpInput = document.getElementById("mrp"); // MRP input
-    let discount = 0, locationDis = 0;
-
-    // Jab Publication select ho
-    pubDropdown.addEventListener("change", function() {
-        const selectedPub = publications.find(pub => pub.id == this.value);
-        bookDropdown.innerHTML = '<option value="">-- Select Book --</option>'; // Reset Books
-
-        if (selectedPub) {
-            for (let i = 1; i <= 6; i++) {
-                const bookType = selectedPub[`book_type_${i}`];
-                if (bookType) {
-                    const option = document.createElement("option");
-                    option.value = `book_discount_${i}`;
-                    option.textContent = bookType;
-                    bookDropdown.appendChild(option);
+            if (selectedPub) {
+                for (let i = 1; i <= 6; i++) {
+                    const bookType = selectedPub[`book_type_${i}`];
+                    if (bookType) {
+                        $bookDropdown.append(`<option value="book_discount_${i}">${bookType}</option>`);
+                    }
                 }
             }
-        }
-    });
+        });
 
-    // Jab Book select ho
-    bookDropdown.addEventListener("change", function() {
-        const selectedPub = publications.find(pub => pub.id == pubDropdown.value);
-        if (selectedPub && this.value) {
-            discount = parseInt(selectedPub[this.value]) || 0;
-            locationDis = parseInt(selectedPub.location_dis) || 0;
-            calculatePrice();
-        }
-    });
-
-    // Jab MRP change ho to calculation update ho
-    mrpInput.addEventListener("input", calculatePrice);
-
-    function calculatePrice() {
-        const mrp = parseInt(mrpInput.value) || 0;
-        const locationDiscount = (locationDis / 100) * mrp;
-        const finalPrice = mrp - (discount - locationDiscount);
-
-        console.log(`MRP: ${mrp}, Discount: ${discount}, Location Discount: ${locationDiscount}, Final Price: ${finalPrice}`);
-
-        if (mrp && locationDiscount && finalPrice>0) {
-    console.log("Fetching records for price:", finalPrice);
-
-    fetch("{{ route('listing.getPriceRecords') }}?price=" + encodeURIComponent(finalPrice))
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
+        // Jab Book select ho
+        $bookDropdown.on("change", function() {
+            const selectedPub = publications.find(pub => pub.id == $pubDropdown.val());
+            if (selectedPub && $(this).val()) {
+                discount = parseInt(selectedPub[$(this).val()]) || 0;
+                locationDis = parseInt(selectedPub.location_dis) || 0;
+                calculatePrice();
             }
-            return response.json();
-        })
-        .then(data => {
-            if (data.length === 0) {
-            console.error("No data received.");
-            return;
+        });
+
+        // Jab MRP change ho to calculation update ho
+        $mrpInput.on("input", calculatePrice);
+
+        function calculatePrice() {
+            const mrp = parseInt($mrpInput.val()) || 0;
+            const locationDiscount = (locationDis / 100) * mrp;
+            const finalPrice = mrp - (discount - locationDiscount);
+
+            if (mrp && locationDiscount && finalPrice > 0) {
+                $.get("{{ route('listing.getPriceRecords') }}", {
+                    price: finalPrice
+                })
+                .done(function(data) {
+                    if (!data.length) {
+                        console.error("No data received.");
+                        return;
+                    }
+
+                    const record = data[0];
+                    const courier_rate = parseInt(record.courier_rate) || 0;
+                    const packing_charge = parseInt(record.packing_charge) || 0;
+                    const our_min_profit_value = parseInt(record.our_min_profit) || 0;
+                    const max_profit_value = parseInt(record.max_profit) || 0;
+
+                    // Calculate transaction cost
+                    const transactionCost = (finalPrice + courier_rate + packing_charge) * (3 / 100);
+                    const selling_price = finalPrice + courier_rate + packing_charge + transactionCost;
+
+                    const selling_price1 = selling_price + our_min_profit_value;
+                    const selling_price2 = selling_price + max_profit_value;
+
+                    console.log("selling_price1", selling_price1);
+                    console.log("selling_price2", selling_price2);
+
+                    $("#selling_price1").text(selling_price1.toFixed(2));
+                    $("#selling_price2").text(selling_price2.toFixed(2));
+                })
+                .fail(function(error) {
+                    console.error("Error fetching records:", error);
+                });
+            }
         }
-
-        const record = data[0];
-
-        const courier_rate = parseInt(record.courier_rate) || 0; 
-        const packing_charge = parseInt(record.packing_charge) || 0; 
-        const our_min_profit_value = parseInt(record.our_min_profit) || 0; 
-        const max_profit_value = parseInt(record.max_profit) || 0; 
-
-            // Calculate transaction cost
-            const transactionCost = (finalPrice + courier_rate + packing_charge) * (3 / 100);
-            const selling_price = finalPrice + courier_rate + packing_charge + transactionCost;
-
-            const selling_price1 = selling_price + our_min_profit_value;
-            const selling_price2 = selling_price + max_profit_value;
-
-            console.log("selling_price1",selling_price1)
-            console.log("selling_price2",selling_price2)
-
-            document.getElementById("selling_price1").textContent = selling_price1.toFixed(2);
-            document.getElementById("selling_price2").textContent = selling_price2.toFixed(2);
-
-        })
-        .catch(error => console.error("Error fetching records:", error));
-}
-
-
-    }
-});
+    });
 </script>

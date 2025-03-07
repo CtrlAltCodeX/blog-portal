@@ -107,10 +107,17 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
-        // echo "hi";die;
         if (!$user = User::where('email', request()->email)->first()) {
             session()->flash('error', 'Opps! Email Or Password Mismatch');
 
+            return redirect()->route('login');
+        }
+
+        if ($user->status == 2) {
+            session()->flash('blocked', 'suspended');
+            return redirect()->route('login');
+        } else if ($user->status == 3) {
+            session()->flash('blocked', 'blocked');
             return redirect()->route('login');
         }
 
@@ -125,18 +132,6 @@ class LoginController extends Controller
         foreach ($oldSessions as $session) {
             $session->delete();
         }
-
-  if ($user->status == 2) {
-    session()->flash('blocked', 'suspended');
-    return redirect()->route('login');
-} 
-else if ($user->status == 3) {
-    session()->flash('blocked', 'blocked');
-    return redirect()->route('login');
-}
-
-    
-
 
         if (request()->otp) {
             $verifyOtp = User::where('email', request()->email)

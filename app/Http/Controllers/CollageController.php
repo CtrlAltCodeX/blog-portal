@@ -27,7 +27,7 @@ class CollageController extends Controller
     {
         $validated = $this->validate(request(), [
             'file'              => 'required|array',
-            'file.*'            => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'file.*'            => 'required|image|mimes:jpeg,png,jpg|max:2048',
             // 'title'             => 'required_if:is_with_watermark,1',
         ], [
             'title.required_if' => 'The title field is required when adding a watermark.',

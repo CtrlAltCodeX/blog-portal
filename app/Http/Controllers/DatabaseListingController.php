@@ -83,13 +83,16 @@ class DatabaseListingController extends Controller
             return view('settings.error');
         }
 
-        $response = Http::withoutVerifying()
-            ->get($url . '/feeds/posts/default?alt=json');
+        $response = Http::withoutVerifying()->get($url . '/feeds/posts/default?alt=json');
 
         $categories = $response->json()['feed']['category'];
+
         $publications  = WeightVSCourier::all();
+
         $siteSetting = SiteSetting::first();
+
         $user_data_transfer = Auth::user()->data_transfer;
+
         if (!$user_data_transfer) {
             return view('database-listing.create_tmp', compact('categories', 'siteSetting', 'user_data_transfer'));
         } else {
@@ -554,8 +557,10 @@ class DatabaseListingController extends Controller
         $response = Http::withoutVerifying()
             ->get($url . '/feeds/posts/default?alt=json');
 
+        $publications  = WeightVSCourier::all();
+
         $categories = $response->json()['feed']['category'];
-        return view('database-listing.publish-edit', compact('listing', 'siteSetting', 'categories'));
+        return view('database-listing.publish-edit', compact('listing', 'siteSetting', 'categories', 'publications'));
     }
 
     /**
@@ -792,7 +797,9 @@ class DatabaseListingController extends Controller
 
         $listing = (object) ($allInfo);
 
-        return view('database-listing.publish-edit', compact('categories', 'listing', 'labels', 'siteSetting', 'productId', 'productTitle'));
+        $publications  = WeightVSCourier::all();
+
+        return view('database-listing.publish-edit', compact('categories', 'listing', 'labels', 'siteSetting', 'productId', 'productTitle', 'publications'));
     }
 
     /**

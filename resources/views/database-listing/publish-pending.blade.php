@@ -54,7 +54,7 @@
                 <div class="card-header justify-content-between">
                     <h3 class="card-title">Updated Listings (MS)</h3>
 
-                    <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center justify-content-between" style="grid-gap: 10px;">
 
                         <form action="" method="get" id='form' style="margin-left: 10px;" class="d-flex align-items-center justify-content-end">
                             <div>
@@ -112,6 +112,13 @@
                             </select>
                         </form>
 
+                        <select class="form-control w-25" id='issue_dropdown'>
+                            <option value="">Select</option>
+                            <option value=2>All</option>
+                            <option value=1>Correct Listing</option>
+                            <option value=3>Error Listing (Astric)</option>
+                        </select>
+
                     </div>
                 </div>
 
@@ -142,9 +149,12 @@
                             </thead>
                             <tbody>
                                 @forelse ($googlePosts as $key => $googlePost)
-                                <tr id='{{$googlePost->id}}'>
+                                <tr id='{{$googlePost->id}}' class="@if(abs($googlePost->selling_price - $googlePost->mrp) >= 0 && abs($googlePost->selling_price - $googlePost->mrp) <= 10) astric @else accurate @endif">
                                     <td>
                                         <input type="checkbox" name="ids" class="checkbox-update" value="{{$googlePost->id}}" />
+                                        @if(abs($googlePost->selling_price - $googlePost->mrp) >= 0 && abs($googlePost->selling_price - $googlePost->mrp) <= 10)
+                                            <span style="color: red;font-size:25px">*</span>
+                                        @endif
                                     </td>
                                     <td>{{ ++$key }}</td>
                                     <td class="status">{{substr($googlePost->error, 0, 20)}}</td>
@@ -171,10 +181,31 @@
                                         @else {{ 'In Stock' }}
                                         @endif
                                     </td>
-                                    <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="@if(isset($googlePost->images)) {{ $googlePost->images[0] }} @endif" alt="Product Image" /></td>
+                                    @php
+                                    if(isset($googlePost->images)) {
+                                    $image = json_decode($googlePost->images)[0];
+                                    } else {
+                                    $image = '/public/dummy.jpg';
+                                    }
+
+                                    @endphp
+                                    <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $image }}" alt="Product Image" /></td>
+                                    <!--<td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="@if(isset($googlePost->images)) {{ $googlePost->images[0] }} @endif" alt="Product Image" /></td>-->
                                     <td><a href="{{ $googlePost->url ? $googlePost->url : '#' }}" target='_blank'>{{ $googlePost->product_id }}</a></td>
                                     <td>{{ $googlePost->title }}</td>
                                     <td>{{ '₹'.$googlePost->selling_price }}</td>
+                                    <td>
+                                        @php
+                                            $discount = $googlePost->mrp > 0 
+                                                        ? round((($googlePost->mrp - $googlePost->selling_price) / $googlePost->mrp) * 100, 2)
+                                                        : 0;
+                                        @endphp
+                                        @if($discount > 0)
+                                            {{ $discount . '%' }}
+                                        @else
+                                            0%
+                                        @endif
+                                    </td>
                                     <td>{{ '₹'.$googlePost->mrp }}</td>
                                     @php
                                     $categories = collect($googlePost->categories??[])->toArray();
@@ -250,15 +281,28 @@
 
 <script>
     $(document).ready(function() {
+        $("#issue_dropdown").change(function() {
+            if($(this).val() == 1) {
+                $(".astric").hide();
+                $(".accurate").show();
+            } else if($(this).val() == 2) {
+                $(".accurate").show();
+                $(".astric").show();
+            } else if($(this).val() == 3) {
+                $(".accurate").hide();
+                $(".astric").show();
+            }
+        });
+        
         //______Basic Data Table
         $('#basic-datatable').DataTable({
-            "paging":false
+            "paging": false
         });
 
         $("#category").on("change", function() {
             $("#form").submit();
         })
-         $("#paging").on("change", function() {
+        $("#paging").on("change", function() {
             $("#pagingform").submit();
         });
         $("#status").change(function() {
@@ -282,20 +326,20 @@
                 return true;
             }
 
-            let selectedValue =$('#status').val();
+            let selectedValue = $('#status').val();
 
             if (ids.length <= 0) {
                 alert('Please select the listing')
                 return true;
             }
 
-            
-            if (selectedValue == "6") { 
-            let confirmDelete = confirm("Are you sure you want to DELETE the selected listings?");
-            if (!confirmDelete) {
-                return; 
+
+            if (selectedValue == 6) {
+                let confirmDelete = confirm("Are you sure you want to DELETE the selected listings?");
+                if (!confirmDelete) {
+                    return;
+                }
             }
-        }
 
 
             $.ajax({
@@ -344,6 +388,8 @@
                 }
             });
         });
+
+        
     })
 </script>
 

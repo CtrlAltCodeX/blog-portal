@@ -99,10 +99,11 @@ $buttonFour = explode(',',$siteSettings?->button_4);
 @if(session('blocked'))
 <div id="modal" style="display: flex; position: fixed; inset: 0; align-items: center; justify-content: center; z-index: 50; background-color: rgba(0, 0, 0, 0.5);">
     <div style="background-color: white; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); width: 40%; margin: auto; padding: 24px; position: relative; text-align: center;">
+        <img src='/blocked-icon.jpg' style="width: 180px;" />
         <h2 id="modalTitle" style="font-size: 1.5rem; font-weight: bold; margin-bottom: 16px;">
             Your account is {!! session('blocked') !!}
         </h2>
-        <p style="font-size: 1rem; color: #4B5563; margin-bottom: 20px;">
+        <p style="font-size: 1rem;color: red;margin-bottom: 20px;font-size: 20px;font-weight: 700;">
             Your account has been {!! session('blocked') !!}. Contact support to reactivate your account .
         </p>
         <button id="infoButton" style="background-color: #007BFF; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem;">
@@ -123,7 +124,7 @@ $buttonFour = explode(',',$siteSettings?->button_4);
 
 <script>
     document.getElementById('infoButton').addEventListener('click', function() {
-        window.location.href = 'https://your-support-url.com'; 
+        window.location.href = 'https://support.exam360.in/'; 
     });
 
     document.getElementById('closeModal').addEventListener('click', function() {
