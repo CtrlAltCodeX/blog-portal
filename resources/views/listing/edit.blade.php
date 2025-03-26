@@ -30,7 +30,7 @@
                         <h4 class="card-title">
                             {{ __('Update Listing') }}
                         </h4>
-                        
+
                         @can('Create Duplicate Listing Button')
                         <button type='submit' class="btn btn-info duplicate_listing">Create Duplicate Listing</button>
                         <!-- <a href="{{ route('copy_database', $post->id) }}" class="btn btn-info duplicate_listing">{{ __('Create Duplicate Listing') }} </a> -->
@@ -129,42 +129,44 @@
                     </div>
                 </div>
 
-                <div class="card">
-                    <div class="card-body" style="background-color: antiquewhite;">
-                        <h4>PRICE CALCULATION</h4>
-                        <div class="row">
-                            <div class="form-group col-md-4">
-                                <label for="pub_name" class="form-label">{{ __('Publication') }}</label>
-                                <select class="genre form-control" name="pub_name" id="pub_name">
-                                    <option value="">--Publication--</option>
-                                    @foreach($publications as $pub)
-                                    <option value="{{ $pub->id }}">{{ $pub->pub_name }}</option>
-                                    @endforeach
-                                </select>
+                <!--<div class="card">-->
+                <!--    <div class="card-body" style="background-color: antiquewhite;">-->
+                <!--        <h4>PRICE CALCULATION</h4>-->
+                <!--        <div class="row">-->
+                <!--            <div class="form-group col-md-4">-->
+                <!--                <label for="pub_name" class="form-label">{{ __('Publication') }}</label>-->
+                <!--                <select class="genre form-control" name="pub_name" id="pub_name">-->
+                <!--                    <option value="">--Publication--</option>-->
+                <!--                    @foreach($publications as $pub)-->
+                <!--                    <option value="{{ $pub->id }}">{{ $pub->pub_name }}</option>-->
+                <!--                    @endforeach-->
+                <!--                </select>-->
 
 
-                            </div>
+                <!--            </div>-->
 
-                            <div class="form-group col-md-4">
-                                <label for="book_name" class="form-label">{{ __('Book Type') }}</label>
-                                <select class="form-control" name="book_name" id="book_name">
-                                    <option value="">-- Select Book --</option>
-                                </select>
-                            </div>
+                <!--            <div class="form-group col-md-4">-->
+                <!--                <label for="book_name" class="form-label">{{ __('Book Type') }}</label>-->
+                <!--                <select class="form-control" name="book_name" id="book_name">-->
+                <!--                    <option value="">-- Select Book --</option>-->
+                <!--                </select>-->
+                <!--            </div>-->
 
 
-                            <div class="form-group col-md-4">
-                                <label class="form-label">{{ __('Selling Prices') }}</label>
-                                <div class="selling-prices">
-                                    <strong>Min Selling Price:</strong> <span id="selling_price1">--</span> <br>
-                                    <strong>Max Selling Price:</strong> <span id="selling_price2">--</span>
-                                </div>
-                            </div>
+                <!--            <div class="form-group col-md-4">-->
+                <!--                <label class="form-label">{{ __('Selling Prices') }}</label>-->
+                <!--                <div class="selling-prices">-->
+                <!--                    <strong>Min Selling Price:</strong> <span id="selling_price1">--</span> <br>-->
+                <!--                    <strong>Max Selling Price:</strong> <span id="selling_price2">--</span>-->
+                <!--                </div>-->
+                <!--            </div>-->
 
-                           
-                        </div>
-                    </div>
-                </div>
+
+                <!--        </div>-->
+                <!--    </div>-->
+                <!--</div>-->
+
+                @include('price-calculator')
 
                 <div class="card">
                     <div class="card-body">
@@ -295,13 +297,13 @@
                                                 </label>
                                             </div>
                                             @php
-                                                $currentMonthYear = date('Y-m'); // Generate current year and month in "YYYY-MM" format
+                                            $currentMonthYear = date('Y-m'); // Generate current year and month in "YYYY-MM" format
                                             @endphp
-                                            
-                                            <input 
-                                                type="month" 
-                                                class="form-control @error('publish_year') is-invalid @enderror" 
-                                                name="publish_year" 
+
+                                            <input
+                                                type="month"
+                                                class="form-control @error('publish_year') is-invalid @enderror"
+                                                name="publish_year"
                                                 value="{{ old('publish_year', $allInfo['publish_year'] ?? $currentMonthYear) }}">
                                             <span class="error-message publish_year" style="color:red;"></span>
 
@@ -312,7 +314,7 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    
+
                                     <!-- SKU -->
                                     <div class="col-md-4">
                                         <div>
@@ -398,7 +400,7 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    
+
                                     <div class="col-md-4">
                                         <div class="">
                                             <label for="weight" class="form-label d-flex justify-content-between">{{ __('Weight (grams)') }}</label>
@@ -416,7 +418,14 @@
                                     <div class="col-md-4">
                                         <div class="">
                                             <label for="reading_age" class="form-label d-flex justify-content-between">{{ __('Reading Age') }}</label>
-                                            <input style="background-color: #e9f85c;" id="reading_age" type="text" class="form-control @error('reading_age') is-invalid @enderror" name="reading_age" value="{{ $allInfo['reading_age']??'Above 10 Years' }}" autocomplete="reading_age" autofocus placeholder="Reading Age">
+                                            <select class="form-control @error('reading_age') is-invalid @enderror" name="reading_age">
+                                                <option value="">--Select--</option>
+                                                <option value="Above 18 Years" {{ $allInfo['reading_age'] == 'Above 18 Years' ? 'selected' : '' }}>Above 18 Years</option>
+                                                <option value="Above 10 Years" {{ $allInfo['reading_age'] == 'Above 10 Years' ? 'selected' : '' }}>Above 10 Years</option>
+                                                <option value="Above 5 Years" {{ $allInfo['reading_age'] == 'Above 5 Years' ? 'selected' : '' }}>Above 5 Years</option>
+                                                <option value="Above 3 Years" {{ $allInfo['reading_age'] == 'Above 3 Years' ? 'selected' : '' }}>Above 3 Years</option>
+                                            </select>
+                                            <!-- <input style="background-color: #e9f85c;" id="reading_age" type="text" class="form-control @error('reading_age') is-invalid @enderror" name="reading_age" value="{{ $allInfo['reading_age']??'Above 10 Years' }}" autocomplete="reading_age" autofocus placeholder="Reading Age"> -->
                                             <span class="error-message reading_age" style="color:red;"></span>
 
                                             @error('reading_age')
@@ -430,7 +439,7 @@
                                     <div class="col-md-4">
                                         <div class="">
                                             <label for="country_origin" class="form-label d-flex justify-content-between">{{ __('Country of Origin') }}</label>
-                                            <input style="background-color: #e9f85c;" id="country_origin" type="country_origin" class="form-control @error('country_origin') is-invalid @enderror" name="country_origin" value="{{ $allInfo['country_origin']??'India' }}" autocomplete="country_origin" autofocus placeholder="Country of Origin">
+                                            <input style="background-color: #e9f85c;" id="country_origin" type="country_origin" class="form-control @error('country_origin') is-invalid @enderror" name="country_origin" readonly value="@if($allInfo['country_origin']) {{ $allInfo['country_origin'] }} @else India @endif" autocomplete="country_origin" autofocus placeholder="Country of Origin">
                                             <span class="error-message country_origin" style="color:red;"></span>
 
                                             @error('country_origin')
@@ -444,7 +453,68 @@
                                     <div class="col-md-4">
                                         <div class="">
                                             <label for="genre" class="form-label d-flex justify-content-between">{{ __('Genre') }}</label>
-                                            <input id="genre" type="genre" class="form-control @error('genre') is-invalid @enderror" name="genre" value="{{ $allInfo['genre']??'Books' }}" autocomplete="genre" autofocus placeholder="Genre">
+                                            <select class="searchable_dropdown form-control @error('genre') is-invalid @enderror" name="genre">
+                                                <option value="">--Select--</option>
+                                                <option value="Fantasy" {{ $allInfo['genre'] == 'Fantasy' ? 'selected' : '' }}>Fantasy</option>
+                                                <option value="Horror" {{ $allInfo['genre'] == 'Horror' ? 'selected' : '' }}>Horror</option>
+                                                <option value="Romance" {{ $allInfo['genre'] == 'Romance' ? 'selected' : '' }}>Romance</option>
+                                                <option value="Science fiction" {{ $allInfo['genre'] == 'Science fiction' ? 'selected' : '' }}>Science fiction</option>
+                                                <option value="Adventure fiction" {{ $allInfo['genre'] == 'Adventure fiction' ? 'selected' : '' }}>Adventure fiction</option>
+                                                <option value="Fiction" {{ $allInfo['genre'] == 'Fiction' ? 'selected' : '' }}>Fiction</option>
+                                                <option value="Mystery" {{ $allInfo['genre'] == 'Mystery' ? 'selected' : '' }}>Mystery</option>
+                                                <option value="Fairy tale" {{ $allInfo['genre'] == 'Fairy tale' ? 'selected' : '' }}>Fairy tale</option>
+                                                <option value="Thriller" {{ $allInfo['genre'] == 'Thriller' ? 'selected' : '' }}>Thriller</option>
+                                                <option value="Young adult" {{ $allInfo['genre'] == 'Young adult' ? 'selected' : '' }}>Young adult</option>
+                                                <option value="Historical" {{ $allInfo['genre'] == 'Historical' ? 'selected' : '' }}>Historical</option>
+                                                <option value="Literary fiction" {{ $allInfo['genre'] == 'Literary fiction' ? 'selected' : '' }}>Literary fiction</option>
+                                                <option value="Comedy" {{ $allInfo['genre'] == 'Comedy' ? 'selected' : '' }}>Comedy</option>
+                                                <option value="Crime" {{ $allInfo['genre'] == 'Crime' ? 'selected' : '' }}>Crime</option>
+                                                <option value="Short story" {{ $allInfo['genre'] == 'Short story' ? 'selected' : '' }}>Short story</option>
+                                                <option value="Classics" {{ $allInfo['genre'] == 'Classics' ? 'selected' : '' }}>Classics</option>
+                                                <option value="Drama" {{ $allInfo['genre'] == 'Drama' ? 'selected' : '' }}>Drama</option>
+                                                <option value="Dystopian Fiction" {{ $allInfo['genre'] == 'Dystopian Fiction' ? 'selected' : '' }}>Dystopian Fiction</option>
+                                                <option value="Gothic fiction" {{ $allInfo['genre'] == 'Gothic fiction' ? 'selected' : '' }}>Gothic fiction</option>
+                                                <option value="Graphic novel" {{ $allInfo['genre'] == 'Graphic novel' ? 'selected' : '' }}>Graphic novel</option>
+                                                <option value="Magic realism" {{ $allInfo['genre'] == 'Magic realism' ? 'selected' : '' }}>Magic realism</option>
+                                                <option value="Mystery and suspense" {{ $allInfo['genre'] == 'Mystery and suspense' ? 'selected' : '' }}>Mystery and suspense</option>
+                                                <option value="Paranormal romance" {{ $allInfo['genre'] == 'Paranormal romance' ? 'selected' : '' }}>Paranormal romance</option>
+                                                <option value="School Books" {{ $allInfo['genre'] == 'School Books' ? 'selected' : '' }}>School Books</option>
+                                                <option value="NCERT Books" {{ $allInfo['genre'] == 'NCERT Books' ? 'selected' : '' }}>NCERT Books</option>
+                                                <option value="Competitive Books" {{ $allInfo['genre'] == 'Competitive Books' ? 'selected' : '' }}>Competitive Books</option>
+                                                <option value="Medical Books" {{ $allInfo['genre'] == 'Medical Books' ? 'selected' : '' }}>Medical Books</option>
+                                                <option value="Dental Books" {{ $allInfo['genre'] == 'Dental Books' ? 'selected' : '' }}>Dental Books</option>
+                                                <option value="Action & Adventure" {{ $allInfo['genre'] == 'Action & Adventure' ? 'selected' : '' }}>Action & Adventure</option>
+                                                <option value="Arts, Film & Photography" {{ $allInfo['genre'] == 'Arts, Film & Photography' ? 'selected' : '' }}>Arts, Film & Photography</option>
+                                                <option value="Biographies, Diaries & True Accounts" {{ $allInfo['genre'] == 'Biographies, Diaries & True Accounts' ? 'selected' : '' }}>Biographies, Diaries & True Accounts</option>
+                                                <option value="Business & Economics" {{ $allInfo['genre'] == 'Business & Economics' ? 'selected' : '' }}>Business & Economics</option>
+                                                <option value="Children's Books" {{ $allInfo['genre'] == "Children's Books" ? 'selected' : '' }}>Children's Books</option>
+                                                <option value="Comics & Graphic Novels" {{ $allInfo['genre'] == 'Comics & Graphic Novels' ? 'selected' : '' }}>Comics & Graphic Novels</option>
+                                                <option value="Computers & Internet" {{ $allInfo['genre'] == 'Computers & Internet' ? 'selected' : '' }}>Computers & Internet</option>
+                                                <option value="Crafts, Hobbies & Home" {{ $allInfo['genre'] == 'Crafts, Hobbies & Home' ? 'selected' : '' }}>Crafts, Hobbies & Home</option>
+                                                <option value="Crime, Thriller & Mystery" {{ $allInfo['genre'] == 'Crime, Thriller & Mystery' ? 'selected' : '' }}>Crime, Thriller & Mystery</option>
+                                                <option value="Engineering Books" {{ $allInfo['genre'] == 'Engineering Books' ? 'selected' : '' }}>Engineering Books</option>
+                                                <option value="Exam Preparation" {{ $allInfo['genre'] == 'Exam Preparation' ? 'selected' : '' }}>Exam Preparation</option>
+                                                <option value="Health, Family & Personal Development" {{ $allInfo['genre'] == 'Health, Family & Personal Development' ? 'selected' : '' }}>Health, Family & Personal Development</option>
+                                                <option value="Health, Fitness & Nutrition" {{ $allInfo['genre'] == 'Health, Fitness & Nutrition' ? 'selected' : '' }}>Health, Fitness & Nutrition</option>
+                                                <option value="Historical Fiction" {{ $allInfo['genre'] == 'Historical Fiction' ? 'selected' : '' }}>Historical Fiction</option>
+                                                <option value="History" {{ $allInfo['genre'] == 'History' ? 'selected' : '' }}>History</option>
+                                                <option value="Humour" {{ $allInfo['genre'] == 'Humour' ? 'selected' : '' }}>Humour</option>
+                                                <option value="Language, Linguistics & Writing" {{ $allInfo['genre'] == 'Language, Linguistics & Writing' ? 'selected' : '' }}>Language, Linguistics & Writing</option>
+                                                <option value="Law" {{ $allInfo['genre'] == 'Law' ? 'selected' : '' }}>Law</option>
+                                                <option value="Literature & Fiction" {{ $allInfo['genre'] == 'Literature & Fiction' ? 'selected' : '' }}>Literature & Fiction</option>
+                                                <option value="Maps & Atlases" {{ $allInfo['genre'] == 'Maps & Atlases' ? 'selected' : '' }}>Maps & Atlases</option>
+                                                <option value="Medicine & Health Sciences" {{ $allInfo['genre'] == 'Medicine & Health Sciences' ? 'selected' : '' }}>Medicine & Health Sciences</option>
+                                                <option value="Politics" {{ $allInfo['genre'] == 'Politics' ? 'selected' : '' }}>Politics</option>
+                                                <option value="Reference" {{ $allInfo['genre'] == 'Reference' ? 'selected' : '' }}>Reference</option>
+                                                <option value="Religion & Spirituality" {{ $allInfo['genre'] == 'Religion & Spirituality' ? 'selected' : '' }}>Religion & Spirituality</option>
+                                                <option value="Science & Mathematics" {{ $allInfo['genre'] == 'Science & Mathematics' ? 'selected' : '' }}>Science & Mathematics</option>
+                                                <option value="Science Fiction & Fantasy" {{ $allInfo['genre'] == 'Science Fiction & Fantasy' ? 'selected' : '' }}>Science Fiction & Fantasy</option>
+                                                <option value="Sports" {{ $allInfo['genre'] == 'Sports' ? 'selected' : '' }}>Sports</option>
+                                                <option value="Teen & Young Adult" {{ $allInfo['genre'] == 'Teen & Young Adult' ? 'selected' : '' }}>Teen & Young Adult</option>
+                                                <option value="Textbooks & Study Guides" {{ $allInfo['genre'] == 'Textbooks & Study Guides' ? 'selected' : '' }}>Textbooks & Study Guides</option>
+                                                <option value="Travel & Tourism" {{ $allInfo['genre'] == 'Travel & Tourism' ? 'selected' : '' }}>Travel & Tourism</option>
+                                            </select>
+                                            <!-- <input id="genre" type="genre" class="form-control @error('genre') is-invalid @enderror" name="genre" value="{{ $allInfo['genre']??'Books' }}" autocomplete="genre" autofocus placeholder="Genre"> -->
                                             <span class="error-message genre" style="color:red;"></span>
 
                                             @error('genre')
@@ -550,7 +620,7 @@
                             </div>
 
                             <!-- Preview Section -->
-                            <div class="col-md-3 text-right mb-2 d-flex" id='preview' style="justify-content: flex-end;" >
+                            <div class="col-md-3 text-right mb-2 d-flex" id='preview' style="justify-content: flex-end;">
                                 <div style="border: 2px solid #ccc;width: 300px;max-height: 300px;height:300px;">
                                     <img src="{{ old('images') ?? $allInfo['baseimg'] }}" id='previewImage' />
                                     <div class='image-status' style="text-align: center;padding: 5px;display:none;"></div>
@@ -665,7 +735,7 @@
 
             $("#form").submit();
         })
-        
+
         $(".duplicate_listing").click(function(e) {
             e.preventDefault();
             $("#form").attr("action", "{{ route('listing.publish.database', $post->id) }}");

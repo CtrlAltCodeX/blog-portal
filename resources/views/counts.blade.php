@@ -56,7 +56,7 @@
                                 <span>End:</span>
                                 <input type="date" name="end_date" class="form-control " value="{{ request()->end_date }}" />
                             </div>
-                            @if(auth()->user()->hasRole('Super Admin'))
+                            @if(auth()->user()->hasRole('Super Admin') || auth()->user()->hasRole('Super Management'))
                             <select class="form-control" id='user' name="user_id">
                                 <option value="">All User</option>
                                 @foreach($users as $user)

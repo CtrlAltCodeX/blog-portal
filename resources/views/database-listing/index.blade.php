@@ -55,28 +55,28 @@
                     <h3 class="card-title">Pending Listings ( DB )</h3>
 
                     <div class="d-flex align-items-center justify-content-between" style="grid-gap: 10px;">
-                        
+
                         <form action="" method="get" id='form' style="margin-left: 10px;" class="d-flex align-items-center justify-content-end">
-                        <div class="w-50">
-                            <a href="{{ route('database-listing.index', ['status' => '', 'category' => 'Product', 'startIndex' => 1, 'user' => request()->user]) }}" class="btn btn-light position-relative me-2 mb-2 btn-sm"> All
-                                ( {{$allCounts}} )
-                                <!--<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">-->
-                                <!--    <span class="visually-hidden">unread messages</span>-->
-                                <!--</span>-->
-                            </a>
-                            <a href="{{ route('database-listing.index', ['status' => 0, 'category' => 'Product', 'startIndex' => 1, 'user' => request()->user]) }}" class="btn btn-success position-relative me-2 mb-2 btn-sm"> Pending
-                                ( {{$pendingCounts}} ) 
-                                <!--<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">-->
-                                <!--    <span class="visually-hidden">unread messages</span>-->
-                                <!--</span>-->
-                            </a>
-                            <a href="{{ route('database-listing.index', ['status' => 2, 'category' => '', 'startIndex' => 1, 'user' => request()->user]) }}" class="btn btn-danger position-relative mb-2 btn-sm"> Rejected
-                                ( {{$rejectedCounts}} ) 
-                                <!--<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">-->
-                                <!--    <span class="visually-hidden">unread messages</span>-->
-                                <!--</span>-->
-                            </a>
-                        </div>
+                            <div class="w-50 d-flex">
+                                <a href="{{ route('database-listing.index', ['status' => '', 'category' => 'Product', 'startIndex' => 1, 'user' => request()->user]) }}" class="btn btn-light position-relative me-2 mb-2 btn-sm"> All
+                                    ( {{$allCounts}} )
+                                    <!--<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">-->
+                                    <!--    <span class="visually-hidden">unread messages</span>-->
+                                    <!--</span>-->
+                                </a>
+                                <a href="{{ route('database-listing.index', ['status' => 0, 'category' => 'Product', 'startIndex' => 1, 'user' => request()->user]) }}" class="btn btn-success position-relative me-2 mb-2 btn-sm"> Pending
+                                    ( {{$pendingCounts}} )
+                                    <!--<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">-->
+                                    <!--    <span class="visually-hidden">unread messages</span>-->
+                                    <!--</span>-->
+                                </a>
+                                <a href="{{ route('database-listing.index', ['status' => 2, 'category' => '', 'startIndex' => 1, 'user' => request()->user]) }}" class="btn btn-danger position-relative mb-2 btn-sm"> Rejected
+                                    ( {{$rejectedCounts}} )
+                                    <!--<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">-->
+                                    <!--    <span class="visually-hidden">unread messages</span>-->
+                                    <!--</span>-->
+                                </a>
+                            </div>
                             <!--<labeL class='user-label'>Stock: </labeL>-->
                             <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
                             <input type="hidden" value="{{ request()->status ?? 0 }}" name='status'>
@@ -90,7 +90,7 @@
                                 <option value="stock__low" {{ request()->category == 'stock__low' ? 'selected' : '' }}>Low Stock (stock__low)</option>
                             </select>
 
-                            @if(auth()->user()->hasRole('Super Admin'))
+                            @if(auth()->user()->hasRole('Super Admin') || auth()->user()->hasRole('Super Management'))
                             <!--<labeL class='user-label'>User: </labeL>-->
                             <select class="form-control w-25 m-2" id='user' name="user">
                                 <option value="all">All Users</option>
@@ -102,9 +102,9 @@
                         </form>
 
                         <form action="" method="get" id='pagingform'>
-                           <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
+                            <input type="hidden" value="{{ request()->startIndex ?? 1 }}" name='startIndex'>
                             <input type="hidden" value="{{ request()->status ?? 0 }}" name='status'>
-                            
+
                             <input type="hidden" value="{{ request()->category ?? '' }}" name='category'>
                             <input type="hidden" value="{{ request()->user ?? 'all' }}" name='user'>
                             <select class="form-control w-100" id='paging' name="paging">
@@ -144,7 +144,7 @@
                                     <th>{{ __('Created By') }}</th>
                                     <th>{{ __('Created at') }}</th>
                                     <th>{{ __('Updated at') }}</th>
-                                    @if(request()->status != 2 && ( auth()->user()->can('Pending Listing ( DB ) -> Edit') || auth()->user()->can('Pending Listing ( DB ) -> Delete')  ))
+                                    @if(request()->status != 2 && ( auth()->user()->can('Pending Listing ( DB ) -> Edit') || auth()->user()->can('Pending Listing ( DB ) -> Delete') ))
                                     <th>{{ __('Action') }}</th>
                                     @endif
                                 </tr>
@@ -156,7 +156,7 @@
                                         <input type="checkbox" name="ids" class="checkbox-update" value="{{$googlePost->id}}" />
                                         @if(abs($googlePost->selling_price - $googlePost->mrp) >= 0 && abs($googlePost->selling_price - $googlePost->mrp) <= 10)
                                             <span style="color: red;font-size:25px">*</span>
-                                        @endif
+                                            @endif
                                     </td>
                                     <td>{{ ++$key }}</td>
                                     <td class="status">{{substr($googlePost->error, 0, 20)}}</td>
@@ -181,20 +181,20 @@
                                         @else {{ 'In Stock' }}
                                         @endif
                                     </td>
-                                    <td><img onerror="this.onerror=null;this.src='/dummy.jpg';" src="" alt="Product Image" /></td>
+                                    <td><img onerror="this.onerror=null;this.src='/dummy.jpg';" src="{{ $googlePost->images ? json_decode($googlePost->images)[0] : '' }}" alt="Product Image" /></td>
                                     <td>{{ $googlePost->title }}</td>
                                     <td>{{ '₹'.$googlePost->selling_price }}
                                     </td>
                                     <td>
                                         @php
-                                            $discount = $googlePost->mrp > 0 
-                                                        ? round((($googlePost->mrp - $googlePost->selling_price) / $googlePost->mrp) * 100, 2)
-                                                        : 0;
+                                        $discount = $googlePost->mrp > 0
+                                        ? round((($googlePost->mrp - $googlePost->selling_price) / $googlePost->mrp) * 100, 2)
+                                        : 0;
                                         @endphp
                                         @if($discount > 0)
-                                            {{ $discount . '%' }}
+                                        {{ $discount . '%' }}
                                         @else
-                                            0%
+                                        0%
                                         @endif
                                     </td>
                                     <td>{{ '₹'.$googlePost->mrp }}</td>
@@ -209,13 +209,13 @@
                                     <td>{{ $googlePost->created_by_user->name }}</td>
                                     <td>{{ date("d-m-Y h:i A", strtotime($googlePost->created_at)) }}</td>
                                     <td>{{ date("d-m-Y h:i A", strtotime($googlePost->updated_at)) }}</td>
-                                    @if(request()->status != 2 && ( auth()->user()->can('Pending Listing ( DB ) -> Edit') || auth()->user()->can('Pending Listing ( DB ) -> Delete')  ))
+                                    @if(request()->status != 2 && ( auth()->user()->can('Pending Listing ( DB ) -> Edit') || auth()->user()->can('Pending Listing ( DB ) -> Delete') ))
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic example">
                                             @can('Pending Listing ( DB ) -> Edit')
                                             <a href="{{ route('database-listing.edit', $googlePost->id) }}" class="btn btn-sm btn-primary padd">{{ __('Edit') }}</a>
                                             @endcan
-                                            
+
                                             @can('Pending Listing ( DB ) -> Delete')
                                             <form action="{{ route('database-listing.destroy', $googlePost->id) }}" method="POST" class="ml-2">
                                                 @csrf
@@ -275,7 +275,10 @@
     $(document).ready(function() {
         //______Basic Data Table
         $('#basic-datatable').DataTable({
-            "paging":false
+            "paging": false,
+            "order": [
+                [1, "asc"]
+            ] // Sorting by second column (index 1) in ascending order
         });
 
         $("#category").on("change", function() {
@@ -289,12 +292,12 @@
         $("#status").change(function() {
             $("#formStatus").submit();
         });
-        
+
         $("#user").change(function() {
             $("#form").submit();
         });
 
-        $("#basic-datatable_wrapper .col-sm-12:first").html('@can("Pending Listing ( DB ) -> Publish to Website")<form id="update-status" action={{route("listing.status")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status" id="status"><option value="">Select</option><option value=0>Pending</option><option value=2>Reject</option><option value=3>Publish to Website</option><option value=4>Save to Draft</option><option value=6>Delete</option></select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div><span class="text-danger m-2">Note: Bulk Approve Listings must configure with Google Authenticator</span></form> @endcan');
+        $("#basic-datatable_wrapper .col-sm-12:first").html('@can("Pending Listing ( DB ) -> Publish to Website")<form id="update-status" action={{route("listing.status")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status" id="status"><option value="">Select</option><option value=0>Pending</option><option value=2>Reject</option><option value=3>Publish to Website</option><option value=4>Save to Draft</option>@can("Pending Listing ( DB ) -> Bulk Delete")<option value=6>Delete</option>@endcan</select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div><span class="text-danger m-2">Note: Bulk Approve Listings must configure with Google Authenticator</span></form> @endcan');
 
         $("#basic-datatable_wrapper").on('click', '.update-status', function(e) {
             e.preventDefault();
@@ -320,7 +323,7 @@
                     return;
                 }
             }
-           
+
             $.ajax({
                 type: "GET",
                 url: "{{ route('listing.status') }}",
@@ -352,12 +355,14 @@
                 }
             }
         });
-        
+
         $('.check-all').click(function() {
             $(".checkbox-update").each(function() {
                 if ($('.check-all').prop('checked') == true) {
-                    $(this).prop('checked', true);
-                    ids.push($(this).val());
+                    if ($(this).parent().parent().is(":visible")) {
+                        $(this).prop('checked', true);
+                        ids.push($(this).val());
+                    }
                 } else {
                     $(this).prop('checked', false);
                     var index = ids.indexOf($(this).val());
@@ -369,13 +374,13 @@
         });
 
         $("#issue_dropdown").change(function() {
-            if($(this).val() == 1) {
+            if ($(this).val() == 1) {
                 $(".astric").hide();
                 $(".accurate").show();
-            } else if($(this).val() == 2) {
+            } else if ($(this).val() == 2) {
                 $(".accurate").show();
                 $(".astric").show();
-            } else if($(this).val() == 3) {
+            } else if ($(this).val() == 3) {
                 $(".accurate").hide();
                 $(".astric").show();
             }

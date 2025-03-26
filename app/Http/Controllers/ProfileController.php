@@ -15,6 +15,14 @@ use Carbon\Carbon;
 class ProfileController extends Controller
 {
     /**
+     * ProfileController constructor
+     */
+    public function __construct()
+    {
+        $this->middleware('role_or_permission:Inventory -> Counts Report', ['only' => ['listings']]);
+    }
+
+    /**
      * Edit the profile
      */
     public function edit()
@@ -132,7 +140,7 @@ class ProfileController extends Controller
                 ->whereDate('created_at', "<=", $toFormattedDate);
         }
 
-        if (auth()->user()->hasRole('Super Admin')) {
+        if (auth()->user()->hasRole('Super Admin') && auth()->user()->hasRole('Super Management')) {
             if (request()->user != 'all') {
                 $userListings = $userListings
                     ->where('created_by', request()->user)

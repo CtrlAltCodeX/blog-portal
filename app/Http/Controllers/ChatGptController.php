@@ -7,6 +7,11 @@ use Illuminate\Support\Facades\Http;
 
 class ChatGptController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role_or_permission:Product Listing > AI Chat Bots', ['only' => ['openAi']]);
+    }
+
     public function openAi()
     {
         return view('chatGpt.new_request');
@@ -27,7 +32,7 @@ class ChatGptController extends Controller
                     ],
                 ],
                 'temperature' => 0.5,
-                "max_tokens" => 200,
+                "max_tokens" => 500,
                 "top_p" => 1.0,
                 "frequency_penalty" => 0.52,
                 "presence_penalty" => 0.5,

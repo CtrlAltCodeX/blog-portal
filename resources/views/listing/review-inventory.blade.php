@@ -216,8 +216,8 @@
                     <nav aria-label="Page navigation example">
                         @if(request()->route()->getName() == 'inventory.review')
                         <ul class="pagination">
-                            @if($googlePosts['prevStartIndex'] > 0) <li class="page-item"><a class="page-link" href="{{ route('inventory.review', ['pageToken' => $googlePosts['prevPageToken'], 'startIndex' => $googlePosts['prevStartIndex'], 'category' => request()->category, 'updated_before' => request()->updated_before]) }}">Previous</a></li> @endif
-                            <li class="page-item"><a class="page-link" href="{{ route('inventory.review', ['pageToken' => $googlePosts['nextPageToken'], 'startIndex' => $googlePosts['startIndex'], 'category' => request()->category, 'updated_before' => request()->updated_before]) }}">Next</a></li>
+                            @if($googlePosts['prevStartIndex'] > 0) <li class="page-item"><a class="page-link" href="{{ route('inventory.review', ['pageToken' => $googlePosts['prevPageToken'], 'startIndex' => $googlePosts['prevStartIndex'], 'category' => request()->category, 'updated_before' => request()->updated_before, 'paging' => request()->paging]) }}">Previous</a></li> @endif
+                            <li class="page-item"><a class="page-link" href="{{ route('inventory.review', ['pageToken' => $googlePosts['nextPageToken'], 'startIndex' => $googlePosts['startIndex'], 'category' => request()->category, 'updated_before' => request()->updated_before, 'paging' => request()->paging]) }}">Next</a></li>
                         </ul>
                         @endif
                     </nav>

@@ -18,7 +18,7 @@ class DashboardController extends Controller
      */
     public function __construct(protected GoogleService $googleService)
     {
-        $this->middleware('role_or_permission:Dashboard', ['only' => ['index']]);
+        // $this->middleware('role_or_permission:Dashboard', ['only' => ['index']]);
     }
 
     /**
@@ -48,12 +48,12 @@ class DashboardController extends Controller
         $pending = Listing::where('status', 0);
 
         $rejected = Listing::where('status', 2);
-        
-        if(auth()->user()->hasRole('Super Admin')){
+
+        if (auth()->user()->hasRole('Super Admin') && auth()->user()->hasRole('Super Management')) {
             $approved = $approved->count();
-    
+
             $pending = $pending->count();
-    
+
             $rejected = $rejected->count();
         } else {
             $approved = $approved
@@ -67,6 +67,14 @@ class DashboardController extends Controller
             $rejected = $rejected
                 ->where('created_by', auth()->user()->id)
                 ->count();
+        }
+
+        if (auth()->check()) {
+            if (auth()->user()->hasPermissionTo('Dashboard')) {
+                return view('dashboard.index', compact('userSessionsCount', 'approved', 'rejected', 'pending'));
+            } else {
+                return redirect()->route('profile.edit');
+            }
         }
 
         return view('dashboard.index', compact('userSessionsCount', 'approved', 'rejected', 'pending'));

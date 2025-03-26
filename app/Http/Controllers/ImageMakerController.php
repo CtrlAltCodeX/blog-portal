@@ -14,6 +14,18 @@ class ImageMakerController extends Controller
 {
 
     /**
+     * Constructor
+     *
+     * @param GoogleService $googleService
+     */
+    public function __construct()
+    {
+        $this->middleware('role_or_permission:Image Creation -> Single Image Maker', ['only' => ['singleImage']]);
+        $this->middleware('role_or_permission:Image Creation -> Combo Image Maker', ['only' => ['comboImage']]);
+        $this->middleware('role_or_permission:Image Creation -> Gallery ( DB )', ['only' => ['imageGallery']]);
+    }
+
+    /**
      * Invoke Function
      *
      * @param string $file

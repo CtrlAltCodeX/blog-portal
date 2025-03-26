@@ -64,10 +64,10 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         @can('Listing create ( DB )')
                         <li><a href="{{ route('database-listing.create') }}" class="slide-item {{ (request()->is('admin/database-listing/create')) ? 'active' : '' }}">{{ __('Create New Listing ( DB )') }}</a></li>
                         @endcan
-                        @can('RA | Pending Listing (DB)')
+                        @can('RA-Pending Listing (DB)')
                         <li><a href="{{ route('database-listing.index', ['status' => 0, 'startIndex' => 1, 'category' => '', 'user' => 'all','paging'=>25]) }}" class="slide-item {{ (request()->is('admin/database-listing')) ? 'active' : '' }}">{{ __('RA | Pending Listing (DB)') }}</a></li>
                         @endcan
-                        @can('RA | Updated Listings (MS)')
+                        @can('RA-Updated Listings (MS)')
                         <li><a href="{{ route('publish.pending', ['status' => 0, 'startIndex' => 1, 'category' => '', 'user' => 'all','paging'=>25]) }}" class="slide-item {{ (request()->is('admin/publish/pending')) ? 'active' : '' }}">{{ __('RA | Updated Listings (MS)') }}</a></li>
                         @endcan
                     </ul>
@@ -112,7 +112,9 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         @can('Inventory -> Counts Report')
                         <li><a href="{{ route('profile.listing', ['user' => 'all', 'status' => 0, 'status_listing' => 'Created']) }}" class="slide-item {{ (request()->is('admin/profile/listings')) ? 'active' : '' }}">{{ __('Listing Counts Report ( DB )') }}</a></li>
                         @endcan
+                        @can('Inventory -> Counts Report')
                         <li><a href="{{ route('users.count') }}" class="slide-item {{ (request()->is('admin/users/count/users')) ? 'active' : '' }}">{{ __('Detail Work Reports') }}</a></li>
+                        @endcan
                     </ul>
                 </li>
                 @endcan
@@ -173,9 +175,9 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         @can('Settings -> Site Access')
                         <li><a href="{{ route('settings.site') }}" class="slide-item {{ request()->is('admin/settings/site') ? 'active' : '' }}">{{ __('Site Settings') }}</a></li>
                         @endcan
-
+                        
                         @can('Settings -> Site Access')
-                        <li><a href="{{ route('settings.policies') }}" class="slide-item {{ request()->is('admin/settings/site') ? 'active' : '' }}">{{ __('Term & Condition / Policies ') }}</a></li>
+                        <li><a href="{{ route('settings.policies') }}" class="slide-item {{ request()->is('admin/settings/policies/term') ? 'active' : '' }}">{{ __('Policies Pages') }}</a></li>
                         @endcan
 
                         @can('Settings -> Backup E-Mail')
@@ -191,7 +193,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         @endcan
 
                         @can('Settings -> Configure Blog')
-                        <li><a href="{{ route('settings.blog') }}" class="slide-item {{ request()->is('admin/settings/blog') ? 'active' : '' }}">{{ __('Confiure Blog') }}</a></li>
+                        <li><a href="{{ route('settings.blog') }}" class="slide-item {{ request()->is('admin/settings/blog') ? 'active' : '' }}">{{ __('Configure API') }}</a></li>
                         @endcan
                     </ul>
                 </li>

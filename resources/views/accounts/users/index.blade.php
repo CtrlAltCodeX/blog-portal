@@ -1,3 +1,4 @@
+@can('User Details -> All Users List')
 @extends('layouts.master')
 
 @section('title', 'Users')
@@ -205,6 +206,7 @@ $getRoles = app('App\Http\Controllers\RoleController');
     </div>
     <!-- End Row -->
 </div>
+
 @endsection
 
 @push('js')
@@ -216,5 +218,6 @@ $getRoles = app('App\Http\Controllers\RoleController');
     });
 </script>
 @endpush
+@endcan
 
 

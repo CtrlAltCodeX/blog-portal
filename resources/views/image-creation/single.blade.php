@@ -50,7 +50,7 @@ $formRoute = "/admin/images/watermark/store";
                                 @if(request()->maker == 'wo-watermark')
                                 <label for="fileInput1">Image without Watermark<span class="text-danger">*</span></label>
 
-                                <input type="file" class="dropify @error('file') is-invalid @enderror" name="file" multiple>
+                                <input type="file" class="dropify @error('file') is-invalid @enderror" name="file" multiple accept=".jpg, .jpeg, .png">
                                 <div id='multiImagesDownload' style="display: none;">
                                     <a href='#' class="w-100 d-flex justify-content-end my-4">
                                         <img src="/downlod-icon.png" />
@@ -72,7 +72,7 @@ $formRoute = "/admin/images/watermark/store";
 
                                 <div class="form-group">
                                     <div class="form-group mb-0 @error('file') is-invalid @enderror" @error('file') style="border: red 2px dotted;" @enderror>
-                                        <input type="file" class="dropify @error('images') is-invalid @enderror" data-bs-height="180" id="file" name="file" />
+                                        <input type="file" class="dropify @error('file') is-invalid @enderror" data-bs-height="180" id="file" name="file" accept=".jpg, .jpeg, .png" />
                                     </div>
                                     @error('file')
                                     <span class="invalid-feedback" role="alert">

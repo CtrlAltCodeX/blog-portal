@@ -36,6 +36,8 @@ class UserController extends Controller
         $this->middleware('role_or_permission:User New create', ['only' => ['create', 'store']]);
         $this->middleware('role_or_permission:User Details -> All Users List -> Edit', ['only' => ['edit', 'update']]);
         $this->middleware('role_or_permission:User delete', ['only' => ['destroy']]);
+        $this->middleware('role_or_permission:Inventory -> Counts Report', ['only' => ['userCounts']]);
+        $this->middleware('role_or_permission:Allot User Roles', ['only' => ['verified']]);
     }
 
     /**
@@ -337,7 +339,7 @@ class UserController extends Controller
             $countCreated->where('user_id', request()->user_id);
         }
 
-        if (!auth()->user()->hasRole('Super Admin')) {
+        if (!auth()->user()->hasRole('Super Admin') && !auth()->user()->hasRole('Super Management')) {
             $countCreated->where('user_id', auth()->user()->id);
         }
 
@@ -360,7 +362,7 @@ class UserController extends Controller
             $countEdited->where('user_id', request()->user_id);
         }
 
-        if (!auth()->user()->hasRole('Super Admin')) {
+        if (!auth()->user()->hasRole('Super Admin') && !auth()->user()->hasRole('Super Management')) {
             $countEdited->where('user_id', auth()->user()->id);
         }
 

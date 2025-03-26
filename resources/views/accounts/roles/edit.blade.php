@@ -50,7 +50,7 @@
                             <div class="form-group">
                                 <div class="d-flex align-items-center">
                                     <label for="name">{{ __('Role Name') }}</label>
-                                    <input id="name" type="text" class="m-2 w-50 form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') ?? $role->name }}"  autocomplete="name" autofocus placeholder="Name" {{ $role->name == 'Super Admin' ? 'readonly' : '' }}>
+                                    <input id="name" type="text" class="m-2 w-50 form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') ?? $role->name }}"  autocomplete="name" autofocus placeholder="Name" {{ ($role->name == 'Super Admin' || $role->name ==  'Super Management') ? 'readonly' : '' }}>
                                 </div>
 
                                 @error('name')

@@ -23,44 +23,16 @@ $googleService = app('App\Services\GoogleService');
 $siteSettings = app('App\Models\SiteSetting');
 
 @endphp
-
-@push('css')
-<style>
-    .tooltip {
-        position: relative;
-        display: inline-block;
-        border-bottom: 1px dotted black;
-    }
-
-    .tooltip .tooltiptext {
-        visibility: hidden;
-        width: 120px;
-        background-color: black;
-        color: #fff;
-        text-align: center;
-        border-radius: 6px;
-        padding: 5px 0;
-
-        /* Position the tooltip */
-        position: absolute;
-        z-index: 1;
-    }
-
-    .tooltip:hover .tooltiptext {
-        visibility: visible;
-    }
-</style>
-@endpush
 <!-- app-Header -->
 <div class="app-header header sticky">
     <div class="container-fluid main-container">
         <div class="d-flex">
             <a aria-label="Hide Sidebar" class="app-sidebar__toggle" data-bs-toggle="sidebar" href="javascript:void(0)"></a>
-            @if(app('App\Http\Controllers\Controller')->tokenIsExpired($googleService))
+            @if(app('App\Http\Controllers\Controller')->tokenIsExpired($googleService)) 
             <span class="p-1 text-white" style="background-color: green;border-radius: 5px;">
                 Developer Connected
             </span>
-            @else
+            @else   
             <span class="p-1 text-white" style="background-color: red;border-radius: 5px;">
                 Developer Disconnect
             </span>
@@ -90,31 +62,31 @@ $siteSettings = app('App\Models\SiteSetting');
                 </button>
                 <div class="navbar navbar-collapse responsive-navbar p-0">
                     <div class="collapse navbar-collapse" id="navbarSupportedContent-4">
-                        @if(!auth()->user()->hasRole('Super Admin') && auth()->user()->show_health)
+                        @if(!auth()->user()->hasRole('Super Admin') && auth()->user()->show_health && !auth()->user()->hasRole('Super Management'))
                         <label style="margin-right: 10px;font-family: system-ui;"><strong>ACCOUNT HEALTH:</strong>
-                            <a href="/account_health.jpeg" target="_blank">
-                                @if($currentWeekDataCreated <= 120)
-                                    <span style="border: 1px solid red;padding: 5px;background-color: red;color: white;box-shadow: 1px 1px 3px black;">AT RISK</span>
-                                    @elseif($currentWeekDataCreated >= 121 && $currentWeekDataCreated <= 149)
-                                        <span style="border: 1px solid orange;padding: 5px;background-color: orange;color: black;box-shadow: 1px 1px 3px black;">REVIEW</span>
-                                        @elseif($currentWeekDataCreated >= 150 && $currentWeekDataCreated <= 199)
-                                            <span style="border: 1px solid yellow;padding: 5px;background-color: yellow;color: black;box-shadow: 1px 1px 3px black;">AVERAGE</span>
-                                            @elseif($currentWeekDataCreated >= 200 && $currentWeekDataCreated <= 349)
-                                                <span style="border: 1px solid lightgreen;padding: 5px;background-color: lightgreen;color: black;box-shadow: 1px 1px 3px black;">GOOD</span>
-                                                @elseif($currentWeekDataCreated >= 350)
-                                                <span style="border: 1px solid green;padding: 5px;background-color: green;color: white;box-shadow: 1px 1px 3px black;">EXCELLENT</span>
-                                                @endif
+                        <a href="/account_health.jpeg" target="_blank">
+                            @if($currentWeekDataCreated <= 120)
+                                <span style="border: 1px solid red;padding: 5px;background-color: red;color: white;box-shadow: 1px 1px 3px black;">AT RISK</span>
+                                @elseif($currentWeekDataCreated >= 121 && $currentWeekDataCreated <= 149)
+                                    <span style="border: 1px solid orange;padding: 5px;background-color: orange;color: black;box-shadow: 1px 1px 3px black;">REVIEW</span>
+                                    @elseif($currentWeekDataCreated >= 150 && $currentWeekDataCreated <= 199)
+                                        <span style="border: 1px solid yellow;padding: 5px;background-color: yellow;color: black;box-shadow: 1px 1px 3px black;">AVERAGE</span>
+                                        @elseif($currentWeekDataCreated >= 200 && $currentWeekDataCreated <= 349)
+                                            <span style="border: 1px solid lightgreen;padding: 5px;background-color: lightgreen;color: black;box-shadow: 1px 1px 3px black;">GOOD</span>
+                                            @elseif($currentWeekDataCreated >= 350)
+                                            <span style="border: 1px solid green;padding: 5px;background-color: green;color: white;box-shadow: 1px 1px 3px black;">EXCELLENT</span>
+                                            @endif
                             </a>
                         </label>
                         @endif
-
+                        
                         <div style="font-size: 15px;display: flex;grid-gap: 10px;">
-                            <a href="{{ route('get.term_condition') }}" title="Term and Condition">
-                                <i class="fa fa-info"></i>
+                            <a href="{{ route('get.term_condition') }}" title="Terms & Condition">
+                                <img src='/terms.jpg' width=45 />
                             </a>
 
-                            <a href="{{ route('get.policies') }}" title="Policy">
-                                <i class="fa fa-info"></i>
+                            <a href="{{ route('get.policies') }}" title="Workout Policies">
+                                <img src='/policy.jpeg' width=25 />
                             </a>
                         </div>
 
@@ -153,9 +125,11 @@ $siteSettings = app('App\Models\SiteSetting');
                                 <a class="dropdown-item" href="lockscreen.html">
                                     <i class="dropdown-icon fe fe-lock"></i> Lockscreen
                                 </a> -->
+                                @if (!auth()->user()->account_details_change_limitations)
                                 <a class="dropdown-item" href="{{route('change.user.password')}}">
                                     <i class="dropdown-icon fe fe-lock"></i> Change Password
                                 </a>
+                                @endif
                                 <a class="dropdown-item" href="javascript:void(0)" onclick="return confirm('{{ __('Are you sure you want logout?') }}') ? document.getElementById('logout').submit() : false;">
                                     <i class="dropdown-icon fe fe-alert-circle"></i> Sign out
                                 </a>

@@ -26,7 +26,12 @@ class DatabaseListingController extends Controller
      *
      * @param GoogleService $googleService
      */
-    public function __construct(protected GoogleService $googleService) {}
+    public function __construct(protected GoogleService $googleService)
+    {
+        $this->middleware('role_or_permission:Listing create ( DB )', ['only' => ['create']]);
+        $this->middleware('role_or_permission:RA-Pending Listing (DB)', ['only' => ['index']]);
+        $this->middleware('role_or_permission:RA-Updated Listings (MS)', ['only' => ['getPublishPending']]);
+    }
 
     /**
      * Display the listing of the resources
@@ -45,7 +50,7 @@ class DatabaseListingController extends Controller
 
         if (request()->status) $googlePosts = $googlePosts->where('status', request()->status);
 
-        if (!auth()->user()->hasRole('Super Admin')) {
+        if (!auth()->user()->hasRole('Super Admin') && !auth()->user()->hasRole('Super Management')) {
             $googlePosts = $googlePosts->where('created_by', auth()->user()->id);
         }
         $googlePosts = $googlePosts->paginate($request->paging);
@@ -57,7 +62,7 @@ class DatabaseListingController extends Controller
         $rejectedCounts = Listing::where('status', 2)->where('is_bulk_upload', 0)
             ->whereNull('product_id');
 
-        if (!auth()->user()->hasRole('Super Admin')) {
+        if (!auth()->user()->hasRole('Super Admin') && !auth()->user()->hasRole('Super Management')) {
             $pendingCounts = $pendingCounts->where('created_by', auth()->user()->id);
 
             $rejectedCounts = $rejectedCounts->where('created_by', auth()->user()->id);
@@ -96,7 +101,7 @@ class DatabaseListingController extends Controller
         if (!$user_data_transfer) {
             return view('database-listing.create_tmp', compact('categories', 'siteSetting', 'user_data_transfer'));
         } else {
-            return view('database-listing.create', compact('categories', 'siteSetting', 'user_data_transfer','publications'));
+            return view('database-listing.create', compact('categories', 'siteSetting', 'user_data_transfer', 'publications'));
         }
     }
 
@@ -192,10 +197,22 @@ class DatabaseListingController extends Controller
                 'images' => $request->images[0],
                 'multiple_images' => $request->multipleImages,
                 'status' => 0,
-                'created_by' => auth()->user()->id
+                'created_by' => auth()->user()->id,
+                'isbn_10' => request()->isbn_10,
+                'isbn_13' => request()->isbn_13,
+                'publish_year' => request()->publish_year,
+                'weight' => request()->weight,
+                'reading_age' => request()->reading_age,
+                'country_origin' => request()->country_origin,
+                'genre' => request()->genre,
+                'manufacturer' => request()->manufacturer,
+                'importer' => request()->importer,
+                'packer' => request()->packer,
             ];
 
-            return view('database-listing.preview', compact('data'));
+            $publications  = WeightVSCourier::all();
+
+            return view('database-listing.preview', compact('data', 'publications'));
         } catch (\Exception $e) {
             session()->flash('error', 'Something went Wrong!!');
             return redirect()->back();
@@ -205,6 +222,7 @@ class DatabaseListingController extends Controller
 
     public function copyDatabase($id)
     {
+
         try {
             $findListing = Listing::find($id);
 
@@ -224,18 +242,18 @@ class DatabaseListingController extends Controller
                     'condition' => $findListing->condition,
                     'binding_type' => $findListing->binding_type,
                     'insta_mojo_url' => $findListing->insta_mojo_url,
-                    'images' => json_encode($findListing->images),
+                    'images' => $findListing->images,
                     'multiple_images' => $findListing->multiple_images,
                     'product_id' => $findListing->product_id ?? null,
                     'status' => 0,
                     'created_by' => auth()->user()->id,
                     'is_bulk_upload' => $findListing->is_bulk_upload,
-                    'isbn_10' => $findListing->isbn10,
-                    'isbn_13' => $findListing->isbn13,
-                    'publish_year' => $findListing->publishyear,
+                    'isbn_10' => $findListing->isbn_10,
+                    'isbn_13' => $findListing->isbn_13,
+                    'publish_year' => $findListing->publish_year,
                     'weight' => $findListing->weight,
-                    'reading_age' => $findListing->age,
-                    'country_origin' => $findListing->origin,
+                    'reading_age' => $findListing->reading_age,
+                    'country_origin' => $findListing->country_origin,
                     'genre' => $findListing->genre,
                     'manufacturer' => $findListing->manufacturer,
                     'importer' => $findListing->importer,
@@ -254,6 +272,7 @@ class DatabaseListingController extends Controller
                 ]);
 
                 $this->updateTheCount('Created', 'create_count');
+
                 if ($newListing) {
                     session()->flash('success', 'Copy Listing created successfully');
                     return redirect()->back();
@@ -286,7 +305,7 @@ class DatabaseListingController extends Controller
 
         $categories = $response->json()['feed']['category'];
         $publications  = WeightVSCourier::all();
-        return view('database-listing.edit', compact('listing', 'siteSetting', 'categories','publications'));
+        return view('database-listing.edit', compact('listing', 'siteSetting', 'categories', 'publications'));
     }
 
     /**
@@ -430,8 +449,8 @@ class DatabaseListingController extends Controller
                     ]);
                 }
             }
-        }else if (request()->publish == 6) {
-          
+        } else if (request()->publish == 6) {
+
             Listing::whereIn('id', request()->ids)->delete();
             UserListingInfo::whereIn('listings_id', request()->ids)->delete();
             return response()->json(['success' => true, 'message' => 'Products deleted successfully.']);
@@ -505,7 +524,7 @@ class DatabaseListingController extends Controller
             ->where('status', 2)
             ->where('is_bulk_upload', 0);
 
-        if (!auth()->user()->hasRole('Super Admin')) {
+        if (!auth()->user()->hasRole('Super Admin') && !auth()->user()->hasRole('Super Management')) {
             $pendingCounts = $pendingCounts->where('created_by', auth()->user()->id);
 
             $rejectedCounts = $rejectedCounts->where('created_by', auth()->user()->id);
@@ -828,7 +847,6 @@ class DatabaseListingController extends Controller
             'url' => request()->product_url,
             'created_by' => auth()->user()->id,
             'status' => 0,
-            'product_id' => null,
             'isbn_10' => trim(request()->isbn_10),
             'isbn_13' => trim(request()->isbn_13),
             'publish_year' => trim(request()->publish_year),
@@ -842,7 +860,7 @@ class DatabaseListingController extends Controller
         ];
 
         $listing = Listing::create($allInfo);
- 
+
         if (!isset(request()->duplicate)) {
             $data = [
                 'image' => $listing->images[0],

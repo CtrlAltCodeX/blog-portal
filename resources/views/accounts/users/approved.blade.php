@@ -1,3 +1,4 @@
+@can('Allot User Roles')
 @extends('layouts.master')
 
 @section('title', 'Users')
@@ -127,4 +128,6 @@
     });
 </script>
 @endpush
+
+@endcan
 

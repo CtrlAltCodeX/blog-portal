@@ -18,6 +18,7 @@ class RoleController extends Controller
     {
         $this->middleware('role_or_permission:Role create', ['only' => ['index', 'show']]);
         $this->middleware('role_or_permission:Role create', ['only' => ['create', 'store']]);
+        $this->middleware('role_or_permission:Roles & Permissions -> View All Roles & Permissions', ['only' => ['view']]);
     }
 
     /**

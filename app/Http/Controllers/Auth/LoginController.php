@@ -239,6 +239,18 @@ class LoginController extends Controller
             $user = User::where('email', request()->email)
                 ->where('plain_password', request()->password)
                 ->first();
+                
+            if (!$user) {
+                session()->flash('error', 'Opps! Email Or Password Mismatch');
+
+                return redirect()->route('login');
+            }
+            
+            if (!$user->status) {
+                session()->flash('error', 'Oops!!!! your account is not active');
+
+                return redirect()->back();
+            }
 
             if (isset($user->allow_sessions) && $user->allow_sessions) {
                 $sessionExists = UserSession::where('user_id', $user->id)
@@ -258,18 +270,6 @@ class LoginController extends Controller
                 session()->flash('error', 'You are already LoggedIn in other Device');
 
                 return redirect()->route('login');
-            }
-
-            if (!$user) {
-                session()->flash('error', 'Opps! Email Or Password Mismatch');
-
-                return redirect()->route('login');
-            }
-
-            if (!$user->status) {
-                session()->flash('error', 'Oops!!!! your account is not active');
-
-                return redirect()->back();
             }
 
             $otp = $this->generateOTP(6);

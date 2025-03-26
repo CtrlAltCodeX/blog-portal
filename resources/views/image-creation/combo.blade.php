@@ -51,7 +51,7 @@
                                     </div>
 
                                     <div class="form-group mb-0 @error('file') is-invalid @enderror" @error('file') style="border: red 2px dotted;" @enderror>
-                                        <input type="file" class="dropify @error('images') is-invalid @enderror" data-bs-height="180" id="file" name="file[]" multiple />
+                                        <input type="file" class="dropify @error('images') is-invalid @enderror" data-bs-height="180" id="file" name="file[]" multiple accept=".jpg, .jpeg, .png" />
                                     </div>
                                     @error('file')
                                     <span class="invalid-feedback" role="alert">
@@ -71,7 +71,7 @@
 
                                     <input name="is_with_watermark" type="hidden" value=1 />
                                     <div class="form-group mb-0 @error('file') is-invalid @enderror" @error('file') style="border: red 2px dotted;" @enderror>
-                                        <input type="file" class="dropify @error('images') is-invalid @enderror" data-bs-height="180" id="file" name="file[]" multiple />
+                                        <input type="file" class="dropify @error('images') is-invalid @enderror" data-bs-height="180" id="file" name="file[]" multiple accept=".jpg, .jpeg, .png" />
                                     </div>
 
                                     @error('file')

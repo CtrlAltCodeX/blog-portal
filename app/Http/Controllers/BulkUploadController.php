@@ -4,19 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Imports\BulkUploadListingsImport;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use App\Jobs\ImportListingCsv;
 use App\Models\Listing;
 use App\Models\SiteSetting;
 use App\Models\UserListingInfo;
-use Intervention\Image\ImageManager;
-use Intervention\Image\Facades\Image;
 use App\Models\WeightVSCourier;
 
 class BulkUploadController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role_or_permission:Product Listing > Bulk Listing Upload', ['only' => ['getOptions']]);
+        $this->middleware('role_or_permission:Product Listing > Bulk Listing Review (Edit)', ['only' => ['viewUploadedFile']]);
+    }
+
     public function getOptions()
     {
         return view('bulk-upload.options');

@@ -141,8 +141,69 @@
                     <td>@if(isset($data['images']))<i class="fa fa-check text-success" style="font-size:36px"></i>@else <i class="fa fa-close" style="font-size:36px;color:red"></i> @endif</td>
                 </tr>
             </table>
+
+            <table style="width:25%">
+                <tr>
+                    <th style="background-color:#eee;">Fields</th>
+                    <th style="background-color:#eee;">Result</th>
+                </tr>
+                <tr>
+                    <td>ISBN 10</td>
+                    <td>@if(isset($data['isbn_10']))<i class="fa fa-check text-success" style="font-size:36px"></i>@else <i class="fa fa-close" style="font-size:36px;color:red"></i> @endif</td>
+                </tr>
+                <tr>
+                    <td>ISBN 13</td>
+                    <td>@if(isset($data['isbn_13']))<i class="fa fa-check text-success" style="font-size:36px"></i>@else <i class="fa fa-close" style="font-size:36px;color:red"></i> @endif</td>
+                </tr>
+                <tr>
+                    <td>Publish Year</td>
+                    <td>@if(isset($data['publish_year']))<i class="fa fa-check text-success" style="font-size:36px"></i>@else <i class="fa fa-close" style="font-size:36px;color:red"></i> @endif</td>
+                </tr>
+                <tr>
+                    <td>Weight</td>
+                    <td>@if(isset($data['weight']))<i class="fa fa-check text-success" style="font-size:36px"></i>@else <i class="fa fa-close" style="font-size:36px;color:red"></i> @endif</td>
+                </tr>
+            </table>
+
+            <table style="width:25%">
+                <tr>
+                    <th style="background-color:#eee;">Fields</th>
+                    <th style="background-color:#eee;">Result</th>
+                </tr>
+                <tr>
+                    <td>Reading Age</td>
+                    <td>@if(isset($data['reading_age']))<i class="fa fa-check text-success" style="font-size:36px"></i>@else <i class="fa fa-close" style="font-size:36px;color:red"></i> @endif</td>
+                </tr>
+                <tr>
+                    <td>Country Origin</td>
+                    <td>@if(isset($data['country_origin']))<i class="fa fa-check text-success" style="font-size:36px"></i>@else <i class="fa fa-close" style="font-size:36px;color:red"></i> @endif</td>
+                </tr>
+                <tr>
+                    <td>Genre</td>
+                    <td>@if(isset($data['genre']))<i class="fa fa-check text-success" style="font-size:36px"></i>@else <i class="fa fa-close" style="font-size:36px;color:red"></i> @endif</td>
+                </tr>
+                <tr>
+                    <td>Manufacturer</td>
+                    <td>@if(isset($data['manufacturer']))<i class="fa fa-check text-success" style="font-size:36px"></i>@else <i class="fa fa-close" style="font-size:36px;color:red"></i> @endif</td>
+                </tr>
+            </table>
+
+            <table style="width:25%">
+                <tr>
+                    <th style="background-color:#eee;">Fields</th>
+                    <th style="background-color:#eee;">Result</th>
+                </tr>
+                <tr>
+                    <td>Importer</td>
+                    <td>@if(isset($data['importer']))<i class="fa fa-check text-success" style="font-size:36px"></i>@else <i class="fa fa-close" style="font-size:36px;color:red"></i> @endif</td>
+                </tr>
+                <tr>
+                    <td>Packer</td>
+                    <td>@if(isset($data['packer']))<i class="fa fa-check text-success" style="font-size:36px"></i>@else <i class="fa fa-close" style="font-size:36px;color:red"></i> @endif</td>
+                </tr>
+            </table>
         </div>
-        
+
         <div class="d-flex mt-5 justify-content-center">
             <a href="{{ route('database-listing.create')  }}" class="btn btn-success">Continue Practice</a>
         </div>

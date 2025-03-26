@@ -1,3 +1,4 @@
+@can('Settings -> Site Access')
 @extends('layouts.master')
 
 @section('title', __('Settings'))
@@ -56,3 +57,4 @@
     });
 </script>
 @endpush
+@endcan

@@ -1,3 +1,4 @@
+@can('Roles & Permissions -> View All Roles & Permissions')
 @extends('layouts.master')
 
 @section('title', __('Roles'))
@@ -72,3 +73,4 @@
         <!-- End Row -->
     </div>
 @endsection
+@endcan

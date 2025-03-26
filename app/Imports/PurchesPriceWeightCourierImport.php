@@ -10,6 +10,7 @@ class PurchesPriceWeightCourierImport implements ToModel, WithHeadingRow
 {
     public function model(array $row)
     {
+
         return new PurchesPriceWeightCourier([
             'min' => $row['min'],
             'max' => $row['max'],

@@ -132,42 +132,44 @@
                     </div>
                 </div>
 
-                <div class="card">
-                    <div class="card-body" style="background-color: antiquewhite;">
-                        <h4>PRICE CALCULATION</h4>
-                        <div class="row">
-                            <div class="form-group col-md-4">
-                                <label for="pub_name" class="form-label">{{ __('Publication') }}</label>
-                                <select class="genre form-control" name="pub_name" id="pub_name">
-                                    <option value="">--Publication--</option>
-                                    @foreach($publications as $pub)
-                                    <option value="{{ $pub->id }}">{{ $pub->pub_name }}</option>
-                                    @endforeach
-                                </select>
+                <!--<div class="card">-->
+                <!--    <div class="card-body" style="background-color: antiquewhite;">-->
+                <!--        <h4>PRICE CALCULATION</h4>-->
+                <!--        <div class="row">-->
+                <!--            <div class="form-group col-md-4">-->
+                <!--                <label for="pub_name" class="form-label">{{ __('Publication') }}</label>-->
+                <!--                <select class="genre form-control" name="pub_name" id="pub_name">-->
+                <!--                    <option value="">--Publication--</option>-->
+                <!--                    @foreach($publications as $pub)-->
+                <!--                    <option value="{{ $pub->id }}">{{ $pub->pub_name }}</option>-->
+                <!--                    @endforeach-->
+                <!--                </select>-->
 
 
-                            </div>
+                <!--            </div>-->
 
-                            <div class="form-group col-md-4">
-                                <label for="book_name" class="form-label">{{ __('Book Type') }}</label>
-                                <select class="form-control" name="book_name" id="book_name">
-                                    <option value="">-- Select Book --</option>
-                                </select>
-                            </div>
+                <!--            <div class="form-group col-md-4">-->
+                <!--                <label for="book_name" class="form-label">{{ __('Book Type') }}</label>-->
+                <!--                <select class="form-control" name="book_name" id="book_name">-->
+                <!--                    <option value="">-- Select Book --</option>-->
+                <!--                </select>-->
+                <!--            </div>-->
 
 
-                            <div class="form-group col-md-4">
-                                <label class="form-label">{{ __('Selling Prices') }}</label>
-                                <div class="selling-prices">
-                                    <strong>Min Selling Price:</strong> <span id="selling_price1">--</span> <br>
-                                    <strong>Max Selling Price:</strong> <span id="selling_price2">--</span>
-                                </div>
-                            </div>
+                <!--            <div class="form-group col-md-4">-->
+                <!--                <label class="form-label">{{ __('Selling Prices') }}</label>-->
+                <!--                <div class="selling-prices">-->
+                <!--                    <strong>Min Selling Price:</strong> <span id="selling_price1">--</span> <br>-->
+                <!--                    <strong>Max Selling Price:</strong> <span id="selling_price2">--</span>-->
+                <!--                </div>-->
+                <!--            </div>-->
 
                            
-                        </div>
-                    </div>
-                </div>
+                <!--        </div>-->
+                <!--    </div>-->
+                <!--</div>-->
+                
+                @include('price-calculator')
 
                 <div class="card">
                     <div class="card-body">
@@ -440,8 +442,8 @@
 
                                     <div class="col-md-4">
                                         <div class="">
-                                            <label for="genre" class="form-label d-flex ">{{ __('Genre') }} <span class="text-danger">*</span></label>
-                                            <select class="genre form-control @error('genre') is-invalid @enderror" name="genre">
+                                            <label for="" class="form-label d-flex ">{{ __('Genre') }} <span class="text-danger">*</span></label>
+                                            <select class="searchable_dropdown form-control @error('genre') is-invalid @enderror" name="genre">
                                                 <option value="">--Select--</option>
                                                 <option value="Fantasy" {{ $listing->genre == 'Fantasy' ? 'selected' : '' }}>Fantasy</option>
                                                 <option value="Horror" {{ $listing->genre == 'Horror' ? 'selected' : '' }}>Horror</option>

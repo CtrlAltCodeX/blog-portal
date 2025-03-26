@@ -1,7 +1,7 @@
 <script>
     $(document).ready(function() {
-        $(".genre").select2();
-        
+        $(".searchable_dropdown").select2();
+
         // Counter to keep track of the number of file input fields
         var fileInputCounter = 2; // Start from 2 since the first one is already visible
 
@@ -145,7 +145,7 @@
 
             if (selectedValues) { // Ensure selectedValues is not null
                 valuesToCheck.forEach(function(value) {
-                    if (selectedValues.includes(value)) { // Use modern `includes` method
+                    if (selectedValues.includes(value)) {
                         alert('This Labels are not accepted while update any listing. Value found: ' + value);
                     }
                 });
@@ -160,7 +160,7 @@
                 totalLength += $(this).text().trim().length;
             });
 
-            @if(!auth()->user()->hasRole('Super Admin'))
+            @if(!auth()->user()->hasRole('Super Admin') && !auth()->user()->hasRole('Super Management'))
             if (totalLength < 170) {
                 event.preventDefault();
                 alert('You must select at least 170 characters in Category.');
@@ -181,7 +181,6 @@
                     (inputValue.includes('[') ||
                         inputValue.includes(']'))
                 ) {
-                    // Display error message
                     var fieldId = $(this).attr('name');
                     if (fieldId != 'images[]' && fieldId != 'multipleImages[]' && fieldId != 'url' && fieldId != 'images') {
                         $(this).css('border', '1px red solid');
@@ -229,10 +228,11 @@
 
             $('select').each(function() {
                 var textareaValue = $(this).val();
+                var notRequiredFields = ['book_name', 'pub_name'];
 
                 if (textareaValue == '') {
                     var fieldId = $(this).attr('name');
-                    if (fieldId) {
+                    if (fieldId && !notRequiredFields.includes(fieldId)) {
                         $(this).css('border', '1px red solid');
                         $('.' + fieldId).text('This field is required');
                         requiredvalid = false;
@@ -310,7 +310,7 @@
         }
 
         function requiredFields(val, currentElement) {
-            var notRequiredFields = ['multipleImages[]', 'images', 'files', 'isbn_10', 'isbn_13', 'isbn_10', 'reading_age', 'country_origin', 'genre', 'manufacturer', 'importer', 'discount']; // Add more fields as needed
+            var notRequiredFields = ['multipleImages[]', 'images', 'files', 'pub_name', 'book_name', 'discount']; // Add more fields as needed
 
             var fieldId = $(currentElement).attr('name');
             if (fieldId && !notRequiredFields.includes(fieldId) && !val) {
@@ -557,89 +557,90 @@
     }
 
     $(document).ready(function() {
-    const publications = @json($publications);
-    const $pubDropdown = $("#pub_name");
-    const $bookDropdown = $("#book_name");
-    const $mrpInput = $("#mrp");
-    let discount = 0,
-        locationDis = 0,
-        enteredMRP = 0; 
+        const publications = @json($publications);
+        const $pubDropdown = $("#pub_name");
+        const $bookDropdown = $("#book_name");
+        const $mrpInput = $("#mrp");
+        let discount = 0,
+            locationDis = 0,
+            enteredMRP = 0;
 
-    // Jab Publication select ho
-    $pubDropdown.on("change", function() {
-        const selectedPub = publications.find(pub => pub.id == $(this).val());
-        $bookDropdown.html('<option value="">-- Select Book --</option>'); 
+        // Jab Publication select ho
+        $pubDropdown.on("change", function() {
+            const selectedPub = publications.find(pub => pub.id == $(this).val());
+            $bookDropdown.html('<option value="">-- Select Book --</option>');
 
-        if (selectedPub) {
-            for (let i = 1; i <= 6; i++) {
-                const bookType = selectedPub[`book_type_${i}`];
-                if (bookType) {
-                    $bookDropdown.append(`<option value="book_discount_${i}">${bookType}</option>`);
+            if (selectedPub) {
+                for (let i = 1; i <= 6; i++) {
+                    const bookType = selectedPub[`book_type_${i}`];
+                    if (bookType) {
+                        $bookDropdown.append(`<option value="book_discount_${i}">${bookType}</option>`);
+                    }
                 }
             }
-        }
 
-        calculatePrice(); 
-    });
+            calculatePrice();
+        });
 
-    // Jab Book select ho
-    $bookDropdown.on("change", function() {
-        const selectedPub = publications.find(pub => pub.id == $pubDropdown.val());
-        if (selectedPub && $(this).val()) {
-            discount = parseInt(selectedPub[$(this).val()]) || 0;
-            locationDis = parseInt(selectedPub.location_dis) || 0;
-        }
-        calculatePrice();
-    });
+        // Jab Book select ho
+        $bookDropdown.on("change", function() {
+            const selectedPub = publications.find(pub => pub.id == $pubDropdown.val());
+            if (selectedPub && $(this).val()) {
+                discount = parseInt(selectedPub[$(this).val()]) || 0;
+                locationDis = parseInt(selectedPub.location_dis) || 0;
+            }
+            calculatePrice();
+        });
 
-    // Jab MRP change ho to naye value store karo aur calculation karo
-    $mrpInput.on("input", function() {
-        enteredMRP = parseInt($(this).val()) || 0;
-        calculatePrice();
-    });
-
-
+        // Jab MRP change ho to naye value store karo aur calculation karo
+        $mrpInput.on("input", function() {
+            enteredMRP = parseInt($(this).val()) || 0;
+            calculatePrice();
+        });
 
         function calculatePrice() {
             const mrp = parseInt($mrpInput.val()) || 0;
-            const locationDiscount = (locationDis / 100) * mrp;
-            const finalPrice = mrp - (discount - locationDiscount);
-            console.log("mrp",mrp)
-            console.log("finalPrice",finalPrice)
+            // const locationDiscount = (locationDis / 100) * mrp;
+            const locationDiscount = locationDis;
+            const netDis = discount - locationDiscount;
+            const finalPrice = mrp - ((netDis * mrp) / 100);
+            // console.log("mrp", mrp)
+            // console.log("finalPrice", finalPrice)
 
-            if (mrp && locationDiscount && finalPrice > 0) {
+            if (mrp && finalPrice > 0) {
                 $.get("{{ route('listing.getPriceRecords') }}", {
-                    price: finalPrice
-                })
-                .done(function(data) {
-                    if (!data.length) {
-                        console.error("No data received.");
-                        alert("No data according to"+finalPrice)
-                        return;
-                    }
+                        price: finalPrice
+                    })
+                    .done(function(data) {
+                        if (!data.length) {
+                            // console.error("No data received.");
+                            alert("No data according to" + finalPrice)
+                            return;
+                        }
 
-                    const record = data[0];
-                    const courier_rate = parseInt(record.courier_rate) || 0;
-                    const packing_charge = parseInt(record.packing_charge) || 0;
-                    const our_min_profit_value = parseInt(record.our_min_profit) || 0;
-                    const max_profit_value = parseInt(record.max_profit) || 0;
+                        const record = data[0];
+                        const courier_rate = parseInt(record.courier_rate) || 0;
+                        const packing_charge = parseInt(record.packing_charge) || 0;
+                        const our_min_profit_value = parseInt(record.our_min_profit) || 0;
+                        const max_profit_value = parseInt(record.max_profit) || 0;
 
-                    // Calculate transaction cost
-                    const transactionCost = (finalPrice + courier_rate + packing_charge) * (3 / 100);
-                    const selling_price = finalPrice + courier_rate + packing_charge + transactionCost;
+                        // Calculate transaction cost
+                        const transactionCost = (finalPrice + courier_rate + packing_charge) * (3 / 100);
+                        const selling_price = finalPrice + courier_rate + packing_charge + transactionCost;
 
-                    const selling_price1 = selling_price + our_min_profit_value;
-                    const selling_price2 = selling_price + max_profit_value;
+                        const selling_price1 = selling_price + our_min_profit_value;
+                        const selling_price2 = selling_price + max_profit_value;
 
-                    console.log("selling_price1", selling_price1);
-                    console.log("selling_price2", selling_price2);
+                        $("#selling_price1").text(selling_price1.toFixed(2));
+                        $("#selling_price2").text(selling_price2.toFixed(2));
 
-                    $("#selling_price1").text(selling_price1.toFixed(2));
-                    $("#selling_price2").text(selling_price2.toFixed(2));
-                })
-                .fail(function(error) {
-                    console.error("Error fetching records:", error);
-                });
+                        $("#selling_price_minus1").text(selling_price1.toFixed(2) - 45);
+                        $("#selling_price_minus2").text(selling_price2.toFixed(2) - 45);
+                        $("#weight").text(record.weight);
+                    })
+                    .fail(function(error) {
+                        console.error("Error fetching records:", error);
+                    });
             }
         }
     });

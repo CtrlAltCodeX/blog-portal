@@ -1,3 +1,4 @@
+@can('Settings -> Validations')
 @extends('layouts.master')
 
 @section('title', __('Fields Validation'))
@@ -154,3 +155,4 @@
     });
 </script>
 @endpush
+@endcan

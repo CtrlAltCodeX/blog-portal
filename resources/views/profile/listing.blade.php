@@ -63,7 +63,7 @@
                     <hr />
 
                     <div class="d-flex w-100" style="grid-gap: 10px;;">
-                        @if(auth()->user()->hasRole('Super Admin'))
+                        @if(auth()->user()->hasRole('Super Admin') || auth()->user()->hasRole('Super Management'))
                         <form action="" method="get" id='form' class="d-flex align-items-center" style="width: 100%;grid-gap: 10px;">
                             <input type='hidden' name='status_listing' value='{{ request()->status_listing }}' />
                             <input type="hidden" name="status" value="">
@@ -158,7 +158,7 @@
                             </tbody>
                         </table>
                     </div>
-                        {{ $userListings->links() }}
+                        {{ $userListings->appends(request()->query())->links() }}
                 </div>
             </div>
         </div>

@@ -103,8 +103,9 @@ $buttonFour = explode(',',$siteSettings?->button_4);
         <h2 id="modalTitle" style="font-size: 1.5rem; font-weight: bold; margin-bottom: 16px;">
             Your account is {!! session('blocked') !!}
         </h2>
-        <p style="font-size: 1rem;color: red;margin-bottom: 20px;font-size: 20px;font-weight: 700;">
-            Your account has been {!! session('blocked') !!}. Contact support to reactivate your account .
+        <p style="font-size: 20px;color: red;margin-bottom: 20px;font-weight: 700;">
+            Your account has been {!! session('blocked') !!}. Contact support to reactivate your account .<br /><br />
+            <span style="font-size: 14px;" class='text-dark'>Note: If your account is suspended, there may be a chance to reactivate it by contacting the support team. However, if your account is blocked, it means you are no longer allowed to use it again.</span>
         </p>
         <button id="infoButton" style="background-color: #007BFF; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem;">
             OPEN SUPPORT

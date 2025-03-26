@@ -5,14 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\GoogleService;
 use App\Http\Requests\BlogRequest;
-use App\Models\Listing;
 use App\Models\Publication;
 use App\Models\SiteSetting;
 use App\Models\WeightVSCourier;
 use App\Models\PurchesPriceWeightCourier;
-use App\Models\UserListingCount;
-use App\Models\UserListingInfo;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Exports\InventoryReviewExport;
@@ -32,6 +28,10 @@ class ListingController extends Controller
         $this->middleware('role_or_permission:Listing create|Inventory -> Manage Inventory', ['only' => ['create', 'store']]);
         $this->middleware('role_or_permission:Inventory -> Manage Inventory -> Edit', ['only' => ['edit', 'update']]);
         $this->middleware('role_or_permission:Inventory -> Manage Inventory -> Delete|Inventory -> Manage Inventory', ['only' => ['destroy']]);
+        $this->middleware('role_or_permission:Listing -> Search Listing', ['only' => ['search']]);
+        $this->middleware('role_or_permission:Inventory -> Manage Inventory', ['only' => ['inventory']]);
+        $this->middleware('role_or_permission:Inventory -> Drafted Inventory', ['only' => ['draftedInventory']]);
+        $this->middleware('role_or_permission:Inventory -> Under Review Inventory', ['only' => ['reviewInventory']]);
     }
 
     /**
@@ -69,7 +69,6 @@ class ListingController extends Controller
 
         return view('listing.create', compact('categories', 'siteSetting','publications'));
     }
-
 
     public function getPriceRecords(Request $request)
     {

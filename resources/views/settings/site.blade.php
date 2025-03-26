@@ -114,15 +114,13 @@ $buttonFour = explode(',',$siteSettings?->button_4);
                     </div>
                 </div>
 
-
-
                 <!-- this is for my site  -->
 
                 <div class="form-group">
                     <div class='d-flex align-items-center mt-2 cursor-pointer' style="grid-gap: 10px;cursor: pointer;">
                         <label for="name" class="form-label">{{ __('Purches Price V/S Weight V/S Courier') }}<span class="text-danger">*</span></label>
-                        <a class='text-dark' href="https://listing.exam360.in/storage/Sample%20File.xlsx" title='Download Sample File' download><i class='fa fa-download'></i></a>
-                        <a href="https://listing.exam360.in/storage/site/purches_file.xlsx" title='Download Current File' download><i class='fa fa-download'></i></a>
+                        <a class='text-dark' href="/purches_file.xlsx" title='Download Sample File' download><i class='fa fa-download'></i></a>
+                        <a href="/storage/site/purches_price_weight.xlsx" title='Download Current File' download><i class='fa fa-download'></i></a>
                     </div>
                     <div class="row mb-5">
                         <div class="col-lg-3">
@@ -135,8 +133,8 @@ $buttonFour = explode(',',$siteSettings?->button_4);
                 <div class="form-group">
                     <div class='d-flex align-items-center mt-2 cursor-pointer' style="grid-gap: 10px;cursor: pointer;">
                         <label for="name" class="form-label">{{ __('Weight V/S Courier') }}<span class="text-danger">*</span></label>
-                        <a class='text-dark' href="https://listing.exam360.in/storage/Sample%20File.xlsx" title='Download Sample File' download><i class='fa fa-download'></i></a>
-                        <a href="https://listing.exam360.in/storage/site/weight_file.xlsx" title='Download Current File' download><i class='fa fa-download'></i></a>
+                        <a class='text-dark' href="/weight_file.xlsx" title='Download Sample File' download><i class='fa fa-download'></i></a>
+                        <a href="/storage/site/weight_vs_courier.xlsx" title='Download Current File' download><i class='fa fa-download'></i></a>
                     </div>
                     <div class="row mb-5">
                         <div class="col-lg-3">

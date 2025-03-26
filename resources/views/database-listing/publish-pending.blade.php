@@ -88,7 +88,7 @@
                                 <option value="stock__low" {{ request()->category == 'stock__low' ? 'selected' : '' }}>Low Stock (stock__low)</option>
                             </select>
 
-                            @if(auth()->user()->hasRole('Super Admin'))
+                            @if(auth()->user()->hasRole('Super Admin') || auth()->user()->hasRole('Super Management'))
                             <!--<labeL class='user-label'>User Filter: </labeL>-->
                             <select class="form-control w-25 m-2" id='user' name="user">
                                 <option value="all">All Users</option>
@@ -104,7 +104,7 @@
                             <input type="hidden" value="{{ request()->status ?? 0 }}" name='status'>
                             
                             <input type="hidden" value="{{ request()->category ?? '' }}" name='category'>
-                            <input type="hidden" value="{{ request()->user ?? all }}" name='user'>
+                            <input type="hidden" value="{{ request()->user ?? 'all' }}" name='user'>
                             <select class="form-control w-100" id='paging' name="paging">
                                 <option value="25" {{ request()->paging == '25' ? 'selected' : '' }}>25</option>
                                 <option value="50" {{ request()->paging == '50' ? 'selected' : '' }}>50</option>
@@ -137,6 +137,7 @@
                                     <th>{{ __('Product ID') }}</th>
                                     <th>{{ __('Product name') }}</th>
                                     <th>{{ __('Sell Price') }}</th>
+                                    <th>{{ __('Dis.') }}</th>
                                     <th>{{ __('MRP') }}</th>
                                     <th>{{ __('Labels') }}</th>
                                     <th>{{ __('Created By') }}</th>
@@ -181,15 +182,7 @@
                                         @else {{ 'In Stock' }}
                                         @endif
                                     </td>
-                                    @php
-                                    if(isset($googlePost->images)) {
-                                    $image = json_decode($googlePost->images)[0];
-                                    } else {
-                                    $image = '/public/dummy.jpg';
-                                    }
-
-                                    @endphp
-                                    <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $image }}" alt="Product Image" /></td>
+                                    <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $googlePost->images ? json_decode($googlePost->images)[0] : '' }}" alt="Product Image" /></td>
                                     <!--<td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="@if(isset($googlePost->images)) {{ $googlePost->images[0] }} @endif" alt="Product Image" /></td>-->
                                     <td><a href="{{ $googlePost->url ? $googlePost->url : '#' }}" target='_blank'>{{ $googlePost->product_id }}</a></td>
                                     <td>{{ $googlePost->title }}</td>
@@ -296,15 +289,18 @@
         
         //______Basic Data Table
         $('#basic-datatable').DataTable({
-            "paging": false
+            "paging": false,
+            "order": [[1, "asc"]]
         });
 
         $("#category").on("change", function() {
             $("#form").submit();
         })
+        
         $("#paging").on("change", function() {
             $("#pagingform").submit();
         });
+        
         $("#status").change(function() {
             $("#formStatus").submit();
         });
@@ -313,7 +309,7 @@
             $("#form").submit();
         });
 
-        $("#basic-datatable_wrapper .col-sm-12:first").html('@can("Pending Listing ( DB ) -> Publish to Website")<form id="update-status" action={{route("listing.status")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status" id="status"><option value="">Select</option><option value=0>Pending</option><option value=2>Reject</option><option value=5>Update to Website</option><option value=6>Delete</option></select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div><span class="text-danger m-2">Note: Bulk Approve Listings must configure with Google Authenticator</span></form> @endcan');
+        $("#basic-datatable_wrapper .col-sm-12:first").html('@can("Pending Listing ( DB ) -> Publish to Website")<form id="update-status" action={{route("listing.status")}} method="GET"><div class="d-flex"><select class="form-control w-50" name="status" id="status"><option value="">Select</option><option value=0>Pending</option><option value=2>Reject</option><option value=5>Update to Website</option>@can("Update Listing ( M/S ) -> Bulk Delete")<option value=6>Delete</option>@endcan</select><button class="btn btn-primary update-status" style="margin-left:10px;">Update</button></div><span class="text-danger m-2">Note: Bulk Approve Listings must configure with Google Authenticator</span></form> @endcan');
 
         $("#basic-datatable_wrapper").on('click', '.update-status', function(e) {
             e.preventDefault();
@@ -388,6 +384,8 @@
                 }
             });
         });
+        
+        
 
         
     })

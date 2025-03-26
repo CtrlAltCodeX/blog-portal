@@ -115,7 +115,7 @@
     <!-- CUSTOM JS -->
     <script src="{{ asset('assets/js/custom.js') }}"></script>
 
-    <!-- <script>
+    <script>
         var timeOut = "{{env('SESSION_LIFETIME')}}" * 60000;
 
         var idleTimer;
@@ -152,7 +152,7 @@
             },
             success: function(result) {},
         });
-    </script> -->
+    </script>
 
     @stack('js')
 </body>
