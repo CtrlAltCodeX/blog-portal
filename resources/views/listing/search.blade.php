@@ -49,16 +49,38 @@
                                     <thead>
                                         <tr>
                                             <th>{{ __('Publication Name') }}</th>
-                                            <th>{{ __('Discount Information') }}</th>
+                                            <th>{{ __('Book Type 1') }}</th>
+                                            <th>{{ __('Discount 1') }}</th>
+                                            <th>{{ __('Book Type 2') }}</th>
+                                            <th>{{ __('Discount 2') }}</th>
+                                            <th>{{ __('Book Type 3') }}</th>
+                                            <th>{{ __('Discount 3') }}</th>
+                                            <th>{{ __('Book Type 4') }}</th>
+                                            <th>{{ __('Discount 4') }}</th>
+                                            <th>{{ __('Book Type 5') }}</th>
+                                            <th>{{ __('Discount 5') }}</th>
+                                            <th>{{ __('Book Type 6') }}</th>
+                                            <th>{{ __('Discount 6') }}</th>
                                             <th>{{ __('Location') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @forelse($publications as $publisher)
                                         <tr>
-                                            <td>{{ $publisher->publication_name }}</td>
-                                            <td>{{ $publisher->discount_information }} %</td>
-                                            <td>{{ $publisher->location }}</td>
+                                            <td>{{ $publisher->pub_name }}</td>
+                                            <td>{{ $publisher->book_type_1 }}</td>
+                                            <td>{{ $publisher->book_discount_1 ? $publisher->book_discount_1."%" : '' }}</td>
+                                            <td>{{ $publisher->book_type_2 }}</td>
+                                            <td>{{ $publisher->book_discount_2 ? $publisher->book_discount_2."%" : '' }}</td>
+                                            <td>{{ $publisher->book_type_3 }}</td>
+                                            <td>{{ $publisher->book_discount_3 ? $publisher->book_discount_3."%" : '' }}</td>
+                                            <td>{{ $publisher->book_type_4 }}</td>
+                                            <td>{{ $publisher->book_discount_4 ? $publisher->book_discount_4."%" : '' }}</td>
+                                            <td>{{ $publisher->book_type_5 }}</td>
+                                            <td>{{ $publisher->book_discount_5 ? $publisher->book_discount_5."%" : '' }}</td>
+                                            <td>{{ $publisher->book_type_6 }}</td>
+                                            <td>{{ $publisher->book_discount_6 ? $publisher->book_discount_6."%" : '' }}</td>
+                                            <td>{{ $publisher->location_dis }}</td>
                                         </tr>
                                         @empty
                                         @endforelse
@@ -332,7 +354,7 @@
 
 <style>
     #suggestions {
-        max-height: 200px;
+        max-height: 470px;
         overflow-y: auto;
         border: 1px solid #ddd;
         background: white;

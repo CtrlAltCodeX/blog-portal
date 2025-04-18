@@ -1,7 +1,9 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Publication;
+use App\Models\WeightVSCourier;
 use Illuminate\Http\Request;
 
 class PublicationController extends Controller
@@ -9,9 +11,14 @@ class PublicationController extends Controller
     public function getpublishers(Request $request)
     {
         $query = $request->get('query');
-        $suggestions = Publication::where('publication_name', 'LIKE', "%{$query}%")
-            ->take(10)
-            ->pluck('publication_name');
+
+        $suggestions = WeightVSCourier::where('pub_name', 'LIKE', "%{$query}%")
+        ->take(10)
+        ->pluck('pub_name');
+
+        // $suggestions = Publication::where('publication_name', 'LIKE', "%{$query}%")
+        //     ->take(10)
+        //     ->pluck('publication_name');
 
         return response()->json($suggestions);
     }
@@ -19,7 +26,8 @@ class PublicationController extends Controller
     public function getpublications(Request $request)
     {
         $query = $request->get('query');
-        $publications = Publication::where('publication_name', 'LIKE', "%{$query}%")->get();
+        $publications = WeightVSCourier::where('pub_name', 'LIKE', "%{$query}%")->get();
+
         return response()->json($publications);
     }
 }

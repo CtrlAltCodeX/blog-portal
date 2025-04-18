@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Exports\BackupListingsExport;
-use App\Exports\ListingsExport;
 use App\Jobs\ManualBackup;
 use App\Models\BackupEmail;
 use App\Models\BackupListing;

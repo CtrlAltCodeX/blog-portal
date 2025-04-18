@@ -517,7 +517,7 @@ class ListingController extends Controller
         $publications = [];
 
         if (request()->p) {
-            $publications = Publication::where('publication_name',  request()->p)
+            $publications = WeightVSCourier::where('pub_name', request()->p)
                 ->get();
         }
 
