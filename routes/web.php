@@ -21,6 +21,7 @@ use App\Http\Controllers\ImageMakerController;
 use App\Http\Controllers\PublicationController;
 use App\Http\Controllers\ChatGptController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\GraphicalDashboardController;
 
 Illuminate\Support\Facades\Auth::routes();
 /*
@@ -56,6 +57,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
+
+Route::get('/graphical-dashboard', [GraphicalDashboardController::class, 'index']
+)->name('graphical.dashboard')->middleware('auth');
+
 
     Route::get('posts', [DashboardController::class, 'getStats'])
         ->name('get.posts.count');

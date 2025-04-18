@@ -77,6 +77,7 @@
     <!-- BOOTSTRAP JS -->
     <script src="{{ asset('assets/plugins/bootstrap/js/popper.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- CHARTJS CHART JS-->
     <script src="{{ asset('assets/plugins/chart/Chart.bundle.js') }}"></script>
