@@ -1,3 +1,5 @@
+
+
 @extends('layouts.master')
 
 @section('title', __("Graphical Dashboard"))
@@ -38,6 +40,7 @@
                                 <h5>Approved</h5>
                                 <h2>{{ $cardTotals['approved'] }}</h2>
                             </div>
+                          
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -64,6 +67,38 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-md-3">
+    <div class="card text-white" style="position: relative; background: linear-gradient(135deg, #007bff, #0056b3); box-shadow: 0 4px 10px rgba(0,0,0,0.2); border-radius: 10px;">
+        <div class="card-body d-flex flex-column align-items-start justify-content-between" style="position: relative;">
+            <!-- Badge at Top Right -->
+            <div style="position: absolute; top: 10px; right: 10px;">
+                @if($currentWeekDataCreated <= 120)
+                    <span class="badge-status" style="background-color: red; color: white; padding: 5px 10px; border-radius: 5px;">AT RISK</span>
+                @elseif($currentWeekDataCreated >= 121 && $currentWeekDataCreated <= 149)
+                    <span class="badge-status" style="background-color: orange; color: black; padding: 5px 10px; border-radius: 5px;">REVIEW</span>
+                @elseif($currentWeekDataCreated >= 150 && $currentWeekDataCreated <= 199)
+                    <span class="badge-status" style="background-color: yellow; color: black; padding: 5px 10px; border-radius: 5px;">AVERAGE</span>
+                @elseif($currentWeekDataCreated >= 200 && $currentWeekDataCreated <= 349)
+                    <span class="badge-status" style="background-color: lightgreen; color: black; padding: 5px 10px; border-radius: 5px;">GOOD</span>
+                @elseif($currentWeekDataCreated >= 350)
+                    <span class="badge-status" style="background-color: green; color: white; padding: 5px 10px; border-radius: 5px;">EXCELLENT</span>
+                @endif
+            </div>
+
+            <!-- Card content -->
+            <div>
+                <h5 class="mb-2">Created This Week:</h5>
+                <h3><strong>{{ $currentWeekDataCreated }}</strong></h3>
+            </div>
+            <div class="w-100 mt-auto text-center">
+                <a href="/account_health.jpeg" target="_blank" class="text-white text-decoration-underline">View Health Chart</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
                 </div>
             @endif
 
