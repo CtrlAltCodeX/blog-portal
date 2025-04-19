@@ -12,19 +12,22 @@
         </div>
         <div class="card-body">
         @if (auth()->user()->id == 1)
-            <form method="GET" action="{{ route('graphical.dashboard') }}">
-                <div class="form-group mb-4">
-                    <label>Select User (for Cards)</label>
-                    <select name="card_user_id" class="form-control" onchange="this.form.submit()">
-                        @foreach ($users as $user)
-                            <option value="{{ $user->id }}" {{ $cardUserId == $user->id ? 'selected' : '' }}>
-                                {{ $user->name }}
-                            </option>
-                        @endforeach
-                        <input type="hidden" name="graph_user_id" value="{{ $graphUserId }}">
-                    </select>
-                </div>
-            </form>
+        <form method="GET" action="{{ route('graphical.dashboard') }}">
+    <div class="form-group mb-4 d-flex justify-content-end" style="width: 100%;">
+        <div style="width: 30%;">
+            <label class="mb-2">Select User (for Cards)</label>
+            <select name="card_user_id" class="form-control" style="height: 45px;" onchange="this.form.submit()">
+                @foreach ($users as $user)
+                    <option value="{{ $user->id }}" {{ $cardUserId == $user->id ? 'selected' : '' }}>
+                        {{ $user->name }}
+                    </option>
+                @endforeach
+                <input type="hidden" name="graph_user_id" value="{{ $graphUserId }}">
+            </select>
+        </div>
+    </div>
+</form>
+
             @endif
 
             @if ($cardTotals)
@@ -74,20 +77,22 @@
         </div>
         <div class="card-body">
         @if (auth()->user()->id == 1)
+        <form method="GET" action="{{ route('graphical.dashboard') }}">
+    <div class="form-group mb-4 d-flex justify-content-end" style="width: 100%;">
+        <div style="width: 20%;">
+            <label class="mb-2">Select User (for Graph)</label>
+            <select name="graph_user_id" class="form-control" style="height: 45px;" onchange="this.form.submit()">
+                @foreach ($users as $user)
+                    <option value="{{ $user->id }}" {{ $graphUserId == $user->id ? 'selected' : '' }}>
+                        {{ $user->name }}
+                    </option>
+                @endforeach
+                <input type="hidden" name="card_user_id" value="{{ $cardUserId }}">
+            </select>
+        </div>
+    </div>
+</form>
 
-            <form method="GET" action="{{ route('graphical.dashboard') }}">
-                <div class="form-group mb-4">
-                    <label>Select User (for Graph)</label>
-                    <select name="graph_user_id" class="form-control" onchange="this.form.submit()">
-                        @foreach ($users as $user)
-                            <option value="{{ $user->id }}" {{ $graphUserId == $user->id ? 'selected' : '' }}>
-                                {{ $user->name }}
-                            </option>
-                        @endforeach
-                        <input type="hidden" name="card_user_id" value="{{ $cardUserId }}">
-                    </select>
-                </div>
-            </form>
             @endif
 
             @if ($graphTotals)
