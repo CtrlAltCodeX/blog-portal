@@ -68,7 +68,7 @@
         @if ($cardTotals)
             <div class="row">
                 <div class="col-md-3 mb-4">
-                    <div class="card text-white bg-success shadow-sm rounded-4 h-100 hover-shadow custom-card">
+                    <div class="card text-white shadow-sm rounded-4 h-100 hover-shadow custom-card" style="background: linear-gradient(135deg, #09ad95, #0056b3);box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);border-radius: 10px;">
                         <div class="card-body text-center">
                             <i class="fa fa-check-circle" style="font-size: 40px;margin-bottom: 10px;"></i>
                             <h6 class="text-uppercase">Approved</h6>
@@ -78,7 +78,7 @@
                 </div>
 
                 <div class="col-md-3 mb-4">
-                    <div class="card text-white bg-danger shadow-sm rounded-4 h-100 hover-shadow custom-card">
+                    <div class="card text-white shadow-sm rounded-4 h-100 hover-shadow custom-card" style="background: linear-gradient(135deg, #e82646, #0056b3);box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);border-radius: 10px;">
                         <div class="card-body text-center">
                             <i class="fa fa-times-circle" style="font-size: 40px;margin-bottom: 10px;"></i>
                             <h6 class="text-uppercase">Rejected</h6>
@@ -88,7 +88,7 @@
                 </div>
 
                 <div class="col-md-3 mb-4">
-                    <div class="card text-dark bg-warning shadow-sm rounded-4 h-100 hover-shadow custom-card">
+                    <div class="card text-white shadow-sm rounded-4 h-100 hover-shadow custom-card" style="background: linear-gradient(135deg, #f7b731, #0056b3);box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);border-radius: 10px;">
                         <div class="card-body text-center">
                             <i class="fa fa-trash" style="font-size: 40px;margin-bottom: 10px;"></i>
                             <h6 class="text-uppercase">Deleted</h6>
@@ -98,7 +98,7 @@
                 </div>
 
                 <div class="col-md-3 mb-4">
-                    <div class="card text-white bg-primary shadow-sm rounded-4 h-100 hover-shadow custom-card">
+                    <div class="card text-white shadow-sm rounded-4 h-100 hover-shadow custom-card" style="background: linear-gradient(135deg, #6c5ffc, #0056b3);box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);border-radius: 10px;">
                         <div class="card-body text-center">
                             <i class="fa fa-plus-circle" style="font-size: 40px;margin-bottom: 10px;"></i>
                             <h6 class="text-uppercase">Created</h6>
@@ -130,7 +130,7 @@
                 </div>
 
                 <div class="col-md-2 mb-4 max-145-height">
-                    <div class="card bg-info text-white h-100">
+                    <div class="card text-white h-100" style="background: linear-gradient(135deg, #1170e4, #0056b3);box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);border-radius: 10px;">
                         <div class="card-body text-center">
                             <h5> Total Created</h5>
                             <h2>{{ $createdCount }}</h2>
@@ -139,7 +139,7 @@
                 </div>
 
                 <div class="col-md-2 mb-4 max-145-height">
-                    <div class="card bg-secondary text-white h-100">
+                    <div class="card text-white h-100" style="background: linear-gradient(135deg, #05c3fb, #0056b3);box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);border-radius: 10px;">
                         <div class="card-body text-center">
                             <h5> Total Updated</h5>
                             <h2>{{ $editedCount }}</h2>
@@ -148,7 +148,7 @@
                 </div>
 
                 <div class="col-md-2 mb-4 max-145-height">
-                    <div class="card bg-dark text-white h-100">
+                    <div class="card bg-dark text-white h-100" style="background: linear-gradient(135deg, #343a40, #0056b3);box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);border-radius: 10px;">
                         <div class="card-body text-center">
                             <h5>All (Created + Updated)</h5>
                             <h2>{{ $sumOfBoth }}</h2>
