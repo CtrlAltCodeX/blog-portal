@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\UserListingCount;
 use Carbon\Carbon;
+use App\Models\UserSession;
 
 class GraphicalDashboardController extends Controller
 {
@@ -14,56 +15,128 @@ class GraphicalDashboardController extends Controller
         $this->middleware('auth');
     }
 
-
     public function index(Request $request)
     {
         $users = User::all();
-    
-        $cardUserId = $request->get('card_user_id') ?? auth()->id();
-        $graphUserId = $request->get('graph_user_id') ?? auth()->id();
-    
-        $cardTotals = null;
-        $graphTotals = null;
-        $count = app('App\Models\UserListingCount');
-        $fromDate = Carbon::now()->subDays(6)->startOfDay(); // 6 din pehle se leke
-        $toDate = Carbon::now()->endOfDay(); // aaj tak
-    
-        if ($cardUserId) {
-            $listingCounts = UserListingCount::where('user_id', $cardUserId)
-                ->whereBetween('created_at', [$fromDate, $toDate])
-                ->get();
-    
-            $cardTotals = [
-                'approved' => $listingCounts->sum('approved_count'),
-                'rejected' => $listingCounts->sum('reject_count'),
-                'deleted' => $listingCounts->sum('delete_count'),
-                'created' => $listingCounts->sum('create_count'),
-            ];
-        }
-    
-        if ($graphUserId) {
-            $listingCounts = UserListingCount::where('user_id', $graphUserId)
-                ->whereBetween('created_at', [$fromDate, $toDate])
-                ->get();
-    
-            $graphTotals = [
-                'approved' => $listingCounts->sum('approved_count'),
-                'rejected' => $listingCounts->sum('reject_count'),
-                'deleted' => $listingCounts->sum('delete_count'),
-                'created' => $listingCounts->sum('create_count'),
-            ];
-        }
 
-     
+        // Filter values
+        $selectedUserId = $request->get('user_id', auth()->id());
+        $range = $request->get('range', '7');
+        $fromDate = $request->get('from_date');
+        $toDate = $request->get('to_date');
 
-    $startOfWeek = Carbon::now()->subDays(8);
-    $endOfWeek = Carbon::now()->subDays(1);
+        // Handle dynamic date range
+        [$startDate, $endDate] = $this->getDateRange($range, $fromDate, $toDate);
 
-    $currentWeekDataCreated = $count->whereBetween('created_at', [$startOfWeek, $endOfWeek])
-        ->where('user_id', $cardUserId)
-        ->sum('create_count');
-    
-        return view('dashboard.graphical', compact('users', 'cardTotals', 'graphTotals', 'cardUserId', 'graphUserId','currentWeekDataCreated'));
+        // Fetch data only if user is selected
+        $listingCounts = UserListingCount::where('user_id', $selectedUserId)
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->get();
+
+            $createdCount = $listingCounts->where('status', 'Created')->count();
+            $editedCount = $listingCounts->where('status', 'Edited')->count();
+            $sumOfBoth = $createdCount + $editedCount;
+            
+            // User creation date
+            $selectedUser = User::find($selectedUserId);
+            $createdAt = $selectedUser ? $selectedUser->created_at : now();
+            $daysSinceCreation = Carbon::parse($createdAt)->diffInDays(Carbon::now());
+            
+
+        // Prepare totals for cards and chart
+        $cardTotals = [
+            'approved' => $listingCounts->sum('approved_count'),
+            'rejected' => $listingCounts->sum('reject_count'),
+            'deleted'  => $listingCounts->sum('delete_count'),
+            'created'  => $listingCounts->sum('create_count'),
+        ];
+
+        // Created this week for performance badge
+        $startOfWeek = Carbon::now()->startOfWeek();
+        $endOfWeek = Carbon::now()->endOfWeek();
+        $currentWeekDataCreated = UserListingCount::where('user_id', $selectedUserId)
+            ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+            ->sum('create_count');
+
+        // Send same data for chart
+        $graphTotals = $cardTotals;
+
+
+        $userSessionsCount = UserSession::where("user_id", $selectedUserId)
+        ->get();
+
+        // for pie chat
+        $now = Carbon::now();
+$startOfThisMonth = $now->copy()->startOfMonth();
+$endOfThisMonth = $now->copy()->endOfMonth();
+$startOfLastMonth = $now->copy()->subMonth()->startOfMonth();
+$endOfLastMonth = $now->copy()->subMonth()->endOfMonth();
+
+$createdLastMonth = UserListingCount::where('user_id', $selectedUserId)
+    ->where('status', 'Created')
+    ->whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])
+    ->count();
+
+$createdThisMonth = UserListingCount::where('user_id', $selectedUserId)
+    ->where('status', 'Created')
+    ->whereBetween('created_at', [$startOfThisMonth, $endOfThisMonth])
+    ->count();
+
+$editedLastMonth = UserListingCount::where('user_id', $selectedUserId)
+    ->where('status', 'Edited')
+    ->whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])
+    ->count();
+
+$editedThisMonth = UserListingCount::where('user_id', $selectedUserId)
+    ->where('status', 'Edited')
+    ->whereBetween('created_at', [$startOfThisMonth, $endOfThisMonth])
+    ->count();
+
+$totalLastMonth = $createdLastMonth + $editedLastMonth;
+$totalThisMonth = $createdThisMonth + $editedThisMonth;
+
+
+
+        return view('dashboard.graphical', compact(
+            'users',
+            'cardTotals',
+            'graphTotals',
+            'currentWeekDataCreated',
+            'range',
+            'createdCount',
+            'editedCount',
+            'sumOfBoth',
+            'daysSinceCreation',
+            'createdLastMonth',
+            'createdThisMonth',
+            'editedLastMonth',
+            'editedThisMonth',
+            'totalLastMonth',
+            'totalThisMonth',
+            'userSessionsCount'
+        ));
     }
-    
+
+    private function getDateRange($range, $fromDate, $toDate)
+    {
+        switch ($range) {
+            case 'today':
+                return [Carbon::today(), Carbon::today()->endOfDay()];
+            case '3':
+            case '7':
+            case '15':
+            case '30':
+            case '60':
+            case '90':
+                return [Carbon::now()->subDays($range), Carbon::now()->endOfDay()];
+            case 'all':
+                return [Carbon::createFromTimestamp(0), Carbon::now()->endOfDay()];
+            case 'custom':
+                $from = $fromDate ? Carbon::parse($fromDate)->startOfDay() : Carbon::now()->startOfDay();
+                $to = $toDate ? Carbon::parse($toDate)->endOfDay() : Carbon::now()->endOfDay();
+                return [$from, $to];
+            default:
+                return [Carbon::now()->subDays(7), Carbon::now()->endOfDay()];
+        }
+    }
 }
