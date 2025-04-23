@@ -58,8 +58,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
-Route::get('/graphical-dashboard', [GraphicalDashboardController::class, 'index']
-)->name('graphical.dashboard')->middleware('auth');
+    Route::get(
+        'dashboard/analytics',
+        [GraphicalDashboardController::class, 'index']
+    )->name('graphical.dashboard')->middleware('auth');
 
 
     Route::get('posts', [DashboardController::class, 'getStats'])

@@ -33,15 +33,15 @@ class GraphicalDashboardController extends Controller
             ->whereBetween('created_at', [$startDate, $endDate])
             ->get();
 
-            $createdCount = $listingCounts->where('status', 'Created')->count();
-            $editedCount = $listingCounts->where('status', 'Edited')->count();
-            $sumOfBoth = $createdCount + $editedCount;
-            
-            // User creation date
-            $selectedUser = User::find($selectedUserId);
-            $createdAt = $selectedUser ? $selectedUser->created_at : now();
-            $daysSinceCreation = Carbon::parse($createdAt)->diffInDays(Carbon::now());
-            
+        $createdCount = $listingCounts->where('status', 'Created')->count();
+        $editedCount = $listingCounts->where('status', 'Edited')->count();
+        $sumOfBoth = $createdCount + $editedCount;
+
+        // User creation date
+        $selectedUser = User::find($selectedUserId);
+        $createdAt = $selectedUser ? $selectedUser->created_at : now();
+        $daysSinceCreation = Carbon::parse($createdAt)->diffInDays(Carbon::now());
+
 
         // Prepare totals for cards and chart
         $cardTotals = [
@@ -61,40 +61,38 @@ class GraphicalDashboardController extends Controller
         // Send same data for chart
         $graphTotals = $cardTotals;
 
-
         $userSessionsCount = UserSession::where("user_id", $selectedUserId)
-        ->get();
+            ->get();
 
         // for pie chat
         $now = Carbon::now();
-$startOfThisMonth = $now->copy()->startOfMonth();
-$endOfThisMonth = $now->copy()->endOfMonth();
-$startOfLastMonth = $now->copy()->subMonth()->startOfMonth();
-$endOfLastMonth = $now->copy()->subMonth()->endOfMonth();
+        $startOfThisMonth = $now->copy()->startOfMonth();
+        $endOfThisMonth = $now->copy()->endOfMonth();
+        $startOfLastMonth = $now->copy()->subMonth()->startOfMonth();
+        $endOfLastMonth = $now->copy()->subMonth()->endOfMonth();
 
-$createdLastMonth = UserListingCount::where('user_id', $selectedUserId)
-    ->where('status', 'Created')
-    ->whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])
-    ->count();
+        $createdLastMonth = UserListingCount::where('user_id', $selectedUserId)
+            ->where('status', 'Created')
+            ->whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])
+            ->count();
 
-$createdThisMonth = UserListingCount::where('user_id', $selectedUserId)
-    ->where('status', 'Created')
-    ->whereBetween('created_at', [$startOfThisMonth, $endOfThisMonth])
-    ->count();
+        $createdThisMonth = UserListingCount::where('user_id', $selectedUserId)
+            ->where('status', 'Created')
+            ->whereBetween('created_at', [$startOfThisMonth, $endOfThisMonth])
+            ->count();
 
-$editedLastMonth = UserListingCount::where('user_id', $selectedUserId)
-    ->where('status', 'Edited')
-    ->whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])
-    ->count();
+        $editedLastMonth = UserListingCount::where('user_id', $selectedUserId)
+            ->where('status', 'Edited')
+            ->whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])
+            ->count();
 
-$editedThisMonth = UserListingCount::where('user_id', $selectedUserId)
-    ->where('status', 'Edited')
-    ->whereBetween('created_at', [$startOfThisMonth, $endOfThisMonth])
-    ->count();
+        $editedThisMonth = UserListingCount::where('user_id', $selectedUserId)
+            ->where('status', 'Edited')
+            ->whereBetween('created_at', [$startOfThisMonth, $endOfThisMonth])
+            ->count();
 
-$totalLastMonth = $createdLastMonth + $editedLastMonth;
-$totalThisMonth = $createdThisMonth + $editedThisMonth;
-
+        $totalLastMonth = $createdLastMonth + $editedLastMonth;
+        $totalThisMonth = $createdThisMonth + $editedThisMonth;
 
 
         return view('dashboard.graphical', compact(
