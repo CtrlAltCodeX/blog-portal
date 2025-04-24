@@ -171,7 +171,7 @@
                         <div class="card-body text-center">
                             <i class="fa fa-money fa-2x text-primary mb-2"></i>
                             <h5>Expected Earning</h5>
-                            <h2>{{ 0 }}</h2>
+                            <h2>₹ {{ $expectedEarning }}</h2>
                         </div>
                     </div>
                 </div>
@@ -224,7 +224,7 @@
             </div>
           </div>
 
-          <div class="col-12">
+          <div class="col-md-6">
             <div class="card h-100 shadow-sm">
               <div class="card-body ">
                 <h6>Total (Created + Edited)</h6>
@@ -234,6 +234,20 @@
               </div>
             </div>
           </div>
+
+          
+          <div class="col-md-6">
+            <div class="card h-100 shadow-sm">
+              <div class="card-body ">
+                <h6>Expected Earning</h6>
+                <div style="position: relative; height:250px;">
+                  <canvas id="ExpectedEarning"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          
         </div>
       </div>
     </div>
@@ -360,6 +374,9 @@
     const editedData = [{{ $editedLastMonth }}, {{ $editedThisMonth }}];
     const totalData = [{{ $totalLastMonth }}, {{ $totalThisMonth }}];
 
+
+    const expectedEarningData = [{{ $lastMonthExpectedEarning ?? 0 }}, {{ $thisMonthExpectedEarning ?? 0 }}];
+
     const pieOptions = {
         type: 'pie',
         options: {
@@ -402,6 +419,32 @@
         }
     });
 
+    new Chart(document.getElementById('ExpectedEarning'), {
+        ...pieOptions,
+        data: {
+            labels: ['Last Month', 'This Month'],
+            datasets: [{
+                data: expectedEarningData,
+               backgroundColor: ['#28a745', '#ffc107'],
+                borderColor: ['#218838', '#e0a800'],
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.label + ': ₹ ' + context.parsed.toLocaleString();
+                        }
+                    }
+                }
+            }
+        }
+    });
+
     new Chart(document.getElementById('barChart'), {
         type: 'bar',
         data: {
@@ -418,6 +461,34 @@
             }
         }
     });
+
+
+    // new Chart(document.getElementById('ExpectedEarning'), {
+    //     ...pieOptions,
+    //     data: {
+    //         labels: ['Last Month', 'This Month'],
+    //         datasets: [{
+    //             data: expectedEarningData,
+    //             backgroundColor: ['#28a745', '#ffc107'],
+    //             borderColor: ['#218838', '#e0a800'],
+    //             borderWidth: 1
+    //         }]
+    //     },
+    //     options: {
+    //         plugins: {
+    //             legend: {
+    //                 position: 'bottom'
+    //             },
+    //             tooltip: {
+    //                 callbacks: {
+    //                     label: function(context) {
+    //                         return context.label + ': $' + context.parsed.toLocaleString();
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    // });
 </script>
     
 @endpush

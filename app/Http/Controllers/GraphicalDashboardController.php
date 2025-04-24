@@ -95,6 +95,29 @@ class GraphicalDashboardController extends Controller
         $totalThisMonth = $createdThisMonth + $editedThisMonth;
 
 
+        // for expected earning code with pie chat 
+
+        $currentMonthDataCreated = UserListingCount::where('user_id', $selectedUserId)
+        ->whereBetween('created_at', [$startDate, $endDate])
+        ->sum('create_count');
+
+        
+        $expectedEarning=$currentMonthDataCreated *  $selectedUser->posting_rate;
+
+
+        $thisMonthDataCreated = UserListingCount::where('user_id', $selectedUserId)
+        ->whereBetween('created_at', [$startOfThisMonth, $endOfThisMonth])
+        ->sum('create_count');
+
+        $lastMonthDataCreated = UserListingCount::where('user_id', $selectedUserId)
+    ->whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])
+    ->sum('create_count');
+
+
+       $thisMonthExpectedEarning = $thisMonthDataCreated * $selectedUser->posting_rate;
+        $lastMonthExpectedEarning = $lastMonthDataCreated * $selectedUser->posting_rate;
+
+
         return view('dashboard.graphical', compact(
             'users',
             'cardTotals',
@@ -111,7 +134,10 @@ class GraphicalDashboardController extends Controller
             'editedThisMonth',
             'totalLastMonth',
             'totalThisMonth',
-            'userSessionsCount'
+            'userSessionsCount',
+            'expectedEarning',
+            'thisMonthExpectedEarning',
+            'lastMonthExpectedEarning'
         ));
     }
 
