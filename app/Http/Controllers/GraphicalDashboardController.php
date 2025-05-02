@@ -32,10 +32,8 @@ class GraphicalDashboardController extends Controller
         $listingCounts = UserListingCount::where('user_id', $selectedUserId)
             ->whereBetween('created_at', [$startDate, $endDate])
             ->get();
-
-        $createdCount = $listingCounts->where('status', 'Created')->count();
-        $editedCount = $listingCounts->where('status', 'Edited')->count();
-        $sumOfBoth = $createdCount + $editedCount;
+            
+            // dd($listingCounts);
 
         // User creation date
         $selectedUser = User::find($selectedUserId);
@@ -50,10 +48,18 @@ class GraphicalDashboardController extends Controller
             'deleted'  => $listingCounts->sum('delete_count'),
             'created'  => $listingCounts->sum('create_count'),
         ];
+        
+        $createdCount = $listingCounts->where('status', 'Created')->sum('create_count');
+        
+        $editedCount = $listingCounts->where('status', 'Edited')->sum('create_count');
+        $sumOfBoth = $createdCount + $editedCount;
 
         // Created this week for performance badge
         $startOfWeek = Carbon::now()->startOfWeek();
         $endOfWeek = Carbon::now()->endOfWeek();
+        
+        // dd([$startOfWeek, $endOfWeek]);
+        
         $currentWeekDataCreated = UserListingCount::where('user_id', $selectedUserId)
             ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
             ->sum('create_count');
@@ -68,55 +74,59 @@ class GraphicalDashboardController extends Controller
         $now = Carbon::now();
         $startOfThisMonth = $now->copy()->startOfMonth();
         $endOfThisMonth = $now->copy()->endOfMonth();
+        
         $startOfLastMonth = $now->copy()->subMonth()->startOfMonth();
         $endOfLastMonth = $now->copy()->subMonth()->endOfMonth();
 
         $createdLastMonth = UserListingCount::where('user_id', $selectedUserId)
             ->where('status', 'Created')
             ->whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])
-            ->count();
+            ->sum('create_count');
 
         $createdThisMonth = UserListingCount::where('user_id', $selectedUserId)
             ->where('status', 'Created')
             ->whereBetween('created_at', [$startOfThisMonth, $endOfThisMonth])
-            ->count();
+            ->sum('create_count');
 
         $editedLastMonth = UserListingCount::where('user_id', $selectedUserId)
             ->where('status', 'Edited')
             ->whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])
-            ->count();
+            ->sum('create_count');
 
         $editedThisMonth = UserListingCount::where('user_id', $selectedUserId)
             ->where('status', 'Edited')
             ->whereBetween('created_at', [$startOfThisMonth, $endOfThisMonth])
-            ->count();
+            ->sum('create_count');
 
         $totalLastMonth = $createdLastMonth + $editedLastMonth;
         $totalThisMonth = $createdThisMonth + $editedThisMonth;
 
 
         // for expected earning code with pie chat 
-
         $currentMonthDataCreated = UserListingCount::where('user_id', $selectedUserId)
-        ->whereBetween('created_at', [$startDate, $endDate])
-        ->sum('create_count');
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->sum('create_count');
+            
+        if ($selectedUser->posting_rate) {
+            $rate = (int) $selectedUser->posting_rate;
+        } else {
+            $rate = 4;
+        }
 
-        
-        $expectedEarning=$currentMonthDataCreated *  $selectedUser->posting_rate;
-
+        $expectedEarning = (int) $currentMonthDataCreated * $rate;
 
         $thisMonthDataCreated = UserListingCount::where('user_id', $selectedUserId)
-        ->whereBetween('created_at', [$startOfThisMonth, $endOfThisMonth])
-        ->sum('create_count');
+            ->whereBetween('created_at', [$startOfThisMonth, $endOfThisMonth])
+            ->sum('create_count');
 
         $lastMonthDataCreated = UserListingCount::where('user_id', $selectedUserId)
-    ->whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])
-    ->sum('create_count');
+            ->whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth])
+            ->sum('create_count');
 
 
-       $thisMonthExpectedEarning = $thisMonthDataCreated * $selectedUser->posting_rate;
-        $lastMonthExpectedEarning = $lastMonthDataCreated * $selectedUser->posting_rate;
+        $thisMonthExpectedEarning = $thisMonthDataCreated * $rate;
 
+        $lastMonthExpectedEarning = $lastMonthDataCreated * $rate;
 
         return view('dashboard.graphical', compact(
             'users',

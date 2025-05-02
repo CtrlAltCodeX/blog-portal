@@ -1,3 +1,4 @@
+@can('Analytics Dashboard')
 @extends('layouts.master')
 
 @section('title', __("Graphical Dashboard"))
@@ -68,14 +69,15 @@
         @if ($cardTotals)
             <div class="row">
                 <div class="col-md-3 mb-4">
-                    <div class="card text-white shadow-sm rounded-4 h-100 hover-shadow custom-card" style="background: linear-gradient(135deg, #09ad95, #0056b3);box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);border-radius: 10px;">
+                    <div class="card text-white shadow-sm rounded-4 h-100 hover-shadow custom-card" style="background: linear-gradient(135deg, #6c5ffc, #0056b3);box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);border-radius: 10px;">
                         <div class="card-body text-center">
-                            <i class="fa fa-check-circle" style="font-size: 40px;margin-bottom: 10px;"></i>
-                            <h6 class="text-uppercase">Approved</h6>
-                            <h2 class="fw-bold">{{ $cardTotals['approved'] }}</h2>
+                            <i class="fa fa-plus-circle" style="font-size: 40px;margin-bottom: 10px;"></i>
+                            <h6 class="text-uppercase">New Created + Updated</h6>
+                            <h2 class="fw-bold">{{ $cardTotals['created'] }}</h2>
                         </div>
                     </div>
                 </div>
+                
 
                 <div class="col-md-3 mb-4">
                     <div class="card text-white shadow-sm rounded-4 h-100 hover-shadow custom-card" style="background: linear-gradient(135deg, #e82646, #0056b3);box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);border-radius: 10px;">
@@ -96,38 +98,17 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <div class="col-md-3 mb-4">
-                    <div class="card text-white shadow-sm rounded-4 h-100 hover-shadow custom-card" style="background: linear-gradient(135deg, #6c5ffc, #0056b3);box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);border-radius: 10px;">
+                    <div class="card text-white shadow-sm rounded-4 h-100 hover-shadow custom-card" style="background: linear-gradient(135deg, #09ad95, #0056b3);box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);border-radius: 10px;">
                         <div class="card-body text-center">
-                            <i class="fa fa-plus-circle" style="font-size: 40px;margin-bottom: 10px;"></i>
-                            <h6 class="text-uppercase">Created</h6>
-                            <h2 class="fw-bold">{{ $cardTotals['created'] }}</h2>
+                            <i class="fa fa-check-circle" style="font-size: 40px;margin-bottom: 10px;"></i>
+                            <h6 class="text-uppercase">Approved (All)</h6>
+                            <h2 class="fw-bold">{{ $cardTotals['approved'] }}</h2>
                         </div>
                     </div>
                 </div>
-
-                <div class="col-md-2 mb-4 max-145-height">
-                    <div class="card text-white h-100" style="background: linear-gradient(135deg, #007bff, #0056b3); box-shadow: 0 4px 10px rgba(0,0,0,0.2); border-radius: 10px;">
-                        <div class="card-body d-flex flex-column justify-content-between text-center position-relative">
-                            <div>
-                                <h5 class="mb-2">Created This Week:</h5>
-                                <h3><strong>{{ $currentWeekDataCreated }}</strong></h3>
-                            </div>
-                        </div>
-                        @if($currentWeekDataCreated <= 120)
-                            <span class="badge-status text-center" style="background-color: red;">AT RISK</span>
-                        @elseif($currentWeekDataCreated <= 149)
-                            <span class="badge-status text-center" style="background-color: orange;">REVIEW</span>
-                        @elseif($currentWeekDataCreated <= 199)
-                            <span class="badge-status text-center" style="background-color: yellow;">AVERAGE</span>
-                        @elseif($currentWeekDataCreated <= 349)
-                            <span class="badge-status text-center" style="background-color: lightgreen;">GOOD</span>
-                        @else
-                            <span class="badge-status text-center" style="background-color: green;">EXCELLENT</span>
-                        @endif
-                    </div>
-                </div>
+                
 
                 <div class="col-md-2 mb-4 max-145-height">
                     <div class="card text-white h-100" style="background: linear-gradient(135deg, #1170e4, #0056b3);box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);border-radius: 10px;">
@@ -150,28 +131,50 @@
                 <div class="col-md-2 mb-4 max-145-height">
                     <div class="card bg-dark text-white h-100" style="background: linear-gradient(135deg, #343a40, #0056b3);box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);border-radius: 10px;">
                         <div class="card-body text-center">
-                            <h5>All (Created + Updated)</h5>
+                            <h5>Work Report <br> (Created + Updated)</h5>
                             <h2>{{ $sumOfBoth }}</h2>
                         </div>
                     </div>
                 </div>
-
+                
                 <div class="col-md-2 mb-4 max-145-height">
-                    <div class="card bg-light h-100 text-dark">
+                    <div class="card text-white h-100" style="background: linear-gradient(135deg, #007bff, #0056b3); box-shadow: 0 4px 10px rgba(0,0,0,0.2); border-radius: 10px;">
+                        <div class="card-body d-flex flex-column justify-content-between text-center position-relative pb-0">
+                            <div>
+                                <h5 class="mb-2">This Week (All) <br> (Monday to Sunday)</h5>
+                                <h3><strong>{{ $currentWeekDataCreated }}</strong></h3>
+                            </div>
+                        </div>
+                        @if($currentWeekDataCreated <= 120)
+                            <span class="badge-status text-center" style="background-color: red;">AT RISK</span>
+                        @elseif($currentWeekDataCreated <= 149)
+                            <span class="badge-status text-center" style="background-color: orange;">REVIEW</span>
+                        @elseif($currentWeekDataCreated <= 199)
+                            <span class="badge-status text-center" style="background-color: yellow;">AVERAGE</span>
+                        @elseif($currentWeekDataCreated <= 349)
+                            <span class="badge-status text-center" style="background-color: lightgreen;">GOOD</span>
+                        @else
+                            <span class="badge-status text-center" style="background-color: green;">EXCELLENT</span>
+                        @endif
+                    </div>
+                </div>
+                
+                <div class="col-md-2 mb-4 max-145-height">
+                    <div class="card bg-light h-100 text-dark" style="background: linear-gradient(135deg, #ccc, yellow);">
                         <div class="card-body text-center">
-                            <i class="fa fa-calendar fa-2x text-primary mb-2"></i>
-                            <h5>Account Age (Days)</h5>
-                            <h2>{{ $daysSinceCreation }}</h2>
+                            <i class="fa fa-money fa-2x text-primary mb-2"></i>
+                            <h5>Value Added</h5>
+                            <h2>₹ {{ $expectedEarning }}</h2>
                         </div>
                     </div>
                 </div>
 
                 <div class="col-md-2 mb-4 max-145-height">
-                    <div class="card bg-light h-100 text-dark">
+                    <div class="card bg-light h-100 text-dark" style="background: linear-gradient(135deg, pink, yellow);">
                         <div class="card-body text-center">
-                            <i class="fa fa-money fa-2x text-primary mb-2"></i>
-                            <h5>Expected Earning</h5>
-                            <h2>₹ {{ $expectedEarning }}</h2>
+                            <i class="fa fa-calendar fa-2x text-primary mb-2"></i>
+                            <h5>Account Age (Days)</h5>
+                            <h2>{{ $daysSinceCreation }}</h2>
                         </div>
                     </div>
                 </div>
@@ -185,14 +188,34 @@
         <h2 class="card-title">Graphical Representations</h2>
     </div>
   <div class="card-body p-4">
+      <h4 class='text-center'><b class='text-uppercase'><u><span style='font-size:30px;'>Performance Metrics</span> <br> (Your Performace V/S Top Performer)</u></b></h4>
     <div class="row g-4">
       <div class="col-lg-6">
         <div class="card h-100 shadow-sm">
           <div class="card-body">
-            <h5 class="card-title text-center">Bar Chart Overview</h5>
+            <h5 class="card-title text-center">Your Work Overview</h5>
             @if($graphTotals)
-              <div style="position: relative;">
+              <div style="position: relative;text-align: center;;">
                 <canvas id="barChart"  style="max-width: 7000px; height: 700px"></canvas>
+                
+                <h4 class='mt-4'><u>Your Listing Reports</u></h4>
+              </div>
+            @else
+              <p class="text-muted text-center">Please select a user to see data.</p>
+            @endif
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-6">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title text-center">Top Performer Overview</h5>
+            @if($graphTotals)
+              <div style="position: relative;text-align: center;;">
+                <canvas id="barChart2"  style="max-width: 7000px;"></canvas>
+                
+                <h4 class='mt-4'><u>Top Performer Listing (Users May Change )</u></h4>
               </div>
             @else
               <p class="text-muted text-center">Please select a user to see data.</p>
@@ -201,53 +224,58 @@
         </div>
       </div>
 
-      <div class="col-lg-6">
+      <div class="col-lg-12">
+      <h4 class='text-center'><b class='text-uppercase'><u><span style='font-size:30px;'>Your Comparison Metrics</span> <br> (Previous Month V/S Current Month)</u></b></h4>
         <div class="row g-4">
-          <div class="col-md-6">
+          <div class="col-md-3">
             <div class="card h-100 shadow-sm">
               <div class="card-body ">
-                <h6>Total Created</h6>
-                <div style="position: relative; height:250px;">
+                <!--<h6>Total Created</h6>-->
+                <div style="position: relative; height:250px;text-align: center;">
                   <canvas id="createdPie"></canvas>
+                  
+                  <h4 class='mt-4'><u>New Created</u></h4>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-md-6">
+          
+          <div class="col-md-3">
             <div class="card h-100 shadow-sm">
               <div class="card-body ">
-                <h6>Total Updated</h6>
-                <div style="position: relative; height:250px;">
+                <!--<h6>Total Updated</h6>-->
+                <div style="position: relative; height:250px;text-align: center;">
                   <canvas id="editedPie"></canvas>
+                  <h4 class='mt-4'><u>Updated Listing</u></h4>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-3">
             <div class="card h-100 shadow-sm">
               <div class="card-body ">
-                <h6>Total (Created + Edited)</h6>
-                <div style="position: relative; height:250px;">
+                <!--<h6>Total (Created + Edited)</h6>-->
+                <div style="position: relative; height:250px;text-align: center;">
                   <canvas id="totalPie"></canvas>
+                  <h4 class='mt-4'><u>Total (Created + Updated)</u></h4>
                 </div>
               </div>
             </div>
           </div>
 
           
-          <div class="col-md-6">
+          <div class="col-md-3">
             <div class="card h-100 shadow-sm">
               <div class="card-body ">
-                <h6>Expected Earning</h6>
-                <div style="position: relative; height:250px;">
+                <!--<h6>Expected Earning</h6>-->
+                <div style="position: relative; height:250px;text-align: center;">
                   <canvas id="ExpectedEarning"></canvas>
+                  <h4 class='mt-4'><u>Value Added</u></h4>
                 </div>
               </div>
             </div>
           </div>
-
-          
         </div>
       </div>
     </div>
@@ -256,18 +284,18 @@
 
 <div class="card mb-5">
   <div class="card-header">
-    <h4 class="card-title">Active Sessions</h4>
+    <h4 class="card-title">Login Sessions Records</h4>
   </div>
   <div class="card-body">
     <div class="table-responsive">
       <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom mb-0">
         <thead>
-          <tr>
-            <th>{{ __('Sl') }}</th>
-            <th>{{ __('Session Id') }}</th>
-            <th>{{ __('Session Start') }}</th>
-            <th>{{ __('Session Expire') }}</th>
-            <th>{{ __('Action') }}</th>
+          <tr style="background-color: #37376d;">
+            <th class='text-white'>{{ __('Sl') }}</th>
+            <th class='text-white'>{{ __('Session Id') }}</th>
+            <th class='text-white'>{{ __('Session Start') }}</th>
+            <th class='text-white'>{{ __('Session Expire') }}</th>
+            <th class='text-white'>{{ __('Action') }}</th>
           </tr>
         </thead>
         <tbody>
@@ -327,24 +355,69 @@
     const myChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Approved', 'Rejected', 'Deleted', 'Created', 'Total Created', 'Total Updated'],
+            labels: ['New Created', 'Updated', 'All (CR + UP)', 'Rejected', 'Deleted', 'Approved'],
             datasets: [{
                 label: 'Count',
                 data: [
-                    {{ $graphTotals['approved'] }},
+                    {{ $createdCount }},
+                    {{ $editedCount }},
+                    {{ $graphTotals['created'] }},
                     {{ $graphTotals['rejected'] }},
                     {{ $graphTotals['deleted'] }},
-                    {{ $graphTotals['created'] }},
-                    {{ $createdCount }},
-                    {{ $editedCount }}
+                    {{ $graphTotals['approved'] }},
                 ],
                 backgroundColor: [
-                    'rgba(40, 167, 69, 0.7)',
                     'rgba(220, 53, 69, 0.7)',
                     'rgba(255, 193, 7, 0.7)',
                     'rgba(0, 123, 255, 0.7)',
                     'rgba(23, 162, 184, 0.7)',   
-                    'rgba(108, 117, 125, 0.7)' 
+                    'rgba(108, 117, 125, 0.7)',
+                    'rgba(40, 167, 69, 0.7)',
+                ],
+                borderColor: [
+                    'rgba(40, 167, 69, 1)',
+                    'rgba(220, 53, 69, 1)',
+                    'rgba(255, 193, 7, 1)',
+                    'rgba(0, 123, 255, 1)'
+                ],
+                borderWidth: 0.5
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    precision: 0
+                }
+            }
+        }
+    });
+</script>
+
+<script>
+    const ctx2 = document.getElementById('barChart2').getContext('2d');
+    const myChart2 = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: ['New Created', 'Updated', 'All (CR + UP)', 'Rejected', 'Deleted', 'Approved'],
+            datasets: [{
+                label: 'Count',
+                data: [
+                    {{ $createdCount }},
+                    {{ $editedCount }},
+                    {{ $graphTotals['created'] }},
+                    {{ $graphTotals['rejected'] }},
+                    {{ $graphTotals['deleted'] }},
+                    {{ $graphTotals['approved'] }},
+                ],
+                backgroundColor: [
+                    'rgba(220, 53, 69, 0.7)',
+                    'rgba(255, 193, 7, 0.7)',
+                    'rgba(0, 123, 255, 0.7)',
+                    'rgba(23, 162, 184, 0.7)',   
+                    'rgba(108, 117, 125, 0.7)',
+                    'rgba(40, 167, 69, 0.7)',
                 ],
                 borderColor: [
                     'rgba(40, 167, 69, 1)',
@@ -375,7 +448,7 @@
     const totalData = [{{ $totalLastMonth }}, {{ $totalThisMonth }}];
 
 
-    const expectedEarningData = [{{ $lastMonthExpectedEarning ?? 0 }}, {{ $thisMonthExpectedEarning ?? 0 }}];
+    const expectedEarningData = [{{ $lastMonthExpectedEarning ?? 4 }}, {{ $thisMonthExpectedEarning ?? 4 }}];
 
     const pieOptions = {
         type: 'pie',
@@ -392,7 +465,7 @@
             labels: ['Last Month', 'This Month'],
             datasets: [{
                 data: createdData,
-                backgroundColor: ['#36A2EB', '#4BC0C0']
+                backgroundColor: ['#36A2EB', '#1BAF03']
             }]
         }
     });
@@ -403,7 +476,7 @@
             labels: ['Last Month', 'This Month'],
             datasets: [{
                 data: editedData,
-                backgroundColor: ['#FF6384', '#FF9F40']
+                backgroundColor: ['#FF6384', '#26D50A']
             }]
         }
     });
@@ -414,7 +487,7 @@
             labels: ['Last Month', 'This Month'],
             datasets: [{
                 data: totalData,
-                backgroundColor: ['#9966FF', '#FFCD56']
+                backgroundColor: ['#9966FF', '#66EE22']
             }]
         }
     });
@@ -425,8 +498,8 @@
             labels: ['Last Month', 'This Month'],
             datasets: [{
                 data: expectedEarningData,
-               backgroundColor: ['#28a745', '#ffc107'],
-                borderColor: ['#218838', '#e0a800'],
+               backgroundColor: ['orange', '#A1F944'],
+                // borderColor: ['#218838', 'green'],
             }]
         },
         options: {
@@ -492,3 +565,5 @@
 </script>
     
 @endpush
+
+@endcan
