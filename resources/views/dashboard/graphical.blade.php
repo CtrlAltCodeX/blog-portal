@@ -23,6 +23,70 @@
     <div class="card-header">
         <h1 class="card-title">Welcome {{ auth()->user()->name }}, your performance charts:</h1>
     </div>
+    @php
+    $categories = [
+        ['label' => 'Safe Zone', 'limit' => 20, 'color' => '#76c7c0'],
+        ['label' => 'Average', 'limit' => 40, 'color' => '#fdd835'],
+        ['label' => 'Good', 'limit' => 60, 'color' => '#4caf50'],
+        ['label' => 'Best', 'limit' => 80, 'color' => '#2196f3'],
+        ['label' => 'Excellent', 'limit' => 100, 'color' => '#9c27b0'],
+    ];
+
+    $filledSegments = [];
+    $remainingPercentage = $progressPercentage;
+
+    foreach ($categories as $index => $category) {
+        $start = $index === 0 ? 0 : $categories[$index - 1]['limit'];
+        $end = $category['limit'];
+        $segmentWidth = $end - $start;
+
+        if ($remainingPercentage >= $segmentWidth) {
+            $filledSegments[] = [
+                'width' => $segmentWidth,
+                'color' => $category['color'],
+                'label' => $category['label'],
+                'percentage' => 100,
+            ];
+            $remainingPercentage -= $segmentWidth;
+        } elseif ($remainingPercentage > 0) {
+            $percentage = ($remainingPercentage / $segmentWidth) * 100;
+            $filledSegments[] = [
+                'width' => $remainingPercentage,
+                'color' => $category['color'],
+                'label' => $category['label'],
+                'percentage' => round($percentage, 1),
+            ];
+            $remainingPercentage = 0;
+        } else {
+            break;
+        }
+    }
+@endphp
+
+<div style="margin: 20px 0;">
+    <div class="card-header">
+        <h2 class="card-title">Progress Overview</h2>
+    </div>
+    <div style="position: relative; width: 100%; height: 40px; display: flex; overflow: hidden; padding: 0 10px; border-radius: 5px; background-color: #e0e0e0;">
+        @foreach ($filledSegments as $segment)
+            <div style="width: {{ $segment['width'] }}%; background-color: {{ $segment['color'] }}; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; font-weight: bold;">
+                {{ $segment['label'] }} ({{ $segment['percentage'] }}%)
+            </div>
+        @endforeach
+    </div>
+    <div style="position: relative; width: 100%; margin-top: 10px;">
+        <div style="position: absolute; left: 0%; transform: translateX(-50%); font-size: 12px; text-align: center;">
+            <span style="margin-left:22px">0</span>
+        </div>
+        @foreach ($categories as $category)
+            <div style="position: absolute; left: {{ $category['limit'] }}%; transform: translateX(-50%); font-size: 12px; text-align: center;">
+                <span>{{ $category['label'] }}<br>{{ $category['limit'] * $totalDays }}</span>
+            </div>
+        @endforeach
+    </div>
+</div>
+
+
     <div class="card-body">
         @if (auth()->user()->id == 1)
             <form method="GET" action="{{ route('graphical.dashboard') }}">

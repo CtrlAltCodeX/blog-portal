@@ -128,6 +128,29 @@ class GraphicalDashboardController extends Controller
 
         $lastMonthExpectedEarning = $lastMonthDataCreated * $rate;
 
+
+
+        // progress bar code 
+        // चयनित दिनांक सीमा के आधार पर कुल दिनों की गणना करें
+$totalDays = Carbon::parse($startDate)->diffInDays(Carbon::parse($endDate)) ;
+// echo $totalDays;die;
+
+// प्रत्येक श्रेणी के लिए सीमा निर्धारित करें
+$safeLimit = 20 * $totalDays;
+$averageLimit = 40 * $totalDays;
+$goodLimit = 60 * $totalDays;
+$bestLimit = 80 * $totalDays;
+$excellentLimit = 100 * $totalDays;
+
+// create_count की कुल संख्या प्राप्त करें
+$totalCreated = $listingCounts->where('status', 'Created')->sum('create_count');
+
+// प्रगति प्रतिशत की गणना करें
+$progressPercentage = ($totalCreated / $excellentLimit) * 100;
+$progressPercentage = min($progressPercentage, 100); // अधिकतम 100%
+
+
+
         return view('dashboard.graphical', compact(
             'users',
             'cardTotals',
@@ -147,7 +170,9 @@ class GraphicalDashboardController extends Controller
             'userSessionsCount',
             'expectedEarning',
             'thisMonthExpectedEarning',
-            'lastMonthExpectedEarning'
+            'lastMonthExpectedEarning',
+              'progressPercentage',
+            'totalDays'
         ));
     }
 
