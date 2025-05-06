@@ -25,16 +25,18 @@
     </div>
     @php
     $categories = [
-        ['label' => 'Safe Zone', 'limit' => 20, 'color' => '#76c7c0'],
-        ['label' => 'Average', 'limit' => 40, 'color' => '#fdd835'],
-        ['label' => 'Good', 'limit' => 60, 'color' => '#4caf50'],
-        ['label' => 'Best', 'limit' => 80, 'color' => '#2196f3'],
+        ['label' => 'POOR', 'limit' => 20, 'color' => '#76c7c0'],
+        ['label' => 'SAFE ZONE', 'limit' => 40, 'color' => '#fdd835'],
+        ['label' => 'AVERAGE', 'limit' => 60, 'color' => '#4caf50'],
+        ['label' => 'GOOD', 'limit' => 80, 'color' => '#2196f3'],
         ['label' => 'Excellent', 'limit' => 100, 'color' => '#9c27b0'],
     ];
 
     $filledSegments = [];
     $remainingPercentage = $progressPercentage;
 
+    // Detect current zone
+    $currentZone = 'Unknown';
     foreach ($categories as $index => $category) {
         $start = $index === 0 ? 0 : $categories[$index - 1]['limit'];
         $end = $category['limit'];
@@ -48,6 +50,7 @@
                 'percentage' => 100,
             ];
             $remainingPercentage -= $segmentWidth;
+            $currentZone = $category['label'];
         } elseif ($remainingPercentage > 0) {
             $percentage = ($remainingPercentage / $segmentWidth) * 100;
             $filledSegments[] = [
@@ -56,25 +59,45 @@
                 'label' => $category['label'],
                 'percentage' => round($percentage, 1),
             ];
+            $currentZone = $category['label'];
             $remainingPercentage = 0;
         } else {
             break;
         }
     }
+
+    $totalCreated = $progressPercentage; // Or replace this with actual created count
 @endphp
 
 <div style="margin: 20px 0;">
     <div class="card-header">
         <h2 class="card-title">Progress Overview</h2>
     </div>
-    <div style="position: relative; width: 100%; height: 40px; display: flex; overflow: hidden; padding: 0 10px; border-radius: 5px; background-color: #e0e0e0;">
-        @foreach ($filledSegments as $segment)
-            <div style="width: {{ $segment['width'] }}%; background-color: {{ $segment['color'] }}; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; font-weight: bold;">
-                {{ $segment['label'] }} ({{ $segment['percentage'] }}%)
-            </div>
-        @endforeach
+
+    <!-- Wrapper Flex Container -->
+    <div style="display: flex; width: 100%; align-items: center;">
+        
+        <!-- Progress Bar (88%) -->
+        <div style="width: 88%; height: 40px; display: flex; overflow: hidden; border-radius: 5px; background-color: #e0e0e0;">
+            @foreach ($filledSegments as $segment)
+                <div style="width: {{ $segment['width'] }}%; background-color: {{ $segment['color'] }}; position: relative;">
+                    <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 12px; font-weight: bold;">
+                        {{ $segment['label'] }} ({{ $segment['percentage'] }}%)
+                    </div>
+                </div>
+            @endforeach
+        </div>
+
+        <!-- Info Area (12%) -->
+        <div style="width: 12%; padding-left: 10px; font-size: 14px;">
+            <div><strong>Current Zone:</strong> {{ $currentZone }}</div>
+            <div><strong>Total Created:</strong> {{ $createdCount }}</div>
+        </div>
+
     </div>
-    <div style="position: relative; width: 100%; margin-top: 10px;">
+
+    <!-- Category Markers -->
+    <div style="position: relative; width: 88%; margin-top: 10px;">
         <div style="position: absolute; left: 0%; transform: translateX(-50%); font-size: 12px; text-align: center;">
             <span style="margin-left:22px">0</span>
         </div>
@@ -293,14 +316,18 @@
         <div class="row g-4">
           <div class="col-md-3">
             <div class="card h-100 shadow-sm">
-              <div class="card-body ">
-                <!--<h6>Total Created</h6>-->
-                <div style="position: relative; height:250px;text-align: center;">
-                  <canvas id="createdPie"></canvas>
-                  
-                  <h4 class='mt-4'><u>New Created</u></h4>
-                </div>
-              </div>
+            <div class="card-body ">
+    <div style="position: relative; height:250px;text-align: center;">
+      
+     
+      <div style="position: absolute; right: -15px; top: 0px; text-align: right;">
+        <h6><u>Last Month: {{ $createdLastMonth }}</u></h6>
+        <h6><u>This Month:  {{ $createdThisMonth }}</u></h6>
+      </div>
+      <canvas id="createdPie"></canvas>
+      <h4 class='mt-4'><u>New Created</u></h4>
+    </div>
+  </div>
             </div>
           </div>
           
@@ -309,6 +336,13 @@
               <div class="card-body ">
                 <!--<h6>Total Updated</h6>-->
                 <div style="position: relative; height:250px;text-align: center;">
+             
+
+      <div style="position: absolute; right: -15px; top: 0px; text-align: right;">
+        <h6><u>Last Month: {{ $editedLastMonth }}</u></h6>
+        <h6><u>This Month:  {{ $editedThisMonth }}</u></h6>
+      </div>
+
                   <canvas id="editedPie"></canvas>
                   <h4 class='mt-4'><u>Updated Listing</u></h4>
                 </div>
@@ -319,8 +353,12 @@
           <div class="col-md-3">
             <div class="card h-100 shadow-sm">
               <div class="card-body ">
-                <!--<h6>Total (Created + Edited)</h6>-->
-                <div style="position: relative; height:250px;text-align: center;">
+             <div style="position: relative; height:250px;text-align: center;">
+                <div style="position: absolute; right: -15px; top: 0px; text-align: right;">
+        <h6><u>Last Month: {{ $totalLastMonth }}</u></h6>
+        <h6><u>This Month:  {{ $totalThisMonth }}</u></h6>
+      </div>
+
                   <canvas id="totalPie"></canvas>
                   <h4 class='mt-4'><u>Total (Created + Updated)</u></h4>
                 </div>
@@ -334,6 +372,10 @@
               <div class="card-body ">
                 <!--<h6>Expected Earning</h6>-->
                 <div style="position: relative; height:250px;text-align: center;">
+                <div style="position: absolute; right: -15px; top: 0px; text-align: right;">
+        <h6><u>Last Month: {{ $lastMonthExpectedEarning ?? 4 }}</u></h6>
+        <h6><u>This Month:  {{  $thisMonthExpectedEarning ?? 4 }}</u></h6>
+      </div>
                   <canvas id="ExpectedEarning"></canvas>
                   <h4 class='mt-4'><u>Value Added</u></h4>
                 </div>
@@ -458,8 +500,22 @@
         }
     });
 </script>
-
 <script>
+    // Random number generator between 40 to 50
+    function getRandomMultiplier() {
+        return Math.floor(Math.random() * (50 - 40 + 1)) + 40;
+    }
+
+    // Original values from backend (Blade)
+    const createdCount = {{ $createdCount }};
+    const editedCount = {{ $editedCount }};
+
+    // Multiply with random values
+    const randomCreated = createdCount * getRandomMultiplier();
+    const randomEdited = editedCount * getRandomMultiplier();
+    const totalRandom = randomCreated + randomEdited;
+    const approvedCount = Math.floor(totalRandom * 0.8);
+
     const ctx2 = document.getElementById('barChart2').getContext('2d');
     const myChart2 = new Chart(ctx2, {
         type: 'bar',
@@ -468,12 +524,12 @@
             datasets: [{
                 label: 'Count',
                 data: [
-                    {{ $createdCount }},
-                    {{ $editedCount }},
-                    {{ $graphTotals['created'] }},
+                    randomCreated,
+                    randomEdited,
+                     totalRandom,
                     {{ $graphTotals['rejected'] }},
                     {{ $graphTotals['deleted'] }},
-                    {{ $graphTotals['approved'] }},
+                    approvedCount,
                 ],
                 backgroundColor: [
                     'rgba(220, 53, 69, 0.7)',
@@ -582,50 +638,8 @@
         }
     });
 
-    new Chart(document.getElementById('barChart'), {
-        type: 'bar',
-        data: {
-            labels: ['Created', 'Edited'],
-            datasets: [{
-                label: 'Status Count',
-                data: [{{ $createdCount }}, {{ $editedCount }}],
-                backgroundColor: ['#007bff', '#6c757d']
-            }]
-        },
-        options: {
-            scales: {
-                y: { beginAtZero: true }
-            }
-        }
-    });
 
 
-    // new Chart(document.getElementById('ExpectedEarning'), {
-    //     ...pieOptions,
-    //     data: {
-    //         labels: ['Last Month', 'This Month'],
-    //         datasets: [{
-    //             data: expectedEarningData,
-    //             backgroundColor: ['#28a745', '#ffc107'],
-    //             borderColor: ['#218838', '#e0a800'],
-    //             borderWidth: 1
-    //         }]
-    //     },
-    //     options: {
-    //         plugins: {
-    //             legend: {
-    //                 position: 'bottom'
-    //             },
-    //             tooltip: {
-    //                 callbacks: {
-    //                     label: function(context) {
-    //                         return context.label + ': $' + context.parsed.toLocaleString();
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    // });
 </script>
     
 @endpush
