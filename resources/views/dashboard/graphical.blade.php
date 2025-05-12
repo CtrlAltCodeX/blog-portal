@@ -21,140 +21,96 @@
 
 <div class="card mb-5">
     <div class="card-header">
-        <h1 class="card-title">Welcome {{ auth()->user()->name }}, your performance charts:</h1>
-    </div>
-    @php
-    $categories = [
-        ['label' => 'POOR', 'limit' => 20, 'color' => '#76c7c0'],
-        ['label' => 'SAFE ZONE', 'limit' => 40, 'color' => '#fdd835'],
-        ['label' => 'AVERAGE', 'limit' => 60, 'color' => '#4caf50'],
-        ['label' => 'GOOD', 'limit' => 80, 'color' => '#2196f3'],
-        ['label' => 'Excellent', 'limit' => 100, 'color' => '#9c27b0'],
-    ];
-
-    $filledSegments = [];
-    $remainingPercentage = $progressPercentage;
-
-    // Detect current zone
-    $currentZone = 'Unknown';
-    foreach ($categories as $index => $category) {
-        $start = $index === 0 ? 0 : $categories[$index - 1]['limit'];
-        $end = $category['limit'];
-        $segmentWidth = $end - $start;
-
-        if ($remainingPercentage >= $segmentWidth) {
-            $filledSegments[] = [
-                'width' => $segmentWidth,
-                'color' => $category['color'],
-                'label' => $category['label'],
-                'percentage' => 100,
-            ];
-            $remainingPercentage -= $segmentWidth;
-            $currentZone = $category['label'];
-        } elseif ($remainingPercentage > 0) {
-            $percentage = ($remainingPercentage / $segmentWidth) * 100;
-            $filledSegments[] = [
-                'width' => $remainingPercentage,
-                'color' => $category['color'],
-                'label' => $category['label'],
-                'percentage' => round($percentage, 1),
-            ];
-            $currentZone = $category['label'];
-            $remainingPercentage = 0;
-        } else {
-            break;
-        }
-    }
-
-    $totalCreated = $progressPercentage; // Or replace this with actual created count
-@endphp
-
-<div style="margin: 20px 0;">
-    <div class="card-header">
-        <h2 class="card-title">Progress Overview</h2>
+        <h1 class="card-title"><span class='text-danger'>Welcome</span> <span class='text-primary'>{{ auth()->user()->name }},</span></h1>
     </div>
 
-    <!-- Wrapper Flex Container -->
-    <div style="display: flex; width: 100%; align-items: center;">
-        
-        <!-- Progress Bar (88%) -->
-        <div style="width: 88%; height: 40px; display: flex; overflow: hidden; border-radius: 5px; background-color: #e0e0e0;">
-            @foreach ($filledSegments as $segment)
-                <div style="width: {{ $segment['width'] }}%; background-color: {{ $segment['color'] }}; position: relative;">
-                    <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 12px; font-weight: bold;">
-                        {{ $segment['label'] }} ({{ $segment['percentage'] }}%)
+
+    <div class="card-body">
+        <form method="GET" action="{{ route('graphical.dashboard') }}">
+                <div class="d-flex gap-3 flex-wrap align-items-end justify-content-end mb-4">
+                    @if (auth()->user()->id == 1)
+                    <div style="width: 20%;">
+                        <label>Select User</label>
+                        <select name="user_id" class="form-control">
+                            @foreach ($users as $user)
+                                <option value="{{ $user->id }}" {{ request()->get('user_id') == $user->id ? 'selected' : '' }}>
+                                    {{ $user->name }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
+                    @endif
+                    <div style="width: 20%;">
+                        <label>Select Range</label>
+                        <select name="range" id="rangeSelect" class="form-control">
+                            <option value="today" {{$range == 'today' ? 'selected' : '' }}>Today's</option>
+                            <option value="3" {{$range == '3' ? 'selected' : '' }}>Last 3 Days</option>
+                            <option value="7" {{$range == '7' ? 'selected' : '' }}>Last 7 Days</option>
+                            <option value="15" {{$range == '15' ? 'selected' : '' }}>Last 15 Days</option>
+                            <option value="30" {{$range == '30' ? 'selected' : '' }}>Last 30 Days</option>
+                            <option value="60" {{$range == '60' ? 'selected' : '' }}>Last 60 Days</option>
+                            <option value="90" {{$range == '90' ? 'selected' : '' }}>Last 90 Days</option>
+                            <option value="all" {{$range == 'all' ? 'selected' : '' }}>All Time</option>
+                            <option value="custom" {{$range == 'custom' ? 'selected' : '' }}>Custom Date</option>
+                        </select>
+                    </div>
+                    <div style="width: 20%;" id="fromDateDiv" class="{{ request()->get('range') == 'custom' ? '' : 'd-none' }}">
+                        <label>From Date</label>
+                        <input type="date" name="from_date" class="form-control" value="{{ request()->get('from_date') }}">
+                    </div>
+                    <div style="width: 20%;" id="toDateDiv" class="{{ request()->get('range') == 'custom' ? '' : 'd-none' }}">
+                        <label>To Date</label>
+                        <input type="date" name="to_date" class="form-control" value="{{ request()->get('to_date') }}">
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+            </div>
+        </form>
+
+        <h2 class="card-title">Progress Lifeline</h2>
+        <div style="display: flex; width: 100%; align-items: center;">
+            <div style="width: 88%; height: 20px; display: flex; overflow: hidden; border-radius: 5px;     background: linear-gradient(135deg, #d3d0d0, #828488);">
+                @foreach ($filledSegments as $segment)
+                    <div style="width: {{ $segment['width'] }}%; background-color: {{ $segment['color'] }}; position: relative;">
+                        <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 12px; font-weight: bold; width:100%">
+                            {{ $segment['label'] }} ({{ $segment['percentage'] }}%)
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            
+            @php
+                $colorMap = [
+                    'POOR' => 'red',
+                    'SAFE ZONE' => 'orange',
+                    'AVERAGE' => '#CCCC00',
+                    'GOOD' => 'green',
+                    'Excellent' => 'blue',
+                ];
+            @endphp
+
+            <div style="width: 12%; padding-left: 10px; font-size: 14px;">
+                <div><strong class='d-flex align-items-center'>Performace: <span style="background-color: {{ $colorMap[$currentZone] ?? 'black' }};padding: 5px;color: white;margin-left: 3px;">{{ $currentZone }}</span></strong> </div>
+                <div><strong>Total work:</strong> {{ $createdEditedCount }}</div>
+            </div>
+        </div>
+
+        <div style="position: relative; width: 70%; margin-top: 10px;">
+            <div style="position: absolute; left: 0%; transform: translateX(-50%); font-size: 12px; text-align: center;">
+                <span style="margin-left:22px">0</span>
+            </div>
+            
+            @foreach ($categories as $category)
+                <div style="position: absolute; left: {{ $category['limit'] }}%; transform: translateX(-50%); font-size: 12px; text-align: center;">
+                    <span style="position: absolute;bottom: 45px;"> | </span>
+                    {{ $category['limit'] * $totalDays }}</span>
                 </div>
             @endforeach
         </div>
 
-        <!-- Info Area (12%) -->
-        <div style="width: 12%; padding-left: 10px; font-size: 14px;">
-            <div><strong>Current Zone:</strong> {{ $currentZone }}</div>
-            <div><strong>Total Created:</strong> {{ $createdCount }}</div>
-        </div>
-
-    </div>
-
-    <!-- Category Markers -->
-    <div style="position: relative; width: 88%; margin-top: 10px;">
-        <div style="position: absolute; left: 0%; transform: translateX(-50%); font-size: 12px; text-align: center;">
-            <span style="margin-left:22px">0</span>
-        </div>
-        @foreach ($categories as $category)
-            <div style="position: absolute; left: {{ $category['limit'] }}%; transform: translateX(-50%); font-size: 12px; text-align: center;">
-                <span>{{ $category['label'] }}<br>{{ $category['limit'] * $totalDays }}</span>
-            </div>
-        @endforeach
-    </div>
-</div>
-
-
-    <div class="card-body">
-        @if (auth()->user()->id == 1)
-            <form method="GET" action="{{ route('graphical.dashboard') }}">
-                    <div class="d-flex gap-3 flex-wrap align-items-end justify-content-end mb-4">
-                        <div style="width: 20%;">
-                            <label>Select User</label>
-                            <select name="user_id" class="form-control">
-                                @foreach ($users as $user)
-                                    <option value="{{ $user->id }}" {{ request()->get('user_id') == $user->id ? 'selected' : '' }}>
-                                        {{ $user->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div style="width: 20%;">
-                            <label>Select Range</label>
-                            <select name="range" id="rangeSelect" class="form-control">
-                                <option value="today" {{$range == 'today' ? 'selected' : '' }}>Today's</option>
-                                <option value="3" {{$range == '3' ? 'selected' : '' }}>Last 3 Days</option>
-                                <option value="7" {{$range == '7' ? 'selected' : '' }}>Last 7 Days</option>
-                                <option value="15" {{$range == '15' ? 'selected' : '' }}>Last 15 Days</option>
-                                <option value="30" {{$range == '30' ? 'selected' : '' }}>Last 30 Days</option>
-                                <option value="60" {{$range == '60' ? 'selected' : '' }}>Last 60 Days</option>
-                                <option value="90" {{$range == '90' ? 'selected' : '' }}>Last 90 Days</option>
-                                <option value="all" {{$range == 'all' ? 'selected' : '' }}>All Time</option>
-                                <option value="custom" {{$range == 'custom' ? 'selected' : '' }}>Custom Date</option>
-                            </select>
-                        </div>
-                        <div style="width: 20%;" id="fromDateDiv" class="{{ request()->get('range') == 'custom' ? '' : 'd-none' }}">
-                            <label>From Date</label>
-                            <input type="date" name="from_date" class="form-control" value="{{ request()->get('from_date') }}">
-                        </div>
-                        <div style="width: 20%;" id="toDateDiv" class="{{ request()->get('range') == 'custom' ? '' : 'd-none' }}">
-                            <label>To Date</label>
-                            <input type="date" name="to_date" class="form-control" value="{{ request()->get('to_date') }}">
-                        </div>
-                        <div>
-                            <button type="submit" class="btn btn-primary">Search</button>
-                        </div>
-                </div>
-            </form>
-        @endif
-
         @if ($cardTotals)
-            <div class="row">
+            <div class="row" style="margin-top: 60px;">
                 <div class="col-md-3 mb-4">
                     <div class="card text-white shadow-sm rounded-4 h-100 hover-shadow custom-card" style="background: linear-gradient(135deg, #6c5ffc, #0056b3);box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);border-radius: 10px;">
                         <div class="card-body text-center">
@@ -500,6 +456,7 @@
         }
     });
 </script>
+
 <script>
     // Random number generator between 40 to 50
     function getRandomMultiplier() {
@@ -559,15 +516,12 @@
         }
     });
 </script>
-
 @endif
 
 <script>
     const createdData = [{{ $createdLastMonth }}, {{ $createdThisMonth }}];
     const editedData = [{{ $editedLastMonth }}, {{ $editedThisMonth }}];
     const totalData = [{{ $totalLastMonth }}, {{ $totalThisMonth }}];
-
-
     const expectedEarningData = [{{ $lastMonthExpectedEarning ?? 4 }}, {{ $thisMonthExpectedEarning ?? 4 }}];
 
     const pieOptions = {
@@ -637,11 +591,7 @@
             }
         }
     });
-
-
-
 </script>
-    
 @endpush
 
 @endcan

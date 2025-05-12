@@ -32,14 +32,11 @@ class GraphicalDashboardController extends Controller
         $listingCounts = UserListingCount::where('user_id', $selectedUserId)
             ->whereBetween('created_at', [$startDate, $endDate])
             ->get();
-            
-            // dd($listingCounts);
 
         // User creation date
         $selectedUser = User::find($selectedUserId);
         $createdAt = $selectedUser ? $selectedUser->created_at : now();
         $daysSinceCreation = Carbon::parse($createdAt)->diffInDays(Carbon::now());
-
 
         // Prepare totals for cards and chart
         $cardTotals = [
@@ -48,25 +45,22 @@ class GraphicalDashboardController extends Controller
             'deleted'  => $listingCounts->sum('delete_count'),
             'created'  => $listingCounts->sum('create_count'),
         ];
-        
+
         $createdCount = $listingCounts->where('status', 'Created')->sum('create_count');
-        
         $editedCount = $listingCounts->where('status', 'Edited')->sum('create_count');
         $sumOfBoth = $createdCount + $editedCount;
 
         // Created this week for performance badge
         $startOfWeek = Carbon::now()->startOfWeek();
         $endOfWeek = Carbon::now()->endOfWeek();
-        
+
         // dd([$startOfWeek, $endOfWeek]);
-        
         $currentWeekDataCreated = UserListingCount::where('user_id', $selectedUserId)
             ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
             ->sum('create_count');
 
         // Send same data for chart
         $graphTotals = $cardTotals;
-
         $userSessionsCount = UserSession::where("user_id", $selectedUserId)
             ->get();
 
@@ -74,7 +68,7 @@ class GraphicalDashboardController extends Controller
         $now = Carbon::now();
         $startOfThisMonth = $now->copy()->startOfMonth();
         $endOfThisMonth = $now->copy()->endOfMonth();
-        
+
         $startOfLastMonth = $now->copy()->subMonth()->startOfMonth();
         $endOfLastMonth = $now->copy()->subMonth()->endOfMonth();
 
@@ -106,7 +100,7 @@ class GraphicalDashboardController extends Controller
         $currentMonthDataCreated = UserListingCount::where('user_id', $selectedUserId)
             ->whereBetween('created_at', [$startDate, $endDate])
             ->sum('create_count');
-            
+
         if ($selectedUser->posting_rate) {
             $rate = (int) $selectedUser->posting_rate;
         } else {
@@ -128,28 +122,72 @@ class GraphicalDashboardController extends Controller
 
         $lastMonthExpectedEarning = $lastMonthDataCreated * $rate;
 
+        $totalDays = Carbon::parse($startDate)->diffInDays(Carbon::parse($endDate));
 
+        $totalDays = $totalDays + 1;
 
-        // progress bar code 
-        // चयनित दिनांक सीमा के आधार पर कुल दिनों की गणना करें
-$totalDays = Carbon::parse($startDate)->diffInDays(Carbon::parse($endDate)) ;
-// echo $totalDays;die;
+        $safeLimit = 25 * $totalDays;
+        $averageLimit = 50 * $totalDays;
+        $goodLimit = 75 * $totalDays;
+        $bestLimit = 100 * $totalDays;
+        $excellentLimit = 125 * $totalDays;
 
-// प्रत्येक श्रेणी के लिए सीमा निर्धारित करें
-$safeLimit = 20 * $totalDays;
-$averageLimit = 40 * $totalDays;
-$goodLimit = 60 * $totalDays;
-$bestLimit = 80 * $totalDays;
-$excellentLimit = 100 * $totalDays;
+        $totalCreated = $listingCounts->where('status', 'Created')->sum('create_count');
+        
+        // dd($totalCreated, $excellentLimit);
 
-// create_count की कुल संख्या प्राप्त करें
-$totalCreated = $listingCounts->where('status', 'Created')->sum('create_count');
+        $progressPercentage = ($sumOfBoth / $excellentLimit) * 100;
+        $progressPercentage = min($progressPercentage, 100); // अधिकतम 100%
 
-// प्रगति प्रतिशत की गणना करें
-$progressPercentage = ($totalCreated / $excellentLimit) * 100;
-$progressPercentage = min($progressPercentage, 100); // अधिकतम 100%
+        $categories = [
+            ['label' => 'POOR', 'limit' => 25, 'color' => 'red'],
+            ['label' => 'SAFE ZONE', 'limit' => 50, 'color' => 'orange'],
+            ['label' => 'AVERAGE', 'limit' => 75, 'color' => 'yellow'],
+            ['label' => 'GOOD', 'limit' => 100, 'color' => 'green'],
+            ['label' => 'Excellent', 'limit' => 125, 'color' => 'blue'],
+        ];
 
+        $filledSegments = [];
+        $remainingPercentage = $progressPercentage;
+        
+        // dd($remainingPercentage);
 
+        // Detect current zone
+        $currentZone = 'Unknown';
+        foreach ($categories as $index => $category) {
+            $start = $index === 0 ? 0 : $categories[$index - 1]['limit'];
+            $end = $category['limit'];
+            $segmentWidth = $end - $start;
+
+            if ($remainingPercentage >= $segmentWidth) {
+                $filledSegments[] = [
+                    'width' => $segmentWidth,
+                    'color' => $category['color'],
+                    'label' => $category['label'],
+                    'percentage' => 100,
+                ];
+                $remainingPercentage -= $segmentWidth;
+                $currentZone = $category['label'];
+            } elseif ($remainingPercentage > 0) {
+                $percentage = ($remainingPercentage / $segmentWidth) * 100;
+                $filledSegments[] = [
+                    'width' => $remainingPercentage,
+                    'color' => $category['color'],
+                    'label' => $category['label'],
+                    'percentage' => round($percentage, 1),
+                ];
+                $currentZone = $category['label'];
+                $remainingPercentage = 0;
+            } else {
+                break;
+            }
+        }
+        
+        // dd($filledSegments);
+
+        $totalCreated = $progressPercentage; // Or replace this with actual created count
+        
+        $createdEditedCount = $createdCount + $editedCount;
 
         return view('dashboard.graphical', compact(
             'users',
@@ -171,8 +209,13 @@ $progressPercentage = min($progressPercentage, 100); // अधिकतम 100%
             'expectedEarning',
             'thisMonthExpectedEarning',
             'lastMonthExpectedEarning',
-              'progressPercentage',
-            'totalDays'
+            'progressPercentage',
+            'totalDays',
+            'filledSegments',
+            'currentZone',
+            'createdCount',
+            'categories',
+            'createdEditedCount'
         ));
     }
 
