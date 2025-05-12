@@ -124,7 +124,7 @@ class GraphicalDashboardController extends Controller
 
         $totalDays = Carbon::parse($startDate)->diffInDays(Carbon::parse($endDate));
 
-        $totalDays = $totalDays + 1;
+        $totalDays = max($totalDays, 1);
 
         $safeLimit = 25 * $totalDays;
         $averageLimit = 50 * $totalDays;
@@ -132,12 +132,9 @@ class GraphicalDashboardController extends Controller
         $bestLimit = 100 * $totalDays;
         $excellentLimit = 125 * $totalDays;
 
-        $totalCreated = $listingCounts->where('status', 'Created')->sum('create_count');
-        
-        // dd($totalCreated, $excellentLimit);
 
-        $progressPercentage = ($sumOfBoth / $excellentLimit) * 100;
-        $progressPercentage = min($progressPercentage, 100); // अधिकतम 100%
+        $progressPercentage = ($sumOfBoth / $excellentLimit) * 125;
+        $progressPercentage = min($progressPercentage, 125); 
 
         $categories = [
             ['label' => 'POOR', 'limit' => 25, 'color' => 'red'],
@@ -185,8 +182,7 @@ class GraphicalDashboardController extends Controller
         
         // dd($filledSegments);
 
-        $totalCreated = $progressPercentage; // Or replace this with actual created count
-        
+        $totalCreated = $progressPercentage; 
         $createdEditedCount = $createdCount + $editedCount;
 
         return view('dashboard.graphical', compact(

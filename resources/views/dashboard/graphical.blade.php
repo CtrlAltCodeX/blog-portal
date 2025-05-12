@@ -96,7 +96,7 @@
             </div>
         </div>
 
-        <div style="position: relative; width: 70%; margin-top: 10px;">
+        <div style="position: relative; width: 88%; margin-top: 10px;">
             <div style="position: absolute; left: 0%; transform: translateX(-50%); font-size: 12px; text-align: center;">
                 <span style="margin-left:22px">0</span>
             </div>
