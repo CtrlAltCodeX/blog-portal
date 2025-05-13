@@ -137,11 +137,11 @@ class GraphicalDashboardController extends Controller
         $progressPercentage = min($progressPercentage, 125); 
 
         $categories = [
-            ['label' => 'POOR', 'limit' => 25, 'color' => 'red'],
-            ['label' => 'SAFE ZONE', 'limit' => 50, 'color' => 'orange'],
-            ['label' => 'AVERAGE', 'limit' => 75, 'color' => 'yellow'],
-            ['label' => 'GOOD', 'limit' => 100, 'color' => 'green'],
-            ['label' => 'Excellent', 'limit' => 125, 'color' => 'blue'],
+            ['label' => 'POOR', 'limit' => 25, 'color' => 'red','width'=>20],
+            ['label' => 'SAFE ZONE', 'limit' => 50, 'color' => 'orange','width'=>40],
+            ['label' => 'AVERAGE', 'limit' => 75, 'color' => 'yellow','width'=>60],
+            ['label' => 'GOOD', 'limit' => 100, 'color' => 'green','width'=>80],
+            ['label' => 'Excellent', 'limit' => 125, 'color' => 'blue',"width"=>100],
         ];
 
         $filledSegments = [];
@@ -158,7 +158,7 @@ class GraphicalDashboardController extends Controller
 
             if ($remainingPercentage >= $segmentWidth) {
                 $filledSegments[] = [
-                    'width' => $segmentWidth,
+                    'width' => 20,
                     'color' => $category['color'],
                     'label' => $category['label'],
                     'percentage' => 100,
@@ -168,7 +168,7 @@ class GraphicalDashboardController extends Controller
             } elseif ($remainingPercentage > 0) {
                 $percentage = ($remainingPercentage / $segmentWidth) * 100;
                 $filledSegments[] = [
-                    'width' => $remainingPercentage,
+                    'width' => 20,
                     'color' => $category['color'],
                     'label' => $category['label'],
                     'percentage' => round($percentage, 1),

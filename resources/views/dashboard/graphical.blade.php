@@ -102,7 +102,7 @@
             </div>
             
             @foreach ($categories as $category)
-                <div style="position: absolute; left: {{ $category['limit'] }}%; transform: translateX(-50%); font-size: 12px; text-align: center;">
+                <div style="position: absolute; left: {{ $category['width'] }}%; transform: translateX(-50%); font-size: 12px; text-align: center;">
                     <span style="position: absolute;bottom: 45px;"> | </span>
                     {{ $category['limit'] * $totalDays }}</span>
                 </div>
