@@ -73,7 +73,7 @@
             <div style="width: 88%; height: 20px; display: flex; overflow: hidden; border-radius: 5px;     background: linear-gradient(135deg, #d3d0d0, #828488);">
                 @foreach ($filledSegments as $segment)
                     <div style="width: {{ $segment['width'] }}%; background-color: {{ $segment['color'] }}; position: relative;">
-                        <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 12px; font-weight: bold; width:100%">
+                        <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 12px; font-weight: bold; width:100%;text-align:center;">
                             {{ $segment['label'] }} ({{ $segment['percentage'] }}%)
                         </div>
                     </div>

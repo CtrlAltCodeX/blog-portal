@@ -17,7 +17,8 @@ class GraphicalDashboardController extends Controller
 
     public function index(Request $request)
     {
-        $users = User::all();
+        $users = User::where('status', 1)
+            ->get();
 
         // Filter values
         $selectedUserId = $request->get('user_id', auth()->id());
@@ -134,14 +135,14 @@ class GraphicalDashboardController extends Controller
 
 
         $progressPercentage = ($sumOfBoth / $excellentLimit) * 125;
-        $progressPercentage = min($progressPercentage, 125); 
+        $progressPercentage = min($progressPercentage, 125);
 
         $categories = [
-            ['label' => 'POOR', 'limit' => 25, 'color' => 'red','width'=>20],
-            ['label' => 'SAFE ZONE', 'limit' => 50, 'color' => 'orange','width'=>40],
-            ['label' => 'AVERAGE', 'limit' => 75, 'color' => 'yellow','width'=>60],
-            ['label' => 'GOOD', 'limit' => 100, 'color' => 'green','width'=>80],
-            ['label' => 'Excellent', 'limit' => 125, 'color' => 'blue',"width"=>100],
+            ['label' => 'POOR', 'limit' => 25, 'color' => 'red', 'width' => 20],
+            ['label' => 'SAFE ZONE', 'limit' => 50, 'color' => 'orange', 'width' => 40],
+            ['label' => 'AVERAGE', 'limit' => 75, 'color' => 'yellow', 'width' => 60],
+            ['label' => 'GOOD', 'limit' => 100, 'color' => 'green', 'width' => 80],
+            ['label' => 'Excellent', 'limit' => 125, 'color' => 'blue', "width" => 100],
         ];
 
         $filledSegments = [];

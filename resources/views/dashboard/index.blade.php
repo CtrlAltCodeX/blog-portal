@@ -23,6 +23,18 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
+                    <div class="w-100 text-right">
+                        <form action="{{ route('dashboard') }}" method="GET" id='user_form'>
+                            <label>Users</label>
+                            <select class="form-control w-25 mb-4" id='users' name="user_id">
+                                @foreach ($users as $user)
+                                <option value="{{ $user->encrypted_id }}" {{ $selectedUserId == $user->id ? 'selected' : '' }}>
+                                    {{ $user->name }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </form>
+                    </div>
                     <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">
                         <thead>
                             <tr>
@@ -41,7 +53,7 @@
                             <td>{{date("d-m-Y h:i A", strtotime($session->expire_at)) }}</td>
                             @if(session()->get('sessionId') != $session->session_id)
                             <td>
-                                <a href="{{ route('user.session.delete', $session->session_id) }}" class="btn btn-primary btn-sm">Delete</a>
+                                <a href="{{ route('user.session.delete', $session->session_id) }}" class="btn btn-primary btn-sm" onclick="return confirm('Are you sure?')">Revoke</a>
                             </td>
                             @else
                             <td>
@@ -310,8 +322,7 @@
 @push('js')
 <script>
     $(document).ready(function() {
-        
-        setTimeout(function(){
+        setTimeout(function() {
             getDraftedInventory();
         }, 2000)
 
@@ -328,8 +339,8 @@
                     localStorage.setItem('drafted', result.length);
                     getTotalProducts();
 
-                    
-                    
+
+
                     getInventoryData();
                 },
             });
@@ -351,8 +362,9 @@
                     $("#products").html(result);
                     localStorage.setItem('totalPublished', result);
                     getInventoryOutStockData();
-                    
-                },error:function(err){
+
+                },
+                error: function(err) {
                     console.log(err);
                 }
             });
@@ -386,7 +398,7 @@
                             localStorage.setItem('out_Stock', result);
                             var getCount = localStorage.getItem('outStock');
                             $("#outStock").html(parseInt(result) + parseInt(getCount));
-                            
+
                             getInventoryLowStockData();
                         },
                     });
@@ -424,7 +436,7 @@
                             localStorage.setItem('low_stock', result);
                             var getCount = localStorage.getItem('low_stock');
                             $("#lowStock").html(parseInt(result) + parseInt(getCount));
-                            
+
                             getInventoryDemandStockData();
                         },
                     });
@@ -462,7 +474,7 @@
                             localStorage.setItem('out_demand', result);
                             var getCount = localStorage.getItem('demandStock');
                             $("#demandStock").html(parseInt(result) + parseInt(getCount));
-                            
+
                             getOneYearOldInventory();
                         },
                     });
@@ -498,7 +510,7 @@
                 success: function(result) {
                     $("#one-year-old").html(result);
                     localStorage.setItem('one-year-old', result);
-                    
+
                     getTwoYearOldInventory();
                 },
             });
@@ -520,7 +532,7 @@
                 success: function(result) {
                     $("#two-year-old").html(result);
                     localStorage.setItem('two-year-old', result);
-                    
+
                     getThreeYearOldInventory();
                 },
             });
@@ -542,9 +554,9 @@
                 success: function(result) {
                     $("#three-year-old").html(result);
                     localStorage.setItem('three-year-old', result);
-                    
+
                     getSixMonthOldInventory();
-                    
+
                     setTimeout(() => {
                         getInventoryInStockData();
                     }, 1000);
@@ -571,6 +583,10 @@
                 },
             });
         }
+
+        $("#users").change(function() {
+            $("#user_form").submit();
+        });
     })
 </script>
 

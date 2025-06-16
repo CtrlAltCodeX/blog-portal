@@ -34,17 +34,23 @@ class WatermarkController extends Controller
 
         $file = $request->file('file');
         $files = [];
+        $lastNumber = 0;
+        
         foreach (File::glob(storage_path('app/public/uploads') . '/*') as $key => $path) {
             $filepath = explode('/', $path);
-
-            foreach ($filepath as $name) {
-                if (strpos($name, '.jpg') !== false || strpos($name, '.png') !== false || strpos($name, '.jpeg') !== false) {
-                    $files[$key]['name'] = $name;
-                }
+            $name = (int) explode('.', $filepath[8])[0];
+            
+            if ($name > $lastNumber) {
+                $lastNumber = $name;
             }
+            
+            $files[$key]['name'] = $filepath[8];
+            $files[$key]['number'] = $name;
         }
+        
 
-        $countIncrease = count($files) + 1;
+        $countIncrease = $lastNumber + 1;
+        
         $filename = $countIncrease . "." . $file->getClientOriginalExtension();
         // $filename = time() . '_' . $file->getClientOriginalName();
         $file->storeAs('public/uploads/', $filename);

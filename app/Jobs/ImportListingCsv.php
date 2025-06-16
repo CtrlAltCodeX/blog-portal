@@ -31,7 +31,7 @@ class ImportListingCsv implements ShouldQueue
     {
         $images = [];
         if ($this->data->images) {
-            $images = $this->downloadImage($this->data->images);
+            $images[] = $this->downloadImage($this->data->images);
         }
 
         $data = [

@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Listing;
+use App\Models\User;
 use App\Models\UserSession;
 use App\Services\GoogleService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use App\Models\UserListingInfo;
+use Illuminate\Support\Facades\Crypt;
 
 class DashboardController extends Controller
 {
@@ -40,8 +42,17 @@ class DashboardController extends Controller
             return view('settings.error');
         }
 
-        $userSessionsCount = UserSession::where("user_id", auth()->user()->id)
-            ->get();
+        $userSessionsCount = UserSession::query();
+
+        $selectedUserId = Crypt::decryptString(request()->get('user_id'));
+
+        if (request()->user_id) {
+            $userSessionsCount->where('user_id', $selectedUserId);
+        } else {
+            $userSessionsCount->where("user_id", auth()->user()->id);
+        }
+
+        $userSessionsCount = $userSessionsCount->get();
 
         $approved = UserListingInfo::where('approved_by', '!=', '');
 
@@ -69,15 +80,22 @@ class DashboardController extends Controller
                 ->count();
         }
 
+        $users = User::where('status', 1)->get()->map(function ($user) {
+            $user->encrypted_id = Crypt::encryptString($user->id);
+            return $user;
+        });
+
         if (auth()->check()) {
             if (auth()->user()->hasPermissionTo('Dashboard')) {
-                return view('dashboard.index', compact('userSessionsCount', 'approved', 'rejected', 'pending'));
+                return view('dashboard.index', compact('userSessionsCount', 'approved', 'rejected', 'pending', 'users', 'selectedUserId'));
             } else {
                 return redirect()->route('profile.edit');
             }
         }
 
-        return view('dashboard.index', compact('userSessionsCount', 'approved', 'rejected', 'pending'));
+        $users = User::where('status', 1)->get();
+
+        return view('dashboard.index', compact('userSessionsCount', 'approved', 'rejected', 'pending', 'users', 'selectedUserId'));
     }
 
     /**

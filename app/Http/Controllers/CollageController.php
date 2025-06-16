@@ -28,7 +28,6 @@ class CollageController extends Controller
         $validated = $this->validate(request(), [
             'file'              => 'required|array',
             'file.*'            => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            // 'title'             => 'required_if:is_with_watermark,1',
         ], [
             'title.required_if' => 'The title field is required when adding a watermark.',
         ]);
@@ -59,17 +58,22 @@ class CollageController extends Controller
             });
 
         $files = [];
+        $lastNumber = 0;
+
         foreach (File::glob(storage_path('app/public/uploads') . '/*') as $key => $path) {
             $filepath = explode('/', $path);
+            $name = (int) explode('.', $filepath[8])[0];
 
-            foreach ($filepath as $name) {
-                if (strpos($name, '.jpg') !== false || strpos($name, '.png') !== false) {
-                    $files[$key]['name'] = $name;
-                }
+            if ($name > $lastNumber) {
+                $lastNumber = $name;
             }
+
+            $files[$key]['name'] = $filepath[8];
+            $files[$key]['number'] = $name;
         }
 
-        $countIncrease = count($files) + 1;
+
+        $countIncrease = $lastNumber + 1;
 
         $filename = $countIncrease . '.jpg';
 

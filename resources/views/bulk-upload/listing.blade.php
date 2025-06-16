@@ -3,7 +3,7 @@
 @section('title', __('Upload CSV file'))
 
 @section('content')
-<form action="{{ route('import.data') }}" method="POST">
+<form action="{{ route('import.data') }}" method="POST" id='listing_form'>
     @csrf
     <div class="card">
         <div class="card-header d-flex justify-content-between">
@@ -61,7 +61,7 @@
                     </tbody>
                 </table>
                 <div style="text-align: right;">
-                    <button class="btn btn-success">Final Upload</button>
+                    <button class="btn btn-success" id='final_upload'>Final Upload</button>
                 </div>
             </div>
         </div>
@@ -86,6 +86,39 @@
                     }
                 }
             });
+        });
+        
+        $('.checkbox-update').click(function() {
+            let val = $(this).val();
+            
+            if ($(this).prop('checked')) {
+                if (!ids.includes(val)) {
+                    ids.push(val);
+                }
+            } else {
+                let index = ids.indexOf(val);
+                if (index !== -1) {
+                    ids.splice(index, 1);
+                }
+                // Also uncheck the "check-all" if any individual is unchecked
+                $('.check-all').prop('checked', false);
+            }
+        
+            // If all checkboxes are checked individually, check "check-all"
+            if ($('.checkbox-update:checked').length === $('.checkbox-update').length) {
+                $('.check-all').prop('checked', true);
+            }
+        });
+        
+        $('#final_upload').click(function(e) {
+             e.preventDefault();
+             
+             if (ids.length > 0) {
+                //  console.log(ids);
+                $('#listing_form').submit();
+             } else {
+                 alert('Please select atleast one checkbox');
+             }
         });
     })
 </script>

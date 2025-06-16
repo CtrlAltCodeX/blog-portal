@@ -574,7 +574,7 @@
                                         <div class="d-flex justify-content-between align-items-center" style="grid-gap: 10px;">
                                             <input id="base_url" type="text" value="{{ (!$listing->is_bulk_upload && $listing->images) ? json_decode($listing->images)[0] : '' }}" class="form-control @error('images') is-invalid @enderror" name="images[]" autocomplete="images" autofocus placeholder="Base URL">
                                             @if($listing->is_bulk_upload && isset($listing->images))
-                                            <a href="{{ url('/') }}/storage/{{ json_decode($listing->images)[0] }}" download=""><i class="fa fa-download"></i></a>
+                                            <a href="{{ url('/') }}/storage/{{ json_decode($listing->images)[0][0] }}" download=""><i class="fa fa-download"></i></a>
                                             @endif
                                         </div>
                                         <!-- <input id="base_url" type="text" value="{{ $listing->images }}" class="form-control @error('images') is-invalid @enderror" name="images[]" autocomplete="images" autofocus placeholder="Base URL">
@@ -621,9 +621,17 @@
                             <button class="btn btn-danger float-right" id='reject'>Reject ( DB )</button>
                             @endcan
 
-                            @can('Pending Listing ( DB ) -> Update ( DB )')
-                            <button class="btn btn-warning float-right" id='update'>Update ( DB )</button>
-                            @endcan
+                            @if(request()->route()->getName() != 'bulklisting.edit')
+                                @can('Pending Listing ( DB ) -> Update ( DB )')
+                                <button class="btn btn-warning float-right" id='update'>Update ( DB )</button>
+                                @endcan
+                            @endif
+
+                            @if(request()->route()->getName() == 'bulklisting.edit')
+                                @can('Product Listing > Bulk Listing Review (Save to DB)')
+                                <button class="btn btn-warning float-right" id='update'>Update ( DB )</button>
+                                @endcan
+                            @endif
 
                             @can('Pending Listing ( DB ) -> Save as Draft')
                             <button class="btn btn-dark float-right" id='draft'>Save as Draft</button>
