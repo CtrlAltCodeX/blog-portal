@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('manufacturer')->nullable();
             $table->string('importer')->nullable();
             $table->string('packer')->nullable();
+            $table->string('url')->nullable();
         });
     }
 

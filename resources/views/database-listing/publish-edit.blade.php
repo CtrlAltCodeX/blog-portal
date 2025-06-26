@@ -48,28 +48,56 @@
                         <div id="progressBar" class="text-end"></div>
 
                         <div>
+                            @php
+                                $isTitleMatch = isset($reference) && trim($listing->title) === trim($reference->title);
+                            @endphp
+
                             <div class="form-group">
                                 <div class="d-flex align-items-center justify-content-between">
-                                    <label for="title" class="form-label">{{ __('Product Title') }}<span class="text-danger">*</span> <span class="text-success">(Product Name | Author | Edition | Publication ( Medium ) )</span></label>
+                                    <label for="title" class="form-label">
+                                        {{ __('Product Title') }}
+                                        <span class="text-danger">*</span>
+                                        <span class="text-success">(Product Name | Author | Edition | Publication ( Medium )) </span>
+                                        <span class="ms-2">
+                                            @if(isset($reference))
+                                                @if(!$isTitleMatch)
+                                                    ✅
+                                                @else
+                                                    ❌
+                                                @endif
+                                            @endif
+                                        </span>
+                                    </label>
                                     <span id="charCount">0/160</span>
+                                    
                                 </div>
-                                <label for="description" class="form-label d-flex justify-content-between text-danger" style="margin-top: -10px;">
-                                    <div>{{ __('Excess Capitalism in Product Title Not Allowed') }}</div>
-                                </label>
 
                                 <input minlength="75" maxlength="160" id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') ?? $listing->title }}" autocomplete="title" autofocus placeholder="title">
                                 <span class="error-message title" style="color:red;"></span>
 
                                 @error('title')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
                                 @enderror
                             </div>
 
+                            @php
+                                $isDescMatch = isset($reference) && trim(strip_tags($listing->description)) === trim(strip_tags($reference->description));
+                            @endphp
                             <div class="form-group">
                                 <label for="description" class="form-label d-flex justify-content-between">
-                                    <div>{{ __('Product Description') }}<span class="text-danger">*</span><span class="text-success"> (Suggestion - Title + Description + Search Key) </span></div>
+                                    <div>{{ __('Product Description') }}<span class="text-danger">*</span><span class="text-success"> (Suggestion - Title + Description + Search Key) </span>
+                                    <span class="ms-2">
+                                        @if(isset($reference))
+                                            @if(!$isDescMatch)
+                                                ✅
+                                            @else
+                                                ❌
+                                            @endif
+                                        @endif
+                                    </span>
+                                </div>
                                     <div class="d-flex">
                                         <a href='{{ $siteSetting->listing_button_1_link }}' target='_blank'>{{ $siteSetting->listing_button_1 }} | &nbsp;</a><a target='_blank' href="{{ $siteSetting->listing_button_2_link }}"> {{ $siteSetting->listing_button_2 }} | </a>
                                         <a href='https://www.commontools.org/tool/replace-new-lines-with-commas-40' target='_blank'>&nbsp;Line Remover</a>
@@ -78,6 +106,8 @@
                                 <label for="description" class="form-label d-flex justify-content-between text-danger" style="margin-top: -10px;">
                                     <div>{{ __('Do not use 3rd Party Links/Website Names') }}</div>
                                 </label>
+
+                                
 
                                 <!-- <label for="description" class="form-label d-flex justify-content-between">
                                     <div>{{ __('Product Description') }}<span class="text-danger">*</span><span class="text-danger"> ( Enter Detail Description without using 3rd party
@@ -116,14 +146,25 @@
                                 <input id="discount" name="discount" type="number" class="form-control" placeholder="Discount ( % )">
                                 <span class="error-message discount" style="color:red;"></span>
                             </div>
-
+                            @php
+                                $isPriceMatch = isset($reference) && $listing->selling_price == $reference->selling_price;
+                            @endphp
                             <div class="form-group col-md-4">
                                 <label for="selling_price" class="form-label d-flex justify-content-between">
-                                    <div>{{ __('Selling Price') }}<span class="text-danger">*</span></div>
+                                    <div>{{ __('Selling Price') }}<span class="text-danger">*</span>
+                                        <span class="ms-2">
+                                            @if(isset($reference))
+                                                @if(!$isPriceMatch)
+                                                    ✅
+                                                @else
+                                                    ❌
+                                                @endif
+                                            @endif
+                                        </span>
+                                    </div>
                                     <div>
                                         <a href='{{ $siteSetting->calc_link }}' target='_blank'>Calculator</a>
                                         <!--<a target='_blank' href="https://docs.google.com/spreadsheets/d/1uSqo6RhsLHaVcVrkEjO_SmOWiXqWBC-aV1LvsowgsL0/"> Disc. Info.</a>-->
-
                                     </div>
                                 </label>
                                 <input id="selling_price" type="number" class="form-control @error('selling_price') is-invalid @enderror" name="selling_price" value="{{ old('selling_price') ?? $listing->selling_price }}" autocomplete="selling_price" autofocus placeholder="Selling Price">
@@ -571,9 +612,19 @@
                                         </span>
                                         @enderror
                                     </div>
-
+                                    @php
+                                        $isImageURLMatch = isset($reference) && $listing->base_url == json_decode($listing->images)[0];
+                                    @endphp
                                     <div class="form-group col-md-4">
-                                        <label for="url" class="form-label">{{ __('Main Image URL') }}</label>
+                                        <label for="url" class="form-label">{{ __('Main Image URL') }}
+                                            @if(isset($reference))
+                                                @if(!$isImageURLMatch)
+                                                    ✅
+                                                @else
+                                                    ❌
+                                                @endif
+                                            @endif
+                                        </label>
                                         <input id="base_url" type="text" value="{{ (isset($listing->images) && gettype(json_decode($listing->images)) == 'array') ? json_decode($listing->images)[0] : $listing->images }}" class="form-control @error('images') is-invalid @enderror" name="images[]" autocomplete="images" autofocus placeholder="Base URL">
                                         <span class="error-message images" style="color:red;"></span>
 

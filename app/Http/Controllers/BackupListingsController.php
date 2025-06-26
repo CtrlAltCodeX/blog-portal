@@ -65,7 +65,17 @@ class BackupListingsController extends Controller
             'Binding Type',
             'Insta Mojo URL',
             'Base URL',
-            'URL'
+            'URL',
+            'Isbn 10',
+            'Isbn 13',
+            'Publish year',
+            'Weight',
+            'Reading age',
+            'Country origin',
+            'Genre',
+            'Manufacturer',
+            'Importer',
+            'Packer'
         ];
 
         array_unshift($getAllListings, $mainColums);

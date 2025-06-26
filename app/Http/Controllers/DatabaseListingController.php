@@ -392,7 +392,6 @@ class DatabaseListingController extends Controller
             ->delete();
 
         if ($listing->delete()) {
-
             if (request()->edit) {
                 $this->updateTheCount('Edited', 'delete_count');
             } else {
@@ -450,6 +449,26 @@ class DatabaseListingController extends Controller
                 }
             }
         } else if (request()->publish == 6) {
+            $listings = Listing::whereIn('id', request()->ids)->get();
+
+            $status = request()->formData[0]['value'];
+
+            foreach ($listings as $listing) {
+                $userCount = UserListingCount::where('user_id', $listing->created_by)
+                    ->whereDate('created_at', $listing->created_at)
+                    ->first();
+
+                if ($status == 6 && !$userCount) {
+                    UserListingCount::create([
+                        'user_id' => $listing->created_by,
+                        'delete_count' => 1,
+                    ]);
+                } else if ($status == 6 && $userCount) {
+                    $userCount->update([
+                        'delete_count' => ++$userCount->delete_count,
+                    ]);
+                }
+            }
 
             Listing::whereIn('id', request()->ids)->delete();
             UserListingInfo::whereIn('listings_id', request()->ids)->delete();
@@ -462,7 +481,7 @@ class DatabaseListingController extends Controller
 
             foreach ($listings as $listing) {
                 $userCount = UserListingCount::where('user_id', $listing->created_by)
-                    ->whereDate('date', $listing->created_at)
+                    ->where('created_at', $listing->created_at)
                     ->first();
 
                 if ($status == 2 && !$userCount) {
@@ -474,12 +493,6 @@ class DatabaseListingController extends Controller
                 } else if ($status == 2 && $userCount) {
                     $userCount->update([
                         'reject_count' => ++$userCount->reject_count,
-                    ]);
-                }
-
-                if ($status == 0 && $userCount) {
-                    $userCount->update([
-                        'reject_count' => --$userCount->reject_count,
                     ]);
                 }
             }
@@ -564,6 +577,7 @@ class DatabaseListingController extends Controller
     public function editPublish($id)
     {
         $listing = Listing::find($id);
+        $reference = BackupListing::where('product_id', $listing->product_id)->first();
 
         $siteSetting = SiteSetting::first();
 
@@ -826,6 +840,7 @@ class DatabaseListingController extends Controller
      */
     public function publshInDB()
     {
+
         $allInfo = [
             'product_id' => trim(request()->database),
             'title' => trim(request()->title),

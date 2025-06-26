@@ -95,7 +95,7 @@
                                     @endphp
                                     
                                     @foreach($filesByDate as $file)
-                                    @if($file->getFilename() == 'facebook-file.csv' || $file->getFilename() == 'merchant-file.xlsx' || str_contains($file->getFilename(), 'backup-file')) @continue; @endif
+                                    @if($file->getFilename() == 'facebook-file.csv' || $file->getFilename() == 'merchant-file.tsv' || str_contains($file->getFilename(), 'backup-file')) @continue; @endif
                                     <a target="_blank" href='{{url("/")}}/storage/{{ $file->getFilename() }}'>
                                         @if(str_contains($file->getFilename(), 'merchant-file'))
                                         <i class="fa fa-google" style="font-size:24px"></i>
