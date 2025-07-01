@@ -22,7 +22,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                 </svg>
             </div>
             <ul class="side-menu">
-                
+
                 <li class="sub-category">
                     <h3>{{ __('Main') }}</h3>
                 </li>
@@ -52,21 +52,21 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         @can('Product Listing > AI Chat Bots')
                         <li><a href="{{ route('ai.description') }}" class="slide-item {{ request()->is('get/ai/description') ? 'active' : '' }}">{{ __('AI Chat Bots') }}</a></li>
                         @endcan
-                        
+
                         @can('Listing -> Search Listing')
                         <li><a href="{{ route('listing.search') }}" class="slide-item {{ (request()->is('admin/search')) ? 'active' : '' }}">{{ __('Search Listing ( M/S )') }}</a></li>
                         @endcan
-                        
+
                         @can('Product Listing > Bulk Listing Upload')
                         <li><a href="{{ route('upload-file.options') }}" class="slide-item {{ (request()->is('admin/upload-file')) ? 'active' : '' }}">{{ __('Bulk Listing Upload') }}</a></li>
                         @endcan
-                        
+
                         @can('Product Listing > Bulk Listing Review (Edit)')
                         <li><a href="{{ route('view.upload', ['type' => 1]) }}" class="slide-item {{ (request()->is('admin/upload-file')) ? 'active' : '' }}">{{ __('Bulk Listing Review') }}</a></li>
                         @endcan
-                        
+
                         <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
-                        
+
                         @can('Listing Create (M/S)')
                         <li><a href="{{ route('listing.create') }}" class="slide-item {{ (request()->is('admin/images/*')) ? 'active' : '' }}">{{ __('Create New Listing ( M/S )') }}</a></li>
                         @endcan
@@ -176,7 +176,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                 @endif
 
                 @if(auth()->user()->can('Settings (Main Menu)'))
-                <li class="slide {{ (request()->is('admin/settings/*') || request()->is('admin/settings') || request()->is('admin/backup/emails') || request()->is('admin/backup/logs')) ? 'is-expanded' : '' }}">
+                <li class="slide {{ (request()->is('admin/settings/*') || request()->is('admin/settings') || request()->is('admin/backup/emails') || request()->is('admin/backup/logs') || request()->is('admin/developers*')) ? 'is-expanded' : '' }}">
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fa fa-gear"></i><span class="side-menu__label">{{ __('Settings') }}</span><i class="angle fe fe-chevron-right"></i></a>
                     <ul class="slide-menu">
                         <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
@@ -184,7 +184,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         @can('Settings -> Site Access')
                         <li><a href="{{ route('settings.site') }}" class="slide-item {{ request()->is('admin/settings/site') ? 'active' : '' }}">{{ __('Site Settings') }}</a></li>
                         @endcan
-                        
+
                         @can('Settings -> Site Access')
                         <li><a href="{{ route('settings.policies') }}" class="slide-item {{ request()->is('admin/settings/policies/term') ? 'active' : '' }}">{{ __('Policies Pages') }}</a></li>
                         @endcan
@@ -204,6 +204,10 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         @can('Settings -> Configure Blog')
                         <li><a href="{{ route('settings.blog') }}" class="slide-item {{ request()->is('admin/settings/blog') ? 'active' : '' }}">{{ __('Configure API') }}</a></li>
                         @endcan
+
+                        {{-- @can('Settings -> Configure Blog') --}}
+                        <li><a href="{{ route('developers.index', ['users' => 50]) }}" class="slide-item {{ request()->is('admin/developers*') ? 'active' : '' }}">{{ __('Developer API Accounts') }}</a></li>
+                        {{-- @endcan --}}
                     </ul>
                 </li>
                 @endif

@@ -22,6 +22,7 @@ use App\Http\Controllers\PublicationController;
 use App\Http\Controllers\ChatGptController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\GraphicalDashboardController;
+use App\Http\Controllers\DeveloperController;
 
 Illuminate\Support\Facades\Auth::routes();
 /*
@@ -74,7 +75,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         ->name('get.policies');
 
     /**
-     * Profile 
+     * Profile
      */
     Route::group(['prefix' => 'profile'], function () {
         Route::get('', [ProfileController::class, 'edit'])
@@ -115,7 +116,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
      */
 
     /**
-     * Image related 
+     * Image related
      */
     Route::group(['prefix' => 'images'], function () {
         Route::get('single/create', [ImageMakerController::class, 'singleImage'])->name('image.single.create');
@@ -270,7 +271,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         ->name('review_inventory_export');
 
     /**
-     * Direct Blogger End 
+     * Direct Blogger End
      */
 
     /**
@@ -308,6 +309,16 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
      * Database END
      */
 
+    /** Developers Functionalities */
+    Route::prefix('developers')->name('developers.')->group(function () {
+        Route::get('/', [DeveloperController::class, 'index'])->name('index');
+        Route::get('/create', [DeveloperController::class, 'create'])->name('create');
+        Route::post('/store', [DeveloperController::class, 'store'])->name('store');
+        Route::get('{user}/edit', [DeveloperController::class, 'edit'])->name('edit');
+        Route::put('{user}/update', [DeveloperController::class, 'update'])->name('update');
+        Route::get('{user}/api-key-gen', [DeveloperController::class, 'keyRegenerate'])->name('api-key-gen');
+        Route::delete('{user}/delete', [DeveloperController::class, 'destroy'])->name('destroy');
+    });
     /**
      * User Functionalities
      */
