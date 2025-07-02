@@ -58,18 +58,8 @@
                                         {{ __('Product Title') }}
                                         <span class="text-danger">*</span>
                                         <span class="text-success">(Product Name | Author | Edition | Publication ( Medium )) </span>
-                                        <span class="ms-2">
-                                            @if(isset($reference))
-                                                @if(!$isTitleMatch)
-                                                    ✅
-                                                @else
-                                                    ❌
-                                                @endif
-                                            @endif
-                                        </span>
                                     </label>
                                     <span id="charCount">0/160</span>
-                                    
                                 </div>
 
                                 <input minlength="75" maxlength="160" id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') ?? $listing->title }}" autocomplete="title" autofocus placeholder="title">
@@ -88,15 +78,6 @@
                             <div class="form-group">
                                 <label for="description" class="form-label d-flex justify-content-between">
                                     <div>{{ __('Product Description') }}<span class="text-danger">*</span><span class="text-success"> (Suggestion - Title + Description + Search Key) </span>
-                                    <span class="ms-2">
-                                        @if(isset($reference))
-                                            @if(!$isDescMatch)
-                                                ✅
-                                            @else
-                                                ❌
-                                            @endif
-                                        @endif
-                                    </span>
                                 </div>
                                     <div class="d-flex">
                                         <a href='{{ $siteSetting->listing_button_1_link }}' target='_blank'>{{ $siteSetting->listing_button_1 }} | &nbsp;</a><a target='_blank' href="{{ $siteSetting->listing_button_2_link }}"> {{ $siteSetting->listing_button_2 }} | </a>
@@ -152,15 +133,6 @@
                             <div class="form-group col-md-4">
                                 <label for="selling_price" class="form-label d-flex justify-content-between">
                                     <div>{{ __('Selling Price') }}<span class="text-danger">*</span>
-                                        <span class="ms-2">
-                                            @if(isset($reference))
-                                                @if(!$isPriceMatch)
-                                                    ✅
-                                                @else
-                                                    ❌
-                                                @endif
-                                            @endif
-                                        </span>
                                     </div>
                                     <div>
                                         <a href='{{ $siteSetting->calc_link }}' target='_blank'>Calculator</a>
@@ -178,43 +150,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!--<div class="card">-->
-                <!--    <div class="card-body" style="background-color: antiquewhite;">-->
-                <!--        <h4>PRICE CALCULATION</h4>-->
-                <!--        <div class="row">-->
-                <!--            <div class="form-group col-md-4">-->
-                <!--                <label for="pub_name" class="form-label">{{ __('Publication') }}</label>-->
-                <!--                <select class="genre form-control" name="pub_name" id="pub_name">-->
-                <!--                    <option value="">--Publication--</option>-->
-                <!--                    @foreach($publications as $pub)-->
-                <!--                    <option value="{{ $pub->id }}">{{ $pub->pub_name }}</option>-->
-                <!--                    @endforeach-->
-                <!--                </select>-->
-
-
-                <!--            </div>-->
-
-                <!--            <div class="form-group col-md-4">-->
-                <!--                <label for="book_name" class="form-label">{{ __('Book Type') }}</label>-->
-                <!--                <select class="form-control" name="book_name" id="book_name">-->
-                <!--                    <option value="">-- Select Book --</option>-->
-                <!--                </select>-->
-                <!--            </div>-->
-
-
-                <!--            <div class="form-group col-md-4">-->
-                <!--                <label class="form-label">{{ __('Selling Prices') }}</label>-->
-                <!--                <div class="selling-prices">-->
-                <!--                    <strong>Min Selling Price:</strong> <span id="selling_price1">--</span> <br>-->
-                <!--                    <strong>Max Selling Price:</strong> <span id="selling_price2">--</span>-->
-                <!--                </div>-->
-                <!--            </div>-->
-
-
-                <!--        </div>-->
-                <!--    </div>-->
-                <!--</div>-->
                 
                 @include('price-calculator')
 
@@ -617,13 +552,6 @@
                                     @endphp
                                     <div class="form-group col-md-4">
                                         <label for="url" class="form-label">{{ __('Main Image URL') }}
-                                            @if(isset($reference))
-                                                @if(!$isImageURLMatch)
-                                                    ✅
-                                                @else
-                                                    ❌
-                                                @endif
-                                            @endif
                                         </label>
                                         <input id="base_url" type="text" value="{{ (isset($listing->images) && gettype(json_decode($listing->images)) == 'array') ? json_decode($listing->images)[0] : $listing->images }}" class="form-control @error('images') is-invalid @enderror" name="images[]" autocomplete="images" autofocus placeholder="Base URL">
                                         <span class="error-message images" style="color:red;"></span>

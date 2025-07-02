@@ -37,5 +37,6 @@ class BackupListing extends Model
         'manufacturer',
         'importer',
         'packer',
+        'last_updated'
     ];
 }

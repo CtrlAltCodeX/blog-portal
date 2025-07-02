@@ -125,6 +125,9 @@ class BackupListing extends Command
             $allProducts = app('App\Services\GoogleService')->backupToDatabse($paginate);
 
             foreach ($allProducts['paginator'] as $key => $products) {
+                $updatedDate = ((array)($products->updated))['$t'];
+                $datetimeString = "2025-06-29T20:51:47.365+05:30";
+                $date = \Carbon\Carbon::parse($datetimeString)->toDateString();
                 $images = [];
                 $doc = new \DOMDocument();
                 if (((array)($products->content))['$t']) {
@@ -192,72 +195,61 @@ class BackupListing extends Command
                 }
 
                 for ($i = 0; $i < $td->length; $i++) {
-                    if ($td->item($i)->getAttribute('itemprop') == 'sku') {
-                        $sku = trim($td->item($i)->textContent);
-                    }
+                    $itemprop = $td->item($i)->getAttribute('itemprop');
+                    $value = trim($td->item($i)->textContent);
 
-                    if ($td->item($i)->getAttribute('itemprop') == 'color') {
-                        $publication = trim($td->item($i)->textContent);
-                    }
-
-                    if ($td->item($i)->getAttribute('itemprop') == 'isbn10') {
-                        $isbn10 = trim($td->item($i)->textContent);
-                    }
-
-                    if ($td->item($i)->getAttribute('itemprop') == 'isbn13') {
-                        $isbn13 = trim($td->item($i)->textContent);
-                    }
-
-                    if ($td->item($i)->getAttribute('itemprop') == 'publishyear') {
-                        $publishyear = trim($td->item($i)->textContent);
-                    }
-
-                    if ($td->item($i)->getAttribute('itemprop') == 'weight') {
-                        $weight = trim($td->item($i)->textContent);
-                    }
-
-                    if ($td->item($i)->getAttribute('itemprop') == 'age') {
-                        $age = trim($td->item($i)->textContent);
-                    }
-
-                    if ($td->item($i)->getAttribute('itemprop') == 'origin') {
-                        $origin = trim($td->item($i)->textContent);
-                    }
-
-                    if ($td->item($i)->getAttribute('itemprop') == 'genre') {
-                        $genre = trim($td->item($i)->textContent);
-                    }
-
-                    if ($td->item($i)->getAttribute('itemprop') == 'manufacturer') {
-                        $manufacturer = trim($td->item($i)->textContent);
-                    }
-
-                    if ($td->item($i)->getAttribute('itemprop') == 'importer') {
-                        $importer = trim($td->item($i)->textContent);
-                    }
-
-                    if ($td->item($i)->getAttribute('itemprop') == 'packer') {
-                        $packer = trim($td->item($i)->textContent);
-                    }
-
-                    if ($td->item($i)->getAttribute('itemprop') == 'language') {
-                        $lang = trim($td->item($i)->textContent);
-                    }
-
-                    if ($td->item($i)->getAttribute('itemprop') == 'edition') {
-                        $edition = trim($td->item($i)->textContent);
-                    }
-
-                    if ($td->item($i)->getAttribute('itemprop') == 'author') {
-                        $author_name = trim($td->item($i)->textContent);
-                    }
-
-                    if ($td->item($i)->getAttribute('itemprop') == 'condition') {
-                        $condition = trim($td->item($i)->textContent);
-                    }
-
-                    if ($td->item($i)->getAttribute('itemprop') == 'binding') {
-                        $binding = trim($td->item($i)->textContent);
+                    switch ($itemprop) {
+                        case 'sku':
+                            $sku = $value;
+                            break;
+                        case 'color':
+                            $publication = $value;
+                            break;
+                        case 'isbn10':
+                            $isbn10 = $value;
+                            break;
+                        case 'isbn13':
+                            $isbn13 = $value;
+                            break;
+                        case 'publishyear':
+                            $publishyear = $value;
+                            break;
+                        case 'weight':
+                            $weight = $value;
+                            break;
+                        case 'age':
+                            $age = $value;
+                            break;
+                        case 'origin':
+                            $origin = $value;
+                            break;
+                        case 'genre':
+                            $genre = $value;
+                            break;
+                        case 'manufacturer':
+                            $manufacturer = $value;
+                            break;
+                        case 'importer':
+                            $importer = $value;
+                            break;
+                        case 'packer':
+                            $packer = $value;
+                            break;
+                        case 'language':
+                            $lang = $value;
+                            break;
+                        case 'edition':
+                            $edition = $value;
+                            break;
+                        case 'author':
+                            $author_name = $value;
+                            break;
+                        case 'condition':
+                            $condition = $value;
+                            break;
+                        case 'binding':
+                            $binding = $value;
+                            break;
                     }
                 }
 
@@ -316,6 +308,7 @@ class BackupListing extends Command
                     'manufacturer' => trim($manufacturer),
                     'importer' => trim($importer),
                     'packer' => trim($packer),
+                    'last_updated' => $date
                 ];
 
 
