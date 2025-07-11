@@ -123,9 +123,9 @@ class GoogleService
                 $currentDate = Carbon::now();
 
                 if (
-                    request()->query('updated_before') == 1
-                    || request()->query('updated_before') == 2
-                    || request()->query('updated_before') == "3Y"
+                    (auth()->user()->can('Review Inventory -> 1Y') && request()->query('updated_before') == 1)
+                    || (auth()->user()->can('Review Inventory -> 2Y') && request()->query('updated_before') == 2)
+                    || (auth()->user()->can('Review Inventory -> 3Y') && request()->query('updated_before') == "3Y")
                 ) {
                     $updateBefore = request()->query('updated_before');
                     if (request()->query('updated_before') == "3Y") $updateBefore = 3;

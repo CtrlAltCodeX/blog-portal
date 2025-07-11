@@ -108,7 +108,8 @@ class DatabaseSeeder extends Seeder
             'pincode' => '201009',
             'full_address' => 'Test address',
             'plain_password' => 'admin123',
-            "allow_sessions" => 0
+            "allow_sessions" => 0,
+            'otp_feature'   => 0
         ])->assignRole($adminRole)->assignRole($writerRole);
 
         $adminRole->givePermissionTo(Permission::all());

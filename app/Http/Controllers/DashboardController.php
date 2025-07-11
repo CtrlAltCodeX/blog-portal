@@ -44,7 +44,15 @@ class DashboardController extends Controller
 
         $userSessionsCount = UserSession::query();
 
-        $selectedUserId = Crypt::decryptString(request()->get('user_id'));
+        $selectedUserId = '';
+        if ((request()->get('user_id'))) {
+            $selectedUserId = Crypt::decryptString(request()->get('user_id'));
+            if (request()->user_id) {
+                $userSessionsCount->where('user_id', $selectedUserId);
+            } else {
+                $userSessionsCount->where("user_id", auth()->user()->id);
+            }
+        }
 
         if (request()->user_id) {
             $userSessionsCount->where('user_id', $selectedUserId);

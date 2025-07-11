@@ -305,6 +305,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::post('database/tmp', [DatabaseListingController::class, 'previewTemp'])
         ->name('database_temp');
+
+    Route::get('fields/changed/{id}', [DatabaseListingController::class, 'fieldsAreChanged'])
+        ->name('database.fields.changed');
     /**
      * Database END
      */

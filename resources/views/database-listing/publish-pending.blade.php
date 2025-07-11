@@ -57,7 +57,7 @@
                     <div class="d-flex align-items-center justify-content-between" style="grid-gap: 10px;">
 
                         <form action="" method="get" id='form' style="margin-left: 10px;" class="d-flex align-items-center justify-content-end">
-                            <div>
+                            <div class='d-flex'>
                                 <a href="{{ route('database-listing.index', ['status' => '', 'category' => 'Product', 'startIndex' => 1, 'user' => request()->user]) }}" class="btn btn-light position-relative me-2 mb-2 btn-sm"> All
                                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{$allCounts}}
                                         <span class="visually-hidden">unread messages</span>
@@ -96,6 +96,15 @@
                                 <option value="{{ $user->id }}" {{ request()->user == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
                                 @endforeach
                             </select>
+                            
+                            <select class="form-control w-25" id='age_filter' name='age_filter'>
+                                <option value="">All - Update Age</option>
+                                <option value=6_month {{ request()->age_filter == '6_month' ? 'selected' : '' }}>0 - 6 Months</option>
+                                <option value=1_year {{ request()->age_filter == '1_year' ? 'selected' : '' }}>6 Months - 1 Year</option>
+                                <option value=2_years {{ request()->age_filter == '2_years' ? 'selected' : '' }}>1 Year - 2 Year</option>
+                                <option value=3_years {{ request()->age_filter == '3_years' ? 'selected' : '' }}>2 Year - 3 Year</option>
+                                <option value=3_plus_years {{ request()->age_filter == '3_plus_years' ? 'selected' : '' }}>3 Year +</option>
+                            </select>
                             @endif
                         </form>
 
@@ -130,6 +139,9 @@
                                     <th><input type="checkbox" class="check-all" /></th>
                                     <!-- <th>{{ __('-') }}</th> -->
                                     <th>{{ __('Sl') }}</th>
+                                    @if (auth()->user()->hasRole('Super Admin') || auth()->user()->hasRole('Super Management'))
+                                    <th>{{ __('Update Age') }}</th>
+                                    @endif
                                     <th>{{ __('Status') }}</th>
                                     <th>{{ __('Status') }}</th>
                                     <th>{{ __('Stock') }}</th>
@@ -158,6 +170,9 @@
                                         @endif
                                     </td>
                                     <td>{{ ++$key }}</td>
+                                    @if (auth()->user()->hasRole('Super Admin') || auth()->user()->hasRole('Super Management'))
+                                    <td class='text-capitalize'>{{ $googlePost->last_updated_formatted??"-" }}</td>
+                                    @endif
                                     <td class="status">{{substr($googlePost->error, 0, 20)}}</td>
                                     <!-- @if($googlePost->error) <span data-bs-placement="top" data-bs-toggle="tooltip" title="{{$googlePost->error}}">Error</span> @else - @endif </td> -->
                                     <td>
@@ -182,7 +197,15 @@
                                         @else {{ 'In Stock' }}
                                         @endif
                                     </td>
-                                    <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $googlePost->images ? json_decode($googlePost->images)[0] : '' }}" alt="Product Image" /></td>
+                                    @php
+                                    if(isset($googlePost->images)) {
+                                    $image = json_decode($googlePost->images)[0];
+                                    } else {
+                                    $image = '/public/dummy.jpg';
+                                    }
+
+                                    @endphp
+                                    <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $image }}" alt="Product Image" /></td>
                                     <!--<td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="@if(isset($googlePost->images)) {{ $googlePost->images[0] }} @endif" alt="Product Image" /></td>-->
                                     <td><a href="{{ $googlePost->url ? $googlePost->url : '#' }}" target='_blank'>{{ $googlePost->product_id }}</a></td>
                                     <td>{{ $googlePost->title }}</td>
@@ -306,6 +329,10 @@
         });
 
         $("#user").change(function() {
+            $("#form").submit();
+        });
+        
+        $("#age_filter").change(function() {
             $("#form").submit();
         });
 

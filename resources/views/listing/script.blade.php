@@ -121,7 +121,7 @@
             if (!url.includes('https://www.instamojo.com/EXAM360/')) {
                 errorHandling('url', 'Please add instamojo link', false, this);
             } else {
-                errorHandling(fieldId, '', true, this);
+                errorHandling('url', '', true, this);
             }
         });
 
@@ -263,6 +263,7 @@
 
         $(".fields select.form-control").on('change', function() {
             calculateFields();
+            checkFieldsAreChanged();
         });
 
         $("textarea").on('input', function() {
@@ -271,6 +272,7 @@
 
         $("input").on('input', function() {
             calculateFields();
+            checkFieldsAreChanged();
         });
 
         $("#publication").on('input', function() {
@@ -310,7 +312,7 @@
         }
 
         function requiredFields(val, currentElement) {
-            var notRequiredFields = ['multipleImages[]', 'images', 'files', 'pub_name', 'book_name', 'discount']; // Add more fields as needed
+            var notRequiredFields = ['multipleImages[]', 'images', 'files', 'pub_name', 'book_name','discount']; // Add more fields as needed
 
             var fieldId = $(currentElement).attr('name');
             if (fieldId && !notRequiredFields.includes(fieldId) && !val) {
@@ -535,7 +537,7 @@
                 $status.html('<span style="color: white;">✖ Please enter a valid image URL.</span>');
             }
         }
-    })
+    // })
 
     $('#count').html("<strong>Label Selected : </strong>" + $('.select2').val().length);
 
@@ -543,20 +545,9 @@
         $('#count').html("<strong>Label Selected : </strong>" + $(this).val().length);
     });
 
-    function copyLink() {
-        // Get the text field
-        var copyText = document.getElementById("url");
+    
 
-        $("#copylink").html('Copied');
-
-        navigator.clipboard.writeText('https://www.instamojo.com/EXAM360/');
-
-        setTimeout(function() {
-            $('#copylink').html('Copy');
-        }, 500)
-    }
-
-    $(document).ready(function() {
+    // $(document).ready(function() {
         const publications = @json($publications);
         const $pubDropdown = $("#pub_name");
         const $bookDropdown = $("#book_name");
@@ -603,7 +594,7 @@
             // const locationDiscount = (locationDis / 100) * mrp;
             const locationDiscount = locationDis;
             const netDis = discount - locationDiscount;
-            const finalPrice = mrp - ((netDis * mrp) / 100);
+            const finalPrice = mrp - ((netDis*mrp)/100);
             // console.log("mrp", mrp)
             // console.log("finalPrice", finalPrice)
 
@@ -643,5 +634,47 @@
                     });
             }
         }
+        
+        function checkFieldsAreChanged()
+        {
+            @if(isset($listing->product_id))
+            $.ajax({
+                type: "GET",
+                url: "{{ route('database.fields.changed', $listing->product_id) }}",
+                data:{
+                    'title':$('#title').val(),
+                    'base_url': $('#base_url').val(),
+                    'selling_price': $('#selling_price').val()
+                },
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(result) {
+                    if (result[0].length != 3 && result[1]) {
+                        $('#update').attr('disabled', true);
+                    } else {
+                        $('#update').attr('disabled', false);
+                    }
+                },
+            });
+            @endif
+        }
+
+        @if(isset($listing->product_id))
+        checkFieldsAreChanged();
+        @endif
     });
+    
+    function copyLink() {
+        // Get the text field
+        var copyText = document.getElementById("url");
+
+        $("#copylink").html('Copied');
+
+        navigator.clipboard.writeText('https://www.instamojo.com/EXAM360/');
+
+        setTimeout(function() {
+            $('#copylink').html('Copy');
+        }, 500)
+    }
 </script>

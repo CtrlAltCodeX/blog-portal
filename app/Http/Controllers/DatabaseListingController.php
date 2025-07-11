@@ -521,10 +521,46 @@ class DatabaseListingController extends Controller
     public function getPublishPending(Request $request)
     {
         $googlePosts = Listing::with('created_by_user')
-            ->orderBy('created_at', 'desc')
-            // ->where('categories', 'LIKE', '%' . request()->category . '%')
-            ->whereNotNull('product_id')
-            ->where('is_bulk_upload', 0);
+            ->leftJoin('backup_listings', 'listings.product_id', '=', 'backup_listings.product_id')
+            ->orderBy('listings.created_at', 'desc')
+            ->whereNotNull('listings.product_id')
+            ->where('listings.is_bulk_upload', 0)
+            ->select(
+                'listings.*',
+                'backup_listings.last_updated as backup_last_updated'
+            );
+
+        if (request()->has('age_filter')) {
+            $filter = request()->age_filter;
+        
+            if ($filter === '6_month') {
+                $dateFrom = Carbon::now()->subMonths(6);
+                $googlePosts->whereBetween('backup_listings.last_updated', [$dateFrom, Carbon::now()]);
+            }
+        
+            if ($filter === '1_year') {
+                $dateFrom = Carbon::now()->subYear();
+                $dateTo = Carbon::now()->subMonths(6);
+                $googlePosts->whereBetween('backup_listings.last_updated', [$dateFrom, $dateTo]);
+            }
+        
+            if ($filter === '2_years') {
+                $dateFrom = Carbon::now()->subYears(2);
+                $dateTo = Carbon::now()->subYear();
+                $googlePosts->whereBetween('backup_listings.last_updated', [$dateFrom, $dateTo]);
+            }
+        
+            if ($filter === '3_years') {
+                $dateFrom = Carbon::now()->subYears(3);
+                $dateTo = Carbon::now()->subYears(2);
+                $googlePosts->whereBetween('backup_listings.last_updated', [$dateFrom, $dateTo]);
+            }
+        
+            if ($filter === '3_plus_years') {
+                $date = Carbon::now()->subYears(3);
+                $googlePosts->whereDate('backup_listings.last_updated', '<=', $date);
+            }
+        }
 
         $allCounts = Listing::whereNotNull('product_id')
             ->where('is_bulk_upload', 0);
@@ -563,6 +599,19 @@ class DatabaseListingController extends Controller
 
         $googlePosts = $googlePosts->paginate($request->paging);
 
+        $googlePosts->getCollection()->transform(function($item) {
+            if ($item->backup_last_updated) {
+                $item->last_updated_formatted = \Carbon\Carbon::parse($item->backup_last_updated)->diffForHumans([
+                    'parts' => 2, // Show up to 2 units (e.g., "1 year 3 months")
+                    'short' => false, // Use short units (e.g., "1y 3mo")
+                    'syntax' => \Carbon\CarbonInterface::DIFF_ABSOLUTE // Remove "ago"
+                ]);
+            } else {
+                $item->last_updated_formatted = null;
+            }
+            return $item;
+        });
+        
         $users = User::where('status', 1)->get();
 
         return view('database-listing.publish-pending', compact('users', 'allCounts', 'googlePosts', 'pendingCounts', 'rejectedCounts'));
@@ -577,7 +626,6 @@ class DatabaseListingController extends Controller
     public function editPublish($id)
     {
         $listing = Listing::find($id);
-        $reference = BackupListing::where('product_id', $listing->product_id)->first();
 
         $siteSetting = SiteSetting::first();
 
@@ -596,6 +644,31 @@ class DatabaseListingController extends Controller
         return view('database-listing.publish-edit', compact('listing', 'siteSetting', 'categories', 'publications'));
     }
 
+    public function fieldsAreChanged($productId)
+    {
+        $reference = BackupListing::where('product_id', $productId)
+            ->where('last_updated', '<=', Carbon::now()->subYear())
+            ->first();
+            
+        $changed = [];
+
+        if (!$reference) return [$changed, false];
+
+        if ($reference->title != request()->title) {
+            $changed[] = 'title';
+        }
+
+        if ($reference->selling_price != request()->selling_price) {
+            $changed[] = 'selling_price';
+        }
+
+        if ($reference->base_url != request()->base_url) {
+            $changed[] = 'base_url';
+        }
+
+        return [$changed, true];
+    }
+    
     /**
      * Edit Post in DB
      */

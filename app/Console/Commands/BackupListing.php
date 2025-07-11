@@ -126,8 +126,7 @@ class BackupListing extends Command
 
             foreach ($allProducts['paginator'] as $key => $products) {
                 $updatedDate = ((array)($products->updated))['$t'];
-                $datetimeString = "2025-06-29T20:51:47.365+05:30";
-                $date = \Carbon\Carbon::parse($datetimeString)->toDateString();
+                $date = \Carbon\Carbon::parse($updatedDate)->toDateString();
                 $images = [];
                 $doc = new \DOMDocument();
                 if (((array)($products->content))['$t']) {

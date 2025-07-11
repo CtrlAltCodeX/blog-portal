@@ -20,4 +20,4 @@ use App\Http\Controllers\Api\ListingController;
 // });
 
 
-Route::post('/listings', [ListingController::class, 'index']);
+Route::get('/listings', [ListingController::class, 'index']);

@@ -45,14 +45,27 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::orderBy('id', 'asc')->paginate(request()->users);
+        $users = User::whereDoesntHave('roles', function ($query) {
+            $query->where('name', 'Developer');
+        })
+        ->orderBy('id', 'asc')
+        ->paginate(request()->get('users', 10));
 
-        $allUser = User::count();
 
-        $active = User::where('status', 1)->count();
+        $allUser = User::whereDoesntHave('roles', function ($query) {
+            $query->where('name', 'Developer');
+        })->count();
 
-        $inactive = User::where('status', 0)->count();
+        $active = User::whereDoesntHave('roles', function ($query) {
+            $query->where('name', 'Developer');
+        })
+        ->where('status', 1)->count();
 
+        $inactive = User::whereDoesntHave('roles', function ($query) {
+            $query->where('name', 'Developer');
+        })
+        ->where('status', 0)->count();
+        
         return view('accounts.users.index', compact('users', 'allUser', 'active', 'inactive'));
     }
 

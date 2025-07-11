@@ -32,9 +32,9 @@ class ManualBackup implements ShouldQueue
             // Call the artisan command for database backup
             Artisan::call('backup:listing');
 
-            Log::info('Database backup completed successfully.');
+            \Log::info('Database backup completed successfully.');
         } catch (\Exception $e) {
-            Log::error('Database backup failed: ' . $e->getMessage());
+            \Log::error('Database backup failed: ' . $e->getMessage());
             // Optionally rethrow the exception to mark the job as failed
             throw $e;
         }

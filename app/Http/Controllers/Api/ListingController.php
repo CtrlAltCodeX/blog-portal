@@ -11,16 +11,24 @@ class ListingController extends Controller
 {
     public function index(Request $request)
     {
-        if($request->has('user_id')){
-            $user = User::find($request->input('user_id'));
-            if($user){
-                if($user->api_key != $request->input('api_key')){
-                    return response()->json(['error' => 'Unauthorized'], 401);
-                }
-            }else{
-                return response()->json(['error' => 'User not found'], 401);
-            }
+        // Validate required authentication fields
+        $userId = $request->input('user_id');
+        $apiKey = $request->input('api_key');
+    
+        if (!$userId || !$apiKey) {
+            return response()->json(['error' => 'user_id and api_key are required.'], 400);
         }
+    
+        $user = User::find($userId);
+    
+        if (!$user) {
+            return response()->json(['error' => 'User not found.'], 401);
+        }
+    
+        if ($user->api_key !== $apiKey) {
+            return response()->json(['error' => 'Unauthorized.'], 401);
+        }
+        
         $query = BackupListing::query();
 
         if ($request->has('product_id')) {
