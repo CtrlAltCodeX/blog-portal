@@ -41,11 +41,8 @@
                     <div class="card-body">
                         <span class="d-flex justify-content-center mb-4 alert-msg text-center align-items-center" style='grid-gap:5px;'><i class='fa fa-warning'></i><strong>Alert:</strong> Please refrain from creating duplicate listings repeatedly. Prior to creating any new listings, ensure to first check the product in 'Search Listing (M/S)'.</span>
                         <hr />
+@include('components.fetch-product')
 
-@include('components.fetch-product', [
-    'inputId' => 'asinInput',
-    'checkboxId' => 'asinCheck',
-])
 
                         <div id="progressBar" class="text-end"></div>
                         <div>
@@ -80,11 +77,7 @@
                                     <div>{{ __('Do not use 3rd Party Links/Website Names') }}</div>
                                 </label>
 
-                                <!-- <label for="description" class="form-label d-flex justify-content-between">
-                                    <div>{{ __('Product Description') }}<span class="text-danger">*</span><span class="text-danger"> ( Enter Detail Description without using 3rd party
-                                            link) </span></div><a target='_blank' href="https://chat.openai.com">ChatGPT</a>
-                                </label> -->
-
+                             
                                 <textarea type="text" class="form-control @error('description') is-invalid @enderror" name="description" autocomplete="description" autofocus placeholder="Description" rows="10" id='desc'>{{ old('description') }}</textarea>
                                 <span class="error-message desc" style="color:red;"></span>
 
@@ -142,57 +135,6 @@
                         </div>
                     </div>
                 </div>
-
-
-
-
-                <!-- weight and couriers -->
-
-                <!--<div class="card">-->
-                <!--    <div class="card-body" style="background-color: antiquewhite;">-->
-                <!--        <h4>PRICE CALCULATION</h4>-->
-                <!--        <div class="row">-->
-                <!--            <div class="form-group col-md-3">-->
-                <!--                <label for="pub_name" class="form-label">{{ __('Publication') }}</label>-->
-                <!--                <select class="genre form-control" name="pub_name" id="pub_name">-->
-                <!--                    <option value="">--Publication--</option>-->
-                <!--                    @foreach($publications as $pub)-->
-                <!--                    <option value="{{ $pub->id }}">{{ $pub->pub_name }}</option>-->
-                <!--                    @endforeach-->
-                <!--                </select>-->
-
-
-                <!--            </div>-->
-
-                <!--            <div class="form-group col-md-3">-->
-                <!--                <label for="book_name" class="form-label">{{ __('Book Type') }}</label>-->
-                <!--                <select class="form-control" name="book_name" id="book_name">-->
-                <!--                    <option value="">-- Select Book --</option>-->
-                <!--                </select>-->
-                <!--            </div>-->
-
-
-                <!--            <div class="form-group col-md-3">-->
-                <!--                <label class="form-label">{{ __('Selling Prices') }}</label>-->
-                <!--                <div class="selling-prices">-->
-                <!--                    <strong>Min Selling Price:</strong> <span id="selling_price1">--</span> <br>-->
-                <!--                    <strong>Max Selling Price:</strong> <span id="selling_price2">--</span>-->
-                <!--                </div>-->
-                <!--            </div>-->
-                            
-                <!--            <div class="form-group col-md-3">-->
-                <!--                <label class="form-label">{{ __('Selling Prices') }}</label>-->
-                <!--                <div class="selling-prices">-->
-                <!--                    <strong>Min Selling Price:</strong> <span id="selling_price_minus1">--</span> <br>-->
-                <!--                    <strong>Max Selling Price:</strong> <span id="selling_price_minus2">--</span>-->
-                <!--                </div>-->
-                <!--            </div>-->
-
-                           
-                <!--        </div>-->
-                <!--    </div>-->
-                <!--</div>-->
-
 
                 @include('price-calculator')
 
@@ -290,7 +232,7 @@
                                                     {{ __('ISBN 10') }}
                                                 </label>
                                             </div>
-                                            <input type="text" class="form-control " name="isbn_10" value="{{ old('isbn_10') }}" autofocus placeholder="ISBN 10">
+                                            <input type="text" class="form-control " name="isbn_10" id="isbn_10" value="{{ old('isbn_10') }}" autofocus placeholder="ISBN 10">
                                             <span class="error-message isbn_10" style="color:red;"></span>
 
                                             @error('isbn_10')
@@ -415,7 +357,7 @@
                                     <div class="col-md-4">
                                         <div class="">
                                             <label for="weight" class="form-label d-flex justify-content-between">{{ __('Weight (grams)') }}</label>
-                                            <input type="number" class="form-control @error('weight') is-invalid @enderror" name="weight" value="{{ old('weight') }}" autocomplete="weight" autofocus placeholder="Weight (g)">
+                                            <input type="number" class="form-control @error('weight') is-invalid @enderror" name="weight" id="weight" value="{{ old('weight') }}" autocomplete="weight" autofocus placeholder="Weight (g)">
                                             <span class="error-message weight" style="color:red;"></span>
 
                                             @error('weight')
@@ -429,9 +371,8 @@
                                     <div class="col-md-4">
                                         <div class="">
                                             <label for="reading_age" class="form-label d-flex justify-content-between">{{ __('Reading Age') }}</label>
-                                            <!-- <input style="background-color: #e9f85c;" id="reading_age" type="text" class="form-control @error('reading_age') is-invalid @enderror" name="reading_age" value="{{ old('reading_age')??'Above 10 Years' }}" autocomplete="reading_age" autofocus placeholder="Reading Age">
-                                            <span class="error-message reading_age" style="color:red;"></span> -->
-                                            <select class="form-control @error('reading_age') is-invalid @enderror" name="reading_age" value="{{ old('reading_age') }}">
+
+                                            <select class="form-control @error('reading_age') is-invalid @enderror" name="reading_age" id="reading_age" value="{{ old('reading_age') }}">
                                                 <option value="">--Select--</option>
                                                 <option value="Above 18 Years">Above 18 Years</option>
                                                 <option value="Above 10 Years">Above 10 Years</option>
@@ -661,7 +602,6 @@
 <script src="{{ asset('assets/plugins/fancyuploder/jquery.ui.widget.js') }}"></script>
 <script src="{{ asset('assets/plugins/fancyuploder/jquery.fileupload.js') }}"></script>
 <script src="{{ asset('assets/plugins/fancyuploder/jquery.fancy-fileupload.js') }}"></script>
-<script src="{{ asset('js/asin-fetcher.js') }}"></script>
 
 @include('listing.script')
 

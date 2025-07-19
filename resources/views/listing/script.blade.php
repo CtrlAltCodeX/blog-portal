@@ -677,4 +677,204 @@
             $('#copylink').html('Copy');
         }, 500)
     }
+window.AsinFetcher = {
+    fetchedResult: null,
+
+    fetchAndStore: function () {
+        const asinInput = document.getElementById('asinInput');
+        if (!asinInput || !asinInput.value.trim()) {
+            alert('❌ Please enter ASIN number(s).');
+            return;
+        }
+
+        const asins = asinInput.value.trim().split(',').map(a => a.trim()).filter(a => a.length > 0);
+
+        const token = "M9kd_M7-JKGWACXbVKZICxl-YA";
+        const url = "https://api.exam360shop.com/api/asin-scraper";
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ asins: asins })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('❌ Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const result = data[0] || {};
+            window.AsinFetcher.fetchedResult = result;
+
+            document.getElementById('downloadBtn').disabled = false;
+            document.getElementById('download2Btn').disabled = false;
+            document.getElementById('autoFillBtn').disabled = false;
+
+            console.log("data getting", data);
+            alert('✅ Product fetched successfully.');
+        })
+        .catch(error => {
+            alert('❌ Error: ' + error.message);
+            console.error(error);
+        });
+    },
+
+    downloadImageWithWhiteBG: function () {
+  const result = window.AsinFetcher.fetchedResult || {};
+  const imgUrl = result["Image Link"] || '';
+
+  if (imgUrl && imgUrl.trim() !== '') {
+    const img = new Image();
+    img.crossOrigin = "anonymous"; // enable CORS if possible
+    img.onload = function () {
+      // ✅ Canvas same size as image
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+
+      const ctx = canvas.getContext('2d');
+
+      // ✅ Fill white background
+      ctx.fillStyle = "#FFFFFF";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // ✅ Draw the image over white
+      ctx.drawImage(img, 0, 0);
+
+      // ✅ Export as blob and download
+      canvas.toBlob(function (blob) {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'product-image-white-bg.jpg';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        alert('✅ White BG Image downloaded.');
+      }, 'image/jpeg', 1);
+    };
+
+    img.onerror = function () {
+      alert('❌ Failed to load image.');
+    };
+
+    img.src = imgUrl;
+
+  } else {
+    alert('❌ Image Link not found.');
+  }
+},
+ autoFill: function () {
+    const result = window.AsinFetcher.fetchedResult || {};
+    const clean = (val) => {
+      if (!val) return '';
+      const trimmed = val.trim().toLowerCase();
+      if (trimmed === 'n/a' || trimmed === 'unknown') return '';
+      return val;
+    };
+
+    const titleInput = document.getElementById('title');
+    if (titleInput) titleInput.value = clean(result.Title);
+    
+const descInput = document.getElementById('desc');
+if (descInput) {
+  descInput.value = clean(result.Discription);
+  console.log("Description filled:", descInput.value);
+}
+
+    const publisherInput = document.getElementById('publication');
+    if (publisherInput) publisherInput.value = clean(result.Publisher);
+
+    const mrpInput = document.getElementById('mrp');
+    if (mrpInput) mrpInput.value = clean(result.MRP);
+
+
+   const author_nameInput = document.getElementById('author_name');
+    if (author_nameInput) author_nameInput.value = clean(result.Author);
+
+       const editionInput = document.getElementById('edition');
+    if (editionInput) editionInput.value = clean(result.Edition);
+
+
+       const isbn_10 = document.getElementById('isbn_10');
+    if (isbn_10) isbn_10.value =clean(result["ISBN-10"]);
+
+    
+       const isbn_13 = document.getElementById('isbn_13');
+    if (isbn_13) isbn_13.value = clean(result["ISBN-13"]);
+        
+       const language = document.getElementById('language');
+    if (language) language.value = clean(result.Language);
+
+       const pages = document.getElementById('pages');
+    if (pages) pages.value = clean(result["No of Pages"]);
+
+    
+       const reading_age = document.getElementById('reading_age');
+    if (reading_age) reading_age.value = clean(result.Reading_age);
+
+        
+       const sku = document.getElementById('sku');
+    if (sku) sku.value = clean(result.SKU);
+
+         
+       const selling_price = document.getElementById('selling_price');
+    if (selling_price) selling_price.value = clean(result["Selling Price"]);
+
+           const weight = document.getElementById('weight');
+    if (weight) weight.value = clean(result.Weight);
+
+      const country_origin = document.getElementById('country_origin');
+    if (country_origin) country_origin.value = clean(result.country_of_origin);
+
+       const importer = document.getElementById('importer');
+    if (importer) importer.value = clean(result.importer);
+
+       const packer = document.getElementById('packer');
+    if (packer) packer.value = clean(result.packer);
+    alert('✅ Auto-Filled.');
+  },
+downloadImage: function () {
+  const result = window.AsinFetcher.fetchedResult || {};
+  const imgUrl = result["Image Link"] || '';
+
+  if (imgUrl && imgUrl.trim() !== '') {
+    fetch(imgUrl, {
+      mode: 'cors'  // Allow cross-origin
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok.');
+      }
+      return response.blob();
+    })
+    .then(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'product-image.jpg';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      alert('✅ Image downloaded successfully.');
+    })
+    .catch(err => {
+      alert('❌ Failed to download image: ' + err.message);
+      console.error(err);
+    });
+  } else {
+    alert('❌ Image Link not found.');
+  }
+}
+
+};
+
+
+
 </script>
