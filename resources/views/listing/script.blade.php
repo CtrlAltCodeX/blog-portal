@@ -751,6 +751,12 @@ autoFill: function () {
     return (trimmed === 'n/a' || trimmed === 'unknown') ? '' : val;
   };
 
+  
+      if (result.Discription && !result.Description) {
+    result.Description = result.Discription;
+  }
+
+
   const fields = {
     title: 'Title',
     desc: 'Description',
@@ -781,11 +787,9 @@ $.each(fields, (id, key) => {
         break;
       case 'TEXTAREA':
         if (id === 'desc') {
-          // Agar Summernote WALA structure mila hai toh editable div mein daalo:
           if ($el.siblings('.note-editor').length) {
             $el.siblings('.note-editor').find('.note-editable').html(clean(result[key]));
           } else {
-            // Warna normal textarea treat karo:
             $el.val(clean(result[key]));
           }
         } else {
