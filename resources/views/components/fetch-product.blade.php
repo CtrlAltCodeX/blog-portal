@@ -34,7 +34,7 @@
 
     <button
       type="button"
-      class="btn custom-btn btn-mahrun"
+      class="dowloand-btn btn-mahrun"
       id="downloadBtn"
       onclick="AsinFetcher.downloadImage()"
       disabled
@@ -44,7 +44,7 @@
 
     <button
       type="button"
-      class="btn custom-btn btn-secondary"
+      class=" dowloand-btn btn-secondary"
       id="download2Btn"
       onclick="AsinFetcher.downloadImageWithWhiteBG()"
       disabled
@@ -54,7 +54,7 @@
 
     <button
       type="button"
-      class="btn custom-btn btn-red"
+      class=" dowloand-btn btn-red"
       id="autoFillBtn"
       onclick="AsinFetcher.autoFill()"
       disabled
@@ -74,6 +74,14 @@
     color: #fff;
   }
 
+    .dowloand-btn {
+    min-width: 120px;  
+    min-height: 44px;  
+    padding: 10px 20px;
+    font-weight: 600;
+    border-radius: 4px;
+    color: #fff;
+  }
   .btn-black {
     background-color: #000;
     border: none;
@@ -94,8 +102,5 @@
     border: none;
   }
 
-  .custom-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
+
 </style>

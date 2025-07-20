@@ -64,7 +64,7 @@
                                 </span>
                                 @enderror
                             </div>
-
+   
                             <div class="form-group">
                                 <label for="description" class="form-label d-flex justify-content-between">
                                     <div>{{ __('Product Description') }}<span class="text-danger">*</span><span class="text-success"> (Suggestion - Title + Description + Search Key) </span></div>
