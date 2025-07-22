@@ -26,63 +26,60 @@ class WatermarkController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            // 'title' => 'required|string|max:255',
-            'file' => 'required|file|mimes:jpeg,png,jpg',
+            'file' => 'nullable|file|mimes:jpeg,png,jpg',
+            'image_url' => 'nullable|url',
         ]);
 
-        $siteSettings = SiteSetting::first();
+        if (!$request->hasFile('file') && !$request->filled('image_url')) {
+            return response()->json(['error' => 'Please provide an image file or image URL.'], 422);
+        }
 
-        $file = $request->file('file');
+        $siteSettings = SiteSetting::first();
         $files = [];
         $lastNumber = 0;
-        
+
         foreach (File::glob(storage_path('app/public/uploads') . '/*') as $key => $path) {
             $filepath = explode('/', $path);
-            $name = (int) explode('.', $filepath[8])[0];
-            
+            $name = (int) explode('.', end($filepath))[0];
+
             if ($name > $lastNumber) {
                 $lastNumber = $name;
             }
-            
-            $files[$key]['name'] = $filepath[8];
+
+            $files[$key]['name'] = end($filepath);
             $files[$key]['number'] = $name;
         }
-        
 
         $countIncrease = $lastNumber + 1;
-        
-        $filename = $countIncrease . "." . $file->getClientOriginalExtension();
-        // $filename = time() . '_' . $file->getClientOriginalName();
-        $file->storeAs('public/uploads/', $filename);
-        
+        $filename = $countIncrease . ".jpg";
+        $localPath = storage_path('app/public/uploads/' . $filename);
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $file->storeAs('public/uploads', $filename);
+        } else if ($request->filled('image_url')) {
+            $imageContents = file_get_contents($request->image_url);
+            file_put_contents($localPath, $imageContents);
+        }
+
+        // Resize and create base image
         $background = (new ImageManager())->canvas(555, 555, '#ffffff');
+        $background->insert(Image::make($localPath)->resize(390, 520), 'center');
 
-        $background->insert(Image::make(storage_path('app/public/uploads/' . $filename))->resize(390, 520), 'center');
-
-        // $image = Image::make(storage_path('app/public/uploads/' . $filename))->fit(555, 555);
-        
-        if (request()->with_watermark) {
+        // Watermark logic
+        if ($request->with_watermark) {
             $fontSize = min($background->width(), $background->height()) / 20;
-    
-            // Calculate center coordinates of the image
             $centerX = $background->width() / 2;
             $centerY = $background->height() / 2;
-    
-            // Calculate watermark position based on the image size
             $watermarkText = $siteSettings->watermark_text ?? 'Exam 360';
-            $watermarkLength = strlen($watermarkText);
-            $numPoints = max($watermarkLength, 1); // Ensure we have at least as many points as characters in the watermark text
-    
+            $numPoints = max(strlen($watermarkText), 1);
             $radius = min($background->width(), $background->height()) / 2;
-    
+
             for ($i = 1; $i < $numPoints; $i++) {
                 $angle = $i * (360 / $numPoints) + 55;
-    
-                // Calculate the position for the watermark text on the circle
                 $x = $centerX + $radius * cos(deg2rad($angle));
                 $y = $centerY + $radius * sin(deg2rad($angle));
-    
-                // Add watermark text
+
                 $background->text($watermarkText, $x, $y, function ($font) use ($fontSize) {
                     $font->file(public_path('arial.ttf'));
                     $font->color([128, 128, 128, 0.5]);
@@ -92,8 +89,7 @@ class WatermarkController extends Controller
                     $font->valign('center');
                 });
             }
-    
-            // Add watermark text at the center of the image
+
             $background->text($watermarkText, $centerX, $centerY, function ($font) use ($fontSize) {
                 $font->file(public_path('arial.ttf'));
                 $font->color([128, 128, 128, 0.5]);
@@ -104,15 +100,25 @@ class WatermarkController extends Controller
             });
         }
 
-        $background->save(storage_path('app/public/uploads/' . $filename));
+        $background->save($localPath);
 
-        $imageContent = Storage::get("public/uploads/{$filename}");
+        // Handle file or URL
+        if ($request->hasFile('file')) {
+            $imageContent = Storage::get("public/uploads/{$filename}");
+        }
 
         session()->put('watermarkFileUrl', $filename);
 
-        return Response::make($imageContent, 200, [
-            'Content-Type' => 'image/jpeg',
-            'Content-Disposition' => 'attachment; filename=' . $filename,
-        ]);
+        if ($request->type == 'json') {
+            return response()->json([
+                'url' => url("storage/uploads/{$filename}"),
+                'filename' => $filename,
+            ]);
+        } else {
+            return Response::make($imageContent, 200, [
+                'Content-Type' => 'image/jpeg',
+                'Content-Disposition' => 'attachment; filename=' . $filename,
+            ]);
+        }
     }
 }

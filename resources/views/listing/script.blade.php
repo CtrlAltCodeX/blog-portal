@@ -537,17 +537,13 @@
                 $status.html('<span style="color: white;">✖ Please enter a valid image URL.</span>');
             }
         }
-    // })
 
-    $('#count').html("<strong>Label Selected : </strong>" + $('.select2').val().length);
+        $('#count').html("<strong>Label Selected : </strong>" + $('.select2').val().length);
 
-    $('.select2').change(function() {
-        $('#count').html("<strong>Label Selected : </strong>" + $(this).val().length);
-    });
+        $('.select2').change(function() {
+            $('#count').html("<strong>Label Selected : </strong>" + $(this).val().length);
+        });
 
-    
-
-    // $(document).ready(function() {
         const publications = @json($publications);
         const $pubDropdown = $("#pub_name");
         const $bookDropdown = $("#book_name");
@@ -677,156 +673,142 @@
             $('#copylink').html('Copy');
         }, 500)
     }
-window.AsinFetcher = {
-  fetchedResult: null,
 
-fetchAndStore: function () {
-    const asinInput = $('#asinInput').val().trim();
-    if (!asinInput) return alert('❌ Please enter ASIN number(s).');
+    window.AsinFetcher = {
+        fetchedResult: null,
 
-   
-    $('#downloadBtn, #download2Btn, #autoFillBtn').prop('disabled', true);
+        fetchAndStore: function () {
+            const asinInput = $('#asinInput').val().trim();
+            if (!asinInput) return alert('❌ Please enter ASIN number(s).');
+        
+            $('#downloadBtn, #download2Btn, #autoFillBtn').prop('disabled', true);
 
-    const asins = asinInput.split(',').map(a => a.trim()).filter(a => a);
+            const asins = asinInput.split(',').map(a => a.trim()).filter(a => a);
 
-    $.ajax({
-      url: 'https://api.exam360shop.com/api/asin-scraper',
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer M9kd_M7-JKGWACXbVKZICxl-YA',
-        'Content-Type': 'application/json'
-      },
-      data: JSON.stringify({ asins: asins }),
-      success: function (data) {
-        const result = data[0] || {};
-        window.AsinFetcher.fetchedResult = result;
+            $.ajax({
+            url: 'https://api.exam360shop.com/api/asin-scraper',
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer M9kd_M7-JKGWACXbVKZICxl-YA',
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify({ asins: asins }),
+            success: function (data) {
+                const result = data[0] || {};
+                window.AsinFetcher.fetchedResult = result;
 
+                $('#downloadBtn, #download2Btn, #autoFillBtn').prop('disabled', false);
 
-        $('#downloadBtn, #download2Btn, #autoFillBtn').prop('disabled', false);
+            },
+            error: function (xhr) {
+                alert('❌ Error: ' + xhr.statusText);
 
-      },
-      error: function (xhr) {
-        alert('❌ Error: ' + xhr.statusText);
+                $('#downloadBtn, #download2Btn, #autoFillBtn').prop('disabled', true);
+            }
+            });
+        },
 
-        $('#downloadBtn, #download2Btn, #autoFillBtn').prop('disabled', true);
-      }
-    });
-  },
-  downloadImageWithWhiteBG: function () {
-    const result = this.fetchedResult || {};
-    const imgUrl = result["Image Link"] || '';
+        downloadImageWithWhiteBG: function () {
+            const result = this.fetchedResult || {};
+            const imgUrl = result["Image Link"] || '';
 
-    if (!imgUrl) return alert('❌ Image Link not found.');
+            $.ajax({
+                url: "{{ route('image.watermark.store') }}",
+                method: 'POST',
+                data: { image_url: imgUrl, type: 'json' },
+                headers: {
+                    // 'Content-Type': 'application/json',
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (data) {
+                    // img.src = data.url;
+                    const a = document.createElement('a');
+                    a.href = data.url;
+                    a.download = data.filename || 'watermarked-image.jpg';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                },
+            });
+        },
 
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.onload = function () {
-      const canvas = document.createElement('canvas');
-      canvas.width = img.width;
-      canvas.height = img.height;
+        autoFill: function () {
+            const result = this.fetchedResult || {};
+            const clean = val => {
+                if (!val) return '';
+                const trimmed = val.trim().toLowerCase();
+                return (trimmed === 'n/a' || trimmed === 'unknown') ? '' : val;
+            };
+        
+            if (result.Discription && !result.Description) {
+                result.Description = result.Discription;
+            }
 
-      const ctx = canvas.getContext('2d');
-      ctx.fillStyle = "#FFF";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, 0, 0);
+            const fields = {
+                title: 'Title',
+                desc: 'Description',
+                publication: 'Publisher',
+                mrp: 'MRP',
+                author_name: 'Author',
+                edition: 'Edition',
+                isbn_10: 'ISBN-10',
+                isbn_13: 'ISBN-13',
+                language: 'Language',
+                pages: 'No of Pages',
+                reading_age: 'Reading_age',
+                sku: 'SKU',
+                selling_price: 'Selling Price',
+                weight: 'Weight',
+                country_origin: 'country_of_origin',
+                importer: 'importer',
+                packer: 'packer'
+            };
 
-      canvas.toBlob(blob => {
-        const url = URL.createObjectURL(blob);
-        $('<a>')
-          .attr({ href: url, download: 'product-image-white-bg.jpg' })
-          .appendTo('body')[0].click();
-        URL.revokeObjectURL(url);
-        // alert('✅ White BG Image downloaded.');
-      }, 'image/jpeg', 1);
-    };
-    img.onerror = () => alert('❌ Failed to load image.');
-    img.src = imgUrl;
-  },
+            $.each(fields, (id, key) => {
+            const $el = $('#' + id);
+            if ($el.length) {
+                switch ($el.prop('tagName')) {
+                case 'INPUT':
+                case 'SELECT':
+                    $el.val(clean(result[key]));
+                    break;
+                case 'TEXTAREA':
+                    if (id === 'desc') {
+                    if ($el.siblings('.note-editor').length) {
+                        $el.siblings('.note-editor').find('.note-editable').html(clean(result[key]));
+                    } else {
+                        $el.val(clean(result[key]));
+                    }
+                    } else {
+                    $el.val(clean(result[key]));
+                    }
+                    break;
+                }
+            }
+            });
+        },
 
-autoFill: function () {
-  const result = this.fetchedResult || {};
-  const clean = val => {
-    if (!val) return '';
-    const trimmed = val.trim().toLowerCase();
-    return (trimmed === 'n/a' || trimmed === 'unknown') ? '' : val;
-  };
+        downloadImage: function () {
+            const imgUrl = (this.fetchedResult || {})["Image Link"] || '';
+            if (!imgUrl) return alert('❌ Image Link not found.');
 
-  
-      if (result.Discription && !result.Description) {
-    result.Description = result.Discription;
-  }
-
-
-  const fields = {
-    title: 'Title',
-    desc: 'Description',
-    publication: 'Publisher',
-    mrp: 'MRP',
-    author_name: 'Author',
-    edition: 'Edition',
-    isbn_10: 'ISBN-10',
-    isbn_13: 'ISBN-13',
-    language: 'Language',
-    pages: 'No of Pages',
-    reading_age: 'Reading_age',
-    sku: 'SKU',
-    selling_price: 'Selling Price',
-    weight: 'Weight',
-    country_origin: 'country_of_origin',
-    importer: 'importer',
-    packer: 'packer'
-  };
-
-$.each(fields, (id, key) => {
-  const $el = $('#' + id);
-  if ($el.length) {
-    switch ($el.prop('tagName')) {
-      case 'INPUT':
-      case 'SELECT':
-        $el.val(clean(result[key]));
-        break;
-      case 'TEXTAREA':
-        if (id === 'desc') {
-          if ($el.siblings('.note-editor').length) {
-            $el.siblings('.note-editor').find('.note-editable').html(clean(result[key]));
-          } else {
-            $el.val(clean(result[key]));
-          }
-        } else {
-          $el.val(clean(result[key]));
+            fetch(imgUrl, { mode: 'cors' })
+            .then(res => {
+                if (!res.ok) throw new Error('Network response was not ok.');
+                return res.blob();
+            })
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+                $('<a>')
+                .attr({ href: url, download: 'product-image.jpg' })
+                .appendTo('body')[0].click();
+                URL.revokeObjectURL(url);
+                // alert('✅ Image downloaded successfully.');
+            })
+            .catch(err => {
+                alert('❌ Failed to download image: ' + err.message);
+            });
         }
-        break;
-    }
-  }
-});
-
-
-  console.log('✅ Auto-Filled:', result);
-}
-,
-
-  downloadImage: function () {
-    const imgUrl = (this.fetchedResult || {})["Image Link"] || '';
-    if (!imgUrl) return alert('❌ Image Link not found.');
-
-    fetch(imgUrl, { mode: 'cors' })
-      .then(res => {
-        if (!res.ok) throw new Error('Network response was not ok.');
-        return res.blob();
-      })
-      .then(blob => {
-        const url = URL.createObjectURL(blob);
-        $('<a>')
-          .attr({ href: url, download: 'product-image.jpg' })
-          .appendTo('body')[0].click();
-        URL.revokeObjectURL(url);
-        // alert('✅ Image downloaded successfully.');
-      })
-      .catch(err => {
-        alert('❌ Failed to download image: ' + err.message);
-      });
-  }
-};
-
+    };
 
 </script>

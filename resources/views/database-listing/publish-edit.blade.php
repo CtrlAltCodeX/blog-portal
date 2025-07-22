@@ -45,6 +45,7 @@
                     </div>
 
                     <div class="card-body">
+                        @include('components.fetch-product')
                         <div id="progressBar" class="text-end"></div>
 
                         <div>

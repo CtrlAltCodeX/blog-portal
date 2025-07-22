@@ -40,7 +40,7 @@
 
                     <div class="card-body">
                         <div id="progressBar" class="text-end"></div>
-@include('components.fetch-product')
+                        @include('components.fetch-product')
                         <div>
                             <div class="form-group">
                                 <div class="d-flex align-items-center justify-content-between">
