@@ -36,12 +36,13 @@
 
         <div class="row">
             <div class="col-md-9 col-xl-12 fields">
-
+ @include('components.fetch-product')
                 <div class="card">
+                    
                     <div class="card-body">
                         <span class="d-flex justify-content-center mb-4 alert-msg text-center align-items-center" style='grid-gap:5px;'><i class='fa fa-warning'></i><strong>Alert:</strong> Please refrain from creating duplicate listings repeatedly. Prior to creating any new listings, ensure to first check the product in 'Search Listing (M/S)'.</span>
                         <hr />
-                        @include('components.fetch-product')
+                       
 
                         <div id="progressBar" class="text-end"></div>
                         <div>

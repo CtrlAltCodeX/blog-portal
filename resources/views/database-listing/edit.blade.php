@@ -21,6 +21,7 @@
     <!-- Row -->
     <div class="row">
         <div class="col-md-9 col-xl-12 fields">
+               @include('components.fetch-product')
             <form action="" method="POST" enctype='multipart/form-data' id='formTest'>
                 @csrf
                 @method('PUT')
@@ -40,7 +41,7 @@
 
                     <div class="card-body">
                         <div id="progressBar" class="text-end"></div>
-                        @include('components.fetch-product')
+                     
                         <div>
                             <div class="form-group">
                                 <div class="d-flex align-items-center justify-content-between">

@@ -677,19 +677,18 @@
     window.AsinFetcher = {
         fetchedResult: null,
 
-        fetchAndStore: function () {
+        fetchAndStore: function (apiUrl, apiToken) {
             const asinInput = $('#asinInput').val().trim();
             if (!asinInput) return alert('❌ Please enter ASIN number(s).');
         
             $('#downloadBtn, #download2Btn, #autoFillBtn').prop('disabled', true);
 
             const asins = asinInput.split(',').map(a => a.trim()).filter(a => a);
-
             $.ajax({
-            url: 'https://api.exam360shop.com/api/asin-scraper',
+            url: apiUrl,
             method: 'POST',
             headers: {
-                'Authorization': 'Bearer M9kd_M7-JKGWACXbVKZICxl-YA',
+            'Authorization': 'Bearer ' + apiToken,
                 'Content-Type': 'application/json'
             },
             data: JSON.stringify({ asins: asins }),
