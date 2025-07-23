@@ -810,4 +810,74 @@
         }
     };
 
+
+   window.TitleFetcher = {
+  fetchAndAppend: function () {
+    const title = $('#titleInput').val().trim();
+    if (!title) {
+      alert('❌ Please enter a title.');
+      return;
+    }
+
+    const template = `Q. Write Product Description in 300 to 400 words of the Book Name - ${title}.
+Q. Write Top 20 Google Search Keywords Which is Most Searchable by Users Before Buying this Item of the Book Name - ${title}.`;
+
+    $.ajax({
+      url: '{{ route("getai.descriptionfetcher") }}',
+      method: 'POST',
+      headers: {
+        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+      },
+      data: { product_info: template },
+      success: function (data) {
+        if (!data.status) {
+          alert('❌ Error: ' + data.message);
+          return;
+        }
+
+        let content = data.content || '';
+
+        const descStart = content.indexOf('Product Description:');
+        const keywordsStart = content.indexOf('Top 20 Google Search Keywords:');
+
+        let description = '';
+        let keywordsText = '';
+
+        if (descStart !== -1 && keywordsStart !== -1) {
+          description = content.substring(descStart + 'Product Description:'.length, keywordsStart).trim();
+          keywordsText = content.substring(keywordsStart + 'Top 20 Google Search Keywords:'.length).trim();
+        }
+
+        const keywordsArray = keywordsText.split(/\n+/).map(line => {
+     
+          return line.replace(/^\d+\.\s*/, '').trim();
+        }).filter(Boolean);
+
+        const keywordsComma = keywordsArray.join(', ');
+
+        const $desc = $('#desc');
+
+        const finalHtml = `
+<strong>Title:</strong> ${title}<br><br>
+<strong>Description:</strong><br>${description}<br><br>
+<strong>Search Keywords:</strong><br>${keywordsComma}
+`;
+
+        if ($desc.siblings('.note-editor').length) {
+          const oldContent = $desc.siblings('.note-editor').find('.note-editable').html();
+          $desc.siblings('.note-editor').find('.note-editable').html(oldContent + '<br>' + finalHtml);
+        } else {
+          const oldVal = $desc.val();
+          const finalText = `Title: ${title}\n\nDescription:\n${description}\n\nSearch Keywords:\n${keywordsComma}`;
+          $desc.val(oldVal + '\n\n' + finalText);
+        }
+
+      },
+      error: function (xhr) {
+        alert('❌ Failed: ' + xhr.statusText);
+      }
+    });
+  }
+};
+
 </script>

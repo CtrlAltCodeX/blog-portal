@@ -34,5 +34,9 @@ return [
     'url' => env('ASIN_API_URL'),
     'token' => env('API_TOKEN'),
   ],
+  'openai' => [
+    'key' => env('OPENAI_API_KEY'),
+    'url' => env('OPENAI_API_URL'),
+],
 
 ];

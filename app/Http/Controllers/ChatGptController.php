@@ -4,13 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use App\Services\ChatGptService;
 
 class ChatGptController extends Controller
 {
-    public function __construct()
+      protected $chatGptService;
+
+        public function __construct(ChatGptService $chatGptService)
     {
+        $this->chatGptService = $chatGptService;
         $this->middleware('role_or_permission:Product Listing > AI Chat Bots', ['only' => ['openAi']]);
+
     }
+
+
 
     public function openAi()
     {
@@ -52,6 +59,31 @@ class ChatGptController extends Controller
             session()->flash('error', 'Something went Wrong!!');
 
             return redirect()->back();
+        }
+    }
+
+
+       public function responseAidescriptionfetcher(Request $request)
+    {
+        try {
+            $result = $this->chatGptService->getMessage($request->product_info);
+
+            if (!$result['status']) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $result['message'],
+                ], 400);
+            }
+
+            return response()->json([
+                'status' => true,
+                'content' => $result['content'],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Exception: ' . $e->getMessage(),
+            ], 500);
         }
     }
 }

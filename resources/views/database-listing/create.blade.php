@@ -37,6 +37,7 @@
         <div class="row">
             <div class="col-md-9 col-xl-12 fields">
  @include('components.fetch-product')
+   @include('components.discription-fetcher')
                 <div class="card">
                     
                     <div class="card-body">
