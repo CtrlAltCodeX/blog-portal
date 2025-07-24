@@ -811,9 +811,9 @@
     };
 
 
-   window.TitleFetcher = {
+  window.TitleFetcher = {
   fetchAndAppend: function () {
-    const title = $('#titleInput').val().trim();
+    const title = $('#title').val().trim();
     if (!title) {
       alert('❌ Please enter a title.');
       return;
@@ -849,7 +849,6 @@ Q. Write Top 20 Google Search Keywords Which is Most Searchable by Users Before 
         }
 
         const keywordsArray = keywordsText.split(/\n+/).map(line => {
-     
           return line.replace(/^\d+\.\s*/, '').trim();
         }).filter(Boolean);
 
@@ -858,20 +857,20 @@ Q. Write Top 20 Google Search Keywords Which is Most Searchable by Users Before 
         const $desc = $('#desc');
 
         const finalHtml = `
-<strong>Title:</strong> ${title}<br><br>
-<strong>Description:</strong><br>${description}<br><br>
+ ${title}<br><br>
+<br>${description}<br><br>
 <strong>Search Keywords:</strong><br>${keywordsComma}
 `;
 
-        if ($desc.siblings('.note-editor').length) {
-          const oldContent = $desc.siblings('.note-editor').find('.note-editable').html();
-          $desc.siblings('.note-editor').find('.note-editable').html(oldContent + '<br>' + finalHtml);
-        } else {
-          const oldVal = $desc.val();
-          const finalText = `Title: ${title}\n\nDescription:\n${description}\n\nSearch Keywords:\n${keywordsComma}`;
-          $desc.val(oldVal + '\n\n' + finalText);
-        }
+        const finalText = `Title: ${title}\n\nDescription:\n${description}\n\nSearch Keywords:\n${keywordsComma}`;
 
+        if ($desc.siblings('.note-editor').length) {
+          // ✅ Overwrite without old content
+          $desc.siblings('.note-editor').find('.note-editable').html(finalHtml);
+        } else {
+          // ✅ Overwrite textarea directly
+          $desc.val(finalText);
+        }
       },
       error: function (xhr) {
         alert('❌ Failed: ' + xhr.statusText);
@@ -879,5 +878,6 @@ Q. Write Top 20 Google Search Keywords Which is Most Searchable by Users Before 
     });
   }
 };
+
 
 </script>

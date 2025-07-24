@@ -39,7 +39,7 @@
     <div class="row">
         <div class="col-md-9 col-xl-12 fields">
              @include('components.fetch-product')
-              @include('components.discription-fetcher')
+            
             <form action="{{ route('listing.store') }}" method="POST" enctype='multipart/form-data' id='form'>
                 @csrf
                 <div class="card">
@@ -85,6 +85,7 @@
                                 </label>
                                 <label for="description" class="form-label d-flex justify-content-between text-danger" style="margin-top: -10px;">
                                     <div>{{ __('Do not use 3rd Party Links/Website Names') }}</div>
+                                      @include('components.discription-fetcher')
                                 </label>
                                 <!-- <div id="summernote" id="description" class="form-control @error('description') is-invalid @enderror" name="description">
                                     {{ old('description') }}

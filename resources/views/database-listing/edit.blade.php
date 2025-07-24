@@ -22,7 +22,7 @@
     <div class="row">
         <div class="col-md-9 col-xl-12 fields">
                @include('components.fetch-product')
-               @include('components.discription-fetcher')
+               
             <form action="" method="POST" enctype='multipart/form-data' id='formTest'>
                 @csrf
                 @method('PUT')
@@ -73,6 +73,7 @@
                                 </label>
                                 <label for="description" class="form-label d-flex justify-content-between text-danger" style="margin-top: -10px;">
                                     <div>{{ __('Do not use 3rd Party Links/Website Names') }}</div>
+                                    @include('components.discription-fetcher')
                                 </label>
 
                                 <!-- <label for="description" class="form-label d-flex justify-content-between">
