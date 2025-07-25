@@ -731,61 +731,70 @@
             });
         },
 
-        autoFill: function () {
-            const result = this.fetchedResult || {};
-            const clean = val => {
-                if (!val) return '';
-                const trimmed = val.trim().toLowerCase();
-                return (trimmed === 'n/a' || trimmed === 'unknown') ? '' : val;
-            };
-        
-            if (result.Discription && !result.Description) {
-                result.Description = result.Discription;
-            }
+     autoFill: function () {
+  const result = this.fetchedResult || {};
+  const clean = val => {
+    if (!val) return '';
+    const trimmed = val.trim().toLowerCase();
+    return (trimmed === 'n/a' || trimmed === 'unknown') ? '' : val;
+  };
 
-            const fields = {
-                title: 'Title',
-                desc: 'Description',
-                publication: 'Publisher',
-                mrp: 'MRP',
-                author_name: 'Author',
-                edition: 'Edition',
-                isbn_10: 'ISBN-10',
-                isbn_13: 'ISBN-13',
-                language: 'Language',
-                pages: 'No of Pages',
-                reading_age: 'Reading_age',
-                sku: 'SKU',
-                selling_price: 'Selling Price',
-                weight: 'Weight',
-                country_origin: 'country_of_origin',
-                importer: 'importer',
-                packer: 'packer'
-            };
+  if (result.Discription && !result.Description) {
+    result.Description = result.Discription;
+  }
 
-            $.each(fields, (id, key) => {
-            const $el = $('#' + id);
-            if ($el.length) {
-                switch ($el.prop('tagName')) {
-                case 'INPUT':
-                case 'SELECT':
-                    $el.val(clean(result[key]));
-                    break;
-                case 'TEXTAREA':
-                    if (id === 'desc') {
-                    if ($el.siblings('.note-editor').length) {
-                        $el.siblings('.note-editor').find('.note-editable').html(clean(result[key]));
-                    } else {
-                        $el.val(clean(result[key]));
-                    }
-                    } else {
-                    $el.val(clean(result[key]));
-                    }
-                    break;
-                }
+  const fields = {
+    title: 'Title',
+    desc: 'Description',
+    publication: 'Publisher',
+    mrp: 'MRP',
+    author_name: 'Author',
+    edition: 'Edition',
+    isbn_10: 'ISBN-10',
+    isbn_13: 'ISBN-13',
+    pages: 'No of Pages',
+    reading_age: 'Reading_age',
+    sku: 'SKU',
+    selling_price: 'Selling Price',
+    weight: 'Weight',
+    country_origin: 'country_of_origin'
+  };
+
+  $.each(fields, (id, key) => {
+    const $el = $('#' + id);
+    if ($el.length) {
+      switch ($el.prop('tagName')) {
+        case 'INPUT':
+        case 'SELECT':
+          $el.val(clean(result[key]));
+          break;
+        case 'TEXTAREA':
+          if (id === 'desc') {
+            if ($el.siblings('.note-editor').length) {
+              $el.siblings('.note-editor').find('.note-editable').html(clean(result[key]));
+            } else {
+              $el.val(clean(result[key]));
             }
-            });
-        },
+          } else {
+            $el.val(clean(result[key]));
+          }
+          break;
+      }
+    }
+  });
+
+  if ($('#language').length) {
+    const lang = clean(result.Language);
+    $('#language').val(lang ? `${lang} Medium` : 'Medium');
+  }
+
+  const publisherValue = clean(result.Publisher) || 'As Per Publisher';
+  $('#manufacturer').val(publisherValue);
+  $('#importer').val(publisherValue);
+  $('#packer').val(publisherValue);
+
+  $('select[name="condition"]').val('New');
+},
 
         downloadImage: function () {
             const imgUrl = (this.fetchedResult || {})["Image Link"] || '';
@@ -802,7 +811,6 @@
                 .attr({ href: url, download: 'product-image.jpg' })
                 .appendTo('body')[0].click();
                 URL.revokeObjectURL(url);
-                // alert('✅ Image downloaded successfully.');
             })
             .catch(err => {
                 alert('❌ Failed to download image: ' + err.message);

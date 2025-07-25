@@ -253,7 +253,7 @@
                                                     {{ __('ISBN 10') }} <span class="text-danger">*</span>
                                                 </label>
                                             </div>
-                                            <input type="text" class="form-control" name="isbn_10" value="{{ old('isbn_10') }}" autofocus placeholder="ISBN 10">
+                                            <input type="text" class="form-control" id="isbn_10" name="isbn_10" value="{{ old('isbn_10') }}" autofocus placeholder="ISBN 10">
                                             <span class="error-message isbn_10" style="color:red;"></span>
 
                                             @error('isbn_10')
@@ -354,7 +354,7 @@
                                             <label for="condition" class="form-label">{{ __('Product Condition') }}<span class="text-danger">*</span></label>
                                             <select class="form-control @error('condition') is-invalid @enderror" name="condition" value="{{ old('condition') }}">
                                                 <option value="">--Select--</option>
-                                                <option value="New">New</option>
+                                                <option value="New" selected>New</option>
                                                 <option value="Like New">Like New</option>
                                                 <option value="Old">Old</option>
                                             </select>
