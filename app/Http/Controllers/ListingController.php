@@ -109,7 +109,7 @@ class ListingController extends Controller
             $user = request()->created_by;
         }
 
-        $result = $this->googleService->createPost($request->all(), null, $user, $user);
+        $result = $this->googleService->createPost($request->all(), $user, $user, null);
 
         if ($message = $result?->error?->message) {
             session()->flash('error', $message);

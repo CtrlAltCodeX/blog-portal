@@ -471,6 +471,7 @@
                                                 <option value="Textbooks & Study Guides">Textbooks & Study Guides</option>
                                                 <option value="Travel & Tourism">Travel & Tourism</option>
                                             </select>
+                                             <span class="error-message genre" style="color:red;"></span>
                                             @error('genre')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -535,7 +536,7 @@
 
                                     <div class="form-group col-md-4">
                                         <label for="url" class="form-label">{{ __('Main Image URL') }}</label>
-                                        <input id="base_url" type="text" value="{{ old('images')[0]??'' }}" class="form-control @error('images') is-invalid @enderror" name="images[]" autocomplete="images" autofocus placeholder="Base URL">
+                                        <input id="base_url" type="text" value="{{ old('images')[0]??'' }}" class="form-control @error('images') is-invalid @enderror images[]" name="images[]" autocomplete="images" autofocus placeholder="Base URL">
                                         <span class="error-message base_url" style="color:red;"></span>
 
                                         @error('images')

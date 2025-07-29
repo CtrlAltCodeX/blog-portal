@@ -294,7 +294,7 @@ class GoogleService
      * 
      * @param array $data
      */
-    public function createPost(array $data, $draft = null, $userId, $currentUser)
+    public function createPost(array $data, $userId, $currentUser, $draft = null)
     {
         try {
             $credential = $this->getCredentails();

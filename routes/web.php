@@ -401,7 +401,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     Route::post('/get/ai/description', [ChatGptController::class, 'responseAiDescription'])
         ->name('getai.response');
 
-        
     Route::post('/get/ai/descriptionfetcher', [ChatGptController::class, 'responseAidescriptionfetcher'])
         ->name('getai.descriptionfetcher');
 

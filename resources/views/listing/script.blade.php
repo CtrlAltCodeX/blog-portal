@@ -136,36 +136,15 @@
             },
         });
 
+        
+
         $('#form, #formTest').submit(function(event) {
             var valid = true;
             var requiredvalid = true;
 
-            var valuesToCheck = ['Stk_o', 'stock__out', 'stock__onDemand', 'Stk_d']; // Replace with your target values
-            var selectedValues = $('.select2').val(); // Get selected values
+            checkSpecificValue();
 
-            if (selectedValues) { // Ensure selectedValues is not null
-                valuesToCheck.forEach(function(value) {
-                    if (selectedValues.includes(value)) {
-                        alert('This Labels are not accepted while update any listing. Value found: ' + value);
-                    }
-                });
-            } else {
-                console.log('No values selected.');
-            }
-
-            let totalLength = 0;
-            let selectedOptions = $('.select2').find('option:selected');
-
-            selectedOptions.each(function() {
-                totalLength += $(this).text().trim().length;
-            });
-
-            @if(!auth()->user()->hasRole('Super Admin') && !auth()->user()->hasRole('Super Management'))
-            if (totalLength < 170) {
-                event.preventDefault();
-                alert('You must select at least 170 characters in Category.');
-            }
-            @endif
+            checkCategoryLength(event);
 
             // Reset previous error messages
             $('.error-message').text('');
@@ -190,14 +169,14 @@
                     }
                 }
 
-                var notRequiredFields = ['multipleImages[]', 'files', 'isbn_10', 'isbn_13', 'isbn_10', 'reading_age', 'country_origin', 'genre', 'manufacturer', 'importer', 'discount'];
+                var notRequiredFields = ['images[]', 'multipleImages[]', 'files', 'isbn_10', 'isbn_13', 'isbn_10', 'reading_age', 'country_origin', 'genre', 'manufacturer', 'importer', 'discount'];
 
                 if (inputValue == '') {
                     var fieldId = $(this).attr('name');
                     if (fieldId && !notRequiredFields.includes(fieldId)) {
-                        console.log(fieldId);
                         $(this).css('border', '1px red solid');
                         $('.' + fieldId).text('This field is required');
+                        console.log(fieldId);
                         requiredvalid = false;
                     }
                 }
@@ -221,6 +200,7 @@
                     if (fieldId) {
                         $(this).css('border', '1px red solid');
                         $('.' + fieldId).text('This field is required');
+                        console.log(fieldId);
                         requiredvalid = false;
                     }
                 }
@@ -235,6 +215,7 @@
                     if (fieldId && !notRequiredFields.includes(fieldId)) {
                         $(this).css('border', '1px red solid');
                         $('.' + fieldId).text('This field is required');
+                        console.log(fieldId);
                         requiredvalid = false;
                     }
                 }
@@ -251,7 +232,6 @@
                 valid = true;
             }
 
-            // Prevent form submission if a URL is found
             if (!valid || !requiredvalid) {
                 event.preventDefault();
             }
@@ -425,6 +405,39 @@
             } else {
                 $('#discount').val(0);
             }
+        }
+
+        function checkSpecificValue()
+        {
+            var valuesToCheck = ['Stk_o', 'stock__out', 'stock__onDemand', 'Stk_d']; // Replace with your target values
+            var selectedValues = $('.select2').val(); // Get selected values
+
+            if (selectedValues) { // Ensure selectedValues is not null
+                valuesToCheck.forEach(function(value) {
+                    if (selectedValues.includes(value)) {
+                        alert('This Labels are not accepted while update any listing. Value found: ' + value);
+                    }
+                });
+            } else {
+                console.log('No values selected.');
+            }
+        }
+
+        function checkCategoryLength(event)
+        {
+            let totalLength = 0;
+            let selectedOptions = $('.select2').find('option:selected');
+
+            selectedOptions.each(function() {
+                totalLength += $(this).text().trim().length;
+            });
+
+            @if(!auth()->user()->hasRole('Super Admin') && !auth()->user()->hasRole('Super Management'))
+            if (totalLength < 170) {
+                event.preventDefault();
+                alert('You must select at least 170 characters in Category.');
+            }
+            @endif
         }
 
         $('#desc').summernote({
@@ -673,219 +686,5 @@
             $('#copylink').html('Copy');
         }, 500)
     }
-
-    window.AsinFetcher = {
-        fetchedResult: null,
-
-        fetchAndStore: function (apiUrl, apiToken) {
-            const asinInput = $('#asinInput').val().trim();
-            if (!asinInput) return alert('❌ Please enter ASIN number(s).');
-        
-            $('#downloadBtn, #download2Btn, #autoFillBtn').prop('disabled', true);
-
-            const asins = asinInput.split(',').map(a => a.trim()).filter(a => a);
-            $.ajax({
-            url: apiUrl,
-            method: 'POST',
-            headers: {
-            'Authorization': 'Bearer ' + apiToken,
-                'Content-Type': 'application/json'
-            },
-            data: JSON.stringify({ asins: asins }),
-            success: function (data) {
-                const result = data[0] || {};
-                window.AsinFetcher.fetchedResult = result;
-
-                $('#downloadBtn, #download2Btn, #autoFillBtn').prop('disabled', false);
-
-            },
-            error: function (xhr) {
-                alert('❌ Error: ' + xhr.statusText);
-
-                $('#downloadBtn, #download2Btn, #autoFillBtn').prop('disabled', true);
-            }
-            });
-        },
-
-        downloadImageWithWhiteBG: function () {
-            const result = this.fetchedResult || {};
-            const imgUrl = result["Image Link"] || '';
-
-            $.ajax({
-                url: "{{ route('image.watermark.store') }}",
-                method: 'POST',
-                data: { image_url: imgUrl, type: 'json' },
-                headers: {
-                    // 'Content-Type': 'application/json',
-                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function (data) {
-                    // img.src = data.url;
-                    const a = document.createElement('a');
-                    a.href = data.url;
-                    a.download = data.filename || 'watermarked-image.jpg';
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                },
-            });
-        },
-
-     autoFill: function () {
-  const result = this.fetchedResult || {};
-  const clean = val => {
-    if (!val) return '';
-    const trimmed = val.trim().toLowerCase();
-    return (trimmed === 'n/a' || trimmed === 'unknown') ? '' : val;
-  };
-
-  if (result.Discription && !result.Description) {
-    result.Description = result.Discription;
-  }
-
-  const fields = {
-    title: 'Title',
-    desc: 'Description',
-    publication: 'Publisher',
-    mrp: 'MRP',
-    author_name: 'Author',
-    edition: 'Edition',
-    isbn_10: 'ISBN-10',
-    isbn_13: 'ISBN-13',
-    pages: 'No of Pages',
-    reading_age: 'Reading_age',
-    sku: 'SKU',
-    selling_price: 'Selling Price',
-    weight: 'Weight',
-    country_origin: 'country_of_origin'
-  };
-
-  $.each(fields, (id, key) => {
-    const $el = $('#' + id);
-    if ($el.length) {
-      switch ($el.prop('tagName')) {
-        case 'INPUT':
-        case 'SELECT':
-          $el.val(clean(result[key]));
-          break;
-        case 'TEXTAREA':
-          if (id === 'desc') {
-            if ($el.siblings('.note-editor').length) {
-              $el.siblings('.note-editor').find('.note-editable').html(clean(result[key]));
-            } else {
-              $el.val(clean(result[key]));
-            }
-          } else {
-            $el.val(clean(result[key]));
-          }
-          break;
-      }
-    }
-  });
-
-  if ($('#language').length) {
-    const lang = clean(result.Language);
-    $('#language').val(lang ? `${lang} Medium` : 'Medium');
-  }
-
-  const publisherValue = clean(result.Publisher) || 'As Per Publisher';
-  $('#manufacturer').val(publisherValue);
-  $('#importer').val(publisherValue);
-  $('#packer').val(publisherValue);
-
-  $('select[name="condition"]').val('New');
-},
-
-        downloadImage: function () {
-            const imgUrl = (this.fetchedResult || {})["Image Link"] || '';
-            if (!imgUrl) return alert('❌ Image Link not found.');
-
-            fetch(imgUrl, { mode: 'cors' })
-            .then(res => {
-                if (!res.ok) throw new Error('Network response was not ok.');
-                return res.blob();
-            })
-            .then(blob => {
-                const url = URL.createObjectURL(blob);
-                $('<a>')
-                .attr({ href: url, download: 'product-image.jpg' })
-                .appendTo('body')[0].click();
-                URL.revokeObjectURL(url);
-            })
-            .catch(err => {
-                alert('❌ Failed to download image: ' + err.message);
-            });
-        }
-    };
-
-
-  window.TitleFetcher = {
-  fetchAndAppend: function () {
-    const title = $('#title').val().trim();
-    if (!title) {
-      alert('❌ Please enter a title.');
-      return;
-    }
-
-    const template = `Q. Write Product Description in 300 to 400 words of the Book Name - ${title}.
-Q. Write Top 20 Google Search Keywords Which is Most Searchable by Users Before Buying this Item of the Book Name - ${title}.`;
-
-    $.ajax({
-      url: '{{ route("getai.descriptionfetcher") }}',
-      method: 'POST',
-      headers: {
-        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-      },
-      data: { product_info: template },
-      success: function (data) {
-        if (!data.status) {
-          alert('❌ Error: ' + data.message);
-          return;
-        }
-
-        let content = data.content || '';
-
-        const descStart = content.indexOf('Product Description:');
-        const keywordsStart = content.indexOf('Top 20 Google Search Keywords:');
-
-        let description = '';
-        let keywordsText = '';
-
-        if (descStart !== -1 && keywordsStart !== -1) {
-          description = content.substring(descStart + 'Product Description:'.length, keywordsStart).trim();
-          keywordsText = content.substring(keywordsStart + 'Top 20 Google Search Keywords:'.length).trim();
-        }
-
-        const keywordsArray = keywordsText.split(/\n+/).map(line => {
-          return line.replace(/^\d+\.\s*/, '').trim();
-        }).filter(Boolean);
-
-        const keywordsComma = keywordsArray.join(', ');
-
-        const $desc = $('#desc');
-
-        const finalHtml = `
- ${title}<br><br>
-<br>${description}<br><br>
-<strong>Search Keywords:</strong><br>${keywordsComma}
-`;
-
-        const finalText = `Title: ${title}\n\nDescription:\n${description}\n\nSearch Keywords:\n${keywordsComma}`;
-
-        if ($desc.siblings('.note-editor').length) {
-          // ✅ Overwrite without old content
-          $desc.siblings('.note-editor').find('.note-editable').html(finalHtml);
-        } else {
-          // ✅ Overwrite textarea directly
-          $desc.val(finalText);
-        }
-      },
-      error: function (xhr) {
-        alert('❌ Failed: ' + xhr.statusText);
-      }
-    });
-  }
-};
-
 
 </script>
