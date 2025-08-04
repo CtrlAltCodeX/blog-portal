@@ -62,7 +62,7 @@ class GraphicalDashboardController extends Controller
 
         // Send same data for chart
         $graphTotals = $cardTotals;
-        $userSessionsCount = UserSession::where("user_id", $selectedUserId)
+        $userSessionsCount = UserSession::with('user')->where("user_id", $selectedUserId)
             ->get();
 
         // for pie chat

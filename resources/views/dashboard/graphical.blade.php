@@ -354,6 +354,7 @@
         <thead>
           <tr style="background-color: #37376d;">
             <th class='text-white'>{{ __('Sl') }}</th>
+            <th class='text-white'>{{ __('User Name') }}</th>
             <th class='text-white'>{{ __('Session Id') }}</th>
             <th class='text-white'>{{ __('Session Start') }}</th>
             <th class='text-white'>{{ __('Session Expire') }}</th>
@@ -364,6 +365,7 @@
           @foreach($userSessionsCount as $key => $session)
           <tr>
             <td>{{ $key + 1 }}</td>
+            <td>{{ $session->user->name }}</td>
             <td>{{ $session->session_id }}</td>
             <td>{{ \Carbon\Carbon::parse($session->created_at)->format('d-m-Y h:i A') }}</td>
             <td>{{ \Carbon\Carbon::parse($session->expire_at)->format('d-m-Y h:i A') }}</td>

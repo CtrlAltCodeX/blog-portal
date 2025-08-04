@@ -73,9 +73,10 @@
             if ($desc.siblings('.note-editor').length) {
               // ✅ Overwrite without old content
               $desc.siblings('.note-editor').find('.note-editable').html(finalHtml);
+              $desc.html(finalHtml);
             } else {
               // ✅ Overwrite textarea directly
-              $desc.val(finalText);
+              $desc.html(finalText);
             }
 
             $("#spinner").addClass('d-none');

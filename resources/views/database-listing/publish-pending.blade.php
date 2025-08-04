@@ -139,6 +139,8 @@
                                     <th><input type="checkbox" class="check-all" /></th>
                                     <!-- <th>{{ __('-') }}</th> -->
                                     <th>{{ __('Sl') }}</th>
+                                    <th>{{ __('Similarity') }}</th>
+                                    <th>{{ __('Change %') }}</th>
                                     @if (auth()->user()->hasRole('Super Admin') || auth()->user()->hasRole('Super Management'))
                                     <th>{{ __('Update Age') }}</th>
                                     @endif
@@ -170,6 +172,8 @@
                                         @endif
                                     </td>
                                     <td>{{ ++$key }}</td>
+                                    <td>{{ $googlePost->similarity_percentage }}</td>
+                                    <td>{{ $googlePost->change_percentage	 }}</td>
                                     @if (auth()->user()->hasRole('Super Admin') || auth()->user()->hasRole('Super Management'))
                                     <td class='text-capitalize'>{{ $googlePost->last_updated_formatted??"-" }}</td>
                                     @endif

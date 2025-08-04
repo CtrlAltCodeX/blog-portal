@@ -311,8 +311,53 @@ class DatabaseListingController extends Controller
     /**
      * Update the specified resource in storage.
      */
+
+     private function getMatchingCharacters($str1, $str2)
+     {
+         $len1 = mb_strlen($str1);
+         $len2 = mb_strlen($str2);
+     
+         $dp = array_fill(0, $len1 + 1, array_fill(0, $len2 + 1, 0));
+     
+         for ($i = 0; $i < $len1; $i++) {
+             for ($j = 0; $j < $len2; $j++) {
+                 if (mb_substr($str1, $i, 1) === mb_substr($str2, $j, 1)) {
+                     $dp[$i + 1][$j + 1] = $dp[$i][$j] + 1;
+                 } else {
+                     $dp[$i + 1][$j + 1] = max($dp[$i + 1][$j], $dp[$i][$j + 1]);
+                 }
+             }
+         }
+     
+         return $dp[$len1][$len2];
+     }
+
+
+
     public function update(BlogRequest $request, string $id)
     {
+        $listing = Listing::findOrFail($id);
+     
+        $oldStr = strip_tags(
+            ($listing->title ?? '') .
+            ($listing->description ?? '') .
+            ($listing->edition ?? '') .
+            (string)$listing->mrp .
+            (string)$listing->selling_price
+        );
+    
+        $newStr = strip_tags(
+            ($request->title ?? '') .
+            ($request->description ?? '') .
+            ($request->edition ?? '') .
+            (string)$request->mrp .
+            (string)$request->selling_price
+        );
+
+        similar_text($oldStr, $newStr, $similarityPercentage);
+    
+        $changePercentage = 100 - $similarityPercentage;
+ 
         $data = [
             '_token' => $request->_token,
             'title' => $request->title,
@@ -342,42 +387,40 @@ class DatabaseListingController extends Controller
             'manufacturer' => $request->manufacturer,
             'importer' => $request->importer,
             'packer' => $request->packer,
-            'is_bulk_upload' => 0
+            'is_bulk_upload' => 0,
+            'similarity_percentage' => round($similarityPercentage, 2),
+            'change_percentage' => round($changePercentage, 2),
         ];
-
-        $listing = Listing::find($id);
-
-        if ($request->status == 2) {
-            $this->updateTheCount('Created', 'reject_count');
-
-            $data['status'] = request()->status;
-
-            $additionalInfo = UserListingInfo::where('image', $request->images[0])
-                ->where('title', request()->title)
-                ->first();
-
-            $additionalInfo->update([
-                'status' => request()->status
-            ]);
-        } else if ($request->status == 1) {
-            $additionalInfo = UserListingInfo::where('image', $request->images[0])
-                ->where('title', request()->title)
-                ->first();
-
-            $additionalInfo->update([
-                'status' => request()->status
-            ]);
-        }
-
-        if ($listing->update($data)) {
-            session()->flash('success', 'Listing Updated successfully');
-
-            return redirect()->back();
-        }
-
-        session()->flash('error', 'Someting went wrong');
-
-        return redirect()->back();
+    
+     
+         if ($request->status == 2) {
+             $this->updateTheCount('Created', 'reject_count');
+             $data['status'] = $request->status;
+     
+             $additionalInfo = UserListingInfo::where('image', $request->images[0])
+                 ->where('title', $request->title)
+                 ->first();
+     
+             if ($additionalInfo) {
+                 $additionalInfo->update(['status' => $request->status]);
+             }
+         } elseif ($request->status == 1) {
+             $additionalInfo = UserListingInfo::where('image', $request->images[0])
+                 ->where('title', $request->title)
+                 ->first();
+     
+             if ($additionalInfo) {
+                 $additionalInfo->update(['status' => $request->status]);
+             }
+         }
+     
+         if ($listing->update($data)) {
+             session()->flash('success', 'Listing Updated successfully');
+             return redirect()->back();
+         }
+     
+         session()->flash('error', 'Something went wrong');
+         return redirect()->back();
     }
 
     /**
@@ -913,6 +956,33 @@ class DatabaseListingController extends Controller
      */
     public function publshInDB()
     {
+        $productId = trim(request()->database);
+        $backupListing = BackupListing::where('product_id', $productId)->first();
+        
+        $similarityPercentage = 0;
+        $changePercentage = 0;
+    
+        if ($backupListing) {
+            $oldStr = strip_tags(
+                ($backupListing->title ?? '') .
+                ($backupListing->description ?? '') .
+                ($backupListing->edition ?? '') .
+                (string)$backupListing->mrp .
+                (string)$backupListing->selling_price
+            );
+    
+            $newStr = strip_tags(
+                trim(request()->title ?? '') .
+                (request()->description ?? '') .
+                trim(request()->edition ?? '') .
+                (string) trim(request()->mrp) .
+                (string) trim(request()->selling_price)
+            );
+
+            similar_text($oldStr, $newStr, $similarityPercentage);
+    
+            $changePercentage = 100 - $similarityPercentage;
+        }
 
         $allInfo = [
             'product_id' => trim(request()->database),
@@ -945,6 +1015,8 @@ class DatabaseListingController extends Controller
             'manufacturer' => trim(request()->manufacturer),
             'importer' => trim(request()->importer),
             'packer' => trim(request()->packer),
+            'similarity_percentage' => round($similarityPercentage * 100, 2),
+            'change_percentage' => round($changePercentage, 2),
         ];
 
         $listing = Listing::create($allInfo);

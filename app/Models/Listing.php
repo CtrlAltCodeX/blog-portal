@@ -50,6 +50,8 @@ class Listing extends Model
         'manufacturer',
         'importer',
         'packer',
+        'similarity_percentage',
+        'change_percentage'
     ];
 
     public function created_by_user()

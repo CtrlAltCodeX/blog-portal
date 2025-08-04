@@ -115,6 +115,8 @@ $getRoles = app('App\Http\Controllers\RoleController');
                                     <th>{{ __('Name') }}</th>
                                     <th>{{ __('Email') }}</th>
                                     <th>{{ __('Mobile') }}</th>
+                                    <th>{{ __('Age of Account') }}</th>
+                                    <th>{{ __('A/C Create Date') }}</th>
                                     <th>{{ __('Roles') }}</th>
                                     <th>{{ __('Listing Rate') }}</th>
                                     <th>{{ __('Account Health') }}</th>
@@ -137,6 +139,12 @@ $getRoles = app('App\Http\Controllers\RoleController');
                                     <td>{{ $user->name }}</td>
                                     <td><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></td>
                                     <td>{{ $user->mobile }}</td>
+                                    @php
+                                        $createdAt = $user->created_at;
+                                        $daysSinceCreation = \Carbon\Carbon::parse($createdAt)->diffInDays(\Carbon\Carbon::now());
+                                    @endphp
+                                    <td>{{ $daysSinceCreation }} Days</td>
+                                    <td>{{ \Carbon\Carbon::parse($user->created_at)->format('d-m-Y h:i A') }}</td>
                                     <td>
                                         @foreach ($user->roles as $index => $role)
                                         <span class="badge bg-primary">{{ $role->name }}</span>

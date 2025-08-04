@@ -132,6 +132,8 @@
                                     <th><input type="checkbox" class="check-all" /></th>
                                     <!--<th>{{ __('-') }}</th>-->
                                     <th>{{ __('Sl') }}</th>
+                                    <th>{{ __('Similarity') }}</th>
+                                    <th>{{ __('Change %') }}</th>
                                     <th>{{ __('Status') }}</th>
                                     <th>{{ __('Status') }}</th>
                                     <th>{{ __('Stock') }}</th>
@@ -159,6 +161,8 @@
                                             @endif
                                     </td>
                                     <td>{{ ++$key }}</td>
+                                    <td>{{ $googlePost->similarity_percentage }}</td>
+                                    <td>{{ $googlePost->change_percentage	 }}</td>
                                     <td class="status">{{substr($googlePost->error, 0, 20)}}</td>
                                     <td>
                                         @switch($googlePost->status)

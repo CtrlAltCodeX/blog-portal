@@ -42,7 +42,7 @@ class DashboardController extends Controller
             return view('settings.error');
         }
 
-        $userSessionsCount = UserSession::query();
+        $userSessionsCount = UserSession::query()->with('user');
 
         $selectedUserId = '';
         if ((request()->get('user_id'))) {
