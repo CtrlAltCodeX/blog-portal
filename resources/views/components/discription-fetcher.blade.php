@@ -18,7 +18,7 @@
           return;
         }
 
-        const template = `Q. Write Product Description in 300 to 400 words of the Book Name - ${title}.
+        const template = `Q. Write Product Description in 500 to 600 words of the Book Name - ${title}.
         Q. Write Top 20 Google Search Keywords Which is Most Searchable by Users Before Buying this Item of the Book Name - ${title}.`;
 
         $.ajax({
