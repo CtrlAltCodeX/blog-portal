@@ -222,7 +222,6 @@ class DatabaseListingController extends Controller
 
     public function copyDatabase($id)
     {
-
         try {
             $findListing = Listing::find($id);
 
@@ -331,8 +330,6 @@ class DatabaseListingController extends Controller
      
          return $dp[$len1][$len2];
      }
-
-
 
     public function update(BlogRequest $request, string $id)
     {
@@ -563,7 +560,7 @@ class DatabaseListingController extends Controller
      */
     public function getPublishPending(Request $request)
     {
-        $googlePosts = Listing::with('created_by_user')
+        $googlePosts = Listing::with('created_by_user', 'backup_listing')
             ->leftJoin('backup_listings', 'listings.product_id', '=', 'backup_listings.product_id')
             ->orderBy('listings.created_at', 'desc')
             ->whereNotNull('listings.product_id')
@@ -656,6 +653,8 @@ class DatabaseListingController extends Controller
         });
         
         $users = User::where('status', 1)->get();
+
+        // dd($googlePosts);
 
         return view('database-listing.publish-pending', compact('users', 'allCounts', 'googlePosts', 'pendingCounts', 'rejectedCounts'));
     }
@@ -1015,7 +1014,7 @@ class DatabaseListingController extends Controller
             'manufacturer' => trim(request()->manufacturer),
             'importer' => trim(request()->importer),
             'packer' => trim(request()->packer),
-            'similarity_percentage' => round($similarityPercentage * 100, 2),
+            'similarity_percentage' => round($similarityPercentage, 2),
             'change_percentage' => round($changePercentage, 2),
         ];
 

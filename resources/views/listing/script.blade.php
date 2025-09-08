@@ -33,9 +33,9 @@
         });
 
         // // Attach a click event to dynamically added "Remove" buttons
-        $("#addUrls").on("click", ".removeFileInput", function() {
+        $("#formTest").on("click", ".removeFileInput", function() {
             // Check if there's more than one file input field before removing
-            if ($("#addUrls .form-group").length > 0) {
+            if ($("#formTest .form-group").length > 0) {
                 $(this).closest('.form-group').remove();
             }
         });
@@ -135,7 +135,6 @@
                 localStorage.setItem('validate', JSON.stringify(result));
             },
         });
-
         
 
         $('#form, #formTest').submit(function(event) {
@@ -557,93 +556,6 @@
             $('#count').html("<strong>Label Selected : </strong>" + $(this).val().length);
         });
 
-        const publications = @json($publications);
-        const $pubDropdown = $("#pub_name");
-        const $bookDropdown = $("#book_name");
-        const $mrpInput = $("#mrp");
-        let discount = 0,
-            locationDis = 0,
-            enteredMRP = 0;
-
-        // Jab Publication select ho
-        $pubDropdown.on("change", function() {
-            const selectedPub = publications.find(pub => pub.id == $(this).val());
-            $bookDropdown.html('<option value="">-- Select Book --</option>');
-
-            if (selectedPub) {
-                for (let i = 1; i <= 6; i++) {
-                    const bookType = selectedPub[`book_type_${i}`];
-                    if (bookType) {
-                        $bookDropdown.append(`<option value="book_discount_${i}">${bookType}</option>`);
-                    }
-                }
-            }
-
-            calculatePrice();
-        });
-
-        // Jab Book select ho
-        $bookDropdown.on("change", function() {
-            const selectedPub = publications.find(pub => pub.id == $pubDropdown.val());
-            if (selectedPub && $(this).val()) {
-                discount = parseInt(selectedPub[$(this).val()]) || 0;
-                locationDis = parseInt(selectedPub.location_dis) || 0;
-            }
-            calculatePrice();
-        });
-
-        // Jab MRP change ho to naye value store karo aur calculation karo
-        $mrpInput.on("input", function() {
-            enteredMRP = parseInt($(this).val()) || 0;
-            calculatePrice();
-        });
-
-        function calculatePrice() {
-            const mrp = parseInt($mrpInput.val()) || 0;
-            // const locationDiscount = (locationDis / 100) * mrp;
-            const locationDiscount = locationDis;
-            const netDis = discount - locationDiscount;
-            const finalPrice = mrp - ((netDis*mrp)/100);
-            // console.log("mrp", mrp)
-            // console.log("finalPrice", finalPrice)
-
-            if (mrp && finalPrice > 0) {
-                $.get("{{ route('listing.getPriceRecords') }}", {
-                        price: finalPrice
-                    })
-                    .done(function(data) {
-                        if (!data.length) {
-                            // console.error("No data received.");
-                            alert("No data according to" + finalPrice)
-                            return;
-                        }
-
-                        const record = data[0];
-                        const courier_rate = parseInt(record.courier_rate) || 0;
-                        const packing_charge = parseInt(record.packing_charge) || 0;
-                        const our_min_profit_value = parseInt(record.our_min_profit) || 0;
-                        const max_profit_value = parseInt(record.max_profit) || 0;
-
-                        // Calculate transaction cost
-                        const transactionCost = (finalPrice + courier_rate + packing_charge) * (3 / 100);
-                        const selling_price = finalPrice + courier_rate + packing_charge + transactionCost;
-
-                        const selling_price1 = selling_price + our_min_profit_value;
-                        const selling_price2 = selling_price + max_profit_value;
-
-                        $("#selling_price1").text(selling_price1.toFixed(2));
-                        $("#selling_price2").text(selling_price2.toFixed(2));
-
-                        $("#selling_price_minus1").text(selling_price1.toFixed(2) - 45);
-                        $("#selling_price_minus2").text(selling_price2.toFixed(2) - 45);
-                        $("#weight").text(record.weight);
-                    })
-                    .fail(function(error) {
-                        console.error("Error fetching records:", error);
-                    });
-            }
-        }
-        
         function checkFieldsAreChanged()
         {
             @if(isset($listing->product_id))

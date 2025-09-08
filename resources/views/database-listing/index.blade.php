@@ -43,6 +43,20 @@
         margin-right: 5px;
         margin-top: 8px;
     }
+
+    .tick {
+        border: 1px solid green;
+        background-color: green;
+        color: white !important;
+        padding: 5px;
+    }
+     
+    .close {
+        border: 1px solid red;
+        background-color: red;
+        color: white !important;
+        padding: 5px;
+    }
 </style>
 @endpush
 
@@ -134,6 +148,7 @@
                                     <th>{{ __('Sl') }}</th>
                                     <th>{{ __('Similarity') }}</th>
                                     <th>{{ __('Change %') }}</th>
+                                    <th>{{ __('Validator') }}</th>
                                     <th>{{ __('Status') }}</th>
                                     <th>{{ __('Status') }}</th>
                                     <th>{{ __('Stock') }}</th>
@@ -162,7 +177,19 @@
                                     </td>
                                     <td>{{ ++$key }}</td>
                                     <td>{{ $googlePost->similarity_percentage }}</td>
-                                    <td>{{ $googlePost->change_percentage	 }}</td>
+                                    <td>{{ $googlePost->change_percentage }}</td>
+                                    <td>
+                                        @php
+                                            $images = json_decode($googlePost->images, true);
+                                            $imageUrl = $images[0] ?? null;
+                                        @endphp
+
+                                        @if($imageUrl && str_contains($imageUrl, 'blogger.googleusercontent.com'))
+                                            <i class='fa fa-check text-success tick'></i>
+                                        @else
+                                            <i class='fa fa-close text-danger close'></i>
+                                        @endif
+                                    </td>
                                     <td class="status">{{substr($googlePost->error, 0, 20)}}</td>
                                     <td>
                                         @switch($googlePost->status)

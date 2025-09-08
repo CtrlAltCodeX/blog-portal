@@ -26,8 +26,6 @@
         text-align: center;
         border-radius: 6px;
         padding: 5px 0;
-
-        /* Position the tooltip */
         position: absolute;
         z-index: 1;
     }
@@ -43,6 +41,20 @@
         margin-right: 5px;
         margin-top: 8px;
     }
+    
+    .tick {
+        border: 1px solid green;
+        background-color: green;
+        color: white !important;
+        padding: 5px;
+     }
+     
+     .close {
+        border: 1px solid red;
+        background-color: red;
+        color: white !important;
+        padding: 5px;
+     }
 </style>
 @endpush
 
@@ -141,13 +153,15 @@
                                     <th>{{ __('Sl') }}</th>
                                     <th>{{ __('Similarity') }}</th>
                                     <th>{{ __('Change %') }}</th>
+                                    <th>{{ __('Validator') }}</th>
                                     @if (auth()->user()->hasRole('Super Admin') || auth()->user()->hasRole('Super Management'))
                                     <th>{{ __('Update Age') }}</th>
                                     @endif
-                                    <th>{{ __('Status') }}</th>
+                                    <th>{{ __('Error Msg') }}</th>
                                     <th>{{ __('Status') }}</th>
                                     <th>{{ __('Stock') }}</th>
-                                    <th>{{ __('Image') }}</th>
+                                    <th>{{ __('Previous Image') }}</th>
+                                    <th>{{ __('New Image') }}</th>
                                     <th>{{ __('Product ID') }}</th>
                                     <th>{{ __('Product name') }}</th>
                                     <th>{{ __('Sell Price') }}</th>
@@ -174,6 +188,18 @@
                                     <td>{{ ++$key }}</td>
                                     <td>{{ $googlePost->similarity_percentage }}</td>
                                     <td>{{ $googlePost->change_percentage	 }}</td>
+                                    <td align='center'>
+                                        @php
+                                            $images = json_decode($googlePost->images, true);
+                                            $imageUrl = $images[0] ?? null;
+                                        @endphp
+
+                                        @if($imageUrl && str_contains($imageUrl, 'blogger.googleusercontent.com'))
+                                            <i class='fa fa-check text-success tick'></i>
+                                        @else
+                                            <i class='fa fa-close text-danger close'></i>
+                                        @endif
+                                    </td>
                                     @if (auth()->user()->hasRole('Super Admin') || auth()->user()->hasRole('Super Management'))
                                     <td class='text-capitalize'>{{ $googlePost->last_updated_formatted??"-" }}</td>
                                     @endif
@@ -209,10 +235,11 @@
                                     }
 
                                     @endphp
-                                    <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $image }}" alt="Product Image" /></td>
+                                    <td align="center"><img style='width:60px;' onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $googlePost->backup_listing ? $googlePost->backup_listing->base_url :  '/public/dummy.jpg' }}" alt="Product Image" /></td>
+                                    <td><img style='width:60px;' onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $image }}" alt="Product Image" /></td>
                                     <!--<td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="@if(isset($googlePost->images)) {{ $googlePost->images[0] }} @endif" alt="Product Image" /></td>-->
                                     <td><a href="{{ $googlePost->url ? $googlePost->url : '#' }}" target='_blank'>{{ $googlePost->product_id }}</a></td>
-                                    <td>{{ $googlePost->title }}</td>
+                                    <td>{{ $googlePost->title }} <br> <span class='text-primary'>{{ $googlePost->backup_listing ? $googlePost->backup_listing->title : 'N/A' }}</span></td>
                                     <td>{{ '₹'.$googlePost->selling_price }}</td>
                                     <td>
                                         @php

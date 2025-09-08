@@ -34,6 +34,7 @@
     <!-- COLOR SKIN CSS -->
     <link id="theme" rel="stylesheet" type="text/css" media="all" href="{{ asset('assets/colors/color1.css') }}" />
 </head>
+    @stack('css')
 
 @php
     $homepageImage = App\Models\SiteSetting::first()->homepage_image??'';

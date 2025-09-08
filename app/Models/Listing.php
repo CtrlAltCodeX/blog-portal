@@ -58,4 +58,9 @@ class Listing extends Model
     {
         return $this->hasOne(User::class, 'id', 'created_by');
     }
+
+    public function backup_listing()
+    {
+        return $this->hasOne(BackupListing::class, 'product_id', 'product_id');
+    }
 }

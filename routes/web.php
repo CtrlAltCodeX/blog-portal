@@ -438,3 +438,6 @@ Route::get('/assets/images/brand/{filename}', UserController::class)
 
 Route::get('', [HomeController::class, 'index'])
     ->name('home');
+
+Route::match(['get','post'], 'price/calculation', [UserController::class, 'priceCalculation'])
+    ->name('price.calculation');

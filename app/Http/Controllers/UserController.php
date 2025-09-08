@@ -16,6 +16,7 @@ use App\Models\UserListingCount;
 use App\Mail\RegisterOtpMail;
 use App\Mail\WelcomeMail;
 use App\Mail\StatusNotificationMail;
+use App\Models\WeightVSCourier;
 
 class UserController extends Controller
 {
@@ -386,5 +387,26 @@ class UserController extends Controller
 
         // Pass data to the view
         return view('counts', compact('countCreated', 'countEdited', 'users'));
+    }
+
+    public function priceCalculation()
+    {
+        $publications  = WeightVSCourier::all();
+        
+        $password = env('PUBLIC_CALCULATOR_PASSWORD'); // set your password
+
+        // If already unlocked in session
+        if (request()->session()->get('page_unlocked', false)) {
+            return view('price-calculator', compact('publications'));
+        }
+    
+        // Check password submission
+        if (request()->isMethod('post') && request()->input('page_password') === $password) {
+            request()->session()->put('page_unlocked', true);
+            return view('price-calculator', compact('publications'));
+        }
+    
+        // Otherwise show password form
+        return view('password-protect');
     }
 }
