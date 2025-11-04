@@ -7,14 +7,13 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
- public function index()
-    {
-        $categories = Category::with('parent')->get();
-        return view('categories.index', compact('categories'));
-    }
+    
+public function index()
+{
+    $categories = Category::with('parent')->paginate(10);
+    return view('categories.index', compact('categories'));
+}
+
 
 public function create()
 {

@@ -24,25 +24,31 @@
                 </thead>
                 <tbody>
                     @foreach ($categories as $category)
-                        <tr>
-                            <td>{{ $category->id }}</td>
-                            <td>{{ $category->name }}</td>
-                            <td>{{ $category->parent?->name ?? '—' }}</td>
-                            <td>{{ $category->category_limit ?? '-' }}</td>
-                            <td>{{ $category->preference ?? '-' }}</td>
-                            <td>
-                                <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                                <form action="{{ route('categories.destroy', $category->id) }}" method="POST" style="display:inline;">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger"
-                                        onclick="return confirm('Are you sure?')">Delete</button>
-                                </form>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td>{{ $category->id }}</td>
+                        <td>{{ $category->name }}</td>
+                        <td>{{ $category->parent?->name ?? '—' }}</td>
+                        <td>{{ $category->category_limit ?? '-' }}</td>
+                        <td>{{ $category->preference ?? '-' }}</td>
+                        <td>
+                            <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                            <form action="{{ route('categories.destroy', $category->id) }}" method="POST" style="display:inline;">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Are you sure?')">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
                     @endforeach
                 </tbody>
             </table>
+
+            {{-- Pagination Links --}}
+            <div class="d-flex justify-content-center mt-3">
+                {!! $categories->links('pagination::bootstrap-5') !!}
+            </div>
         </div>
     </div>
+
 </div>
 @endsection

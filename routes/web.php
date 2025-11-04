@@ -24,7 +24,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\GraphicalDashboardController;
 use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\CategoryController;
-
+use App\Http\Controllers\CreatePageController;
 Illuminate\Support\Facades\Auth::routes();
 /*
 |--------------------------------------------------------------------------
@@ -328,6 +328,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
      */
     Route::resource('users', UserController::class);
 Route::resource('categories', CategoryController::class);
+Route::resource('createpages', CreatePageController::class);
 
     Route::get('count/users', [UserController::class, 'userCounts'])
         ->name('users.count');
