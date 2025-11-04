@@ -211,6 +211,9 @@ $userInfo = app('App\Models\SiteSetting')->first();
                     </ul>
                 </li>
                 @endif
+
+                <li><a href="{{ route('categories.index') }}" class="slide-item {{ request()->is('admin/categories') ? 'active' : '' }}">{{ __('Create Categories') }}</a></li>
+
             </ul>
         </div>
     </div>

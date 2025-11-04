@@ -23,6 +23,7 @@ use App\Http\Controllers\ChatGptController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\GraphicalDashboardController;
 use App\Http\Controllers\DeveloperController;
+use App\Http\Controllers\CategoryController;
 
 Illuminate\Support\Facades\Auth::routes();
 /*
@@ -326,6 +327,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
      * User Functionalities
      */
     Route::resource('users', UserController::class);
+Route::resource('categories', CategoryController::class);
 
     Route::get('count/users', [UserController::class, 'userCounts'])
         ->name('users.count');

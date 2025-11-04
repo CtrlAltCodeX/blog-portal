@@ -30,7 +30,9 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
 
         Paginator::useBootstrap();
-
+        if (file_exists(app_path('Helpers/helpers.php'))) {
+            require_once app_path('Helpers/helpers.php');
+        }
         Storage::extend('dropbox', function (Application $app, array $config) {
             $adapter = new DropboxAdapter(new DropboxClient(
                 $config['authorization_token']
