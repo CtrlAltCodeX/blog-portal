@@ -49,8 +49,14 @@
 
                             <div class="form-group col-2">
                                 <label for="preference" class="form-label">{{ __('Preference') }}</label>
-                                <input type="number" class="form-control" name="preference" placeholder="Preference order">
+                                <select class="form-control" name="preference">
+                                    <option value="">Select Preference</option>
+                                    <option value="High">High</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="Low">Low</option>
+                                </select>
                             </div>
+
                         </div>
                     </div>
                 </div>

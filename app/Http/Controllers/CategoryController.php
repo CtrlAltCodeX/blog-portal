@@ -29,7 +29,7 @@ public function create()
         $request->validate([
             'name' => 'required|string|max:255',
             'category_limit' => 'nullable|integer',
-            'preference' => 'nullable|integer',
+            'preference' => 'nullable|string',
         ]);
 
         Category::create([
@@ -65,7 +65,7 @@ public function edit(Category $category)
         $request->validate([
             'name' => 'required|string|max:255',
             'category_limit' => 'nullable|integer',
-            'preference' => 'nullable|integer',
+            'preference' => 'nullable|string',
         ]);
 
         $category->update($request->only(['name', 'parent_id', 'category_limit', 'preference']));
