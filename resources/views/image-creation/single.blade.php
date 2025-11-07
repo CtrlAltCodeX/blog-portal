@@ -4,9 +4,9 @@
 
 @php
 if(request()->maker == 'wo-watermark'){
-$formRoute = "/admin/convert/image";
+    $formRoute = "/admin/convert/image";
 } elseif(request()->maker == 'wo-watermark'){
-$formRoute = "/admin/images/watermark/store";
+    $formRoute = "/admin/images/watermark/store";
 }
 @endphp
 
@@ -24,7 +24,6 @@ $formRoute = "/admin/images/watermark/store";
                     <div id="fileInputContainer">
                         <div class="form-group"></div>
                         <div class="d-flex justify-content-end">
-                            <!-- <label for="fileInput1" class="mt-2">Single Image Maker</label> -->
                             <form action="" method="get" id='form'>
                                 <div class="d-flex">
                                     <div class="d-flex align-items-baseline">
@@ -40,12 +39,23 @@ $formRoute = "/admin/images/watermark/store";
                                             <small class="text-danger">( GMC Approved )</small>
                                         </label>
                                     </div>
+
+                                    <div class="d-flex align-items-baseline">
+                                        <input type="radio" class="m-2" name="size" value='basic' {{ request()->size == 'basic' ?  'checked' : '' }} />
+                                        <label>Basic<br /></label>
+                                    </div>
+
+                                    <div class="d-flex align-items-baseline">
+                                        <input type="radio" class="m-2" name="size" value='fixed' {{ request()->size == 'fixed' ?  'checked' : '' }} />
+                                        <label>Fixed<br /></label>
+                                    </div>
                                 </div>
                             </form>
                         </div>
 
                         <form action="{{ route('image.watermark.store')  }}" method="post" enctype="multipart/form-data">
                             @csrf
+                            <input type='hidden' name='size' value='{{ request()->size }}' />
                             <div class="form-group mt-2" @error('file') style="border: red 2px dotted;" @enderror>
                                 @if(request()->maker == 'wo-watermark')
                                 <label for="fileInput1">Image without Watermark<span class="text-danger">*</span></label>

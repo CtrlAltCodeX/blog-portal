@@ -49,12 +49,35 @@
         padding: 5px;
      }
      
-     .close {
+    .close {
         border: 1px solid red;
         background-color: red;
         color: white !important;
         padding: 5px;
-     }
+    }
+
+    .thumb {
+        width: 60px;
+        cursor: zoom-in;
+    }
+
+    .image-preview {
+        position: fixed;
+        display: none; /* hidden initially */
+        top: 0;
+        left: 0;
+        width: 400px;
+        border: 1px solid #ddd;
+        background: #fff;
+        z-index: 9999;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+
+    .image-preview img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
 </style>
 @endpush
 
@@ -186,7 +209,9 @@
                                         @endif
                                     </td>
                                     <td>{{ ++$key }}</td>
-                                    <td>{{ $googlePost->similarity_percentage }}</td>
+                                    <td style="{{ $googlePost->similarity_percentage > 40 ? 'background-color: red; color: white;' : '' }}">
+                                        {{ $googlePost->similarity_percentage }}
+                                    </td>
                                     <td>{{ $googlePost->change_percentage	 }}</td>
                                     <td align='center'>
                                         @php
@@ -235,9 +260,24 @@
                                     }
 
                                     @endphp
-                                    <td align="center"><img style='width:60px;' onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $googlePost->backup_listing ? $googlePost->backup_listing->base_url :  '/public/dummy.jpg' }}" alt="Product Image" /></td>
-                                    <td><img style='width:60px;' onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $image }}" alt="Product Image" /></td>
-                                    <!--<td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="@if(isset($googlePost->images)) {{ $googlePost->images[0] }} @endif" alt="Product Image" /></td>-->
+                                    <td align="center">
+                                        <img 
+                                            class="thumb" 
+                                            src="{{ $googlePost->backup_listing ? $googlePost->backup_listing->base_url :  '/dummy.jpg' }}" 
+                                            data-full="{{ $googlePost->backup_listing ? $googlePost->backup_listing->base_url :  '/dummy.jpg' }}"
+                                            onerror="this.onerror=null;this.src='/dummy.jpg';"
+                                            alt="Product Image">
+                                        {{-- <img class='zoomable' style='width:60px;' onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $googlePost->backup_listing ? $googlePost->backup_listing->base_url :  '/public/dummy.jpg' }}" alt="Product Image" /> --}}
+                                    </td>
+                                    <td>
+                                        <img 
+                                            class="thumb" 
+                                            src="{{ $image }}" 
+                                            data-full="{{ $image }}"
+                                            onerror="this.onerror=null;this.src='/dummy.jpg';"
+                                            alt="Product Image">
+                                        {{-- <img style='width:60px;' onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $image }}" alt="Product Image" class='zoomable' /> --}}
+                                    </td>
                                     <td><a href="{{ $googlePost->url ? $googlePost->url : '#' }}" target='_blank'>{{ $googlePost->product_id }}</a></td>
                                     <td>{{ $googlePost->title }} <br> <span class='text-primary'>{{ $googlePost->backup_listing ? $googlePost->backup_listing->title : 'N/A' }}</span></td>
                                     <td>{{ '₹'.$googlePost->selling_price }}</td>
@@ -299,6 +339,10 @@
     </div>
 </div>
 
+<div id="imagePreview" class="image-preview">
+  <img id="imagePreviewImg" src="" alt="Preview">
+</div>
+
 @endsection
 
 @push('js')
@@ -326,42 +370,44 @@
 <!-- FORMELEMENTS JS -->
 <script src="/assets/js/form-elements.js"></script>
 
+@include('database-listing.listting-script')
+
 <script>
     $(document).ready(function() {
-        $("#issue_dropdown").change(function() {
-            if($(this).val() == 1) {
-                $(".astric").hide();
-                $(".accurate").show();
-            } else if($(this).val() == 2) {
-                $(".accurate").show();
-                $(".astric").show();
-            } else if($(this).val() == 3) {
-                $(".accurate").hide();
-                $(".astric").show();
-            }
-        });
+        // $("#issue_dropdown").change(function() {
+        //     if($(this).val() == 1) {
+        //         $(".astric").hide();
+        //         $(".accurate").show();
+        //     } else if($(this).val() == 2) {
+        //         $(".accurate").show();
+        //         $(".astric").show();
+        //     } else if($(this).val() == 3) {
+        //         $(".accurate").hide();
+        //         $(".astric").show();
+        //     }
+        // });
         
         //______Basic Data Table
-        $('#basic-datatable').DataTable({
-            "paging": false,
-            "order": [[1, "asc"]]
-        });
+        // $('#basic-datatable').DataTable({
+        //     "paging": false,
+        //     "order": [[1, "asc"]]
+        // });
 
-        $("#category").on("change", function() {
-            $("#form").submit();
-        })
+        // $("#category").on("change", function() {
+        //     $("#form").submit();
+        // })
         
-        $("#paging").on("change", function() {
-            $("#pagingform").submit();
-        });
+        // $("#paging").on("change", function() {
+        //     $("#pagingform").submit();
+        // });
         
-        $("#status").change(function() {
-            $("#formStatus").submit();
-        });
+        // $("#status").change(function() {
+        //     $("#formStatus").submit();
+        // });
 
-        $("#user").change(function() {
-            $("#form").submit();
-        });
+        // $("#user").change(function() {
+        //     $("#form").submit();
+        // });
         
         $("#age_filter").change(function() {
             $("#form").submit();
@@ -416,36 +462,57 @@
             });
         });
 
-        var ids = [];
-        $(".checkbox-update").click(function() {
-            if ($(this).prop('checked')) {
-                ids.push($(this).val());
-            } else {
-                var index = ids.indexOf($(this).val());
-                if (index !== -1) {
-                    ids.splice(index, 1);
-                }
-            }
-        });
+        // var ids = [];
+        // $(".checkbox-update").click(function() {
+        //     if ($(this).prop('checked')) {
+        //         ids.push($(this).val());
+        //     } else {
+        //         var index = ids.indexOf($(this).val());
+        //         if (index !== -1) {
+        //             ids.splice(index, 1);
+        //         }
+        //     }
+        // });
 
-        $('.check-all').click(function() {
-            $(".checkbox-update").each(function() {
-                if ($('.check-all').prop('checked') == true) {
-                    $(this).prop('checked', true);
-                    ids.push($(this).val());
-                } else {
-                    $(this).prop('checked', false);
-                    var index = ids.indexOf($(this).val());
-                    if (index !== -1) {
-                        ids.splice(index, 1);
-                    }
-                }
-            });
-        });
-        
-        
+        // $('.check-all').click(function() {
+        //     $(".checkbox-update").each(function() {
+        //         if ($('.check-all').prop('checked') == true) {
+        //             $(this).prop('checked', true);
+        //             ids.push($(this).val());
+        //         } else {
+        //             $(this).prop('checked', false);
+        //             var index = ids.indexOf($(this).val());
+        //             if (index !== -1) {
+        //                 ids.splice(index, 1);
+        //             }
+        //         }
+        //     });
+        // });
 
-        
+        // $(function() {
+        //     $('.thumb').hover(
+        //         function(e) {
+        //             var full = $(this).data('full');
+        //             if (!full) {
+        //                 full = '/dummy.jpg';
+        //             }
+        //             console.log(full);
+        //             $('#imagePreviewImg').attr('src', full);
+        //             $('#imagePreview').show();
+        //         },
+        //         function(e) {
+        //             $('#imagePreview').hide();
+        //         }
+        //     );
+
+        //     $('.thumb').mousemove(function(e) {
+        //         // follow mouse cursor
+        //         $('#imagePreview').css({
+        //             top: e.clientY - 250 + 'px',
+        //             left: e.clientX + 20 + 'px'
+        //         });
+        //     });
+        // });
     })
 </script>
 

@@ -12,7 +12,7 @@
             $("#form").submit();
         })
 
-        $('input[name="maker"]').change(function() {
+        $('input[name="maker"], input[name="size"]').change(function() {
             $("#form").submit();
         })
 

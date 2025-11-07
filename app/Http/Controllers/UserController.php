@@ -17,6 +17,7 @@ use App\Mail\RegisterOtpMail;
 use App\Mail\WelcomeMail;
 use App\Mail\StatusNotificationMail;
 use App\Models\WeightVSCourier;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -49,8 +50,8 @@ class UserController extends Controller
         $users = User::whereDoesntHave('roles', function ($query) {
             $query->where('name', 'Developer');
         })
-        ->orderBy('id', 'asc')
-        ->paginate(request()->get('users', 10));
+            ->orderBy('id', 'asc')
+            ->paginate(request()->get('users', 10));
 
 
         $allUser = User::whereDoesntHave('roles', function ($query) {
@@ -60,13 +61,13 @@ class UserController extends Controller
         $active = User::whereDoesntHave('roles', function ($query) {
             $query->where('name', 'Developer');
         })
-        ->where('status', 1)->count();
+            ->where('status', 1)->count();
 
         $inactive = User::whereDoesntHave('roles', function ($query) {
             $query->where('name', 'Developer');
         })
-        ->where('status', 0)->count();
-        
+            ->where('status', 0)->count();
+
         return view('accounts.users.index', compact('users', 'allUser', 'active', 'inactive'));
     }
 
@@ -108,17 +109,30 @@ class UserController extends Controller
             $result .= substr($generator, rand() % strlen($generator), 1);
         }
 
-        // Returning the result
         return $result;
     }
 
-    public function registerOTP()
+    public function registerOTP(Request $request)
     {
         $otp = $this->generateOTP(6);
 
         session()->flash('otp', $otp);
 
-        Mail::to('abhishek86478@gmail.com')->send(new RegisterOtpMail($otp, request()->name));
+        // Collect all form data
+        $userData = $request->only([
+            'name',
+            'email',
+            'mobile',
+            'account_type',
+            'aadhaar_no',
+            'father_name',
+            'mother_name',
+            'state',
+            'pincode',
+            'full_address'
+        ]);
+
+        Mail::to('abhishek86478@gmail.com')->send(new RegisterOtpMail($otp, $userData));
 
         session()->flash('success', __('OTP Send to Admin'));
 

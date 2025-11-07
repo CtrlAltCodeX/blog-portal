@@ -12,6 +12,10 @@ use Intervention\Image\ImageManager;
 
 class WatermarkController extends Controller
 {
+    const CANVAS_WIDTH = 555;
+    const CANVAS_HEIGHT = 555;
+    const COLOR_BACKGROUND = '#ffffff';
+
     /**
      * Show the create view.
      */
@@ -62,9 +66,17 @@ class WatermarkController extends Controller
             file_put_contents($localPath, $imageContents);
         }
 
+        if (request()->size == 'basic') {
+            $widthSizeImage = 390;
+            $heightSizeImage = 520;
+        } else if (request()->size == 'fixed') {
+            $widthSizeImage = 320;
+            $heightSizeImage = 450;
+        }
+
         // Resize and create base image
-        $background = (new ImageManager())->canvas(555, 555, '#ffffff');
-        $background->insert(Image::make($localPath)->resize(390, 520), 'center');
+        $background = (new ImageManager())->canvas(self::CANVAS_WIDTH, self::CANVAS_HEIGHT, self::COLOR_BACKGROUND);
+        $background->insert(Image::make($localPath)->resize($widthSizeImage, $heightSizeImage), 'center');
 
         // Watermark logic
         if ($request->with_watermark) {

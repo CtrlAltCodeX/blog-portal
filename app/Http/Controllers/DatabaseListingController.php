@@ -111,6 +111,13 @@ class DatabaseListingController extends Controller
     public function store(BlogRequest $request)
     {
         try {
+            $listing = $this->listingExist($request->title, $request->description);
+
+            if ($listing) {
+                session()->flash('error', '⚠️ Your Title is too similar to existing product');
+                return redirect()->back();
+            }
+
             $data = [
                 '_token' => $request->_token,
                 'title' => $request->title,
@@ -311,50 +318,73 @@ class DatabaseListingController extends Controller
      * Update the specified resource in storage.
      */
 
-     private function getMatchingCharacters($str1, $str2)
-     {
-         $len1 = mb_strlen($str1);
-         $len2 = mb_strlen($str2);
-     
-         $dp = array_fill(0, $len1 + 1, array_fill(0, $len2 + 1, 0));
-     
-         for ($i = 0; $i < $len1; $i++) {
-             for ($j = 0; $j < $len2; $j++) {
-                 if (mb_substr($str1, $i, 1) === mb_substr($str2, $j, 1)) {
-                     $dp[$i + 1][$j + 1] = $dp[$i][$j] + 1;
-                 } else {
-                     $dp[$i + 1][$j + 1] = max($dp[$i + 1][$j], $dp[$i][$j + 1]);
-                 }
-             }
-         }
-     
-         return $dp[$len1][$len2];
-     }
+    private function getMatchingCharacters($str1, $str2)
+    {
+        $len1 = mb_strlen($str1);
+        $len2 = mb_strlen($str2);
 
+        $dp = array_fill(0, $len1 + 1, array_fill(0, $len2 + 1, 0));
+
+        for ($i = 0; $i < $len1; $i++) {
+            for ($j = 0; $j < $len2; $j++) {
+                if (mb_substr($str1, $i, 1) === mb_substr($str2, $j, 1)) {
+                    $dp[$i + 1][$j + 1] = $dp[$i][$j] + 1;
+                } else {
+                    $dp[$i + 1][$j + 1] = max($dp[$i + 1][$j], $dp[$i][$j + 1]);
+                }
+            }
+        }
+
+        return $dp[$len1][$len2];
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
     public function update(BlogRequest $request, string $id)
     {
+        $listing = $this->listingExist($request->title, $request->description);
+
+        if ($listing) {
+            session()->flash('error', '⚠️ Your Title is too similar to an existing product. You are not allowed to COPY the title of any existing listing. ');
+
+            return redirect()->back();
+        }
+
         $listing = Listing::findOrFail($id);
-     
+
+        $threshold = 50;
+        $wordSim = $this->textSimilarity($request->description, $listing->description);
+        $phraseSim = $this->ngramSimilarity($request->description, $listing->description);
+
+        if ($wordSim >= $threshold || $phraseSim >= $threshold) {
+            session()->flash('error', "⚠️ Your description is too similar ({$wordSim}% match) to an existing product. You are not allowed to copy any existing listing Description. <br> 
+            <span style='color:blue;'><strong>Recommendation:</strong> You should change at least 50% of the description. 
+            However, you can COPY the 'Search Key' part.</span>");
+
+            return back();
+        }
+
         $oldStr = strip_tags(
             ($listing->title ?? '') .
-            ($listing->description ?? '') .
-            ($listing->edition ?? '') .
-            (string)$listing->mrp .
-            (string)$listing->selling_price
+                ($listing->description ?? '') .
+                ($listing->edition ?? '') .
+                (string)$listing->mrp .
+                (string)$listing->selling_price
         );
-    
+
         $newStr = strip_tags(
             ($request->title ?? '') .
-            ($request->description ?? '') .
-            ($request->edition ?? '') .
-            (string)$request->mrp .
-            (string)$request->selling_price
+                ($request->description ?? '') .
+                ($request->edition ?? '') .
+                (string)$request->mrp .
+                (string)$request->selling_price
         );
 
         similar_text($oldStr, $newStr, $similarityPercentage);
-    
+
         $changePercentage = 100 - $similarityPercentage;
- 
+
         $data = [
             '_token' => $request->_token,
             'title' => $request->title,
@@ -388,36 +418,40 @@ class DatabaseListingController extends Controller
             'similarity_percentage' => round($similarityPercentage, 2),
             'change_percentage' => round($changePercentage, 2),
         ];
-    
-     
-         if ($request->status == 2) {
-             $this->updateTheCount('Created', 'reject_count');
-             $data['status'] = $request->status;
-     
-             $additionalInfo = UserListingInfo::where('image', $request->images[0])
-                 ->where('title', $request->title)
-                 ->first();
-     
-             if ($additionalInfo) {
-                 $additionalInfo->update(['status' => $request->status]);
-             }
-         } elseif ($request->status == 1) {
-             $additionalInfo = UserListingInfo::where('image', $request->images[0])
-                 ->where('title', $request->title)
-                 ->first();
-     
-             if ($additionalInfo) {
-                 $additionalInfo->update(['status' => $request->status]);
-             }
-         }
-     
-         if ($listing->update($data)) {
-             session()->flash('success', 'Listing Updated successfully');
-             return redirect()->back();
-         }
-     
-         session()->flash('error', 'Something went wrong');
-         return redirect()->back();
+
+        $listing = Listing::find($id);
+
+        if ($request->status == 2) {
+            $this->updateTheCount('Created', 'reject_count');
+
+            $data['status'] = request()->status;
+
+            $additionalInfo = UserListingInfo::where('image', $request->images[0])
+                ->where('title', request()->title)
+                ->first();
+
+            $additionalInfo->update([
+                'status' => request()->status
+            ]);
+        } else if ($request->status == 1) {
+            $additionalInfo = UserListingInfo::where('image', $request->images[0])
+                ->where('title', request()->title)
+                ->first();
+
+            $additionalInfo->update([
+                'status' => request()->status
+            ]);
+        }
+
+        if ($listing->update($data)) {
+            session()->flash('success', 'Listing Updated successfully');
+
+            return redirect()->back();
+        }
+
+        session()->flash('error', 'Someting went wrong');
+
+        return redirect()->back();
     }
 
     /**
@@ -432,6 +466,7 @@ class DatabaseListingController extends Controller
             ->delete();
 
         if ($listing->delete()) {
+
             if (request()->edit) {
                 $this->updateTheCount('Edited', 'delete_count');
             } else {
@@ -459,7 +494,7 @@ class DatabaseListingController extends Controller
         if (request()->publish == 3 || request()->publish == 4) {
             foreach (request()->ids as $loopIndex => $id) {
                 $job = PublishProducts::dispatch($id, request()->publish, auth()->user()->id)
-                        ->delay(now()->addSeconds(10 * $loopIndex));
+                    ->delay(now()->addSeconds(10 * $loopIndex));
 
                 $loopIndex++;
 
@@ -572,35 +607,36 @@ class DatabaseListingController extends Controller
 
         if (request()->has('age_filter')) {
             $filter = request()->age_filter;
-        
+
             if ($filter === '6_month') {
                 $dateFrom = Carbon::now()->subMonths(6);
                 $googlePosts->whereBetween('backup_listings.last_updated', [$dateFrom, Carbon::now()]);
             }
-        
+
             if ($filter === '1_year') {
                 $dateFrom = Carbon::now()->subYear();
                 $dateTo = Carbon::now()->subMonths(6);
                 $googlePosts->whereBetween('backup_listings.last_updated', [$dateFrom, $dateTo]);
             }
-        
+
             if ($filter === '2_years') {
                 $dateFrom = Carbon::now()->subYears(2);
                 $dateTo = Carbon::now()->subYear();
                 $googlePosts->whereBetween('backup_listings.last_updated', [$dateFrom, $dateTo]);
             }
-        
+
             if ($filter === '3_years') {
                 $dateFrom = Carbon::now()->subYears(3);
                 $dateTo = Carbon::now()->subYears(2);
                 $googlePosts->whereBetween('backup_listings.last_updated', [$dateFrom, $dateTo]);
             }
-        
+
             if ($filter === '3_plus_years') {
                 $date = Carbon::now()->subYears(3);
                 $googlePosts->whereDate('backup_listings.last_updated', '<=', $date);
             }
         }
+
 
         $allCounts = Listing::whereNotNull('product_id')
             ->where('is_bulk_upload', 0);
@@ -639,7 +675,7 @@ class DatabaseListingController extends Controller
 
         $googlePosts = $googlePosts->paginate($request->paging);
 
-        $googlePosts->getCollection()->transform(function($item) {
+        $googlePosts->getCollection()->transform(function ($item) {
             if ($item->backup_last_updated) {
                 $item->last_updated_formatted = \Carbon\Carbon::parse($item->backup_last_updated)->diffForHumans([
                     'parts' => 2, // Show up to 2 units (e.g., "1 year 3 months")
@@ -651,10 +687,8 @@ class DatabaseListingController extends Controller
             }
             return $item;
         });
-        
-        $users = User::where('status', 1)->get();
 
-        // dd($googlePosts);
+        $users = User::where('status', 1)->get();
 
         return view('database-listing.publish-pending', compact('users', 'allCounts', 'googlePosts', 'pendingCounts', 'rejectedCounts'));
     }
@@ -691,7 +725,7 @@ class DatabaseListingController extends Controller
         $reference = BackupListing::where('product_id', $productId)
             ->where('last_updated', '<=', Carbon::now()->subYear())
             ->first();
-            
+
         $changed = [];
 
         if (!$reference) return [$changed, false];
@@ -710,7 +744,7 @@ class DatabaseListingController extends Controller
 
         return [$changed, true];
     }
-    
+
     /**
      * Edit Post in DB
      */
@@ -957,30 +991,37 @@ class DatabaseListingController extends Controller
     {
         $productId = trim(request()->database);
         $backupListing = BackupListing::where('product_id', $productId)->first();
-        
+
         $similarityPercentage = 0;
         $changePercentage = 0;
-    
+
         if ($backupListing) {
             $oldStr = strip_tags(
                 ($backupListing->title ?? '') .
-                ($backupListing->description ?? '') .
-                ($backupListing->edition ?? '') .
-                (string)$backupListing->mrp .
-                (string)$backupListing->selling_price
+                    ($backupListing->description ?? '') .
+                    ($backupListing->edition ?? '') .
+                    (string)$backupListing->mrp .
+                    (string)$backupListing->selling_price
             );
-    
+
             $newStr = strip_tags(
                 trim(request()->title ?? '') .
-                (request()->description ?? '') .
-                trim(request()->edition ?? '') .
-                (string) trim(request()->mrp) .
-                (string) trim(request()->selling_price)
+                    (request()->description ?? '') .
+                    trim(request()->edition ?? '') .
+                    (string) trim(request()->mrp) .
+                    (string) trim(request()->selling_price)
             );
 
             similar_text($oldStr, $newStr, $similarityPercentage);
-    
+
             $changePercentage = 100 - $similarityPercentage;
+        }
+
+        $listing = $this->listingExist(request()->title, request()->description);
+
+        if ($listing) {
+            session()->flash('success', 'Listing already exists.');
+            return redirect()->back();
         }
 
         $allInfo = [
@@ -1041,7 +1082,7 @@ class DatabaseListingController extends Controller
             session()->flash('success', 'Listing created successfully');
         }
 
-        return redirect()->route('inventory.index', ['startIndex' => '1', 'category' => 'Product']);
+        return redirect()->route('publish.pending', ['startIndex' => '1', 'category' => 'Product']);
     }
 
     /**
@@ -1087,5 +1128,56 @@ class DatabaseListingController extends Controller
                 'status' => $status,
             ]);
         }
+    }
+
+    public function listingExist($title, $description)
+    {
+        $listing = Listing::where('title', $title)
+            ->first();
+
+        $backupListing = BackupListing::where('title', $title)
+            ->first();
+
+        if (!$listing && !$backupListing) return false;
+
+        return true;
+    }
+
+    public static function cleanText($text)
+    {
+        $text = strtolower(strip_tags($text));
+        $text = preg_replace('/[^a-z0-9\s]/', '', $text);
+        $text = preg_replace('/\s+/', ' ', $text);
+        return trim($text);
+    }
+
+    public static function textSimilarity($text1, $text2)
+    {
+        $words1 = explode(' ', self::cleanText($text1));
+        $words2 = explode(' ', self::cleanText($text2));
+        $words1 = array_unique($words1);
+        $words2 = array_unique($words2);
+        $common = array_intersect($words1, $words2);
+        $similarity = (count($common) / max(count($words1), count($words2))) * 100;
+        return round($similarity, 2);
+    }
+
+    public static function getNgrams($text, $n = 3)
+    {
+        $words = explode(' ', self::cleanText($text));
+        $ngrams = [];
+        for ($i = 0; $i < count($words) - $n + 1; $i++) {
+            $ngrams[] = implode(' ', array_slice($words, $i, $n));
+        }
+        return $ngrams;
+    }
+
+    public static function ngramSimilarity($text1, $text2, $n = 3)
+    {
+        $ngrams1 = self::getNgrams($text1, $n);
+        $ngrams2 = self::getNgrams($text2, $n);
+        $common = array_intersect($ngrams1, $ngrams2);
+        $similarity = (count($common) / max(count($ngrams1), count($ngrams2))) * 100;
+        return round($similarity, 2);
     }
 }
