@@ -18,6 +18,9 @@ class CreatePage extends Model
         'upload',
         'batch_id',
         'status',
+        'official_remark',
+        'remarks_user_id',
+        'remarks_date',
     ];
 
     public function category()

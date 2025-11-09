@@ -11,9 +11,48 @@ class CreatePageController extends Controller
 {
     public function index()
     {
-        $pages = CreatePage::with(['category', 'subCategory', 'user'])->latest()->paginate(10);
-        return view('createpages.index', compact('pages'));
+        $pages = CreatePage::with(['category', 'subCategory', 'user'])
+            ->latest()
+            ->paginate(10);
+
+        $total = CreatePage::count();
+        $now = now();
+
+        $pendingQuery = CreatePage::where('status', 'pending');
+
+
+        $pending = (clone $pendingQuery)
+            ->where('created_at', '>', $now->copy()->subDays(3))
+            ->count();
+
+        $lastDayAction = (clone $pendingQuery)
+            ->where('created_at', '<=', $now->copy()->subDays(3))
+            ->where('created_at', '>', $now->copy()->subDays(7))
+            ->count();
+
+        $autoRejected = (clone $pendingQuery)
+            ->where('created_at', '<=', $now->copy()->subDays(7))
+            ->count();
+
+        $approved = CreatePage::where('status', 'approved')->count();
+        $denied = CreatePage::where('status', 'denied')->count();
+
+
+        $calc = function ($num) use ($total) {
+            return $total > 0 ? round(($num / $total) * 100, 2) : 0;
+        };
+
+        $stats = [
+            'Pending' => ['count' => $pending, 'percent' => $calc($pending)],
+            'Last Day Action' => ['count' => $lastDayAction, 'percent' => $calc($lastDayAction)],
+            'No Actions Taken (Auto Rejected)' => ['count' => $autoRejected, 'percent' => $calc($autoRejected)],
+            'Approved' => ['count' => $approved, 'percent' => $calc($approved)],
+            'Denied' => ['count' => $denied, 'percent' => $calc($denied)],
+        ];
+
+        return view('createpages.index', compact('pages', 'stats'));
     }
+
 
     public function create()
     {
@@ -52,5 +91,56 @@ class CreatePageController extends Controller
         ]);
 
         return redirect()->route('createpages.index')->with('success', 'Create Page entry added successfully!');
+    }
+
+
+    public function updateSingle(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:pending,approved,denied',
+            'official_remark' => 'nullable|string|max:255',
+        ]);
+
+        $page = CreatePage::findOrFail($id);
+        $page->update([
+            'official_remark' => $request->official_remark,
+            'remarks_user_id' => Auth::id(),
+            'remarks_date' => now(),
+            'status' => $request->status,
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Record updated successfully.']);
+    }
+
+    public function updateMultiple(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'status' => 'required|in:pending,approved,denied',
+            'official_remark' => 'nullable|string|max:255',
+        ]);
+
+        CreatePage::whereIn('id', $request->ids)->update([
+            'official_remark' => $request->official_remark,
+            'remarks_user_id' => Auth::id(),
+            'remarks_date' => now(),
+            'status' => $request->status,
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Selected records updated successfully.']);
+    }
+
+    public function deleteMultiple(Request $request)
+    {
+        $request->validate(['ids' => 'required|array']);
+        CreatePage::whereIn('id', $request->ids)->delete();
+
+        return response()->json(['success' => true, 'message' => 'Selected records deleted successfully.']);
+    }
+
+    public function destroy($id)
+    {
+        CreatePage::findOrFail($id)->delete();
+        return response()->json(['success' => true, 'message' => 'Record deleted successfully.']);
     }
 }

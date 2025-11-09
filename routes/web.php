@@ -25,6 +25,7 @@ use App\Http\Controllers\GraphicalDashboardController;
 use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CreatePageController;
+
 Illuminate\Support\Facades\Auth::routes();
 /*
 |--------------------------------------------------------------------------
@@ -327,8 +328,22 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
      * User Functionalities
      */
     Route::resource('users', UserController::class);
-Route::resource('categories', CategoryController::class);
-Route::resource('createpages', CreatePageController::class);
+    Route::resource('categories', CategoryController::class);
+
+    Route::post('/createpages/update-multiple', [CreatePageController::class, 'updateMultiple'])
+        ->name('createpages.updateMultiple');
+    Route::delete('/createpages/delete-multiple', [CreatePageController::class, 'deleteMultiple'])
+        ->name('createpages.deleteMultiple');
+
+
+    Route::post('/createpages/{id}/single-update', [CreatePageController::class, 'updateSingle'])
+        ->name('createpages.customupdate');
+    Route::delete('/createpages/{id}', [CreatePageController::class, 'destroy'])
+        ->name('createpages.destroy');
+
+
+    Route::resource('createpages', CreatePageController::class)->except(['destroy', 'update']);
+
 
     Route::get('count/users', [UserController::class, 'userCounts'])
         ->name('users.count');
@@ -442,5 +457,5 @@ Route::get('/assets/images/brand/{filename}', UserController::class)
 Route::get('', [HomeController::class, 'index'])
     ->name('home');
 
-Route::match(['get','post'], 'price/calculation', [UserController::class, 'priceCalculation'])
+Route::match(['get', 'post'], 'price/calculation', [UserController::class, 'priceCalculation'])
     ->name('price.calculation');
