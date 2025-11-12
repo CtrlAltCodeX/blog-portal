@@ -15,6 +15,11 @@ use Tzsk\Collage\MakeCollage;
 
 class CollageController extends Controller
 {
+    const CANVAS_WIDTH = 555;
+    const CANVAS_HEIGHT = 555;
+    const COLOR_BACKGROUND = '#ffffff';
+
+
     /**
      * Show the create view.
      */
@@ -44,8 +49,8 @@ class CollageController extends Controller
             3 => CustomThreeImage::class,
             4 => FourImage::class,
         ])
-            ->make(555, 555)->padding(80)
-            ->background('#fff')
+            ->make(self::CANVAS_WIDTH, self::CANVAS_HEIGHT)->padding(80)
+            ->background(self::COLOR_BACKGROUND)
             ->from($processedImages, function ($alignment) use ($processedImages) {
                 $imageCount = count($processedImages);
                 if ($imageCount == 2) {
@@ -71,7 +76,6 @@ class CollageController extends Controller
             $files[$key]['name'] = $filepath[8];
             $files[$key]['number'] = $name;
         }
-
 
         $countIncrease = $lastNumber + 1;
 

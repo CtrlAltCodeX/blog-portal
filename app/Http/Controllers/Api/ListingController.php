@@ -52,4 +52,15 @@ class ListingController extends Controller
         return response()->json($listings);
     }
 
+    public function getListingData($term)
+    {
+        $listing = BackupListing::orWhere('title', $term)
+            ->orWhere('isbn_13', $term)
+            ->orWhere('isbn_10', $term)
+            ->first();
+
+        if (!$listing) return response()->json(['error' => 'Listing not found.'], 200);
+
+        return response()->json($listing);
+    }
 }

@@ -97,12 +97,19 @@ class TwoImage extends CollageGenerator
      */
     protected function resizeVerticalImages()
     {
-        $width = 235;
+        if (request()->size == 'basic') {
+            $width = 235;
+            $height = 320;
+        } else if (request()->size == 'fixed') {
+            $width = 160;
+            $height = 225;
+        }
+
+        // $width = 235;
         $images = collect();
         foreach ($this->images as $image) {
             $width = round($width);
-            $height = 320;
-
+            // $height = 320;
             $images->push($image->fit($width, $height));
         }
 

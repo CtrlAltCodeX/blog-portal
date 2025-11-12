@@ -20,10 +20,17 @@ class OneImage extends CollageGenerator
      */
     public function create($closure = null)
     {
-        $this->check(1);
+        if (request()->size == 'basic') {
+            $widthSizeImage = 390;
+            $heightSizeImage = 520;
+        } else if (request()->size == 'fixed') {
+            $widthSizeImage = 320;
+            $heightSizeImage = 450;
+        }
 
+        $this->check(1);
         $this->createCanvas();
-        $this->process();
+        $this->process($widthSizeImage, $heightSizeImage);
 
         return $this->canvas->insert($this->images->first(), 'center');
     }
@@ -43,11 +50,11 @@ class OneImage extends CollageGenerator
     /**
      * Process Image.
      */
-    protected function process()
+    protected function process($widthSizeImage, $heightSizeImage)
     {
         $width = $this->file->getWidth() - $this->file->getPadding();
         $height = $this->file->getHeight() - $this->file->getPadding();
 
-        $this->images = collect([$this->images->first()->fit(360, 520)]);
+        $this->images = collect([$this->images->first()->fit($widthSizeImage, $heightSizeImage)]);
     }
 }

@@ -43,8 +43,15 @@ class CustomThreeImage extends CollageGenerator
     {
         [$width, $height, $largeWidth] = $this->getWidthSize();
 
-        $width = round(235);
-        $height = round(315);
+        if (request()->size == 'basic') {
+            $width = 185;
+            $height = 250;
+        } else if (request()->size == 'fixed') {
+            $width = 106;
+            $height = 150;
+        }
+        // $width = round(235);
+        // $height = round(315);
 
         $one = $this->images->get(0);
         $this->canvas->insert($one->fit($width, $height), 'top-left');

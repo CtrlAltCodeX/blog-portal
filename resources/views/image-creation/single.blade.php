@@ -4,9 +4,9 @@
 
 @php
 if(request()->maker == 'wo-watermark'){
-    $formRoute = "/admin/convert/image";
+$formRoute = "/admin/convert/image";
 } elseif(request()->maker == 'wo-watermark'){
-    $formRoute = "/admin/images/watermark/store";
+$formRoute = "/admin/images/watermark/store";
 }
 @endphp
 
@@ -24,30 +24,40 @@ if(request()->maker == 'wo-watermark'){
                     <div id="fileInputContainer">
                         <div class="form-group"></div>
                         <div class="d-flex justify-content-end">
+                            <!-- <label for="fileInput1" class="mt-2">Single Image Maker</label> -->
                             <form action="" method="get" id='form'>
-                                <div class="d-flex">
-                                    <div class="d-flex align-items-baseline">
-                                        <input type="radio" class="m-2" name="maker" id="w-watermark" value='w-watermark' {{ request()->maker == 'w-watermark' ?  'checked' : '' }} />
-                                        <label for="w-watermark">With Watermark<br />
-                                            <small class="text-danger">( GMC Not Approved )</small>
-                                        </label>
+                                <div class="d-flex" style="grid-gap: 5px;height: 75px;">
+                                    <div style="border: 1px solid #ccc;">
+                                        <span class='text-center w-100 d-block fw-bold' style="background-color: #240d0d;color: white;padding: 10px;">Image Size Adjustment</span>
+                                        <div class="d-flex justify-content-center" >
+                                            <div class="d-flex align-items-baseline">
+                                                <input type="radio" class="m-2" name="size" value='basic' {{ request()->size == 'basic' ?  'checked' : '' }} />
+                                                <label>Auto<br /></label>
+                                            </div>
+            
+                                            <div class="d-flex align-items-baseline">
+                                                <input type="radio" class="m-2" name="size" value='fixed' {{ request()->size == 'fixed' ?  'checked' : '' }} />
+                                                <label>Fixed<br /></label>
+                                            </div>
+                                        </div>
                                     </div>
-
-                                    <div class="d-flex align-items-baseline">
-                                        <input type="radio" class="m-2" name="maker" id="wo-watermark" value='wo-watermark' {{ request()->maker == 'wo-watermark' ?  'checked' : '' }} />
-                                        <label for="wo-watermark">Without Watermark<br />
-                                            <small class="text-danger">( GMC Approved )</small>
-                                        </label>
-                                    </div>
-
-                                    <div class="d-flex align-items-baseline">
-                                        <input type="radio" class="m-2" name="size" value='basic' {{ request()->size == 'basic' ?  'checked' : '' }} />
-                                        <label>Basic<br /></label>
-                                    </div>
-
-                                    <div class="d-flex align-items-baseline">
-                                        <input type="radio" class="m-2" name="size" value='fixed' {{ request()->size == 'fixed' ?  'checked' : '' }} />
-                                        <label>Fixed<br /></label>
+                                    <div style="border: 1px solid #ccc;">
+                                        <span class='text-center w-100 d-block fw-bold' style="background-color: #240d0d;color: white;padding: 10px;">Image Watermark</span>
+                                        <div class="d-flex" style="padding-right: 5px;">
+                                            <div class="d-flex align-items-baseline">
+                                                <input type="radio" class="m-2" name="maker" id="w-watermark" value='w-watermark' {{ request()->maker == 'w-watermark' ?  'checked' : '' }} />
+                                                <label for="w-watermark">With ( GMC <i class='fa fa-close text-danger'></i>) <br />
+                                                    <!--<small class="text-danger">( GMC Not Approved )</small>-->
+                                                </label>
+                                            </div>
+        
+                                            <div class="d-flex align-items-baseline">
+                                                <input type="radio" class="m-2" name="maker" id="wo-watermark" value='wo-watermark' {{ request()->maker == 'wo-watermark' ?  'checked' : '' }} />
+                                                <label for="wo-watermark">Without ( GMC <i class='fa fa-check text-success'>) </i><br />
+                                                    <!--<small class="text-danger">( GMC Approved )</small>-->
+                                                </label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </form>

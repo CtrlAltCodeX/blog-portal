@@ -18,26 +18,59 @@
                         <div class="d-flex justify-content-end">
                             <!-- <label for="fileInput1" class="mt-2">Images<span class="text-danger">*</span>( Multiple Images )</label> -->
                             <form action="" method="get" id='form'>
-                                <div class="d-flex">
-                                    <div class="d-flex align-items-baseline">
-                                        <input type="radio" class="m-2" name="maker" id="with-watermark" value='w-watermark' {{ request()->maker == 'w-watermark' ?  'checked' : '' }} />
-                                        <label for="with-watermark">With Watermark<br />
-                                            <small class="text-danger">( GMC Not Approved )</small>
-                                        </label>
+                                <div class="d-flex" style="grid-gap: 5px;height: 75px;">
+                                    <div style="border: 1px solid #ccc;">
+                                        <span class='text-center w-100 d-block fw-bold' style="background-color: #240d0d;color: white;padding: 10px;">Image Size Adjustment</span>
+                                        <div class="d-flex justify-content-center" >
+                                            <div class="d-flex align-items-baseline">
+                                                <input type="radio" class="m-2" name="size" value='basic' {{ request()->size == 'basic' ?  'checked' : '' }} />
+                                                <label>Auto<br /></label>
+                                            </div>
+            
+                                            <div class="d-flex align-items-baseline">
+                                                <input type="radio" class="m-2" name="size" value='fixed' {{ request()->size == 'fixed' ?  'checked' : '' }} />
+                                                <label>Fixed<br /></label>
+                                            </div>
+                                        </div>
                                     </div>
-
-                                    <div class="d-flex align-items-baseline">
-                                        <input type="radio" class="m-2" name="maker" id="without-watermark" value='wo-watermark' {{ request()->maker == 'wo-watermark' ?  'checked' : '' }} />
-                                        <label for="without-watermark">Without Watermark<br />
-                                            <small class="text-danger">( GMC Approved )</small>
-                                        </label>
+                                    <div style="border: 1px solid #ccc;">
+                                        <span class='text-center w-100 d-block fw-bold' style="background-color: #240d0d;color: white;padding: 10px;">Image Watermark</span>
+                                        <div class="d-flex" style="padding-right: 5px;">
+                                            <div class="d-flex align-items-baseline">
+                                                <input type="radio" class="m-2" name="maker" id="w-watermark" value='w-watermark' {{ request()->maker == 'w-watermark' ?  'checked' : '' }} />
+                                                <label for="w-watermark">With ( GMC <i class='fa fa-close text-danger'></i>) <br />
+                                                </label>
+                                            </div>
+        
+                                            <div class="d-flex align-items-baseline">
+                                                <input type="radio" class="m-2" name="maker" id="wo-watermark" value='wo-watermark' {{ request()->maker == 'wo-watermark' ?  'checked' : '' }} />
+                                                <label for="wo-watermark">Without ( GMC <i class='fa fa-check text-success'>) </i><br />
+                                                </label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
+                                <!--<div class="d-flex">-->
+                                <!--    <div class="d-flex align-items-baseline">-->
+                                <!--        <input type="radio" class="m-2" name="maker" id="with-watermark" value='w-watermark' {{ request()->maker == 'w-watermark' ?  'checked' : '' }} />-->
+                                <!--        <label for="with-watermark">With Watermark<br />-->
+                                <!--            <small class="text-danger">( GMC Not Approved )</small>-->
+                                <!--        </label>-->
+                                <!--    </div>-->
+
+                                <!--    <div class="d-flex align-items-baseline">-->
+                                <!--        <input type="radio" class="m-2" name="maker" id="without-watermark" value='wo-watermark' {{ request()->maker == 'wo-watermark' ?  'checked' : '' }} />-->
+                                <!--        <label for="without-watermark">Without Watermark<br />-->
+                                <!--            <small class="text-danger">( GMC Approved )</small>-->
+                                <!--        </label>-->
+                                <!--    </div>-->
+                                <!--</div>-->
                             </form>
                         </div>
 
                         <form action="{{ route('image.collage.store') }}" method="post" enctype="multipart/form-data" id="{{ request()->maker == 'wo-watermark' ? 'multipleImagesform': '' }}">
                             @csrf
+                            <input type="hidden" name="size" value='{{ request()->size }}' />
                             <div class="form-group mt-2" @error('multipleImages') style="border: red 2px dotted;" @enderror>
                                 @if(request()->maker == 'wo-watermark')
                                 <div class="form-group">
