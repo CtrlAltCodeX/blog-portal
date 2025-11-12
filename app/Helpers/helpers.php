@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Category;
 
 /**
  * Render nested category dropdown options recursively.

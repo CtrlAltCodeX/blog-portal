@@ -3,58 +3,100 @@
 @section('title', __('Create Page List'))
 
 @section('content')
-<div class="main-container container-fluid">
-    <div class="page-header d-flex justify-content-between align-items-center">
-        <h1 class="page-title">Create Page List</h1>
-        <a href="{{ route('createpages.create') }}" class="btn btn-primary">+ New Entry</a>
-    </div>
+<style>
+    .fit {
+        width: max-content;        
+    }
+</style>
 
-    {{-- STATUS SUMMARY --}}
-    <div class="row mb-4">
-        @foreach($stats as $label => $data)
-        <div class="col-md-2 col-sm-6 mb-2">
-            <div class="card text-center shadow-sm">
-                <div class="card-body p-3">
-                    <h6 class="fw-bold mb-1">{{ $label }}</h6>
-                    <p class="mb-0">{{ $data['count'] }} ({{ $data['percent'] }}%)</p>
-                </div>
+<div class="main-container container-fluid">
+    <div class="card">
+        <div class='card-header'>
+            <div class="page-header d-flex justify-content-between align-items-center my-0 w-100">
+                <h1 class="page-title">Post List</h1>
+                <a href="{{ route('createpages.create') }}" class="btn btn-primary">Create New</a>
             </div>
         </div>
-        @endforeach
-    </div>
 
-    {{-- LISTING TABLE --}}
-    <div class="card">
         <div class="card-body table-responsive">
-            <div class="mb-3">
-                <button type="button" id="bulkEditBtn" class="btn btn-warning btn-sm">Bulk Edit</button>
-                <button type="button" id="bulkDeleteBtn" class="btn btn-danger btn-sm">Bulk Delete</button>
+            <div class="row mb-4">
+                @foreach($stats as $label => $data)
+                <div class="col-md-2 col-sm-6 mb-2">
+                    <div class="card text-center shadow-sm">
+                        <div class="card-body p-3">
+                            <h6 class="fw-bold mb-1">{{ $label }}</h6>
+                            <p class="mb-0">{{ $data['count'] }} ({{ $data['percent'] }}%)</p>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+            
+            <div class='row'>
+                <div class='col-md-4'>
+                    <div class="mb-3">
+                        <div class='d-flex' style="grid-gap: 10px;">
+                            <select id='dropdown' class='form-control'>
+                                <option value="">Select</option>
+                                <option value=1>Bulk Edit</option>
+                                <option value=2>Bulk Delete</option>
+                            </select>
+                            <button class='btn btn-primary w-25' id='submit_btn' >Submit</button>
+                        </div>
+                        {{-- <button type="button" id="bulkEditBtn" class="btn btn-warning btn-sm">Bulk Edit</button>
+                        <button type="button" id="bulkDeleteBtn" class="btn btn-danger btn-sm">Bulk Delete</button> --}}
+                    </div>
+                </div>
             </div>
 
             <form id="bulkDeleteForm">
-                <table class="table table-bordered table-striped align-middle">
+                <table class="table table-bordered table-striped align-middle table-responsive">
                     <thead>
                         <tr>
                             <th><input type="checkbox" id="selectAll"></th>
-                            <th>SL No.</th>
-                            <th>Batch ID</th>
-                            <th>Created Date</th>
+                            <th>
+                                <div class='fit'>
+                                    SL No. / Batch ID    
+                                </div>
+                            </th>
+                            <th>
+                                <div class='fit'>
+                                    Created At / By    
+                                </div>
+                            </th>
+                            <!--<th>Created Date</th>-->
                             <th>SLA</th>
-                            <th>Created By</th>
-                            <th>Category</th>
-                            <th>Sub-Category</th>
-                            <th>Preferred Date</th>
-                            <th>Date</th>
-                            <th>Attachment</th>
-                            <th>Current Status</th>
+                            <!--<th>Created By</th>-->
+                            <th>
+                                <div class='fit'>
+                                    Category / Sub-Category    
+                                </div>
+                            </th>
+                            <!--<th></th>-->
+                            <th>
+                                <div class='fit'>
+                                    Preferred / Date
+                                </div>
+                            </th>
+                            <!--<th>Date</th>-->
+                            <!--<th>Attachment</th>-->
+                            <th>
+                                <div class='fit'>
+                                    Current Status    
+                                </div>
+                            </th>
                             <th>Official Remarks</th>
-                            <th>Remarks Given By</th>
-                            <th>Remarks Date</th>
+                            <th>
+                                <div class='fit'>
+                                    Remarks By / Date        
+                                </div>
+                            </th>
+                            <!--<th>Remarks Date</th>-->
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($pages as $page)
+                        @forelse ($pages as $page)
                         @php
                         $created = \Carbon\Carbon::parse($page->created_at);
                         $diffDays = $created->diffInDays(now());
@@ -76,45 +118,87 @@
                         @endphp
                         <tr>
                             <td><input type="checkbox" name="ids[]" value="{{ $page->id }}"></td>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $page->batch_id }}</td>
-                            <td>{{ $created->format('d M Y') }}</td>
+                            <td>
+                                <div class='fit'>
+                                    {{ $loop->iteration }} / {{ $page->batch_id }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class='fit'>
+                                    {{ $created->format('d M Y') }} /
+                                    {{ $page->user->name ?? 'N/A' }}
+                                </div>
+                            </td>
+                            <!--<td>{{ $created->format('d M Y') }}</td>-->
                             <td>
                                 <span
                                     class="sla-timer text-success"
                                     data-created="{{ $page->created_at }}"
-                                    data-id="{{ $page->id }}">
+                                    data-id="{{ $page->id }}"
+                                    style='display:block; width:130px;'>
                                     Loading...
                                 </span>
                             </td>
-                            <td>{{ $page->user->name ?? 'N/A' }}</td>
-                            <td>{{ $page->category->name ?? 'N/A' }}</td>
-                            <td>{{ $page->subCategory->name ?? 'N/A' }}</td>
-                            <td>{{ $page->any_preferred_date ?? '-' }}</td>
-                            <td>{{ $page->date ?? '-' }}</td>
+                            <!--<td>{{ $page->user->name ?? 'N/A' }}</td>-->
                             <td>
-                                @if($page->upload)
-                                <a href="{{ asset('storage/' . $page->upload) }}" target="_blank">View</a>
-                                @else
-                                -
-                                @endif
+                                <div class='fit'>
+                                    {{ $page->category->name ?? 'N/A' }} / {{ $page->subCategory->name ?? 'N/A' }}    
+                                </div>
                             </td>
-                            <td>{{ $status }}</td>
-                            <td>{{ $page->official_remark ?? '-' }}</td>
-                            <td>{{ $page->remarks_user_id ? \App\Models\User::find($page->remarks_user_id)->name ?? '-' : '-' }}</td>
-                            <td>{{ $page->remarks_date ? \Carbon\Carbon::parse($page->remarks_date)->format('d M Y') : '-' }}</td>
+                            <!--<td></td>-->
                             <td>
+                                <div class='fit'>
+                                    {{ $page->any_preferred_date ?? '-' }} / {{ $page->date ?? '-' }}    
+                                </div>
+                            </td>
+                            <!--<td>{{ $page->date ?? '-' }}</td>-->
+                            <!--<td>-->
+                            <!--    @if($page->upload)-->
+                            <!--    <a href="{{ asset('storage/' . $page->upload) }}" target="_blank">View</a>-->
+                            <!--    @else-->
+                            <!--    --->
+                            <!--    @endif-->
+                            <!--</td>-->
+                            <td>{{ $status }}</td>
+                            <td>
+                                <div class='fit'>
+                                    @php
+                                        $shortText = Str::words($page->official_remark, 10, '...');
+                                    @endphp
+                                    <span data-bs-placement="top" data-bs-toggle="tooltip" title="{{ $page->official_remark }}">
+                                        {{ $shortText ?? '-' }}
+                                    </span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class='fit'>
+                                    {{ $page->remarks_user_id ? \App\Models\User::find($page->remarks_user_id)->name ?? '-' : '-' }} / 
+                                    {{ $page->remarks_date ? \Carbon\Carbon::parse($page->remarks_date)->format('d M Y') : '-' }}
+                                </div>
+                            </td>
+                            <!--<td>-->
+                            <!--    <div class='fit'>-->
+                            <!--        {{ $page->remarks_date ? \Carbon\Carbon::parse($page->remarks_date)->format('d M Y') : '-' }}    -->
+                            <!--    </div>-->
+                            <!--</td>-->
+                            <td class='d-flex' style='grid-gap: 10px;'>
+                                @if($page->upload)
+                                <a href="{{ asset('storage/' . $page->upload) }}" target="_blank" class='btn btn-sm btn-warning'>View attachment</a>
+                                @endif
                                 <button type="button" class="btn btn-sm btn-warning single-edit" data-id="{{ $page->id }}">Edit</button>
                                 <button type="button" class="btn btn-sm btn-danger single-delete" data-id="{{ $page->id }}">Delete</button>
                             </td>
 
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="16" class="text-center">{{ __('No records found.') }}</td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </form>
 
-            {{-- Pagination --}}
             <div class="d-flex justify-content-center mt-3">
                 {!! $pages->links('pagination::bootstrap-5') !!}
             </div>
@@ -123,8 +207,6 @@
 </div>
 
 
-
-<!-- Edit Modal -->
 <div class="modal fade" id="editModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -162,17 +244,13 @@
     </div>
 </div>
 
-
 @endsection
 @push('js')
 <script>
     $(document).ready(function() {
-
-        //Select all checkboxes
         $('#selectAll').on('change', function() {
             $('input[name="ids[]"]').prop('checked', this.checked);
         });
-
 
         $(document).on('click', '.single-edit', function(e) {
             e.preventDefault();
@@ -182,7 +260,6 @@
             $('#status').val('pending');
             $('#editModal').modal('show');
         });
-
 
         $(document).on('click', '.single-delete', function(e) {
             e.preventDefault();
@@ -210,42 +287,74 @@
             });
         });
 
+        $('#submit_btn').click(function () {
+            var bulkEdit = $("#dropdown").val();
+            if (bulkEdit == 2) {
+                const ids = $('input[name="ids[]"]:checked').map(function() {
+                    return this.value;
+                }).get();
+    
+                if (!ids.length) return alert('Select at least one record.');
+                if (!confirm('Are you sure you want to delete selected records?')) return;
+    
+                $.ajax({
+                    url: '{{ route("createpages.deleteMultiple") }}',
+                    type: 'DELETE',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        ids
+                    },
+                    success: res => {
+                        alert(res.message);
+                        location.reload();
+                    }
+                });
+            } else if (bulkEdit == 1) {
+                const ids = $('input[name="ids[]"]:checked').map(function() {
+                    return this.value;
+                }).get();
+    
+                if (!ids.length) return alert('Select at least one record.');
+                $('#editId').val('bulk');
+                $('#official_remark').val('');
+                $('#status').val('pending');
+                $('#editModal').modal('show');
+            }
+        })
 
         $('#bulkDeleteBtn').click(function() {
-            const ids = $('input[name="ids[]"]:checked').map(function() {
-                return this.value;
-            }).get();
+            // const ids = $('input[name="ids[]"]:checked').map(function() {
+            //     return this.value;
+            // }).get();
 
-            if (!ids.length) return alert('Select at least one record.');
-            if (!confirm('Are you sure you want to delete selected records?')) return;
+            // if (!ids.length) return alert('Select at least one record.');
+            // if (!confirm('Are you sure you want to delete selected records?')) return;
 
-            $.ajax({
-                url: '{{ route("createpages.deleteMultiple") }}',
-                type: 'DELETE',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    ids
-                },
-                success: res => {
-                    alert(res.message);
-                    location.reload();
-                }
-            });
+            // $.ajax({
+            //     url: '{{ route("createpages.deleteMultiple") }}',
+            //     type: 'DELETE',
+            //     data: {
+            //         _token: '{{ csrf_token() }}',
+            //         ids
+            //     },
+            //     success: res => {
+            //         alert(res.message);
+            //         location.reload();
+            //     }
+            // });
         });
-
 
         $('#bulkEditBtn').click(function() {
-            const ids = $('input[name="ids[]"]:checked').map(function() {
-                return this.value;
-            }).get();
+            // const ids = $('input[name="ids[]"]:checked').map(function() {
+            //     return this.value;
+            // }).get();
 
-            if (!ids.length) return alert('Select at least one record.');
-            $('#editId').val('bulk');
-            $('#official_remark').val('');
-            $('#status').val('pending');
-            $('#editModal').modal('show');
+            // if (!ids.length) return alert('Select at least one record.');
+            // $('#editId').val('bulk');
+            // $('#official_remark').val('');
+            // $('#status').val('pending');
+            // $('#editModal').modal('show');
         });
-
 
         $('#editForm').submit(function(e) {
             e.preventDefault();
@@ -278,9 +387,6 @@
             });
         });
 
-
-
-        // SLA  Timer (3 days = 72 hours)
         function startSLACountdown() {
             const timers = document.querySelectorAll('.sla-timer');
             timers.forEach(el => {

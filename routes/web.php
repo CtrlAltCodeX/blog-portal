@@ -258,8 +258,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
      */
     Route::resource('listing', ListingController::class);
 
-    Route::get('getPriceRecords', [ListingController::class, 'getPriceRecords'])->name('listing.getPriceRecords');
-
     Route::get('articles', [DatabaseListingController::class, 'articles'])
         ->name('articles.index');
 
@@ -342,7 +340,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         ->name('createpages.destroy');
 
 
-    Route::resource('createpages', CreatePageController::class)->except(['destroy', 'update']);
+    Route::resource('createpages', CreatePageController::class)
+        ->except(['destroy', 'update']);
 
 
     Route::get('count/users', [UserController::class, 'userCounts'])
@@ -441,6 +440,9 @@ Route::group(['prefix' => 'password'], function () {
 
     Route::post('update', [ResetPasswordController::class, 'updatePassword'])->name('password.update');
 });
+
+Route::get('getPriceRecords', [ListingController::class, 'getPriceRecords'])
+    ->name('listing.getPriceRecords');
 
 Route::get('/check-session-status', function () {
     session()->put('expire_error', 'Your session has expired. Please log in again.');

@@ -212,9 +212,13 @@ $userInfo = app('App\Models\SiteSetting')->first();
                 </li>
                 @endif
 
-                <li><a href="{{ route('categories.index') }}" class="slide-item {{ request()->is('admin/categories') ? 'active' : '' }}">{{ __('Create Categories') }}</a></li>
-                <li><a href="{{ route('createpages.index') }}" class="slide-item {{ request()->is('admin/createpages') ? 'active' : '' }}">{{ __('Create Pages') }}</a></li>
-
+                <li class="slide {{ (request()->is('admin/settings/*') || request()->is('admin/categories') || request()->is('admin/createpages')) ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fa fa-gear"></i><span class="side-menu__label">{{ __('Posts') }}</span><i class="angle fe fe-chevron-right"></i></a>
+                    <ul class="slide-menu">
+                        <li><a href="{{ route('categories.index') }}" class="slide-item {{ request()->is('admin/categories') ? 'active' : '' }}">{{ __('Categories') }}</a></li>
+                        <li><a href="{{ route('createpages.index') }}" class="slide-item {{ request()->is('admin/createpages') ? 'active' : '' }}">{{ __('Post') }}</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </div>

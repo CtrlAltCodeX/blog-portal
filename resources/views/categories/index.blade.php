@@ -4,12 +4,14 @@
 
 @section('content')
 <div class="main-container container-fluid">
-    <div class="page-header">
-        <h1 class="page-title">{{ __('Categories List') }}</h1>
-        <a href="{{ route('categories.create') }}" class="btn btn-primary float-right">Add Category</a>
-    </div>
-
     <div class="card">
+        <div class='card-header'>
+            <div class="page-header my-0 w-100">
+                <h1 class="page-title">{{ __('Categories List') }}</h1>
+                <a href="{{ route('categories.create') }}" class="btn btn-primary float-right">Add Category</a>
+            </div>
+        </div>
+
         <div class="card-body">
             <table class="table table-bordered text-center">
                 <thead>
@@ -43,7 +45,6 @@
                 </tbody>
             </table>
 
-            {{-- Pagination Links --}}
             <div class="d-flex justify-content-center mt-3">
                 {!! $categories->links('pagination::bootstrap-5') !!}
             </div>
