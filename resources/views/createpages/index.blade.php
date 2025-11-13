@@ -7,6 +7,52 @@
     .fit {
         width: max-content;        
     }
+
+      .status-tabs {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        padding: 0.75rem;
+    }
+
+    .status-tabs .nav-link {
+        border: none;
+        margin: 4px 6px;
+        border-radius: 6px;
+        padding: 10px 18px;
+        color: #495057;
+        background-color: #f8f9fa;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 500;
+    }
+
+    .status-tabs .nav-link:hover {
+        background-color: #e9ecef;
+        transform: translateY(-1px);
+    }
+
+    .status-tabs .nav-link.active {
+        background-color: #0d6efd;
+        color: #fff;
+        box-shadow: 0 3px 6px rgba(13, 110, 253, 0.3);
+    }
+
+    .status-tabs .nav-link.active .badge {
+        background: rgba(255, 255, 255, 0.25);
+    }
+
+    .status-tabs .badge {
+        font-size: 0.8rem;
+    }
+
+    .status-tabs small {
+        font-size: 0.75rem;
+        opacity: 0.85;
+    }
 </style>
 
 <div class="main-container container-fluid">
@@ -19,18 +65,21 @@
         </div>
 
         <div class="card-body table-responsive">
-            <div class="row mb-4">
-                @foreach($stats as $label => $data)
-                <div class="col-md-2 col-sm-6 mb-2">
-                    <div class="card text-center shadow-sm">
-                        <div class="card-body p-3">
-                            <h6 class="fw-bold mb-1">{{ $label }}</h6>
-                            <p class="mb-0">{{ $data['count'] }} ({{ $data['percent'] }}%)</p>
-                        </div>
-                    </div>
-                </div>
-                @endforeach
-            </div>
+    <div class="status-tabs">
+    <ul class="nav nav-pills justify-content-around flex-wrap">
+        @foreach($stats as $key => $data)
+            <li class="nav-item">
+                <a class="nav-link {{ $statusFilter === $key ? 'active' : '' }}"
+                   href="{{ route('createpages.index', ['status' => $key]) }}">
+                    <span>{{ $data['label'] }}</span>
+                    <span class="badge bg-secondary">{{ $data['count'] }}</span>
+                    <small>({{ $data['percent'] }}%)</small>
+                </a>
+            </li>
+        @endforeach
+    </ul>
+</div>
+
             
             <div class='row'>
                 <div class='col-md-4'>

@@ -25,6 +25,8 @@ use App\Http\Controllers\GraphicalDashboardController;
 use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CreatePageController;
+use App\Http\Controllers\SubCategoryController;
+
 
 Illuminate\Support\Facades\Auth::routes();
 /*
@@ -327,7 +329,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
      */
     Route::resource('users', UserController::class);
     Route::resource('categories', CategoryController::class);
-
+ 
+    Route::resource('subcategories', SubCategoryController::class);
     Route::post('/createpages/update-multiple', [CreatePageController::class, 'updateMultiple'])
         ->name('createpages.updateMultiple');
     Route::delete('/createpages/delete-multiple', [CreatePageController::class, 'deleteMultiple'])

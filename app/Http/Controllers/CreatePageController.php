@@ -9,49 +9,57 @@ use Illuminate\Support\Facades\Auth;
 
 class CreatePageController extends Controller
 {
-    public function index()
-    {
-        $pages = CreatePage::with(['category', 'subCategory', 'user'])
-            ->latest()
-            ->paginate(10);
+  public function index(Request $request)
+{
+    $statusFilter = $request->get('status'); 
 
-        $total = CreatePage::count();
+    $query = CreatePage::with(['category', 'subCategory', 'user'])->latest();
+
+    if ($statusFilter) {
+        
         $now = now();
 
-        $pendingQuery = CreatePage::where('status', 'pending');
-
-
-        $pending = (clone $pendingQuery)
-            ->where('created_at', '>', $now->copy()->subDays(3))
-            ->count();
-
-        $lastDayAction = (clone $pendingQuery)
-            ->where('created_at', '<=', $now->copy()->subDays(3))
-            ->where('created_at', '>', $now->copy()->subDays(7))
-            ->count();
-
-        $autoRejected = (clone $pendingQuery)
-            ->where('created_at', '<=', $now->copy()->subDays(7))
-            ->count();
-
-        $approved = CreatePage::where('status', 'approved')->count();
-        $denied = CreatePage::where('status', 'denied')->count();
-
-
-        $calc = function ($num) use ($total) {
-            return $total > 0 ? round(($num / $total) * 100, 2) : 0;
-        };
-
-        $stats = [
-            'Pending' => ['count' => $pending, 'percent' => $calc($pending)],
-            'Last Day Action' => ['count' => $lastDayAction, 'percent' => $calc($lastDayAction)],
-            'No Actions Taken (Auto Rejected)' => ['count' => $autoRejected, 'percent' => $calc($autoRejected)],
-            'Approved' => ['count' => $approved, 'percent' => $calc($approved)],
-            'Denied' => ['count' => $denied, 'percent' => $calc($denied)],
-        ];
-
-        return view('createpages.index', compact('pages', 'stats'));
+        if ($statusFilter === 'auto_rejected') {
+            $query->where('status', 'pending')->where('created_at', '<=', $now->copy()->subDays(7));
+        } elseif ($statusFilter === 'last_day_action') {
+            $query->where('status', 'pending')
+                ->where('created_at', '<=', $now->copy()->subDays(3))
+                ->where('created_at', '>', $now->copy()->subDays(7));
+        } elseif ($statusFilter === 'pending_recent') {
+            $query->where('status', 'pending')->where('created_at', '>', $now->copy()->subDays(3));
+        } else {
+            $query->where('status', $statusFilter);
+        }
     }
+
+    $pages = $query->paginate(10);
+
+ 
+    $total = CreatePage::count();
+    $now = now();
+    $pendingQuery = CreatePage::where('status', 'pending');
+
+    $pending = (clone $pendingQuery)->where('created_at', '>', $now->copy()->subDays(3))->count();
+    $lastDayAction = (clone $pendingQuery)
+        ->where('created_at', '<=', $now->copy()->subDays(3))
+        ->where('created_at', '>', $now->copy()->subDays(7))
+        ->count();
+    $autoRejected = (clone $pendingQuery)->where('created_at', '<=', $now->copy()->subDays(7))->count();
+    $approved = CreatePage::where('status', 'approved')->count();
+    $denied = CreatePage::where('status', 'denied')->count();
+
+    $calc = fn($num) => $total > 0 ? round(($num / $total) * 100, 2) : 0;
+
+    $stats = [
+        'pending_recent' => ['label' => 'Pending', 'count' => $pending, 'percent' => $calc($pending)],
+        'last_day_action' => ['label' => 'Last Day Action', 'count' => $lastDayAction, 'percent' => $calc($lastDayAction)],
+        'auto_rejected' => ['label' => 'No Actions Taken (Auto Rejected)', 'count' => $autoRejected, 'percent' => $calc($autoRejected)],
+        'approved' => ['label' => 'Approved', 'count' => $approved, 'percent' => $calc($approved)],
+        'denied' => ['label' => 'Denied', 'count' => $denied, 'percent' => $calc($denied)],
+    ];
+
+    return view('createpages.index', compact('pages', 'stats', 'statusFilter'));
+}
 
 
     public function create()
