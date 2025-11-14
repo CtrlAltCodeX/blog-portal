@@ -11,7 +11,6 @@
       .status-tabs {
         background: #fff;
         border-radius: 8px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
         padding: 0.75rem;
     }
 
@@ -60,26 +59,24 @@
         <div class='card-header'>
             <div class="page-header d-flex justify-content-between align-items-center my-0 w-100">
                 <h1 class="page-title">Post List</h1>
-                <a href="{{ route('createpages.create') }}" class="btn btn-primary">Create New</a>
+                <a href="{{ route('posts.create') }}" class="btn btn-primary">Create New</a>
             </div>
         </div>
 
         <div class="card-body table-responsive">
-    <div class="status-tabs">
-    <ul class="nav nav-pills justify-content-around flex-wrap">
-        @foreach($stats as $key => $data)
-            <li class="nav-item">
-                <a class="nav-link {{ $statusFilter === $key ? 'active' : '' }}"
-                   href="{{ route('createpages.index', ['status' => $key]) }}">
-                    <span>{{ $data['label'] }}</span>
-                    <span class="badge bg-secondary">{{ $data['count'] }}</span>
-                    <small>({{ $data['percent'] }}%)</small>
-                </a>
-            </li>
-        @endforeach
-    </ul>
-</div>
-
+            <div class="status-tabs">
+                <ul class="nav nav-pills justify-content-around flex-wrap">
+                    @foreach($stats as $key => $data)
+                        <li class="nav-item">
+                            <a class="nav-link {{ $statusFilter === $key ? 'active' : '' }}"
+                            href="{{ route('posts.index', ['status' => $key]) }}">
+                                <span>{{ $data['label'] }}</span>
+                                <span class="badge bg-secondary">{{ $data['count'] }}</span>
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
             
             <div class='row'>
                 <div class='col-md-4'>
@@ -92,8 +89,6 @@
                             </select>
                             <button class='btn btn-primary w-25' id='submit_btn' >Submit</button>
                         </div>
-                        {{-- <button type="button" id="bulkEditBtn" class="btn btn-warning btn-sm">Bulk Edit</button>
-                        <button type="button" id="bulkDeleteBtn" class="btn btn-danger btn-sm">Bulk Delete</button> --}}
                     </div>
                 </div>
             </div>
@@ -316,7 +311,7 @@
             if (!confirm('Are you sure you want to delete this record?')) return;
 
             $.ajax({
-                url: `/admin/createpages/${id}`,
+                url: `/admin/posts/${id}`,
                 type: 'DELETE',
                 data: {
                     _token: '{{ csrf_token() }}'
@@ -347,7 +342,7 @@
                 if (!confirm('Are you sure you want to delete selected records?')) return;
     
                 $.ajax({
-                    url: '{{ route("createpages.deleteMultiple") }}',
+                    url: '{{ route("posts.bulk.delete") }}',
                     type: 'DELETE',
                     data: {
                         _token: '{{ csrf_token() }}',
@@ -371,40 +366,6 @@
             }
         })
 
-        $('#bulkDeleteBtn').click(function() {
-            // const ids = $('input[name="ids[]"]:checked').map(function() {
-            //     return this.value;
-            // }).get();
-
-            // if (!ids.length) return alert('Select at least one record.');
-            // if (!confirm('Are you sure you want to delete selected records?')) return;
-
-            // $.ajax({
-            //     url: '{{ route("createpages.deleteMultiple") }}',
-            //     type: 'DELETE',
-            //     data: {
-            //         _token: '{{ csrf_token() }}',
-            //         ids
-            //     },
-            //     success: res => {
-            //         alert(res.message);
-            //         location.reload();
-            //     }
-            // });
-        });
-
-        $('#bulkEditBtn').click(function() {
-            // const ids = $('input[name="ids[]"]:checked').map(function() {
-            //     return this.value;
-            // }).get();
-
-            // if (!ids.length) return alert('Select at least one record.');
-            // $('#editId').val('bulk');
-            // $('#official_remark').val('');
-            // $('#status').val('pending');
-            // $('#editModal').modal('show');
-        });
-
         $('#editForm').submit(function(e) {
             e.preventDefault();
 
@@ -423,8 +384,8 @@
             };
 
             const url = isBulk ?
-                '{{ route("createpages.updateMultiple") }}' :
-                `/admin/createpages/${editId}/single-update`;
+                '{{ route("posts.bulk.update") }}' :
+                `/admin/posts/${editId}/single-update`;
 
             $.post(url, data, function(res) {
                 if (res.success) {
@@ -447,7 +408,7 @@
                     const diff = deadline - now;
 
                     if (diff <= 0) {
-                        el.textContent = "Expired";
+                        el.textContent = "SLA Breached";
                         el.classList.remove("text-success");
                         el.classList.add("text-danger");
                         return;

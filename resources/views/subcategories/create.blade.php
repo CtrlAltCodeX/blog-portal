@@ -51,9 +51,9 @@
                                 <label for="preference">{{ __('Preference') }}</label>
                                 <select name="preference" class="form-control">
                                     <option value="">Select Preference</option>
-                                    <option value="High">High</option>
-                                    <option value="Medium">Medium</option>
-                                    <option value="Low">Low</option>
+                                    @foreach (preferences() as $key => $preferences)
+                                        <option value="{{ $key }}">{{ $preferences }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>

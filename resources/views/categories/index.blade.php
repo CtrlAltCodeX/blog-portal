@@ -18,8 +18,6 @@
                     <tr>
                         <th>ID</th>
                         <th>Category Name</th>
-                        <th>Limit</th>
-                        <th>Preference</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -28,8 +26,6 @@
                         <tr>
                             <td>{{ $category->id }}</td>
                             <td>{{ $category->name }}</td>
-                            <td>{{ $category->category_limit ?? '-' }}</td>
-                            <td>{{ $category->preference ?? '-' }}</td>
                             <td>
                                 <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-sm btn-warning">Edit</a>
                                 <form action="{{ route('categories.destroy', $category->id) }}" method="POST" style="display:inline;">

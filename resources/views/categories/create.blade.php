@@ -32,13 +32,13 @@
                             </div>
 
                             {{-- Category Limit --}}
-                            <div class="form-group col-4">
+                            {{-- <div class="form-group col-4">
                                 <label for="category_limit" class="form-label">Category Limit</label>
                                 <input type="number" class="form-control" name="category_limit" placeholder="Enter limit">
-                            </div>
+                            </div> --}}
 
                             {{-- Preference --}}
-                            <div class="form-group col-4">
+                            {{-- <div class="form-group col-4">
                                 <label for="preference" class="form-label">Preference</label>
                                 <select class="form-control" name="preference">
                                     <option value="">Select Preference</option>
@@ -46,8 +46,7 @@
                                     <option value="Medium">Medium</option>
                                     <option value="Low">Low</option>
                                 </select>
-                            </div>
-
+                            </div> --}}
                         </div>
                     </div>
                 </div>

@@ -26,32 +26,11 @@
 
                     <div class="card-body">
                         <div class="row">
-
-                            {{-- Category Name --}}
                             <div class="form-group col-4">
                                 <label for="name" class="form-label">Category Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="name"
                                     value="{{ old('name', $category->name) }}" required>
                             </div>
-
-                            {{-- Category Limit --}}
-                            <div class="form-group col-4">
-                                <label for="category_limit" class="form-label">Category Limit</label>
-                                <input type="number" class="form-control" name="category_limit"
-                                    value="{{ old('category_limit', $category->category_limit) }}">
-                            </div>
-
-                            {{-- Preference --}}
-                            <div class="form-group col-4">
-                                <label for="preference" class="form-label">Preference</label>
-                                <select class="form-control" name="preference">
-                                    <option value="">Select Preference</option>
-                                    <option value="High" {{ old('preference', $category->preference) == 'High' ? 'selected' : '' }}>High</option>
-                                    <option value="Medium" {{ old('preference', $category->preference) == 'Medium' ? 'selected' : '' }}>Medium</option>
-                                    <option value="Low" {{ old('preference', $category->preference) == 'Low' ? 'selected' : '' }}>Low</option>
-                                </select>
-                            </div>
-
                         </div>
                     </div>
                 </div>

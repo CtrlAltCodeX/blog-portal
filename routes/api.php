@@ -21,3 +21,5 @@ use App\Http\Controllers\Api\ListingController;
 
 
 Route::get('/listings', [ListingController::class, 'index']);
+
+Route::get('/search-by-asins/{asin}', [ListingController::class, 'getListingData']);

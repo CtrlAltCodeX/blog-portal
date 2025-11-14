@@ -72,9 +72,9 @@
                                 <label for="preference" class="form-label">{{ __('Preference') }}</label>
                                 <select class="form-control" name="preference">
                                     <option value="">Select Preference</option>
-                                    <option value="High" {{ old('preference', $subcategory->preference) == 'High' ? 'selected' : '' }}>High</option>
-                                    <option value="Medium" {{ old('preference', $subcategory->preference) == 'Medium' ? 'selected' : '' }}>Medium</option>
-                                    <option value="Low" {{ old('preference', $subcategory->preference) == 'Low' ? 'selected' : '' }}>Low</option>
+                                    @foreach (preferences() as $key => $preferences)
+                                        <option value="{{ $key }}" {{ old('preference', $subcategory->preference) == $key ? 'selected' : '' }}>{{ $preferences }}</option>
+                                    @endforeach
                                 </select>
                             </div>
 

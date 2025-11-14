@@ -24,8 +24,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\GraphicalDashboardController;
 use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\CreatePageController;
 use App\Http\Controllers\SubCategoryController;
+use App\Http\Controllers\PostsController;
 
 
 Illuminate\Support\Facades\Auth::routes();
@@ -48,9 +48,11 @@ Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallb
 Route::post('/auth/google/refresh', [GoogleController::class, 'refreshGoogle'])
     ->name('google.refresh.token');
 
-Route::match(['get', 'post'], '/verify/otp', [LoginController::class, 'authenticateOTP'])->name('verify.otp');
+Route::match(['get', 'post'], '/verify/otp', [LoginController::class, 'authenticateOTP'])
+    ->name('verify.otp');
 
-Route::get('assets/{id}', \App\Http\Controllers\ImageMakerController::class)->name('assets');
+Route::get('assets/{id}', \App\Http\Controllers\ImageMakerController::class)
+    ->name('assets');
 
 Route::get('register/otp', [UserController::class, 'registerOTP'])
     ->name('register.otp');
@@ -59,7 +61,6 @@ Route::post('registers/store', [UserController::class, 'register'])
     ->name('register.store');
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function () {
-
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
@@ -69,7 +70,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     )->name('graphical.dashboard')->middleware('auth');
 
 
-    Route::get('posts', [DashboardController::class, 'getStats'])
+    Route::get('posts/count', [DashboardController::class, 'getStats'])
         ->name('get.posts.count');
 
     Route::get('term/condition', [SettingsController::class, 'getTermCondition'])
@@ -324,28 +325,29 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         Route::get('{user}/api-key-gen', [DeveloperController::class, 'keyRegenerate'])->name('api-key-gen');
         Route::delete('{user}/delete', [DeveloperController::class, 'destroy'])->name('destroy');
     });
+
     /**
      * User Functionalities
      */
     Route::resource('users', UserController::class);
     Route::resource('categories', CategoryController::class);
- 
+
     Route::resource('subcategories', SubCategoryController::class);
-    Route::post('/createpages/update-multiple', [CreatePageController::class, 'updateMultiple'])
-        ->name('createpages.updateMultiple');
-    Route::delete('/createpages/delete-multiple', [CreatePageController::class, 'deleteMultiple'])
-        ->name('createpages.deleteMultiple');
 
+    Route::post('posts/update', [PostsController::class, 'bulkUpdate'])
+        ->name('posts.bulk.update');
 
-    Route::post('/createpages/{id}/single-update', [CreatePageController::class, 'updateSingle'])
-        ->name('createpages.customupdate');
-    Route::delete('/createpages/{id}', [CreatePageController::class, 'destroy'])
-        ->name('createpages.destroy');
+    Route::delete('posts/delete', [PostsController::class, 'bulkDelete'])
+        ->name('posts.bulk.delete');
 
+    Route::post('posts/{id}/single-update', [PostsController::class, 'updateSingle'])
+        ->name('posts.customupdate');
 
-    Route::resource('createpages', CreatePageController::class)
+    Route::delete('posts/{id}', [PostsController::class, 'destroy'])
+        ->name('posts.destroy');
+
+    Route::resource('posts', PostsController::class)
         ->except(['destroy', 'update']);
-
 
     Route::get('count/users', [UserController::class, 'userCounts'])
         ->name('users.count');
@@ -377,8 +379,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     Route::post('live/posts', [GoogleService::class, 'posts'])
         ->name('live.posts');
 
-    Route::get('posts', [DashboardController::class, 'getStats'])
-        ->name('get.posts.count');
+    // Route::get('posts', [DashboardController::class, 'getStats'])
+    //     ->name('get.posts.count');
 
     Route::get('set/session/id', [UserController::class, 'setSessionId'])
         ->name('user.session.id');

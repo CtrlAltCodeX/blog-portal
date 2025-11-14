@@ -24,3 +24,13 @@ function renderCategoryOptions($categories, $prefix = '', $selectedId = null)
 
     return $html;
 }
+
+
+function preferences()
+{
+    return [
+        1 => 'High',
+        2 => 'Medium',
+        3 => 'Low',
+    ];
+}

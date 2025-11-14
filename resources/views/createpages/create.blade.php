@@ -8,7 +8,7 @@
         <h1 class="page-title">{{ __('Create Page Entry') }}</h1>
     </div>
 
-    <form action="{{ route('createpages.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="card">
             <div class="card-header d-flex justify-content-between">
