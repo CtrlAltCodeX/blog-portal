@@ -18,7 +18,7 @@
                     <tr>
                         <th>ID</th>
                         <th>Sub-Category Name</th>
-                        <th>Parent Category</th>
+                        <th>Category</th>
                         <th>Limit</th>
                         <th>Preference</th>
                         <th>Actions</th>
@@ -31,7 +31,22 @@
                         <td>{{ $subcategory->name }}</td>
                         <td>{{ $subcategory->parent?->name ?? '—' }}</td>
                         <td>{{ $subcategory->category_limit ?? '-' }}</td>
-                        <td>{{ $subcategory->preference ?? '-' }}</td>
+                        <td>
+                            @switch($subcategory->preference)
+                                @case(1)
+                                    {{ 'High' }}
+                                    @break
+                                @case(2)
+                                    {{ 'Medium' }}
+                                    @break
+                                @case(3)
+                                    {{ 'Low' }}
+                                    @break
+                            
+                                @default
+                                    
+                            @endswitch
+                        </td>
                         <td>
                             <a href="{{ route('subcategories.edit', $subcategory->id) }}" class="btn btn-sm btn-warning">Edit</a>
                             <form action="{{ route('subcategories.destroy', $subcategory->id) }}" method="POST" style="display:inline;">
