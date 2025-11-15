@@ -16,6 +16,7 @@ class CreatePage extends Model
         'any_preferred_date',
         'date',
         'upload',
+        'url',  
         'batch_id',
         'status',
         'official_remark',
@@ -37,4 +38,6 @@ class CreatePage extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    
 }

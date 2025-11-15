@@ -18,7 +18,7 @@ use App\Mail\WelcomeMail;
 use App\Mail\StatusNotificationMail;
 use App\Models\WeightVSCourier;
 use Illuminate\Http\Request;
-
+use App\Models\CreatePage;
 class UserController extends Controller
 {
 
@@ -399,8 +399,38 @@ class UserController extends Controller
         // Get all users
         $users = User::all();
 
+
+$createPageReport = CreatePage::with('user')
+    ->selectRaw("
+        user_id,
+        COUNT(*) as total_created,
+        SUM(CASE WHEN status = 'approved' THEN 1 ELSE 0 END) AS total_approved,
+        SUM(CASE WHEN status = 'denied' THEN 1 ELSE 0 END) AS total_rejected,
+        SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) AS total_pending
+    ")
+    ->groupBy('user_id');
+
+
+if (request()->has('start_date') && request()->has('end_date')) {
+    $start = Carbon::parse(request()->start_date)->startOfDay();
+    $end = Carbon::parse(request()->end_date)->endOfDay();
+
+    $createPageReport->whereBetween('created_at', [$start, $end]);
+}
+
+
+if (request()->user_id) {
+    $createPageReport->where('user_id', request()->user_id);
+}
+
+if (!auth()->user()->hasRole('Super Admin') && !auth()->user()->hasRole('Super Management')) {
+    $createPageReport->where('user_id', auth()->user()->id);
+}
+
+$createPageReport = $createPageReport->get();
+
         // Pass data to the view
-        return view('counts', compact('countCreated', 'countEdited', 'users'));
+        return view('counts', compact('countCreated', 'countEdited','createPageReport', 'users'));
     }
 
     public function priceCalculation()

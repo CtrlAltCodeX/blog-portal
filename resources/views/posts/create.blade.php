@@ -50,12 +50,17 @@
                     <label>Date</label>
                     <input type="date" class="form-control" name="date">
                 </div>
+            <div class="form-group col-4">
+                <label>URL (Optional)</label>
+                <input type="text" name="url" class="form-control" placeholder="https://example.com">
+            </div>
 
                 {{-- Upload --}}
                 <div class="form-group col-4">
                     <label>Upload Attachment</label>
-                    <input type="file" name="upload" class="form-control"
-                           accept=".jpg,.jpeg,.png,.pdf,.doc,.docx">
+                   <input type="file" name="upload[]" class="form-control"
+       accept=".jpg,.jpeg,.png,.pdf,.doc,.docx" multiple>
+
                 </div>
             </div>
         </div>

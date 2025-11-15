@@ -79,6 +79,73 @@
             </div>
             
             <div class='row'>
+
+            <form method="GET" action="" id="filterForm">
+    <div class="row mb-3">
+
+        <div class="col-md-2">
+            <label>Sort By Date</label>
+            <select class="form-control" name="sort">
+                <option value="desc" {{ $sortOrder=='desc'?'selected':'' }}>Latest → Oldest</option>
+                <option value="asc"  {{ $sortOrder=='asc'?'selected':'' }}>Oldest → Latest</option>
+            </select>
+        </div>
+
+  <div class="col-md-2">
+    <label>SLA Status</label>
+    <select id="slaFilter" class="form-control" name="sla">
+        <option value="" {{ $slaFilter == '' ? 'selected' : '' }}>All</option>
+
+        <option value="regular" {{ $slaFilter == 'regular' ? 'selected' : '' }}>
+            Regular (72–48 hrs)
+        </option>
+
+        <option value="normal" {{ $slaFilter == 'normal' ? 'selected' : '' }}>
+            Normal (48–24 hrs)
+        </option>
+
+        <option value="caution" {{ $slaFilter == 'caution' ? 'selected' : '' }}>
+            Caution (24–0 hrs)
+        </option>
+
+        <option value="breach" {{ $slaFilter == 'breach' ? 'selected' : '' }}>
+            SLA Breach
+        </option>
+    </select>
+</div>
+
+
+        <div class="col-md-2">
+            <label>Category</label>
+            <select class="form-control" name="category_id">
+                <option value="">All</option>
+                @foreach($categories as $cat)
+                    <option value="{{ $cat->id }}" {{ $category_id==$cat->id?'selected':'' }}>
+                        {{ $cat->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <label>Sub Category</label>
+            <select class="form-control" name="subcat_id">
+                <option value="">All</option>
+                @foreach($subcategories as $sub)
+                    <option value="{{ $sub->id }}" {{ $subcat_id==$sub->id?'selected':'' }}>
+                        {{ $sub->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="col-md-2 d-flex align-items-end mt-2">
+            <button type="submit" class="btn btn-primary btn-block">Filter</button>
+        </div>
+
+    </div>
+</form>
+
                 <div class='col-md-4'>
                     <div class="mb-3">
                         <div class='d-flex' style="grid-gap: 10px;">
@@ -91,7 +158,10 @@
                         </div>
                     </div>
                 </div>
+               
+
             </div>
+
 
             <form id="bulkDeleteForm">
                 <table class="table table-bordered table-striped align-middle table-responsive">
@@ -108,22 +178,21 @@
                                     Created At / By    
                                 </div>
                             </th>
-                            <!--<th>Created Date</th>-->
+                         
                             <th>SLA</th>
-                            <!--<th>Created By</th>-->
+                           
                             <th>
                                 <div class='fit'>
                                     Category / Sub-Category    
                                 </div>
                             </th>
-                            <!--<th></th>-->
+                           
                             <th>
                                 <div class='fit'>
                                     Preferred / Date
                                 </div>
                             </th>
-                            <!--<th>Date</th>-->
-                            <!--<th>Attachment</th>-->
+                           
                             <th>
                                 <div class='fit'>
                                     Current Status    
@@ -135,7 +204,7 @@
                                     Remarks By / Date        
                                 </div>
                             </th>
-                            <!--<th>Remarks Date</th>-->
+                       
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -162,11 +231,15 @@
                         @endphp
                         <tr>
                             <td><input type="checkbox" name="ids[]" value="{{ $page->id }}"></td>
-                            <td>
-                                <div class='fit'>
-                                    {{ $loop->iteration }} / {{ $page->batch_id }}
-                                </div>
-                            </td>
+                         <td>
+                            <div class='fit'>
+                                {{ $loop->iteration }} / 
+                                <a href="{{ route('batch.details', $page->id) }}">
+                                    {{ $page->batch_id }}
+                                </a>
+                            </div>
+                        </td>
+
                             <td>
                                 <div class='fit'>
                                     {{ $created->format('d M Y') }} /
@@ -174,15 +247,16 @@
                                 </div>
                             </td>
                             <!--<td>{{ $created->format('d M Y') }}</td>-->
-                            <td>
-                                <span
-                                    class="sla-timer text-success"
-                                    data-created="{{ $page->created_at }}"
-                                    data-id="{{ $page->id }}"
-                                    style='display:block; width:130px;'>
-                                    Loading...
-                                </span>
-                            </td>
+                          <td>
+    <button
+        class="btn btn-sm sla-btn"
+        data-created="{{ $page->created_at }}"
+        data-id="{{ $page->id }}"
+        style="width:130px;">
+        Loading...
+    </button>
+</td>
+
                             <!--<td>{{ $page->user->name ?? 'N/A' }}</td>-->
                             <td>
                                 <div class='fit'>
@@ -195,14 +269,7 @@
                                     {{ $page->any_preferred_date ?? '-' }} / {{ $page->date ?? '-' }}    
                                 </div>
                             </td>
-                            <!--<td>{{ $page->date ?? '-' }}</td>-->
-                            <!--<td>-->
-                            <!--    @if($page->upload)-->
-                            <!--    <a href="{{ asset('storage/' . $page->upload) }}" target="_blank">View</a>-->
-                            <!--    @else-->
-                            <!--    --->
-                            <!--    @endif-->
-                            <!--</td>-->
+                          
                             <td>{{ $status }}</td>
                             <td>
                                 <div class='fit'>
@@ -220,18 +287,21 @@
                                     {{ $page->remarks_date ? \Carbon\Carbon::parse($page->remarks_date)->format('d M Y') : '-' }}
                                 </div>
                             </td>
-                            <!--<td>-->
-                            <!--    <div class='fit'>-->
-                            <!--        {{ $page->remarks_date ? \Carbon\Carbon::parse($page->remarks_date)->format('d M Y') : '-' }}    -->
-                            <!--    </div>-->
-                            <!--</td>-->
-                            <td class='d-flex' style='grid-gap: 10px;'>
-                                @if($page->upload)
-                                <a href="{{ asset('storage/' . $page->upload) }}" target="_blank" class='btn btn-sm btn-warning'>View attachment</a>
-                                @endif
-                                <button type="button" class="btn btn-sm btn-warning single-edit" data-id="{{ $page->id }}">Edit</button>
-                                <button type="button" class="btn btn-sm btn-danger single-delete" data-id="{{ $page->id }}">Delete</button>
-                            </td>
+                         
+                       <td>
+                        <div class="d-flex justify-content-end" style="gap: 10px;">
+                            @if($page->status == 'pending')
+                                <button type="button" class="btn btn-sm btn-warning single-edit" data-id="{{ $page->id }}">
+                                    Edit
+                                </button>
+                            @endif
+
+                            <button type="button" class="btn btn-sm btn-danger single-delete" data-id="{{ $page->id }}">
+                                Delete
+                            </button>
+                        </div>
+                    </td>
+
 
                         </tr>
                         @empty
@@ -397,42 +467,47 @@
             });
         });
 
-        function startSLACountdown() {
-            const timers = document.querySelectorAll('.sla-timer');
-            timers.forEach(el => {
-                const createdAt = new Date(el.dataset.created);
-                const deadline = new Date(createdAt.getTime() + (3 * 24 * 60 * 60 * 1000)); // +3 days
+   function setupSLAButtons() {
+    const buttons = document.querySelectorAll('.sla-btn');
 
-                function updateTimer() {
-                    const now = new Date();
-                    const diff = deadline - now;
+    buttons.forEach(btn => {
+        const createdAt = new Date(btn.dataset.created);
+        const deadline = createdAt.getTime() + (72 * 60 * 60 * 1000); // 72 hours
+        const now = new Date().getTime();
+        const diff = deadline - now;
 
-                    if (diff <= 0) {
-                        el.textContent = "SLA Breached";
-                        el.classList.remove("text-success");
-                        el.classList.add("text-danger");
-                        return;
-                    }
+        const totalHoursLeft = diff / (1000 * 60 * 60);
 
-                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-                    let display = '';
-                    if (days > 0) display += `${days}d `;
-                    if (hours > 0 || days > 0) display += `${hours}h `;
-                    display += `${minutes}m ${seconds}s`;
-
-                    el.textContent = display + " left";
-                }
-
-                updateTimer();
-                setInterval(updateTimer, 1000);
-            });
+        // SLA Breach
+        if (diff <= 0) {
+            btn.textContent = "SLA Breach";
+            btn.classList.remove("btn-primary", "btn-success", "btn-warning");
+            btn.classList.add("btn-danger");
+            return;
         }
 
-        startSLACountdown();
+        // 72 – 48 hrs → Regular
+        if (totalHoursLeft <= 72 && totalHoursLeft > 48) {
+            btn.textContent = "Regular";
+            btn.classList.add("btn-primary"); // Blue
+        }
+
+        // 48 – 24 hrs → Normal
+        else if (totalHoursLeft <= 48 && totalHoursLeft > 24) {
+            btn.textContent = "Normal";
+            btn.classList.add("btn-success"); // Green
+        }
+
+        // 24 – 0 hrs → Caution
+        else if (totalHoursLeft <= 24 && totalHoursLeft > 0) {
+            btn.textContent = "Caution";
+            btn.classList.add("btn-warning"); // Yellow
+        }
+    });
+}
+
+setupSLAButtons();
+
     });
 </script>
 @endpush

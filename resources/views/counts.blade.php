@@ -151,6 +151,48 @@
                     </div>
                 </div>
             </div>
+
+            <div class="card mt-4">
+    <div class="card-header">
+        <h3 class="card-title">Record 3 (Create Page Report)</h3>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered text-nowrap">
+                <thead>
+                    <tr>
+                        <th>Sl. No.</th>
+                        <th>Total Created</th>
+                        <th>Approved</th>
+                        <th>Rejected</th>
+                        <th>Pending</th>
+                        <th>User Name</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @forelse($createPageReport as $key => $data)
+                    <tr>
+                        <td>{{ $key + 1 }}</td>
+                        <td>{{ $data->total_created }}</td>
+                        <td>{{ $data->total_approved }}</td>
+                        <td>{{ $data->total_rejected }}</td>
+                        <td>{{ $data->total_pending }}</td>
+                        <td>{{ $data->user->name ?? 'N/A' }}</td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="6" align="center">No Result Found</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+
         </div>
     </div>
 </div>
