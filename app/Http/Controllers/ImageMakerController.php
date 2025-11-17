@@ -35,9 +35,20 @@ class ImageMakerController extends Controller
     {
         abort_if(auth()->guest(), Response::HTTP_FORBIDDEN);
 
-        return response()->file(
-            storage_path('app/public/uploads/' . $file)
-        );
+        $basePath = storage_path('app/public/uploads/');
+
+        $filePath1 = $basePath . $file;
+        $filePath2 = $basePath . 'posts/' . $file;
+
+        if (file_exists($filePath1)) {
+            return response()->file($filePath1);
+        }
+
+        if (file_exists($filePath2)) {
+            return response()->file($filePath2);
+        }
+
+        abort(404, 'File not found.');
     }
 
     /**
@@ -105,9 +116,9 @@ class ImageMakerController extends Controller
         usort($files, function ($a, $b) {
             return strtotime($b['datetime']) - strtotime($a['datetime']);
         });
-   
+
         $files = $this->paginate($files, request()->count, request()->page);
-        
+
         return view('image-creation.image-gallery', compact('files'));
     }
 
@@ -124,9 +135,9 @@ class ImageMakerController extends Controller
     {
         $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
         $items = $items instanceof Collection ? $items : Collection::make($items);
-    
+
         $paginated = new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
-        
+
         // Append existing GET parameters to pagination links
         $paginated->appends(request()->query());
 

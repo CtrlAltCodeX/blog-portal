@@ -78,6 +78,11 @@ class RoleController extends Controller
                 // Add the permission to the array for the current category
                 $permissionsInCategory['Image'][] = $permission;
             }
+
+            if (stripos($permission['name'], 'Post') !== false) {
+                // Add the permission to the array for the current category
+                $permissionsInCategory['Post'][] = $permission;
+            }
         }
 
         return view('accounts.roles.create', compact('permissions', 'permissionsInCategory'));
@@ -149,6 +154,11 @@ class RoleController extends Controller
             if (stripos($permission['name'], 'Inventory') !== false) {
                 // Add the permission to the array for the current category
                 $permissionsInCategory['Inventory'][] = $permission;
+            }
+
+            if (stripos($permission['name'], 'Post') !== false) {
+                // Add the permission to the array for the current category
+                $permissionsInCategory['Post'][] = $permission;
             }
         }
 

@@ -204,17 +204,32 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         
                         <li><a href="{{ route('developers.index', ['users' => 50]) }}" class="slide-item {{ request()->is('admin/developers*') ? 'active' : '' }}">{{ __('Developer API Accounts') }}</a></li>
                         
+                        @can('Settings -> Categories')
                         <li><a href="{{ route('categories.index') }}" class="slide-item {{ request()->is('admin/categories') ? 'active' : '' }}">{{ __('Categories') }}</a></li>
+                        @endcan
+                        @can('Settings -> Sub Categories')
                         <li><a href="{{ route('subcategories.index') }}" class="slide-item {{ request()->is('admin/subcategories') ? 'active' : '' }}">   {{ __('Sub Categories') }}</a></li>
+                        @endcan
+
+                        @can('Settings -> Sub Sub Categories')
+                        <li><a href="{{ route('sub-subcategories.index') }}" class="slide-item {{ request()->is('admin/sub-subcategories') ? 'active' : '' }}">   {{ __('Sub Sub Categories') }}</a></li>
+                        @endcan
                     </ul>
                 </li>
                 @endif
-                <li class="slide {{ (request()->is('admin/createpages')) ? 'is-expanded' : '' }}">
+                @can('List Post')
+                <li class="slide {{ (request()->is('admin/posts')) ? 'is-expanded' : '' }}">
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fa fa-gear"></i><span class="side-menu__label">{{ __('Posts') }}</span><i class="angle fe fe-chevron-right"></i></a>
                     <ul class="slide-menu">
-                        <li><a href="{{ route('posts.index') }}" class="slide-item {{ request()->is('admin/createpages') ? 'active' : '' }}">{{ __('Post') }}</a></li>
+                        @can('Create Post')
+                        <li><a href="{{ route('posts.create') }}" class="slide-item {{ request()->is('admin/create') ? 'active' : '' }}">{{ __('Create Post') }}</a></li>
+                        @endcan
+                        @can('List Post')
+                        <li><a href="{{ route('posts.index', ['status' => 'pending_recent']) }}" class="slide-item {{ request()->is('admin/posts') ? 'active' : '' }}">{{ __('Post') }}</a></li>
+                        @endcan
                     </ul>
                 </li>
+                @endcan
             </ul>
         </div>
     </div>

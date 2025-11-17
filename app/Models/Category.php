@@ -9,7 +9,13 @@ class Category extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'parent_id', 'category_limit', 'preference'];
+    protected $fillable = [
+        'name',
+        'parent_id',
+        'category_limit',
+        'preference',
+        'sub_parent_id',
+    ];
 
     public function parent()
     {
@@ -19,5 +25,15 @@ class Category extends Model
     public function children()
     {
         return $this->hasMany(Category::class, 'parent_id');
+    }
+
+    public function subParent()
+    {
+        return $this->belongsTo(Category::class, 'sub_parent_id');
+    }
+
+    public function subChildren()
+    {
+        return $this->hasMany(Category::class, 'sub_parent_id');
     }
 }

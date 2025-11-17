@@ -25,6 +25,7 @@ use App\Http\Controllers\GraphicalDashboardController;
 use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SubCategoryController;
+use App\Http\Controllers\SubSubCategoryController;
 use App\Http\Controllers\PostsController;
 
 
@@ -330,14 +331,17 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
      * User Functionalities
      */
     Route::resource('users', UserController::class);
+
     Route::resource('categories', CategoryController::class);
 
     Route::resource('subcategories', SubCategoryController::class);
 
+    Route::resource('sub-subcategories', SubSubCategoryController::class);
+
     Route::post('posts/update', [PostsController::class, 'bulkUpdate'])
         ->name('posts.bulk.update');
-Route::get('/batch-details/{id}', [PostsController::class, 'batchDetails'])
-     ->name('batch.details');
+    Route::get('/batch-details/{id}', [PostsController::class, 'batchDetails'])
+        ->name('batch.details');
 
     Route::delete('posts/delete', [PostsController::class, 'bulkDelete'])
         ->name('posts.bulk.delete');

@@ -62,15 +62,18 @@
                                                 aria-label="{{ __('Actions') }}">
                                                 <a href="{{ route('roles.edit', $role->id) }}"
                                                     class="btn btn-primary">{{ __('EDIT') }}</a>
-
-                                                <button type="button"
-                                                    onclick="return confirm('{{ __('Are you sure you want to delete this record?') }}') ? document.getElementById('delete-role').submit() : false;"
-                                                    class="btn btn-danger">{{ __('DELETE') }}</button>
-                                                <form action="{{ route('roles.destroy', $role->id) }}" id="delete-role"
-                                                    method="post">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                </form>
+                                                
+                                                @if ($role->name != 'Super Admin')
+                                                    <button type="button"
+                                                        onclick="return confirm('{{ __('Are you sure you want to delete this record?') }}') ? document.getElementById('delete-role').submit() : false;"
+                                                        class="btn btn-danger">{{ __('DELETE') }}</button>
+                                                    
+                                                    <form action="{{ route('roles.destroy', $role->id) }}" id="delete-role"
+                                                        method="post">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                    </form>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>

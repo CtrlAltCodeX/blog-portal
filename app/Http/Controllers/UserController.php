@@ -293,13 +293,11 @@ class UserController extends Controller
             $body = "We regret to inform you that your account has been Suspended due to unusual activities detected on our platform. This decision has been made to ensure the safety and integrity of our users and services.";
             Mail::to($user->email)->send(new StatusNotificationMail('SUSPEND', $subject, $body));
             Mail::to('abhishek86478@gmail.com')->send(new StatusNotificationMail('SUSPEND', $subject, $body));
-
         } else if ($user->status == 3) {
             $subject = "Important Notice: Your Account Has Been Permanently Blocked";
             $body = "We regret to inform you that your account has been permanently blocked due to unusual activities detected on our platform. This decision has been made to ensure the safety and integrity of our users and services. ";
             Mail::to($user->email)->send(new StatusNotificationMail('BLOCKED', $subject, $body));
             Mail::to('abhishek86478@gmail.com')->send(new StatusNotificationMail('BLOCKED', $subject, $body));
-
         }
 
         session()->flash('success', __('User updated successfully.'));
@@ -399,57 +397,56 @@ class UserController extends Controller
         // Get all users
         $users = User::all();
 
-
-$createPageReport = CreatePage::with('user')
-    ->selectRaw("
-        user_id,
-        COUNT(*) as total_created,
-        SUM(CASE WHEN status = 'approved' THEN 1 ELSE 0 END) AS total_approved,
-        SUM(CASE WHEN status = 'denied' THEN 1 ELSE 0 END) AS total_rejected,
-        SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) AS total_pending
-    ")
-    ->groupBy('user_id');
-
-
-if (request()->has('start_date') && request()->has('end_date')) {
-    $start = Carbon::parse(request()->start_date)->startOfDay();
-    $end = Carbon::parse(request()->end_date)->endOfDay();
-
-    $createPageReport->whereBetween('created_at', [$start, $end]);
-}
+        $createPageReport = CreatePage::with('user')
+            ->selectRaw("
+                user_id,
+                COUNT(*) as total_created,
+                SUM(CASE WHEN status = 'approved' THEN 1 ELSE 0 END) AS total_approved,
+                SUM(CASE WHEN status = 'denied' THEN 1 ELSE 0 END) AS total_rejected,
+                SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) AS total_pending
+            ")
+            ->groupBy('user_id');
 
 
-if (request()->user_id) {
-    $createPageReport->where('user_id', request()->user_id);
-}
+        if (request()->has('start_date') && request()->has('end_date')) {
+            $start = Carbon::parse(request()->start_date)->startOfDay();
+            $end = Carbon::parse(request()->end_date)->endOfDay();
 
-if (!auth()->user()->hasRole('Super Admin') && !auth()->user()->hasRole('Super Management')) {
-    $createPageReport->where('user_id', auth()->user()->id);
-}
+            $createPageReport->whereBetween('created_at', [$start, $end]);
+        }
 
-$createPageReport = $createPageReport->get();
+
+        if (request()->user_id) {
+            $createPageReport->where('user_id', request()->user_id);
+        }
+
+        if (!auth()->user()->hasRole('Super Admin') && !auth()->user()->hasRole('Super Management')) {
+            $createPageReport->where('user_id', auth()->user()->id);
+        }
+
+        $createPageReport = $createPageReport->get();
 
         // Pass data to the view
-        return view('counts', compact('countCreated', 'countEdited','createPageReport', 'users'));
+        return view('counts', compact('countCreated', 'countEdited', 'createPageReport', 'users'));
     }
 
     public function priceCalculation()
     {
         $publications  = WeightVSCourier::all();
-        
+
         $password = env('PUBLIC_CALCULATOR_PASSWORD'); // set your password
 
         // If already unlocked in session
         if (request()->session()->get('page_unlocked', false)) {
             return view('price-calculator', compact('publications'));
         }
-    
+
         // Check password submission
         if (request()->isMethod('post') && request()->input('page_password') === $password) {
             request()->session()->put('page_unlocked', true);
             return view('price-calculator', compact('publications'));
         }
-    
+
         // Otherwise show password form
         return view('password-protect');
     }

@@ -34,3 +34,14 @@ function preferences()
         3 => 'Low',
     ];
 }
+
+function status($key = null)
+{
+    $status = [
+        1 => 'pending',
+        2 => 'approved',
+        3 => 'denied',
+    ];
+
+    return $key ? $status[$key] : $status;
+}

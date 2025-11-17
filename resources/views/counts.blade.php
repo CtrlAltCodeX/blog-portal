@@ -45,9 +45,9 @@
             <h5 align=center class='text-primary'><strong>NOTE: </strong> By Default This Page Will Show Current Month Records If Date Range Not Selected.</h5>
             <div class="card">
                 <div class="card-header justify-content-between">
-                    
+
                     <h3 class="card-title">Record 1 ( Create New Listing )</h3>
-                    
+
                     <form action="{{ route('users.count') }}" method="GET" id='filter'>
                         <div class="d-flex" style="grid-gap:10px;">
                             <div class="d-flex align-items-center" style="grid-gap:10px;">
@@ -64,7 +64,7 @@
                                 @endforeach
                             </select>
                             @endif
-                            
+
                             <button type='submit' class='btn btn-primary w-25'>Filter</button>
                         </div>
                     </form>
@@ -84,7 +84,7 @@
                                     <th>{{ __('User Name') }}</th>
                                 </tr>
                             </thead>
-                            
+
                             <tbody>
                                 @forelse($countCreated as $key => $data)
                                 <tr>
@@ -153,45 +153,45 @@
             </div>
 
             <div class="card mt-4">
-    <div class="card-header">
-        <h3 class="card-title">Record 3 (Create Page Report)</h3>
-    </div>
+                <div class="card-header">
+                    <h3 class="card-title">Record 3 (Create Page Report)</h3>
+                </div>
 
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-bordered text-nowrap">
-                <thead>
-                    <tr>
-                        <th>Sl. No.</th>
-                        <th>Total Created</th>
-                        <th>Approved</th>
-                        <th>Rejected</th>
-                        <th>Pending</th>
-                        <th>User Name</th>
-                    </tr>
-                </thead>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th>Sl. No.</th>
+                                    <th>Total Created</th>
+                                    <th>Approved</th>
+                                    <th>Rejected</th>
+                                    <th>Pending</th>
+                                    <th>User Name</th>
+                                </tr>
+                            </thead>
 
-                <tbody>
-                    @forelse($createPageReport as $key => $data)
-                    <tr>
-                        <td>{{ $key + 1 }}</td>
-                        <td>{{ $data->total_created }}</td>
-                        <td>{{ $data->total_approved }}</td>
-                        <td>{{ $data->total_rejected }}</td>
-                        <td>{{ $data->total_pending }}</td>
-                        <td>{{ $data->user->name ?? 'N/A' }}</td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="6" align="center">No Result Found</td>
-                    </tr>
-                    @endforelse
-                </tbody>
+                            <tbody>
+                                @forelse($createPageReport as $key => $data)
+                                <tr>
+                                    <td>{{ $key + 1 }}</td>
+                                    <td>{{ $data->total_created }}</td>
+                                    <td>{{ $data->total_approved }}</td>
+                                    <td>{{ $data->total_rejected }}</td>
+                                    <td>{{ $data->total_pending }}</td>
+                                    <td>{{ $data->user->name ?? 'N/A' }}</td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="6" align="center">No Result Found</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
 
-            </table>
-        </div>
-    </div>
-</div>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
         </div>
     </div>
