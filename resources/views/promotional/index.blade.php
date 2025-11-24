@@ -1,0 +1,79 @@
+@extends('layouts.master')
+
+@section('title', __('Promotional Image Listing'))
+
+@section('content')
+<div class="card">
+    <div class="card-header">
+        <h3>Promotional Image Listing</h3>
+    </div>
+
+    <div class="card-body">
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>SL</th>
+                <th>Batch ID</th>
+                <th>Category</th>
+                <th>Sub-Category</th>
+                <th>Sub-Sub Category</th>
+                <th>Title</th>
+                <th>Brief Description</th>
+                <th>Preferred Date</th>
+                <th>Image</th>
+                <th>URL</th>
+                <th>Created By</th>
+                <th>Created Date</th>
+                <th>Created Time</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            @foreach($PromotionalImage as $key => $row)
+            <tr>
+                <td>{{ $key + 1 }}</td>
+
+                <td>{{ $row->batch_id }}</td>
+
+                <td>{{ optional($row->categoryRelation)->name }}</td>
+                <td>{{ optional($row->subCategoryRelation)->name }}</td>
+                <td>{{ optional($row->subSubCategoryRelation)->name }}</td>
+
+                <td>{{ $row->title }}</td>
+
+                <td>{{ Str::limit($row->brief_description, 50) }}</td>
+
+                <td>{{ $row->preferred_date ?? 'N/A' }}</td>
+
+                <td>
+                    @if($row->attach_image)
+                        <img src="{{ asset('storage/' . $row->attach_image) }}" width="60">
+                    @endif
+                </td>
+
+                <td>
+                    @if($row->attach_url)
+                        <a href="{{ $row->attach_url }}" target="_blank">{{ $row->attach_url }}</a>
+                    @endif
+                </td>
+
+                <td>{{ optional($row->creator)->name }}</td>
+
+                <td>{{ $row->created_at->format('d-m-Y') }}</td>
+                <td>{{ $row->created_at->format('h:i A') }}</td>
+
+                <td>
+                    <button onclick="alert('Edit Working...');"
+                            class="btn btn-sm btn-primary">
+                        Edit
+                    </button>
+                </td>
+            </tr>
+            @endforeach
+            </tbody>
+
+        </table>
+    </div>
+</div>
+@endsection

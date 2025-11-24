@@ -230,6 +230,15 @@ $userInfo = app('App\Models\SiteSetting')->first();
                     </ul>
                 </li>
                 @endcan
+
+          <li><a href="{{ route('content.create') }}" class="slide-item {{ request()->is('admin/content/create') ? 'active' : '' }}">{{ __('Create Content') }}</a></li>
+          <li><a href="{{ route('content.listing') }}" class="slide-item {{ request()->is('admin/content/listing') ? 'active' : '' }}">{{ __('Content Listing') }}</a></li>
+
+          <li><a href="{{ route('promotional.create') }}" class="slide-item {{ request()->is('admin/promotional/create') ? 'active' : '' }}">{{ __('Create Promotional Image') }}</a></li>
+                    <li><a href="{{ route('promotional.listing') }}" class="slide-item {{ request()->is('admin/promotional/listing') ? 'active' : '' }}">{{ __('Promotional Images Listing') }}</a></li>
+
+
+
             </ul>
         </div>
     </div>

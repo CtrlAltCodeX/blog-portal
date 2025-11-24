@@ -27,7 +27,8 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\SubSubCategoryController;
 use App\Http\Controllers\PostsController;
-
+use App\Http\Controllers\ContentCreateController;
+use App\Http\Controllers\PromotionalImageController;
 
 Illuminate\Support\Facades\Auth::routes();
 /*
@@ -354,6 +355,21 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::resource('posts', PostsController::class)
         ->except(['destroy', 'update']);
+
+
+        Route::get('/content/create', [ContentCreateController::class, 'create'])->name('content.create');
+          Route::get('/content/listing', [ContentCreateController::class, 'index'])->name('content.listing');
+Route::post('/content/store', [ContentCreateController::class, 'store'])->name('content.store');
+Route::get('/content/row', [ContentCreateController::class, 'getRow'])
+    ->name('content.row');
+
+Route::get('/promotional/create', [PromotionalImageController::class, 'create'])->name('promotional.create');
+Route::get('/promotional/listing', [PromotionalImageController::class, 'index'])->name('promotional.listing');
+Route::post('/promotional/store', [PromotionalImageController::class, 'store'])->name('promotional.store');
+
+Route::get('/promotional/row', [PromotionalImageController::class, 'getRow'])
+    ->name('promotional.row');
+
 
     Route::get('count/users', [UserController::class, 'userCounts'])
         ->name('users.count');

@@ -1,6 +1,6 @@
 <script>
     $(document).ready(function () {
-        // Show / Hide Date Field Based on "Preferred Date" Select
+
         $('#preferredDateSelect').on('change', function () {
             if ($(this).val() === 'Yes') {
                 $('#dateField').show();
