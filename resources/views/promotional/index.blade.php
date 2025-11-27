@@ -3,6 +3,7 @@
 @section('title', __('Promotional Image Listing'))
 
 @section('content')
+
 <div class="card">
     <div class="card-header">
         <h3>Promotional Image Listing</h3>
@@ -30,7 +31,7 @@
             </thead>
 
             <tbody>
-                @foreach($PromotionalImage as $key => $row)
+                @forelse($PromotionalImage as $key => $row)
                 <tr>
                     <td>{{ $key + 1 }}</td>
 
@@ -71,7 +72,11 @@
 
                     </td>
                 </tr>
-                @endforeach
+                @empty
+                <tr>
+                    <td align="center" colspan="14">No Promotional Images Found.</td>
+                </tr>
+                @endforelse
             </tbody>
 
         </table>
@@ -79,8 +84,8 @@
 </div>
 
 @include('components.approval-form')
-@endsection
 
+@endsection
 
 @push('js')
 <script>

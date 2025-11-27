@@ -66,6 +66,8 @@ class WatermarkController extends Controller
             file_put_contents($localPath, $imageContents);
         }
 
+        $widthSizeImage = 390;
+        $heightSizeImage = 520;
         if (request()->size == 'basic') {
             $widthSizeImage = 390;
             $heightSizeImage = 520;

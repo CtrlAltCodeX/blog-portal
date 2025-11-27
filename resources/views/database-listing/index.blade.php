@@ -298,7 +298,7 @@
                             </tbody>
                         </table>
 
-                        {!! $googlePosts->links() !!}
+                        {!! $googlePosts->appends(request()->all())->links() !!}
                     </div>
                 </div>
             </div>

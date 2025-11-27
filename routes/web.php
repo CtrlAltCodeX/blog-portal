@@ -357,16 +357,16 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     Route::resource('posts', PostsController::class)
         ->except(['destroy', 'update']);
 
-
     Route::resource('content', ContentController::class)->only([
         'index',
         'create',
         'store'
     ]);
 
-    Route::get('/content/row', [ContentController::class, 'getRow'])
+    Route::get('content/row', [ContentController::class, 'getRow'])
         ->name('content.row');
-    Route::get('/approval/list', [ContentController::class, 'approvalList'])
+
+    Route::get('approval/list', [ContentController::class, 'approvalList'])
         ->name('approval.list');
 
     Route::resource('promotional', PromotionalController::class)->only([
@@ -375,9 +375,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         'store'
     ]);
 
-    Route::post('/approval/submit', [PromotionalController::class, 'submit'])->name('approval.submit');
+    Route::post('approval/submit', [PromotionalController::class, 'submit'])->name('approval.submit');
 
-    Route::get('/promotional/row', [PromotionalController::class, 'getRow'])
+    Route::get('promotional/row', [PromotionalController::class, 'getRow'])
         ->name('promotional.row');
 
     Route::resource('worktype', WorkTypeController::class);

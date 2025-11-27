@@ -23,7 +23,7 @@
           '{{ config('services.asin.url') }}',
           '{{ config('services.asin.token') }}'
         )"
-        style='grid-gap:4px;padding-right: 30px;'
+        style='grid-gap:4px;padding-right:30px;'
       >
         <i class="fa fa-spinner d-none fa-spin" id='spinner' aria-hidden="true" style='font-size:20px;'></i>
         FETCH
@@ -58,9 +58,9 @@
       >
         <i class="fa fa-download"></i>
       </button>
-
-      
     </div>
+      <br>
+      <label style='font-size:16px; text-align:center;' class='w-100'><strong>Note- </strong>You Can Use this Feature To <u>"Create New Listing"</u> & <u>"Update Old Listings"</u>. It will Save Your Time! <br /> <span class='text-danger'>Error Alert: <i>If Not Working,Then Please Report to our Developer Team  <a href='https://wa.me/917004940179' target='_blank'><i class='fa fa-whatsapp' style='margin-left:10px;'></i> Click Here</a> .</span></label>
   </div>
 </div>
 

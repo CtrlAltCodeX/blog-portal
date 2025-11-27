@@ -1,23 +1,37 @@
 @extends('layouts.master')
 
-@section('title', 'Create Promotional Image')
+@section('title', 'Create Promotional')
 
 @section('content')
+<style>
+    .table th, .table td {
+        width: fit-content;
+    }
+
+    select.form-control {
+        width: 120px;
+    }
+
+    input.form-control {
+        width: 150px;
+    }
+
+    textarea.form-control {
+        width: 200px;
+    }
+</style>
 
 <div class="container-fluid py-3">
-
-
     <div class="card">
         <div class="card-header">
-            <h3>Create Promotional Images</h3>
+            <h3>Create Promotional</h3>
         </div>
 
         <div class="card-body">
-
             <form action="{{ route('promotional.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
-                <table class="table table-bordered" id="promo-table">
+                <table class="table table-bordered table-responsive" id="promo-table">
                     <thead>
                         <tr>
                             <th>Category*</th>
@@ -36,11 +50,8 @@
                     <tbody id="promotional-body">
                         @include('components.single-row', ['index' => 0, 'showDocs' => false])
                     </tbody>
-
                 </table>
-
                 <button type="button" class="btn btn-primary btn-sm" id="add-promotional-row">+ Add Row</button>
-
                 <button class="btn btn-success float-end">SAVE ALL</button>
             </form>
         </div>

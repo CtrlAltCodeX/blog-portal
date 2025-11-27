@@ -221,26 +221,15 @@ $userInfo = app('App\Models\SiteSetting')->first();
                 <li class="slide {{ (request()->is('admin/posts')) ? 'is-expanded' : '' }}">
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fa fa-gear"></i><span class="side-menu__label">{{ __('Posts') }}</span><i class="angle fe fe-chevron-right"></i></a>
                     <ul class="slide-menu">
-                        @can('Create Post')
-                        <li><a href="{{ route('posts.create') }}" class="slide-item {{ request()->is('admin/create') ? 'active' : '' }}">{{ __('Create Post') }}</a></li>
-                        @endcan
-                        @can('List Post')
-                        <li><a href="{{ route('posts.index', ['status' => 'pending_recent']) }}" class="slide-item {{ request()->is('admin/posts') ? 'active' : '' }}">{{ __('Post') }}</a></li>
-                        @endcan
+                         <li><a href="{{ route('worktype.index') }}" class="slide-item {{ request()->is('admin/WorkType ') ? 'active' : '' }}">{{ __('Work Type') }}</a></li>
+                        <li><a href="{{ route('content.create') }}" class="slide-item {{ request()->is('admin/content/create') ? 'active' : '' }}">{{ __('Content Create') }}</a></li>
+                        <li><a href="{{ route('content.index') }}" class="slide-item {{ request()->is('admin/content/listing') ? 'active' : '' }}">{{ __('Content Listing') }}</a></li>
+                        <li><a href="{{ route('promotional.create') }}" class="slide-item {{ request()->is('admin/promotional/create') ? 'active' : '' }}">{{ __('Create Promotional Image') }}</a></li>
+                        <li><a href="{{ route('promotional.index') }}" class="slide-item {{ request()->is('admin/promotional/listing') ? 'active' : '' }}">{{ __('Promotional Images Listing') }}</a></li>
+                        <li><a href="{{ route('approval.list') }}" class="slide-item {{ request()->is('admin/approval/list ') ? 'active' : '' }}">{{ __('Approval List') }}</a></li>
                     </ul>
                 </li>
                 @endcan
-                <li><a href="{{ route('worktype.index') }}" class="slide-item {{ request()->is('admin/WorkType ') ? 'active' : '' }}">{{ __('Work Type') }}</a></li>
-
-                <li><a href="{{ route('content.create') }}" class="slide-item {{ request()->is('admin/content/create') ? 'active' : '' }}">{{ __('Content Create') }}</a></li>
-                <li><a href="{{ route('content.index') }}" class="slide-item {{ request()->is('admin/content/listing') ? 'active' : '' }}">{{ __('Content Listing') }}</a></li>
-
-                <li><a href="{{ route('promotional.create') }}" class="slide-item {{ request()->is('admin/promotional/create') ? 'active' : '' }}">{{ __('Create Promotional Image') }}</a></li>
-                <li><a href="{{ route('promotional.index') }}" class="slide-item {{ request()->is('admin/promotional/listing') ? 'active' : '' }}">{{ __('Promotional Images Listing') }}</a></li>
-                <li><a href="{{ route('approval.list') }}" class="slide-item {{ request()->is('admin/approval/list ') ? 'active' : '' }}">{{ __('Approval List') }}</a></li>
-
-
-
             </ul>
         </div>
     </div>

@@ -4,45 +4,48 @@
 
 @section('content')
 
-<div class="container-fluid py-3">
+<style>
+    .table th, .table td {
+        width: fit-content;
+    }
+</style>
 
-    <!-- Tabs Header -->
-    <ul class="nav nav-tabs mb-3" id="approvalTabs" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active"
-                id="content-tab"
-                data-bs-toggle="tab"
-                data-bs-target="#contentTab"
-                type="button"
-                role="tab">
-                Content
-            </button>
-        </li>
-
-        <li class="nav-item" role="presentation">
-            <button class="nav-link"
-                id="promo-tab"
-                data-bs-toggle="tab"
-                data-bs-target="#promoTab"
-                type="button"
-                role="tab">
-                Promotional
-            </button>
-        </li>
-    </ul>
-
-    <!-- Tabs Content -->
-    <div class="tab-content" id="approvalTabsContent">
-
-        <!-- CONTENT TAB -->
-        <div class="tab-pane fade show active" id="contentTab" role="tabpanel">
-            <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h4>Content Approval List</h4>
-                </div>
-
-                <div class="card-body">
-                    <table class="table table-bordered table-striped">
+<div class="card">
+    <div class="card-header">
+        <h4>Approval List</h4>
+    </div>
+    <div class="card-body">
+        <div class="container-fluid py-3">
+            <!-- Tabs Header -->
+            <ul class="nav nav-tabs mb-3" id="approvalTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active"
+                        id="content-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#contentTab"
+                        type="button"
+                        role="tab">
+                        Content
+                    </button>
+                </li>
+        
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link"
+                        id="promo-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#promoTab"
+                        type="button"
+                        role="tab">
+                        Promotional
+                    </button>
+                </li>
+            </ul>
+        
+            <!-- Tabs Content -->
+            <div class="tab-content" id="approvalTabsContent">
+                <!-- CONTENT TAB -->
+                <div class="tab-pane fade show active" id="contentTab" role="tabpanel">
+                    <table class="table table-bordered table-striped table-responsive">
                         <thead>
                             <tr>
                                 <th>Type</th>
@@ -57,12 +60,11 @@
                                 <th>Expected Amount</th>
                                 <th>Content Report Note</th>
                                 <th>Host Record Note</th>
-                                   <th>Status</th>
+                                    <th>Status</th>
                             </tr>
                         </thead>
-
                         <tbody>
-                            @foreach($contents as $row)
+                            @forelse($contents as $row)
                             <tr>
                                 <td><span class="badge bg-primary">Content</span></td>
 
@@ -97,22 +99,17 @@
                                     @endif
                                 </td>
                             </tr>
-                            @endforeach
+                            @empty
+                            <tr>
+                                <td colspan="12" class="text-center">No content approvals found.</td>
+                            </tr>
+                            @endforelse
                         </tbody>
                     </table>
-
                 </div>
-            </div>
-        </div>
-
-        <!-- PROMOTIONAL TAB -->
-        <div class="tab-pane fade" id="promoTab" role="tabpanel">
-            <div class="card mb-4">
-                <div class="card-header bg-success text-white">
-                    <h4>Promotional Approval List</h4>
-                </div>
-
-                <div class="card-body">
+        
+                <!-- PROMOTIONAL TAB -->
+                <div class="tab-pane fade" id="promoTab" role="tabpanel">
                     <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
@@ -131,9 +128,8 @@
                                 <th>Status</th>
                             </tr>
                         </thead>
-
                         <tbody>
-                            @foreach($promos as $row)
+                            @forelse($promos as $row)
                             <tr>
                                 <td><span class="badge bg-success">Promotional</span></td>
                                 <td> {{ $row->batch_id }}</td>
@@ -165,16 +161,17 @@
                                 </td>
 
                             </tr>
-                            @endforeach
+                            @empty
+                            <tr>
+                                <td colspan="12" class="text-center">No promotional approvals found.</td>
+                            </tr>
+                            @endforelse
                         </tbody>
                     </table>
-
                 </div>
             </div>
         </div>
-
     </div>
-
 </div>
 
 @endsection

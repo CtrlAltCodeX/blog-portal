@@ -13,15 +13,10 @@ class WorkTypeController extends Controller
         return view('worktype.index', compact('workTypes'));
     }
 
-
-
     public function create()
     {
         return view('worktype.create');
     }
-
-
-
 
     public function store(Request $request)
     {
@@ -35,15 +30,11 @@ class WorkTypeController extends Controller
         return redirect()->route('worktype.index')->with('success', 'Work Type Added');
     }
 
-
-
     public function edit($id)
     {
         $workType = WorkType::findOrFail($id);
         return view('worktype.edit', compact('workType'));
     }
-
-
 
     public function update(Request $request, $id)
     {
@@ -57,8 +48,6 @@ class WorkTypeController extends Controller
         return redirect()->route('worktype.index')->with('success', 'Work Type Updated');
     }
 
-
-    
     public function destroy($id)
     {
         WorkType::findOrFail($id)->delete();

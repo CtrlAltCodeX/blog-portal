@@ -5,14 +5,10 @@
 @section('content')
 
 <div class="card">
-
-
     <div class='card-header'>
         <div class="page-header d-flex justify-content-between align-items-center my-0 w-100">
             <h1 class="page-title">Work Type</h1>
-           
             <a href="{{ route('worktype.create') }}" class="btn btn-primary">Create Work Type</a>
-         
         </div>
     </div>
 
@@ -28,7 +24,7 @@
             </thead>
 
             <tbody class="text-center">
-                @foreach($workTypes as $key => $row)
+                @forelse($workTypes as $key => $row)
                 <tr>
                     <td>{{ $key+1 }}</td>
                     <td>{{ $row->cause }}</td>
@@ -44,7 +40,11 @@
                         </form>
                     </td>
                 </tr>
-                @endforeach
+                @empty
+                <tr>
+                    <td colspan="4">No Work Types Found.</td>
+                </tr>
+                @endforelse
             </tbody>
 
         </table>

@@ -19,7 +19,6 @@ class PromotionalController extends Controller
         return view('promotional.index', compact('PromotionalImage', 'worktypes'));
     }
 
-
     public function create()
     {
         $categories = Category::whereNull('parent_id')
@@ -28,7 +27,6 @@ class PromotionalController extends Controller
 
         return view('promotional.create', compact('categories'));
     }
-
 
     public function store(Request $request)
     {
@@ -48,9 +46,7 @@ class PromotionalController extends Controller
             $batchId = str_pad($lastBatch, 7, '0', STR_PAD_LEFT);
 
             $attachmentImage = null;
-            $attachmentDocs = null;
 
-            // Image Upload
             if (isset($row['attach_image'])) {
                 $attachmentImage = $row['attach_image']->store('uploads/promotional/image', 'public');
             }
@@ -66,7 +62,6 @@ class PromotionalController extends Controller
                 'any_preferred_date'    => $row['any_preferred_date'] ?? 'No',
                 'preferred_date'        => isset($row['any_preferred_date']) && $row['any_preferred_date'] == 'Yes' ? $row['preferred_date'] : null,
                 'attach_image'          => $attachmentImage,
-
                 'attach_url'            => $row['attach_url'] ?? null,
             ]);
         }
@@ -75,7 +70,6 @@ class PromotionalController extends Controller
             ->back()
             ->with('success', 'Promotional images saved successfully.');
     }
-
 
     public function getRow(Request $request)
     {
@@ -90,8 +84,6 @@ class PromotionalController extends Controller
         ]);
     }
 
-
-    // common approvel ka function h jo dono ke liye h (content / promotional)
     public function submit(Request $r)
     {
         $model = $r->type === 'content' ? Content::class : Promotional::class;

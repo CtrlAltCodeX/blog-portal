@@ -1,7 +1,5 @@
 <script>
     $(document).ready(function () {
-
-     
         $(document).on('change', '.category_id', function () {
 
             let catId = $(this).val();

@@ -77,9 +77,9 @@ class ContentController extends Controller
             ->back()
             ->with('success', 'Content saved successfully.');
     }
+
     public function approvalList()
     {
-        // Content Items (only verified)
         $contents = Content::with([
             'creator',
             'workType',
@@ -89,7 +89,6 @@ class ContentController extends Controller
             ->orderBy('id', 'DESC')
             ->get();
 
-        // Promotional Items (only verified)
         $promos = Promotional::with([
             'creator',
             'workType',
@@ -101,7 +100,6 @@ class ContentController extends Controller
 
         return view('approval.index', compact('contents', 'promos'));
     }
-
 
     public function getRow(Request $request)
     {
