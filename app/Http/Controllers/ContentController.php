@@ -2,20 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ContentCreate;
+use App\Models\Content;
 use App\Models\Category;
+use App\Models\WorkType;
 use Illuminate\Http\Request;
+use App\Models\Promotional;
 use Illuminate\Support\Facades\Auth;
 
-class ContentCreateController extends Controller
+class ContentController extends Controller
 {
 
     public function index()
-{
-    $contents = ContentCreate::get();
-
-    return view('content.index', compact('contents'));
-}
+    {
+        $contents = Content::get();
+        $worktypes = WorkType::all();
+        return view('content.index', compact('contents', 'worktypes'));
+    }
 
     public function create()
     {
@@ -35,14 +37,14 @@ class ContentCreateController extends Controller
             'rows.*.sub_category_id' => 'required',
             'rows.*.sub_sub_category_id' => 'required',
         ]);
-  $lastBatch = ContentCreate::max('batch_id');
-    if (!$lastBatch) {
-        $lastBatch = 0;
-    }
-    
+        $lastBatch = Content::max('batch_id');
+        if (!$lastBatch) {
+            $lastBatch = 0;
+        }
+
         foreach ($request->rows as $row) {
-         $lastBatch++;
-        $batchId = str_pad($lastBatch, 7, '0', STR_PAD_LEFT);
+            $lastBatch++;
+            $batchId = str_pad($lastBatch, 7, '0', STR_PAD_LEFT);
 
             $attachmentImage = null;
             $attachmentDocs = null;
@@ -55,7 +57,7 @@ class ContentCreateController extends Controller
                 $attachmentDocs = $row['attach_docs']->store('uploads/content/docs', 'public');
             }
 
-            ContentCreate::create([
+            Content::create([
                 'batch_id'              => $batchId,
                 'user_id'               => Auth::id(),
                 'category'           => $row['category_id'],
@@ -75,17 +77,42 @@ class ContentCreateController extends Controller
             ->back()
             ->with('success', 'Content saved successfully.');
     }
+    public function approvalList()
+    {
+        // Content Items (only verified)
+        $contents = Content::with([
+            'creator',
+            'workType',
+            'verifiedUser'
+        ])
+            ->whereNotNull('verified_by')  // filter applied
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        // Promotional Items (only verified)
+        $promos = Promotional::with([
+            'creator',
+            'workType',
+            'verifiedUser'
+        ])
+            ->whereNotNull('verified_by')  // filter applied
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        return view('approval.index', compact('contents', 'promos'));
+    }
+
 
     public function getRow(Request $request)
-{
-    $categories = Category::whereNull('parent_id')
-        ->with('children')
-        ->get();
+    {
+        $categories = Category::whereNull('parent_id')
+            ->with('children')
+            ->get();
 
-    return view('content.single-row', [
-        'categories' => $categories,
-        'index' => $request->index
-    ]);
-}
-
+        return view('components.single-row', [
+            'categories' => $categories,
+            'index' => $request->index,
+            'showDocs' => true
+        ]);
+    }
 }

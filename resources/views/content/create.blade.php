@@ -5,37 +5,47 @@
 @section('content')
 
 <div class="container-fluid py-3">
-    <h3>Create Content</h3>
+    <div class="card">
+        <div class="card-header">
+            <h3>Create Content</h3>
+        </div>
 
-    <form action="{{ route('content.store') }}" method="POST" enctype="multipart/form-data">
-        @csrf
+        <div class="card-body">
 
-        <table class="table table-bordered" id="content-table">
-            <thead>
-                <tr>
-                    <th>Category*</th>
-                    <th>Sub Category*</th>
-                    <th>Sub Sub Category*</th>
-                    <th>Title*</th>
-                    <th>Description</th>
-                    <th>Preferred?</th>
-                    <th>Date</th>
-                    <th>Image</th>
-                    <th>Docs</th>
-                    <th>URL</th>
-                    <th>#</th>
-                </tr>
-            </thead>
+            <form action="{{ route('content.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
 
-            <tbody id="content-body">
-                @include('content.single-row', ['index' => 0])
-            </tbody>
-        </table>
+                <table class="table table-bordered" id="content-table">
+                    <thead>
+                        <tr>
+                            <th>Category*</th>
+                            <th>Sub Category*</th>
+                            <th>Sub Sub Category*</th>
+                            <th>Title*</th>
+                            <th>Description</th>
+                            <th>Preferred?</th>
+                            <th>Date</th>
+                            <th>Image</th>
+                            <th>Docs</th>
+                            <th>URL</th>
+                            <th>#</th>
+                        </tr>
+                    </thead>
 
-        <button type="button" class="btn btn-sm btn-primary" id="add-row">+ Add Row</button>
+                    <tbody id="content-body">
+                        @include('components.single-row', ['index' => 0, 'showDocs' => true])
+                    </tbody>
 
-        <button class="btn btn-success float-end">SAVE ALL</button>
-    </form>
+                </table>
+
+                <button type="button" class="btn btn-sm btn-primary" id="add-row">+ Add Row</button>
+
+                <button class="btn btn-success float-end">SAVE ALL</button>
+            </form>
+
+        </div>
+    </div>
+
 </div>
 
 @endsection

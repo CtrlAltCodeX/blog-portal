@@ -63,12 +63,12 @@
 
      let rowIndex = 1;
 
-    $('#add-row').click(function () {
+    $('#add-promotional-row').click(function () {
         $.ajax({
             url: "{{ route('promotional.row') }}",
             data: { index: rowIndex },
             success: function (html) {
-                $('#promo-body').append(html);
+                $('#promotional-body').append(html);
                 rowIndex++;
             }
         });

@@ -2,20 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PromotionalImage;
+use App\Models\Content;
+use App\Models\Promotional;
+use App\Models\WorkType;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class PromotionalImageController extends Controller
+class PromotionalController extends Controller
 {
 
-        public function index()
-{
-    $PromotionalImage = PromotionalImage::get();
-
-    return view('promotional.index', compact('PromotionalImage'));
-}
+    public function index()
+    {
+        $PromotionalImage = Promotional::get();
+        $worktypes = WorkType::all();
+        return view('promotional.index', compact('PromotionalImage', 'worktypes'));
+    }
 
 
     public function create()
@@ -36,14 +38,14 @@ class PromotionalImageController extends Controller
             'rows.*.sub_category_id' => 'required',
             'rows.*.sub_sub_category_id' => 'required',
         ]);
-  $lastBatch = PromotionalImage::max('batch_id');
-    if (!$lastBatch) {
-        $lastBatch = 0;
-    }
-    
+        $lastBatch = Promotional::max('batch_id');
+        if (!$lastBatch) {
+            $lastBatch = 0;
+        }
+
         foreach ($request->rows as $row) {
-         $lastBatch++;
-        $batchId = str_pad($lastBatch, 7, '0', STR_PAD_LEFT);
+            $lastBatch++;
+            $batchId = str_pad($lastBatch, 7, '0', STR_PAD_LEFT);
 
             $attachmentImage = null;
             $attachmentDocs = null;
@@ -53,7 +55,7 @@ class PromotionalImageController extends Controller
                 $attachmentImage = $row['attach_image']->store('uploads/promotional/image', 'public');
             }
 
-            PromotionalImage::create([
+            Promotional::create([
                 'batch_id'              => $batchId,
                 'user_id'               => Auth::id(),
                 'category'           => $row['category_id'],
@@ -64,27 +66,50 @@ class PromotionalImageController extends Controller
                 'any_preferred_date'    => $row['any_preferred_date'] ?? 'No',
                 'preferred_date'        => isset($row['any_preferred_date']) && $row['any_preferred_date'] == 'Yes' ? $row['preferred_date'] : null,
                 'attach_image'          => $attachmentImage,
-               
+
                 'attach_url'            => $row['attach_url'] ?? null,
             ]);
         }
 
-       return redirect()
+        return redirect()
             ->back()
             ->with('success', 'Promotional images saved successfully.');
     }
 
 
     public function getRow(Request $request)
-{
-    $categories = Category::whereNull('parent_id')
-        ->with('children')
-        ->get();
+    {
+        $categories = Category::whereNull('parent_id')
+            ->with('children')
+            ->get();
 
-    return view('promotional.single-row', [
-        'categories' => $categories,
-        'index' => $request->index
-    ]);
-}
+        return view('components.single-row', [
+            'categories' => $categories,
+            'index' => $request->index,
+            'showDocs' => false
+        ]);
+    }
 
+
+    // common approvel ka function h jo dono ke liye h (content / promotional)
+    public function submit(Request $r)
+    {
+        $model = $r->type === 'content' ? Content::class : Promotional::class;
+
+        $item = $model::findOrFail($r->id);
+
+        $item->update([
+            'verified_by'        => Auth::id(),
+            'verified_date'      => now()->format('Y-m-d'),
+            'verified_time'      => now()->format('H:i:s'),
+            'status'             => $r->status,
+            'rejection_cause'    => $r->status === 'denied' ? $r->rejection_cause : null,
+            'worktype_id'        => $r->worktype_id,
+            'expected_amount'    => $r->expected_amount,
+            'content_report_note' => $r->content_report_note,
+            'host_record_note'   => $r->host_record_note,
+        ]);
+
+        return back()->with('success', 'Approval Updated Successfully');
+    }
 }

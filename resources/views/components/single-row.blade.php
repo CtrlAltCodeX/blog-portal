@@ -1,3 +1,6 @@
+@php
+    $showDocs = $showDocs ?? false; // default false if not passed
+@endphp
 
 <tr>
     <td>
@@ -43,6 +46,12 @@
     <td>
         <input type="file" name="rows[{{ $index }}][attach_image]" class="form-control">
     </td>
+
+    @if($showDocs)
+    <td>
+        <input type="file" name="rows[{{ $index }}][attach_docs]" class="form-control">
+    </td>
+    @endif
 
     <td>
         <input type="text" name="rows[{{ $index }}][attach_url]" class="form-control" placeholder="https://...">
