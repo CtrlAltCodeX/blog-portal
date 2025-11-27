@@ -11,13 +11,47 @@ use Illuminate\Support\Facades\Auth;
 
 class ContentController extends Controller
 {
-
-    public function index()
+    public function index(Request $request)
     {
-        $contents = Content::get();
+        $category_id  = $request->get('category_id');
+        $subcat_id    = $request->get('sub_category_id');
+        $subsubcat_id    = $request->get('sub_sub_category_id');
+
+
+        $categories = Category::whereNull('parent_id')->with('children.subChildren')->get();
+
+        $contents = Content::with([
+            'category',
+            'subCategory',
+            'subSubCategory',
+            'creator'
+        ])->orderBy('id', 'DESC');
+
+        // FILTERS APPLY
+        if ($category_id) {
+            $contents->where('category_id', $category_id);
+        }
+
+        if ($subcat_id) {
+            $contents->where('sub_category_id', $subcat_id);
+        }
+
+        if ($subsubcat_id) {
+            $contents->where('sub_sub_category_id', $subsubcat_id);
+        }
+
+        $contents = $contents->paginate(10)->appends($request->query());
         $worktypes = WorkType::all();
-        return view('content.index', compact('contents', 'worktypes'));
+        return view('content.index', compact(
+            'contents',
+            'categories',
+            'category_id',
+            'subcat_id',
+            'subsubcat_id',
+            'worktypes'
+        ));
     }
+
 
     public function create()
     {
@@ -60,9 +94,9 @@ class ContentController extends Controller
             Content::create([
                 'batch_id'              => $batchId,
                 'user_id'               => Auth::id(),
-                'category'           => $row['category_id'],
-                'sub_category'       => $row['sub_category_id'],
-                'sub_sub_category'   => $row['sub_sub_category_id'],
+                'category_id'           => $row['category_id'],
+                'sub_category_id'       => $row['sub_category_id'],
+                'sub_sub_category_id'   => $row['sub_sub_category_id'],
                 'title'                 => $row['title'] ?? null,
                 'brief_description'     => $row['brief_description'] ?? null,
                 'any_preferred_date'    => $row['any_preferred_date'] ?? 'No',
@@ -78,27 +112,32 @@ class ContentController extends Controller
             ->with('success', 'Content saved successfully.');
     }
 
-    public function approvalList()
+    public function approvalList(Request $request)
     {
-        $contents = Content::with([
-            'creator',
-            'workType',
-            'verifiedUser'
-        ])
-            ->whereNotNull('verified_by')  // filter applied
+        $status = $request->status ?? null;
+        $activeTab = $request->tab ?? 'content';
+
+        $contents = Content::with(['creator', 'workType', 'verifiedUser'])
+            ->when($status, function ($q) use ($status) {
+                if ($status != 'all') {
+                    $q->where('status', $status);
+                }
+            })
+            ->whereNotNull('verified_by')
             ->orderBy('id', 'DESC')
             ->get();
 
-        $promos = Promotional::with([
-            'creator',
-            'workType',
-            'verifiedUser'
-        ])
-            ->whereNotNull('verified_by')  // filter applied
+        $promos = Promotional::with(['creator', 'workType', 'verifiedUser'])
+            ->when($status, function ($q) use ($status) {
+                if ($status != 'all') {
+                    $q->where('status', $status);
+                }
+            })
+            ->whereNotNull('verified_by')
             ->orderBy('id', 'DESC')
             ->get();
 
-        return view('approval.index', compact('contents', 'promos'));
+        return view('approval.index', compact('contents', 'promos', 'status', 'activeTab'));
     }
 
     public function getRow(Request $request)

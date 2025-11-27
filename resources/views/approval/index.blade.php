@@ -5,7 +5,8 @@
 @section('content')
 
 <style>
-    .table th, .table td {
+    .table th,
+    .table td {
         width: fit-content;
     }
 </style>
@@ -15,11 +16,24 @@
         <h4>Approval List</h4>
     </div>
     <div class="card-body">
+        <form method="GET" class="mb-3">
+            <input type="hidden" name="tab" id="activeTabInput" value="{{ $activeTab }}">
+
+            <select name="status" onchange="this.form.submit()" class="form-select" style="width:400px;height:50px">
+                <option value="" >Filter By Status</option>
+                <option value="all" {{ ($status=='all') ? 'selected' : '' }}>All</option>
+                <option value="approved" {{ ($status=='approved') ? 'selected' : '' }}>Approved</option>
+                <option value="denied" {{ ($status=='denied') ? 'selected' : '' }}>Denied</option>
+            </select>
+        </form>
+
         <div class="container-fluid py-3">
+
+
             <!-- Tabs Header -->
             <ul class="nav nav-tabs mb-3" id="approvalTabs" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active"
+                    <button class="nav-link {{ $activeTab == 'content-tab' ? 'active' : 'active' }}"
                         id="content-tab"
                         data-bs-toggle="tab"
                         data-bs-target="#contentTab"
@@ -28,9 +42,9 @@
                         Content
                     </button>
                 </li>
-        
+
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link"
+                    <button class="nav-link {{ $activeTab == 'promo-tab' ? 'active' : '' }}"
                         id="promo-tab"
                         data-bs-toggle="tab"
                         data-bs-target="#promoTab"
@@ -40,11 +54,12 @@
                     </button>
                 </li>
             </ul>
-        
+
             <!-- Tabs Content -->
             <div class="tab-content" id="approvalTabsContent">
                 <!-- CONTENT TAB -->
-                <div class="tab-pane fade show active" id="contentTab" role="tabpanel">
+                <div class="tab-pane fade {{ $activeTab == 'content-tab' ? 'show active' : 'show active' }}" id="contentTab">
+
                     <table class="table table-bordered table-striped table-responsive">
                         <thead>
                             <tr>
@@ -60,7 +75,7 @@
                                 <th>Expected Amount</th>
                                 <th>Content Report Note</th>
                                 <th>Host Record Note</th>
-                                    <th>Status</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -107,9 +122,10 @@
                         </tbody>
                     </table>
                 </div>
-        
+
                 <!-- PROMOTIONAL TAB -->
-                <div class="tab-pane fade" id="promoTab" role="tabpanel">
+                <div class="tab-pane fade {{ $activeTab == 'promo-tab' ? 'show active' : '' }}" id="promoTab">
+
                     <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
@@ -175,3 +191,13 @@
 </div>
 
 @endsection
+
+@push('js')
+<script>
+    document.querySelectorAll('#approvalTabs button').forEach(btn => {
+        btn.addEventListener('shown.bs.tab', function() {
+            document.getElementById('activeTabInput').value = this.id;
+        });
+    });
+</script>
+@endpush

@@ -1,7 +1,7 @@
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
 
-        $('#preferredDateSelect').on('change', function () {
+        $('#preferredDateSelect').on('change', function() {
             if ($(this).val() === 'Yes') {
                 $('#dateField').show();
             } else {
@@ -9,7 +9,7 @@
             }
         });
 
-        $('#category_id').on('change', function () {
+        $('#category_id').on('change', function() {
             let catId = $(this).val();
             let subs = @json($categories);
 
@@ -18,14 +18,17 @@
 
             subs.forEach(cat => {
                 if (cat.id == catId && cat.children.length > 0) {
+
                     cat.children.forEach(child => {
-                        subSelect.append(`<option value="${child.id}">${child.name}</option>`);
+                        if (child.sub_parent_id === null) {
+                            subSelect.append(`<option value="${child.id}">${child.name}</option>`);
+                        }
                     });
                 }
             });
         });
 
-        $('#sub_category_id').on('change', function () {
+        $('#sub_category_id').on('change', function() {
             let catId = $("#category_id").val();
             let subCatId = $(this).val();
             let subs = @json($categories);

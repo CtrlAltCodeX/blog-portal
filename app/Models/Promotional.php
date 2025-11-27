@@ -13,9 +13,9 @@ class Promotional extends Model
     protected $fillable = [
         'user_id',
         'batch_id',
-        'category',
-        'sub_category',
-        'sub_sub_category',
+        'category_id',
+        'sub_category_id',
+        'sub_sub_category_id',
         'title',
         'brief_description',
         'preferred_date',
@@ -34,21 +34,20 @@ class Promotional extends Model
 
     ];
 
-    public function categoryRelation()
+    public function category()
     {
-        return $this->belongsTo(Category::class, 'category');
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
-    public function subCategoryRelation()
+    public function subCategory()
     {
-        return $this->belongsTo(Category::class, 'sub_category');
+        return $this->belongsTo(Category::class, 'sub_category_id');
     }
 
-    public function subSubCategoryRelation()
+    public function subSubCategory()
     {
-        return $this->belongsTo(Category::class, 'sub_sub_category');
+        return $this->belongsTo(Category::class, 'sub_sub_category_id');
     }
-
     public function creator()
     {
         return $this->belongsTo(User::class, 'user_id');

@@ -1,21 +1,51 @@
 @extends('layouts.master')
-
 @section('title', __('Content Listing'))
-
 @section('content')
-<style>
-    .table th, .table td {
-        width: fit-content;
-    }
-</style>
-
 <div class="card">
     <div class="card-header">
         <h3>Content List</h3>
     </div>
 
     <div class="card-body">
-        <table class="table table-bordered table-striped table-responsive">
+
+        <div class='row'>
+            <form method="GET" action="" id="filterForm">
+                <input type='hidden' name='status' value='{{ request()->status }}' />
+                <div class="row mb-3">
+                    <div class="col-md-2">
+                        <label>Category</label>
+                        <select class="form-control" name="category_id" id='category_id'>
+                            <option value="">All</option>
+                            @foreach($categories as $cat)
+                            <option value="{{ $cat->id }}" {{ $category_id==$cat->id?'selected':'' }}>
+                                {{ $cat->name }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <label>Sub Category</label>
+                        <select class="form-control" name="sub_category_id" id='sub_category_id'>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <label>Sub Sub Category</label>
+                        <select class="form-control" name="sub_sub_category_id" id='sub_sub_category_id'>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2 d-flex align-items-end mt-2">
+                        <button type="submit" class="btn btn-primary btn-block">Filter</button>
+                    </div>
+
+                </div>
+            </form>
+
+        </div>
+
+        <table class="table table-bordered table-striped">
             <thead>
                 <tr>
                     <th>SL</th>
@@ -38,24 +68,16 @@
             </thead>
 
             <tbody>
-                @forelse($contents as $key => $row)
+                @foreach($contents as $key => $row)
                 <tr>
                     <td>{{ $key+1 }}</td>
                     <td>{{ $row->batch_id }}</td>
-                    <td>{{ optional($row->categoryRelation)->name }}</td>
-                    <td>{{ optional($row->subCategoryRelation)->name }}</td>
-                    <td>{{ optional($row->subSubCategoryRelation)->name }}</td>
+                    <td>{{ optional($row->category)->name }}</td>
+                    <td>{{ optional($row->subCategory)->name }}</td>
+                    <td>{{ optional($row->subSubCategory)->name }}</td>
 
                     <td>{{ $row->title }}</td>
-                    <td>
-                        @php
-                            $shortText = Str::words($row->brief_description, 10, '...');
-                        @endphp
-                        <span data-bs-placement="top" data-bs-toggle="tooltip" title="{{ $row->brief_description }}">
-                            {{ $shortText ?? '-' }}
-                        </span>
-                        {{-- {{ Str::limit($row->brief_description, 40) }} --}}
-                    </td>
+                    <td>{{ Str::limit($row->brief_description, 40) }}</td>
                     <td>{{ $row->preferred_date }}</td>
 
                     <td>
@@ -66,13 +88,13 @@
 
                     <td>
                         @if($row->attach_docs)
-                        <a href="{{ asset('storage/' . $row->attach_docs) }}" target="_blank" class="btn btn-sm btn-primary">View Doc</a>
+                        <a href="{{ asset('storage/' . $row->attach_docs) }}" target="_blank">View Doc</a>
                         @endif
                     </td>
 
                     <td>
                         @if($row->attach_url)
-                        <button class="btn btn-sm btn-primary" onclick="window.open('{{ $row->attach_url }}', '_blank')">View URL</button>
+                        <a href="{{ $row->attach_url }}" target="_blank">{{ $row->attach_url }}</a>
                         @endif
                     </td>
                     <td>{{ $row->status}}</td>
@@ -89,14 +111,15 @@
                         </button>
                     </td>
                 </tr>
-                @empty
-                <tr>
-                    <td align=center colspan="16">No Content Found.</td>
-                </tr>
-                @endforelse
+                @endforeach
             </tbody>
 
         </table>
+        <div class="d-flex justify-content-end mt-3">
+            {!! $contents->links('pagination::bootstrap-5') !!}
+        </div>
+
+
     </div>
 </div>
 @include('components.approval-form')
@@ -105,6 +128,7 @@
 
 
 @push('js')
+@include('posts-script');
 <script>
     function openApproval(type, id) {
         document.getElementById('itemType').value = type;
