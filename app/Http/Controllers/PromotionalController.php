@@ -12,11 +12,42 @@ use Illuminate\Support\Facades\Auth;
 class PromotionalController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $PromotionalImage = Promotional::get();
+        $categories = Category::whereNull('parent_id')->with('children.subChildren')->get();
+
+        $promotionalImage = Promotional::with([
+            'category',
+            'subCategory',
+            'subSubCategory',
+            'creator'
+        ])->orderBy('id', 'DESC');
+
+        // FILTERS APPLY
+        if ($category_id  = $request->get('category_id')) {
+            $promotionalImage->where('category_id', $category_id);
+        }
+
+        if ($subcat_id  = $request->get('sub_category_id')) {
+            $promotionalImage->where('sub_category_id', $subcat_id);
+        }
+
+        if ($subsubcat_id  = $request->get('sub_sub_category_id')) {
+            $promotionalImage->where('sub_sub_category_id', $subsubcat_id);
+        }
+
+        $promotionalImage = $promotionalImage->paginate(10)->appends($request->query());
+
         $worktypes = WorkType::all();
-        return view('promotional.index', compact('PromotionalImage', 'worktypes'));
+
+        return view('promotional.index', compact(
+            'promotionalImage',
+            'categories',
+            'category_id',
+            'subcat_id',
+            'subsubcat_id',
+            'worktypes'
+        ));
     }
 
     public function create()

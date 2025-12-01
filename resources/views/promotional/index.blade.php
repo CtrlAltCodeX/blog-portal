@@ -10,6 +10,42 @@
     </div>
 
     <div class="card-body">
+        <div class='row'>
+            <form method="GET" action="" id="filterForm">
+                <input type='hidden' name='status' value='{{ request()->status }}' />
+                <div class="row mb-3">
+                    <div class="col-md-2">
+                        <label>Category</label>
+                        <select class="form-control" name="category_id" id='category_id'>
+                            <option value="">All</option>
+                            @foreach($categories as $cat)
+                            <option value="{{ $cat->id }}" {{ $category_id==$cat->id?'selected':'' }}>
+                                {{ $cat->name }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <label>Sub Category</label>
+                        <select class="form-control" name="sub_category_id" id='sub_category_id'>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <label>Sub Sub Category</label>
+                        <select class="form-control" name="sub_sub_category_id" id='sub_sub_category_id'>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2 d-flex align-items-end mt-2">
+                        <button type="submit" class="btn btn-primary btn-block">Filter</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
@@ -37,9 +73,9 @@
 
                     <td>{{ $row->batch_id }}</td>
 
-                    <td>{{ optional($row->categoryRelation)->name }}</td>
-                    <td>{{ optional($row->subCategoryRelation)->name }}</td>
-                    <td>{{ optional($row->subSubCategoryRelation)->name }}</td>
+                    <td>{{ optional($row->category)->name }}</td>
+                    <td>{{ optional($row->subCategory)->name }}</td>
+                    <td>{{ optional($row->subSubCategory)->name }}</td>
 
                     <td>{{ $row->title }}</td>
 
@@ -80,6 +116,9 @@
             </tbody>
 
         </table>
+        <div class="d-flex justify-content-end mt-3">
+            {!! $promotionalImage->links('pagination::bootstrap-5') !!}
+        </div>
     </div>
 </div>
 
@@ -88,6 +127,9 @@
 @endsection
 
 @push('js')
+
+@include('posts-script');
+
 <script>
     function openApproval(type, id) {
         document.getElementById('itemType').value = type;

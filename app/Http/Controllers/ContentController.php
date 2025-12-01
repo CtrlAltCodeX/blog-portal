@@ -12,11 +12,42 @@ use Illuminate\Support\Facades\Auth;
 class ContentController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $contents = Content::get();
+        $categories = Category::whereNull('parent_id')->with('children.subChildren')->get();
+
+        $contents = Content::with([
+            'category',
+            'subCategory',
+            'subSubCategory',
+            'creator'
+        ])->orderBy('id', 'DESC');
+
+        // FILTERS APPLY
+        if ($category_id  = $request->get('category_id')) {
+            $contents->where('category_id', $category_id);
+        }
+
+        if ($subcat_id  = $request->get('sub_category_id')) {
+            $contents->where('sub_category_id', $subcat_id);
+        }
+
+        if ($subsubcat_id  = $request->get('sub_sub_category_id')) {
+            $contents->where('sub_sub_category_id', $subsubcat_id);
+        }
+
+        $contents = $contents->paginate(10)->appends($request->query());
+
         $worktypes = WorkType::all();
-        return view('content.index', compact('contents', 'worktypes'));
+
+        return view('content.index', compact(
+            'contents',
+            'categories',
+            'category_id',
+            'subcat_id',
+            'subsubcat_id',
+            'worktypes'
+        ));
     }
 
     public function create()

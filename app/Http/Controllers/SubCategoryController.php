@@ -15,6 +15,7 @@ class SubCategoryController extends Controller
     public function index()
     {
         $subcategories = Category::whereNotNull('parent_id')
+            ->whereNull("sub_parent_id")
             ->with('parent')
             ->paginate(10);
 
