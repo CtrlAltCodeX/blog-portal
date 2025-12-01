@@ -46,6 +46,9 @@
         </div>
 
         <table class="table table-bordered table-striped">
+        </div>
+
+        <table class="table table-bordered table-striped table-responsive">
             <thead>
                 <tr>
                     <th>SL</th>
@@ -120,6 +123,10 @@
         </div>
 
 
+         <div class="d-flex justify-content-end mt-3">
+            {!! $contents->links('pagination::bootstrap-5') !!}
+        </div>
+
     </div>
 </div>
 @include('components.approval-form')
@@ -129,6 +136,8 @@
 
 @push('js')
 @include('posts-script');
+
+
 <script>
     function openApproval(type, id) {
         document.getElementById('itemType').value = type;

@@ -45,6 +45,7 @@
 
                 <li class="nav-item" role="presentation">
                     <button class="nav-link {{ $activeTab == 'promo-tab' ? 'active' : '' }}"
+                    <button class="nav-link {{ $activeTab == 'promo-tab' ? 'active' : 'active' }}"
                         id="promo-tab"
                         data-bs-toggle="tab"
                         data-bs-target="#promoTab"
@@ -59,6 +60,8 @@
             <div class="tab-content" id="approvalTabsContent">
                 <!-- CONTENT TAB -->
                 <div class="tab-pane fade {{ $activeTab == 'content-tab' ? 'show active' : 'show active' }}" id="contentTab">
+
+                <div class="tab-pane fade show {{ $activeTab == 'content-tab' ? 'show active' : 'show active' }}" id="contentTab" role="tabpanel">
 
                     <table class="table table-bordered table-striped table-responsive">
                         <thead>
@@ -124,8 +127,10 @@
                 </div>
 
                 <!-- PROMOTIONAL TAB -->
+
                 <div class="tab-pane fade {{ $activeTab == 'promo-tab' ? 'show active' : '' }}" id="promoTab">
 
+                <div class="tab-pane fade {{ $activeTab == 'promo-tab' ? 'show active' : '' }}" id="promoTab" role="tabpanel">
                     <table class="table table-bordered table-striped">
                         <thead>
                             <tr>

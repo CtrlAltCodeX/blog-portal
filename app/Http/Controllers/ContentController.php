@@ -11,13 +11,8 @@ use Illuminate\Support\Facades\Auth;
 
 class ContentController extends Controller
 {
-    public function index(Request $request)
+   public function index(Request $request)
     {
-        $category_id  = $request->get('category_id');
-        $subcat_id    = $request->get('sub_category_id');
-        $subsubcat_id    = $request->get('sub_sub_category_id');
-
-
         $categories = Category::whereNull('parent_id')->with('children.subChildren')->get();
 
         $contents = Content::with([
@@ -28,20 +23,22 @@ class ContentController extends Controller
         ])->orderBy('id', 'DESC');
 
         // FILTERS APPLY
-        if ($category_id) {
+        if ($category_id  = $request->get('category_id')) {
             $contents->where('category_id', $category_id);
         }
 
-        if ($subcat_id) {
+        if ($subcat_id  = $request->get('sub_category_id')) {
             $contents->where('sub_category_id', $subcat_id);
         }
 
-        if ($subsubcat_id) {
+        if ($subsubcat_id  = $request->get('sub_sub_category_id')) {
             $contents->where('sub_sub_category_id', $subsubcat_id);
         }
 
         $contents = $contents->paginate(10)->appends($request->query());
+
         $worktypes = WorkType::all();
+
         return view('content.index', compact(
             'contents',
             'categories',
@@ -51,6 +48,7 @@ class ContentController extends Controller
             'worktypes'
         ));
     }
+
 
 
     public function create()

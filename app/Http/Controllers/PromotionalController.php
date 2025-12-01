@@ -12,16 +12,12 @@ use Illuminate\Support\Facades\Auth;
 class PromotionalController extends Controller
 {
 
+ 
     public function index(Request $request)
     {
-        $category_id  = $request->get('category_id');
-        $subcat_id    = $request->get('sub_category_id');
-        $subsubcat_id    = $request->get('sub_sub_category_id');
-
-
         $categories = Category::whereNull('parent_id')->with('children.subChildren')->get();
 
-        $PromotionalImage = Promotional::with([
+        $promotionalImage = Promotional::with([
             'category',
             'subCategory',
             'subSubCategory',
@@ -29,22 +25,24 @@ class PromotionalController extends Controller
         ])->orderBy('id', 'DESC');
 
         // FILTERS APPLY
-        if ($category_id) {
-            $PromotionalImage->where('category_id', $category_id);
+        if ($category_id  = $request->get('category_id')) {
+            $promotionalImage->where('category_id', $category_id);
         }
 
-        if ($subcat_id) {
-            $PromotionalImage->where('sub_category_id', $subcat_id);
+        if ($subcat_id  = $request->get('sub_category_id')) {
+            $promotionalImage->where('sub_category_id', $subcat_id);
         }
 
-        if ($subsubcat_id) {
-            $PromotionalImage->where('sub_sub_category_id', $subsubcat_id);
+        if ($subsubcat_id  = $request->get('sub_sub_category_id')) {
+            $promotionalImage->where('sub_sub_category_id', $subsubcat_id);
         }
-        $PromotionalImage = $PromotionalImage->paginate(10)->appends($request->query());
+
+        $promotionalImage = $promotionalImage->paginate(10)->appends($request->query());
 
         $worktypes = WorkType::all();
+
         return view('promotional.index', compact(
-            'PromotionalImage',
+            'promotionalImage',
             'categories',
             'category_id',
             'subcat_id',

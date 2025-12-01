@@ -69,7 +69,7 @@
             </thead>
 
             <tbody>
-                @forelse($PromotionalImage as $key => $row)
+                @forelse($promotionalImage as $key => $row)
                 <tr>
                     <td>{{ $key + 1 }}</td>
 
@@ -118,8 +118,12 @@
             </tbody>
 
         </table>
+
          <div class="d-flex justify-content-end mt-3">
-            {!! $PromotionalImage->links('pagination::bootstrap-5') !!}
+            {!! $promotionalImage->links('pagination::bootstrap-5') !!}
+
+        <div class="d-flex justify-content-end mt-3">
+            {!! $promotionalImage->links('pagination::bootstrap-5') !!}
         </div>
     </div>
 </div>
@@ -130,6 +134,8 @@
 
 @push('js')
 @include('posts-script');
+
+
 <script>
     function openApproval(type, id) {
         document.getElementById('itemType').value = type;
