@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Page;
 use App\Models\Content;
 use App\Models\Category;
 use App\Models\WorkType;
@@ -11,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ContentController extends Controller
 {
-   public function index(Request $request)
+    public function index(Request $request)
     {
         $categories = Category::whereNull('parent_id')->with('children.subChildren')->get();
 
@@ -69,7 +70,56 @@ class ContentController extends Controller
             'rows.*.sub_category_id' => 'required',
             'rows.*.sub_sub_category_id' => 'required',
         ]);
-        $lastBatch = Content::max('batch_id');
+
+        $pageId  = $request->page_id ?? null;
+        $batchId = $request->page_batch_id ?? null;
+
+        // -----------------------------------------------------
+        // CASE 1: CREATED FROM HOME PAGE (SINGLE ENTRY MODE)
+        // -----------------------------------------------------
+        if ($batchId) {
+
+            // Always single record
+            $row = $request->rows[0];
+
+            $attachmentImage = isset($row['attach_image'])
+                ? $row['attach_image']->store('uploads/content/image', 'public')
+                : null;
+
+            $attachmentDocs = isset($row['attach_docs'])
+                ? $row['attach_docs']->store('uploads/content/docs', 'public')
+                : null;
+
+            Content::create([
+                'batch_id'              => $batchId,
+                'user_id'               => Auth::id(),
+                'category_id'           => $row['category_id'],
+                'sub_category_id'       => $row['sub_category_id'],
+                'sub_sub_category_id'   => $row['sub_sub_category_id'],
+                'title'                 => $row['title'] ?? null,
+                'brief_description'     => $row['brief_description'] ?? null,
+                'any_preferred_date'    => $row['any_preferred_date'] ?? 'No',
+                'preferred_date'        => ($row['any_preferred_date'] ?? 'No') === 'Yes' ? $row['preferred_date'] : null,
+                'attach_image'          => $attachmentImage,
+                'attach_docs'           => $attachmentDocs,
+                'attach_url'            => $row['attach_url'] ?? null,
+            ]);
+
+            // Mark the page as completed
+            if ($pageId) {
+                Page::where('id', $pageId)->update(['status' => 'completed']);
+            }
+            return redirect()
+                ->back()
+                ->with('success', 'Task completed successfully.');
+        }
+
+
+        $latestContentBatch = Content::max('batch_id');
+        $latestPageBatch = Page::max('batch_id');
+
+        $lastBatch = max($latestContentBatch, $latestPageBatch);
+
         if (!$lastBatch) {
             $lastBatch = 0;
         }
@@ -109,6 +159,28 @@ class ContentController extends Controller
             ->back()
             ->with('success', 'Content saved successfully.');
     }
+
+
+    public function createFromPage($id)
+    {
+        $page = Page::findOrFail($id);
+
+        $categories = Category::whereNull('parent_id')
+            ->with('children.subChildren')
+            ->get();
+
+        $disableAddMore = true; // Add more disable
+        $fromPage = true;       // View को बताएगा कि यह Page से आए हैं
+
+        return view('content.create', compact(
+            'categories',
+            'page',
+            'disableAddMore',
+            'fromPage'
+        ));
+    }
+
+
 
     public function approvalList(Request $request)
     {

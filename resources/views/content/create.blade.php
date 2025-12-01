@@ -4,7 +4,8 @@
 
 @section('content')
 <style>
-    .table th, .table td {
+    .table th,
+    .table td {
         width: fit-content;
     }
 
@@ -52,7 +53,14 @@
                         @include('components.single-row', ['index' => 0, 'showDocs' => true])
                     </tbody>
                 </table>
+                @if(empty($disableAddMore))
                 <button type="button" class="btn btn-sm btn-primary" id="add-row">+ Add Row</button>
+                @endif
+                @if(!empty($page))
+                <input type="hidden" name="page_batch_id" value="{{ $page->batch_id }}">
+                <input type="hidden" name="page_id" value="{{ $page->id }}">
+                @endif
+
                 <button class="btn btn-success float-end">SAVE ALL</button>
             </form>
 

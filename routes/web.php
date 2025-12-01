@@ -30,6 +30,7 @@ use App\Http\Controllers\PostsController;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\PromotionalController;
 use App\Http\Controllers\WorkTypeController;
+use App\Http\Controllers\PageController;
 
 Illuminate\Support\Facades\Auth::routes();
 /*
@@ -366,8 +367,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     Route::get('content/row', [ContentController::class, 'getRow'])
         ->name('content.row');
 
+    // Page से Content create page पर redirect
+    Route::get('/content/from-page/{id}', [ContentController::class, 'createFromPage'])
+        ->name('content.fill.from.page');
+
     Route::get('approval/list', [ContentController::class, 'approvalList'])
         ->name('approval.list');
+    Route::resource('pages', PageController::class);
 
     Route::resource('promotional', PromotionalController::class)->only([
         'index',

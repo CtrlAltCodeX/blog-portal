@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\SupportMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use App\Models\Page;
 
 class HomeController extends Controller
 {
@@ -25,8 +26,19 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $contents = Page::with([
+            'category',
+            'subCategory',
+            'subSubCategory'
+        ])
+            ->where('status', 'open') // केवल open वाले
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        return view('home', compact('contents'));
     }
+
+
 
     public function supportMail()
     {
@@ -35,7 +47,7 @@ class HomeController extends Controller
         foreach (['exam360.in@gmail.com', 'abhishek86478@gmail.com'] as $mail) {
             Mail::to($mail)->send(new SupportMail($data));
         }
-        
+
         return redirect()->back();
     }
 }

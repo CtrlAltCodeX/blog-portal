@@ -1,35 +1,49 @@
 @php
-    $showDocs = $showDocs ?? false; // default false if not passed
+$showDocs = $showDocs ?? false; // default false if not passed
+$p = $page ?? null;
 @endphp
 
 <tr>
     <td>
         <select name="rows[{{ $index }}][category_id]" class="form-control category_id" required>
             <option value="">Select</option>
+
             @foreach($categories as $c)
-                <option value="{{ $c->id }}">{{ $c->name }}</option>
+            <option value="{{ $c->id }}"
+                @if($p && $p->category_id == $c->id) selected @endif>
+                {{ $c->name }}
+            </option>
             @endforeach
         </select>
     </td>
 
     <td>
         <select name="rows[{{ $index }}][sub_category_id]" class="form-control sub_category_id" required>
+            @if($p)
+            <option value="{{ $p->sub_category_id }}">{{ $p->subCategory->name }}</option>
+            @else
             <option value="">Select</option>
+            @endif
         </select>
     </td>
 
     <td>
         <select name="rows[{{ $index }}][sub_sub_category_id]" class="form-control sub_sub_category_id" required>
+            @if($p)
+            <option value="{{ $p->sub_sub_category_id }}">{{ $p->subSubCategory->name }}</option>
+            @else
             <option value="">Select</option>
+            @endif
         </select>
     </td>
-
     <td>
-        <input type="text" name="rows[{{ $index }}][title]" class="form-control" required>
+        <input type="text" name="rows[{{ $index }}][title]"
+            class="form-control"
+            value="{{ $p->title ?? '' }}"
+            required>
     </td>
-
     <td>
-        <textarea name="rows[{{ $index }}][brief_description]" class="form-control"></textarea>
+        <textarea name="rows[{{ $index }}][brief_description]" class="form-control">{{ $p->description ?? '' }}</textarea>
     </td>
 
     <td>

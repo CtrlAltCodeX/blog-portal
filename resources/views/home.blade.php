@@ -67,12 +67,12 @@
       <nav id="main-nav">
         <ul class="first-nav">
           <li><a href="#home" class="menu-links">Home</a></li>
-            <li><a href="#about" class="menu-links">About</a></li>
-            <li><a href="#review" class="menu-links">Reviews</a></li>
-            <li><a href="#contact" class="menu-links">Contact</a></li>
-            <li><a href="https://support.exam360.in/freelance-partner">FREELANCE</a></li>
-            <li><a href="{{ route('register') }}" class="btn-br bg-btn5 btshad-b2 lnk">Signup <span class="circle"></span></a> </li>
-            <li><a href="{{ route('login') }}" class="btn-br bg-btn5 btshad-b2 lnk">Office Login <span class="circle"></span></a> </li>
+          <li><a href="#about" class="menu-links">About</a></li>
+          <li><a href="#review" class="menu-links">Reviews</a></li>
+          <li><a href="#contact" class="menu-links">Contact</a></li>
+          <li><a href="https://support.exam360.in/freelance-partner">FREELANCE</a></li>
+          <li><a href="{{ route('register') }}" class="btn-br bg-btn5 btshad-b2 lnk">Signup <span class="circle"></span></a> </li>
+          <li><a href="{{ route('login') }}" class="btn-br bg-btn5 btshad-b2 lnk">Office Login <span class="circle"></span></a> </li>
         </ul>
         <ul class="bottom-nav">
           <li class="prb">
@@ -185,114 +185,7 @@
       </div>
     </div>
   </section>
-  <!--End About-->
-  <!--Start Service-->
-  <!-- <section class="bhv-service bg-gradient3 pad-tb deep-dark" id="services">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-lg-8">
-          <div class="common-heading">
-            <span>Service</span>
-            <h2 class="mb30">Specializing In</h2>
-          </div>
-        </div>
-      </div>
-      <div class="row upset link-hover shape-num justify-content-center">
-        <div class="col-lg-3 col-sm-6 mt30 shape-loc  wow fadeIn" data-wow-delay=".2s">
-          <div class="s-block" data-tilt data-tilt-max="5" data-tilt-speed="1000">
-            <div class="s-card-icon"><img src="images/icons/branding.svg" alt="service" class="img-fluid" /></div>
-            <h4>Logo & Branding Service</h4>
-            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-            <a href="javascript:void(0)">Learn More <i class="fas fa-chevron-right fa-icon"></i></a>
-          </div>
-        </div>
-        <div class="col-lg-3 col-sm-6 mt30 shape-loc  wow fadeIn" data-wow-delay=".5s">
-          <div class="s-block" data-tilt data-tilt-max="5" data-tilt-speed="1000">
-            <div class="s-card-icon"><img src="images/icons/development.svg" alt="service" class="img-fluid" /></div>
-            <h4>Website Design & Development</h4>
-            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-            <a href="javascript:void(0)">Learn More <i class="fas fa-chevron-right fa-icon"></i></a>
-          </div>
-        </div>
-        <div class="col-lg-3 col-sm-6 mt30 shape-loc  wow fadeIn" data-wow-delay=".8s">
-          <div class="s-block" data-tilt data-tilt-max="5" data-tilt-speed="1000">
-            <div class="s-card-icon"><img src="images/icons/app.svg" alt="service" class="img-fluid" /></div>
-            <h4>Mobile App Development</h4>
-            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-            <a href="javascript:void(0)">Learn More <i class="fas fa-chevron-right fa-icon"></i></a>
-          </div>
-        </div>
-      </div>
-      <div class="-cta-btn mt70">
-        <div class="free-cta-title v-center  wow zoomInDown" data-wow-delay="1.1s">
-          <p>Let's Start A <span>New Project Together</span></p>
-          <a href="#" class="btn-main bg-btn2 lnk">Get A Quote <i class="fas fa-chevron-right fa-icon"></i><span class="circle"></span></a>
-        </div>
-      </div>
-    </div>
-  </section> -->
-  <!--End Service-->
-  <!--Start Portfolio-->
-  <!-- <section class="portfolio-section pad-tb" id="work">
-    <div class="container">
-      <div class="row justify-content-center ">
-        <div class="col-lg-8">
-          <div class="common-heading">
-            <span>Our Work</span>
-            <h2 class="mb0">Our Latest Creative Work</h2>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-8 col-sm-8 mt60 wow fadeInUp" data-wow-delay="0.2s">
-          <div class="isotope_item hover-scale">
-            <div class="item-image" data-tilt data-tilt-max="2" data-tilt-speed="1000">
-              <a href="#"><img src="images/portfolio/image-d.jpg" alt="image" class="img-fluid" /> </a>
-            </div>
-            <div class="item-info">
-              <h4><a href="#">Ecommerce Development</a></h4>
-              <p>Web Application</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-sm-4 mt60 wow fadeInUp" data-wow-delay="0.4s">
-          <div class="isotope_item hover-scale">
-            <div class="item-image" data-tilt data-tilt-max="2" data-tilt-speed="1000">
-              <a href="#"><img src="images/portfolio/image-1.jpg" alt="image" class="img-fluid" /> </a>
-            </div>
-            <div class="item-info">
-              <h4><a href="#">Creative App</a></h4>
-              <p>iOs, Android</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-sm-4 mt60 wow fadeInUp" data-wow-delay="0.6s">
-          <div class="isotope_item hover-scale">
-            <div class="item-image" data-tilt data-tilt-max="2" data-tilt-speed="1000">
-              <a href="#"><img src="images/portfolio/image-6.jpg" alt="image" class="img-fluid" /> </a>
-            </div>
-            <div class="item-info">
-              <h4><a href="#">Brochure Design</a></h4>
-              <p>Graphic, Print</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-8 col-sm-8 mt60 wow fadeInUp" data-wow-delay="0.8s">
-          <div class="isotope_item hover-scale">
-            <div class="item-image" data-tilt data-tilt-max="2" data-tilt-speed="1000">
-              <a href="#"><img src="images/portfolio/image-c.jpg" alt="image" class="img-fluid" /> </a>
-            </div>
-            <div class="item-info">
-              <h4><a href="#">Icon Pack</a></h4>
-              <p>iOs, Android</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section> -->
-  <!--End Portfolio-->
-  <!--Start Clients-->
+
   <section class="clients-section pad-tb" id="clients">
     <div class="container">
       <div class="row justify-content-center">
@@ -429,6 +322,73 @@
     </div>
   </section>
   <!--End Enquire Form-->
+  <!-- START: Content Listing Section -->
+  <section class="pad-tb" id="content-list">
+    <div class="container">
+
+      <div class="row justify-content-center mb-4">
+        <div class="col-lg-10">
+          <div class="d-flex justify-content-between">
+            <h4><strong>New Task (Waiting For Execution)</strong></h4>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+
+        @if($contents->count() > 0)
+        <div class="col-lg-12">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Sub Category</th>
+                <th>Sub-Sub Category</th>
+                <th width="100">Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @foreach($contents as $item)
+              <tr>
+                <td>{{ $loop->iteration }}</td>
+
+                <td>{{ $item->title }}</td>
+
+                <td>{{ $item->description ?? '-' }}</td>
+
+                <td>{{ $item->category->name ?? '-' }}</td>
+
+                <td>{{ $item->subCategory->name ?? '-' }}</td>
+
+                <td>{{ $item->subSubCategory->name ?? '-' }}</td>
+
+                <td>
+                  <a href="{{ route('content.fill.from.page', $item->id) }}" class="btn btn-primary btn-sm">
+                    Complete New Task
+                  </a>
+
+                </td>
+              </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+
+        @else
+        <div class="col-lg-12 text-center">
+          <p>No Open Pages Found.</p>
+        </div>
+        @endif
+
+      </div>
+    </div>
+  </section>
+
+  <!-- END: Content Listing Section -->
 
   <!--Start Footer-->
   <footer>
