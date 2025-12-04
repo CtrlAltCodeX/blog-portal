@@ -3,13 +3,18 @@
 @section('title', __('Page Listing'))
 
 @section('content')
+<style>
+    .fit {
+        width: max-content;
+    }
+</style>
 
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
         <h3>Page Listing</h3>
 
         <a href="{{ route('pages.create') }}" class="btn btn-primary">
-            + Create Page
+            Create Page
         </a>
     </div>
 
@@ -53,7 +58,6 @@
             </form>
         </div>
 
-        {{-- PAGE LIST TABLE --}}
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
@@ -76,16 +80,36 @@
                 <tr>
                     <td>{{ $key + 1 }}</td>
 
-                    <td>{{ $row->batch_id }}</td>
-
-                    <td>{{ $row->title }}</td>
-
-                    <td>{{ optional($row->category)->name }}</td>
-                    <td>{{ optional($row->subCategory)->name }}</td>
-                    <td>{{ optional($row->subSubCategory)->name }}</td>
+                    <td>
+                        <div class="fit">
+                            {{ $row->batch_id }}
+                        </div>
+                    </td>
 
                     <td>
-                        <span >{{ $row->status }}</span>
+                        <div class="fit">
+                            {{ $row->title }}
+                        </div>
+                    </td>
+
+                    <td>
+                        <div class="fit">
+                            {{ optional($row->category)->name }}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="fit">
+                            {{ optional($row->subCategory)->name }}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="fit">
+                            {{ optional($row->subSubCategory)->name }}
+                        </div>
+                    </td>
+
+                    <td>
+                        <span>{{ $row->status }}</span>
                     </td>
 
                     <td>{{ optional($row->creator)->name }}</td>
@@ -94,22 +118,24 @@
                     <td>{{ $row->created_at->format('h:i A') }}</td>
 
                     <td>
-                        <a href="{{ route('pages.edit', $row->id) }}" 
-                           class="btn btn-sm btn-warning">
-                            Edit
-                        </a>
-
-                        <form action="{{ route('pages.destroy', $row->id) }}" 
-                              method="POST" 
-                              style="display:inline-block;">
-                            @csrf
-                            @method('DELETE')
-
-                            <button class="btn btn-sm btn-danger"
-                                    onclick="return confirm('Delete this page?')">
-                                Delete
-                            </button>
-                        </form>
+                        <div class='d-flex' style='gap:5px;'>
+                            <a href="{{ route('pages.edit', $row->id) }}" 
+                               class="btn btn-sm btn-warning">
+                                Edit
+                            </a>
+    
+                            <form action="{{ route('pages.destroy', $row->id) }}" 
+                                  method="POST" 
+                                  style="display:inline-block;">
+                                @csrf
+                                @method('DELETE')
+    
+                                <button class="btn btn-sm btn-danger"
+                                        onclick="return confirm('Delete this page?')">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
 

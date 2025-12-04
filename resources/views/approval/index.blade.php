@@ -9,6 +9,10 @@
     .table td {
         width: fit-content;
     }
+
+    .max-content {
+        width: max-content;
+    }
 </style>
 
 <div class="card">
@@ -56,13 +60,8 @@
                 </li>
             </ul>
 
-            <!-- Tabs Content -->
             <div class="tab-content" id="approvalTabsContent">
-                <!-- CONTENT TAB -->
-                <div class="tab-pane fade {{ $activeTab == 'content-tab' ? 'show active' : 'show active' }}" id="contentTab">
-
                 <div class="tab-pane fade show {{ $activeTab == 'content-tab' ? 'show active' : 'show active' }}" id="contentTab" role="tabpanel">
-
                     <table class="table table-bordered table-striped table-responsive">
                         <thead>
                             <tr>
@@ -72,7 +71,6 @@
                                 <th>Verified Date</th>
                                 <th>Verified Time</th>
                                 <th>Title</th>
-
                                 <th>Cause of Rejection</th>
                                 <th>Work Type & Value</th>
                                 <th>Expected Amount</th>
@@ -84,37 +82,85 @@
                         <tbody>
                             @forelse($contents as $row)
                             <tr>
-                                <td><span class="badge bg-primary">Content</span></td>
-
-                                <td> {{ $row->batch_id }}</td>
-
-                                <td>{{ $row->verifiedUser->name ?? '—' }}</td>
-
-                                <td>{{ $row->verified_date ?? '—' }}</td>
-                                <td>{{ $row->verified_time ?? '—' }}</td>
-
-                                <td>{{ $row->title }}</td>
-
-                                <td>{{ $row->rejection_cause ?? '—' }}</td>
-
                                 <td>
-                                    {{ $row->workType->cause ?? '' }}
-                                    @if(isset($row->expected_amount))
-                                    (₹{{ $row->expected_amount }})
-                                    @endif
+                                    <div class="max-content">
+                                        <span class="badge bg-primary">Content</span>
+                                    </div>
                                 </td>
 
-                                <td>{{ $row->expected_amount ?? '—' }}</td>
-                                <td>{{ $row->content_report_note ?? '—' }}</td>
-                                <td>{{ $row->host_record_note ?? '—' }}</td>
                                 <td>
-                                    @if($row->status == 'approved')
-                                    <span class="badge bg-success">{{ ucfirst($row->status) }}</span>
-                                    @elseif($row->status == 'denied')
-                                    <span class="badge bg-danger">{{ ucfirst($row->status) }}</span>
-                                    @else
-                                    <span class="badge bg-secondary">{{ ucfirst($row->status ?? '—') }}</span>
-                                    @endif
+                                    <div class="max-content">
+                                        {{ $row->batch_id }}
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="max-content">
+                                        {{ $row->verifiedUser->name ?? '—' }}
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="max-content">
+                                        {{ $row->verified_date ?? '—' }}
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="max-content">
+                                        {{ $row->verified_time ?? '—' }}
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="max-content">
+                                        {{ $row->title }}
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="max-content">
+                                        {{ $row->rejection_cause ?? '—' }}
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="max-content">
+                                        {{ $row->workType->cause ?? '' }}
+                                        @if(isset($row->expected_amount))
+                                            (₹{{ $row->expected_amount }})
+                                        @endif
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="max-content">
+                                        {{ $row->expected_amount ?? '—' }}
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="max-content">
+                                        {{ $row->content_report_note ?? '—' }}
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="max-content">
+                                        {{ $row->host_record_note ?? '—' }}
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="max-content">
+                                        @if($row->status == 'approved')
+                                            <span class="badge bg-success">{{ ucfirst($row->status) }}</span>
+                                        @elseif($row->status == 'denied')
+                                            <span class="badge bg-danger">{{ ucfirst($row->status) }}</span>
+                                        @else
+                                            <span class="badge bg-secondary">{{ ucfirst($row->status ?? '—') }}</span>
+                                        @endif
+                                    </div>
                                 </td>
                             </tr>
                             @empty
@@ -126,10 +172,6 @@
                     </table>
                 </div>
 
-                <!-- PROMOTIONAL TAB -->
-
-                <div class="tab-pane fade {{ $activeTab == 'promo-tab' ? 'show active' : '' }}" id="promoTab">
-
                 <div class="tab-pane fade {{ $activeTab == 'promo-tab' ? 'show active' : '' }}" id="promoTab" role="tabpanel">
                     <table class="table table-bordered table-striped">
                         <thead>
@@ -140,7 +182,6 @@
                                 <th>Verified Date</th>
                                 <th>Verified Time</th>
                                 <th>Title</th>
-
                                 <th>Cause of Rejection</th>
                                 <th>Work Type & Value</th>
                                 <th>Expected Amount</th>
@@ -152,35 +193,86 @@
                         <tbody>
                             @forelse($promos as $row)
                             <tr>
-                                <td><span class="badge bg-success">Promotional</span></td>
-                                <td> {{ $row->batch_id }}</td>
-                                <td>{{ $row->verifiedUser->name ?? '—' }}</td>
-
-                                <td>{{ $row->verified_date ?? '—' }}</td>
-                                <td>{{ $row->verified_time ?? '—' }}</td>
-                                <td>{{ $row->title }}</td>
-                                <td>{{ $row->rejection_cause ?? '—' }}</td>
-
                                 <td>
-                                    {{ $row->workType->cause ?? '' }}
-                                    @if(isset($row->expected_amount))
-                                    (₹{{ $row->expected_amount }})
-                                    @endif
+                                    <div class="max-content">
+                                        <span class="badge bg-success">Promotional</span>
+                                    </div>
                                 </td>
 
-                                <td>{{ $row->expected_amount ?? '—' }}</td>
-                                <td>{{ $row->content_report_note ?? '—' }}</td>
-                                <td>{{ $row->host_record_note ?? '—' }}</td>
                                 <td>
-                                    @if($row->status == 'approved')
-                                    <span class="badge bg-success">{{ ucfirst($row->status) }}</span>
-                                    @elseif($row->status == 'denied')
-                                    <span class="badge bg-danger">{{ ucfirst($row->status) }}</span>
-                                    @else
-                                    <span class="badge bg-secondary">{{ ucfirst($row->status ?? '—') }}</span>
-                                    @endif
+                                    <div class="max-content">
+                                        {{ $row->batch_id }}
+                                    </div>
                                 </td>
 
+                                <td>
+                                    <div class="max-content">
+                                        {{ $row->verifiedUser->name ?? '—' }}
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="max-content">
+                                        {{ $row->verified_date ?? '—' }}
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="max-content">
+                                        {{ $row->verified_time ?? '—' }}
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="max-content">
+                                        {{ $row->title }}
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="max-content">
+                                        {{ $row->rejection_cause ?? '—' }}
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="max-content">
+                                        {{ $row->workType->cause ?? '' }}
+                                        @if(isset($row->expected_amount))
+                                            (₹{{ $row->expected_amount }})
+                                        @endif
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="max-content">
+                                        {{ $row->expected_amount ?? '—' }}
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="max-content">
+                                        {{ $row->content_report_note ?? '—' }}
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="max-content">
+                                        {{ $row->host_record_note ?? '—' }}
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="max-content">
+                                        @if($row->status == 'approved')
+                                            <span class="badge bg-success">{{ ucfirst($row->status) }}</span>
+                                        @elseif($row->status == 'denied')
+                                            <span class="badge bg-danger">{{ ucfirst($row->status) }}</span>
+                                        @else
+                                            <span class="badge bg-secondary">{{ ucfirst($row->status ?? '—') }}</span>
+                                        @endif
+                                    </div>
+                                </td>
                             </tr>
                             @empty
                             <tr>

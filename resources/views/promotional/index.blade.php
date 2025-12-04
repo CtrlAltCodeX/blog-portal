@@ -4,6 +4,12 @@
 
 @section('content')
 
+<style>
+    .max-content {
+        width: max-content;
+    }
+</style>
+
 <div class="card">
     <div class="card-header">
         <h3>Promotional Image Listing</h3>
@@ -12,7 +18,9 @@
     <div class="card-body">
 
         <div class='row'>
-            <form method="GET" action="" id="filterForm">
+            @include('components.filters')
+
+            {{-- <form method="GET" action="" id="filterForm">
                 <input type='hidden' name='status' value='{{ request()->status }}' />
                 <div class="row mb-3">
                     <div class="col-md-2">
@@ -44,11 +52,11 @@
                     </div>
 
                 </div>
-            </form>
+            </form> --}}
 
         </div>
 
-        <table class="table table-bordered table-striped">
+        <table class="table table-bordered table-striped table-responsive">
             <thead>
                 <tr>
                     <th>SL</th>
@@ -71,45 +79,82 @@
             <tbody>
                 @forelse($promotionalImage as $key => $row)
                 <tr>
-                    <td>{{ $key + 1 }}</td>
-
-                    <td>{{ $row->batch_id }}</td>
-
-                    <td>{{ optional($row->category)->name }}</td>
-                    <td>{{ optional($row->subCategory)->name }}</td>
-                    <td>{{ optional($row->subSubCategory)->name }}</td>
-
-                    <td>{{ $row->title }}</td>
-
-                    <td>{{ Str::limit($row->brief_description, 50) }}</td>
-
-                    <td>{{ $row->preferred_date ?? 'N/A' }}</td>
-
                     <td>
-                        @if($row->attach_image)
-                        <img src="{{ asset('storage/' . $row->attach_image) }}" width="60">
-                        @endif
+                        <div class="max-content">{{ $key + 1 }}</div>
                     </td>
 
                     <td>
-                        @if($row->attach_url)
-                        <a href="{{ $row->attach_url }}" target="_blank">{{ $row->attach_url }}</a>
-                        @endif
+                        <div class="max-content">{{ $row->batch_id }}</div>
                     </td>
 
-                    <td>{{ optional($row->creator)->name }}</td>
-
-                    <td>{{ $row->created_at->format('d-m-Y') }}</td>
-                    <td>{{ $row->created_at->format('h:i A') }}</td>
+                    <td>
+                        <div class="max-content">{{ optional($row->category)->name }}</div>
+                    </td>
+                    <td>
+                        <div class="max-content">{{ optional($row->subCategory)->name }}</div>
+                    </td>
+                    <td>
+                        <div class="max-content">{{ optional($row->subSubCategory)->name }}</div>
+                    </td>
 
                     <td>
-                        <button class="btn btn-sm btn-primary"
-                            onclick="openApproval('promotional', {{ $row->id }})">
-                            Approve / Deny
-                        </button>
+                        <div class="max-content">{{ $row->title }}</div>
+                    </td>
 
+                    <td>
+                        <div class="max-content">
+                            @php
+                                $shortText = Str::words($row->brief_description, 10, '...');
+                            @endphp
+                            <span data-bs-placement="top" data-bs-toggle="tooltip"
+                                title="{{ $row->brief_description }}">
+                                {{ $shortText ?? '-' }}
+                            </span>
+                        </div>
+                    </td>
+
+                    <td><div class="max-content">{{ $row->preferred_date ?? 'N/A' }}</div></td>
+
+                    <td>
+                        <div class="max-content">
+                            @if($row->attach_image)
+                                <img src="{{ asset('storage/' . $row->attach_image) }}" width="60">
+                            @endif
+                        </div>
+                    </td>
+
+                    <td>
+                        <div class="max-content">
+                            @if($row->attach_url)
+                                <button class="btn btn-sm btn-primary"
+                                    onclick="window.open('{{ $row->attach_url }}', '_blank')">
+                                    View URL
+                                </button>
+                            @endif
+                        </div>
+                    </td>
+
+                    <td>
+                        <div class="max-content">{{ optional($row->creator)->name }}</div>
+                    </td>
+
+                    <td>
+                        <div class="max-content">{{ $row->created_at->format('d-m-Y') }}</div>
+                    </td>
+                    <td>
+                        <div class="max-content">{{ $row->created_at->format('h:i A') }}</div>
+                    </td>
+
+                    <td>
+                        <div class="max-content">
+                            <button class="btn btn-sm btn-primary"
+                                onclick="openApproval('promotional', {{ $row->id }})">
+                                Approve / Deny
+                            </button>
+                        </div>
                     </td>
                 </tr>
+
                 @empty
                 <tr>
                     <td align="center" colspan="14">No Promotional Images Found.</td>

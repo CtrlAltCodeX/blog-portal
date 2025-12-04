@@ -29,8 +29,8 @@ use App\Http\Controllers\SubSubCategoryController;
 use App\Http\Controllers\PostsController;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\PromotionalController;
-use App\Http\Controllers\WorkTypeController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\WorkTypeController;
 
 Illuminate\Support\Facades\Auth::routes();
 /*
@@ -373,6 +373,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::get('approval/list', [ContentController::class, 'approvalList'])
         ->name('approval.list');
+
     Route::resource('pages', PageController::class);
 
     Route::resource('promotional', PromotionalController::class)->only([
@@ -381,7 +382,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         'store'
     ]);
 
-    Route::post('approval/submit', [PromotionalController::class, 'submit'])->name('approval.submit');
+    Route::post('approval/submit', [PromotionalController::class, 'submit'])
+        ->name('approval.submit');
 
     Route::get('promotional/row', [PromotionalController::class, 'getRow'])
         ->name('promotional.row');

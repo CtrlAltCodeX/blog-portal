@@ -1,5 +1,5 @@
 @php
-$showDocs = $showDocs ?? false; // default false if not passed
+$showDocs = $showDocs ?? false;
 $p = $page ?? null;
 @endphp
 
