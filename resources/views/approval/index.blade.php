@@ -24,7 +24,7 @@
             <input type="hidden" name="tab" id="activeTabInput" value="{{ $activeTab }}">
 
             <select name="status" onchange="this.form.submit()" class="form-select" style="width:400px;height:50px">
-                <option value="" >Filter By Status</option>
+                <option value="">Filter By Status</option>
                 <option value="all" {{ ($status=='all') ? 'selected' : '' }}>All</option>
                 <option value="approved" {{ ($status=='approved') ? 'selected' : '' }}>Approved</option>
                 <option value="denied" {{ ($status=='denied') ? 'selected' : '' }}>Denied</option>
@@ -49,7 +49,7 @@
 
                 <li class="nav-item" role="presentation">
                     <button class="nav-link {{ $activeTab == 'promo-tab' ? 'active' : '' }}"
-                    <button class="nav-link {{ $activeTab == 'promo-tab' ? 'active' : 'active' }}"
+                        <button class="nav-link {{ $activeTab == 'promo-tab' ? 'active' : 'active' }}"
                         id="promo-tab"
                         data-bs-toggle="tab"
                         data-bs-target="#promoTab"
@@ -125,40 +125,61 @@
                                 </td>
 
                                 <td>
-                                    <div class="max-content">
-                                        {{ $row->workType->cause ?? '' }}
-                                        @if(isset($row->expected_amount))
-                                            (₹{{ $row->expected_amount }})
-                                        @endif
-                                    </div>
+                                    <select class="form-select worktype-select"
+                                        data-id="{{ $row->id }}"
+                                        data-type="content"
+                                        style="width:150px">
+                                        <option value="">Select</option>
+                                        @foreach($worktypes as $w)
+                                        <option value="{{ $w->id }}"
+                                            data-amount="{{ $w->amount }}"
+                                            {{ $row->worktype_id == $w->id ? 'selected' : '' }}>
+                                            {{ $w->cause }}
+                                        </option>
+                                        @endforeach
+                                    </select>
                                 </td>
 
                                 <td>
-                                    <div class="max-content">
-                                        {{ $row->expected_amount ?? '—' }}
-                                    </div>
+                                    <input type="number"
+                                        class="form-control expected-amount"
+                                        data-id="{{ $row->id }}"
+                                        data-type="content"
+                                        value="{{ $row->expected_amount }}"
+                                        readonly
+                                        style="width:120px">
                                 </td>
 
                                 <td>
-                                    <div class="max-content">
-                                        {{ $row->content_report_note ?? '—' }}
-                                    </div>
+                                    <input type="text"
+                                        class="form-control content-note"
+                                        data-id="{{ $row->id }}"
+                                        data-type="content"
+                                        value="{{ $row->content_report_note }}"
+                                        style="width:200px">
+                                    <button class="btn btn-sm btn-success mt-1 save-content-note"
+                                        data-id="{{ $row->id }}">Save</button>
                                 </td>
 
                                 <td>
-                                    <div class="max-content">
-                                        {{ $row->host_record_note ?? '—' }}
-                                    </div>
+                                    <input type="text"
+                                        class="form-control host-note"
+                                        data-id="{{ $row->id }}"
+                                        data-type="content"
+                                        value="{{ $row->host_record_note }}"
+                                        style="width:200px">
+                                    <button class="btn btn-sm btn-success mt-1 save-host-note"
+                                        data-id="{{ $row->id }}">Save</button>
                                 </td>
 
                                 <td>
                                     <div class="max-content">
                                         @if($row->status == 'approved')
-                                            <span class="badge bg-success">{{ ucfirst($row->status) }}</span>
+                                        <span class="badge bg-success">{{ ucfirst($row->status) }}</span>
                                         @elseif($row->status == 'denied')
-                                            <span class="badge bg-danger">{{ ucfirst($row->status) }}</span>
+                                        <span class="badge bg-danger">{{ ucfirst($row->status) }}</span>
                                         @else
-                                            <span class="badge bg-secondary">{{ ucfirst($row->status ?? '—') }}</span>
+                                        <span class="badge bg-secondary">{{ ucfirst($row->status ?? '—') }}</span>
                                         @endif
                                     </div>
                                 </td>
@@ -236,40 +257,61 @@
                                 </td>
 
                                 <td>
-                                    <div class="max-content">
-                                        {{ $row->workType->cause ?? '' }}
-                                        @if(isset($row->expected_amount))
-                                            (₹{{ $row->expected_amount }})
-                                        @endif
-                                    </div>
+                                    <select class="form-select worktype-select"
+                                        data-id="{{ $row->id }}"
+                                        data-type="promotional"
+                                        style="width:150px">
+                                        <option value="">Select</option>
+                                        @foreach($worktypes as $w)
+                                        <option value="{{ $w->id }}"
+                                            data-amount="{{ $w->amount }}"
+                                            {{ $row->worktype_id == $w->id ? 'selected' : '' }}>
+                                            {{ $w->cause }}
+                                        </option>
+                                        @endforeach
+                                    </select>
                                 </td>
 
                                 <td>
-                                    <div class="max-content">
-                                        {{ $row->expected_amount ?? '—' }}
-                                    </div>
+                                    <input type="number"
+                                        class="form-control expected-amount"
+                                        data-id="{{ $row->id }}"
+                                        data-type="promotional"
+                                        value="{{ $row->expected_amount }}"
+                                        readonly
+                                        style="width:120px">
                                 </td>
 
                                 <td>
-                                    <div class="max-content">
-                                        {{ $row->content_report_note ?? '—' }}
-                                    </div>
+                                    <input type="text"
+                                        class="form-control content-note"
+                                        data-id="{{ $row->id }}"
+                                        data-type="promotional"
+                                        value="{{ $row->content_report_note }}"
+                                        style="width:200px">
+                                    <button class="btn btn-sm btn-success mt-1 save-content-note"
+                                        data-id="{{ $row->id }}">Save</button>
                                 </td>
 
                                 <td>
-                                    <div class="max-content">
-                                        {{ $row->host_record_note ?? '—' }}
-                                    </div>
+                                    <input type="text"
+                                        class="form-control host-note"
+                                        data-id="{{ $row->id }}"
+                                        data-type="promotional"
+                                        value="{{ $row->host_record_note }}"
+                                        style="width:200px">
+                                    <button class="btn btn-sm btn-success mt-1 save-host-note"
+                                        data-id="{{ $row->id }}">Save</button>
                                 </td>
 
                                 <td>
                                     <div class="max-content">
                                         @if($row->status == 'approved')
-                                            <span class="badge bg-success">{{ ucfirst($row->status) }}</span>
+                                        <span class="badge bg-success">{{ ucfirst($row->status) }}</span>
                                         @elseif($row->status == 'denied')
-                                            <span class="badge bg-danger">{{ ucfirst($row->status) }}</span>
+                                        <span class="badge bg-danger">{{ ucfirst($row->status) }}</span>
                                         @else
-                                            <span class="badge bg-secondary">{{ ucfirst($row->status ?? '—') }}</span>
+                                        <span class="badge bg-secondary">{{ ucfirst($row->status ?? '—') }}</span>
                                         @endif
                                     </div>
                                 </td>
@@ -291,9 +333,106 @@
 
 @push('js')
 <script>
+    function showSuccess(msg) {
+        let div = document.createElement("div");
+        div.className = "alert alert-success";
+        div.style.position = "fixed";
+        div.style.top = "20px";
+        div.style.left = "50%";
+        div.style.transform = "translateX(-50%)";
+        div.style.padding = "8px 20px";
+        div.style.fontSize = "15px";
+        div.style.borderRadius = "6px";
+        div.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
+        div.style.zIndex = "9999";
+        div.style.opacity = "0";
+        div.style.transition = "opacity 0.4s ease";
+        div.innerText = msg;
+
+        document.body.appendChild(div);
+
+        // Fade in
+        setTimeout(() => {
+            div.style.opacity = "1";
+        }, 50);
+
+        // Fade out + remove
+        setTimeout(() => {
+            div.style.opacity = "0";
+            setTimeout(() => div.remove(), 400);
+        }, 2000);
+    }
+
+
+
     document.querySelectorAll('#approvalTabs button').forEach(btn => {
         btn.addEventListener('shown.bs.tab', function() {
             document.getElementById('activeTabInput').value = this.id;
+        });
+    });
+
+    // Work Type change → update expected amount + save
+    $(document).on('change', '.worktype-select', function() {
+        let id = $(this).data('id');
+        let type = $(this).data('type');
+        let amount = $(this).find(':selected').data('amount');
+
+        // update expected amount input
+        $(this).closest('tr').find('.expected-amount').val(amount);
+
+        // save worktype
+        $.post("{{ route('approval.quick.update') }}", {
+            id: id,
+            type: type,
+            field: 'worktype_id',
+            value: $(this).val(),
+            _token: "{{ csrf_token() }}"
+        }, function() {
+            showSuccess("Work type updated!");
+        });
+
+        // save expected amount
+        $.post("{{ route('approval.quick.update') }}", {
+            id: id,
+            type: type,
+            field: 'expected_amount',
+            value: amount,
+            _token: "{{ csrf_token() }}"
+        });
+    });
+
+    // Save Content Note
+    $(document).on('click', '.save-content-note', function() {
+        let id = $(this).data('id');
+        let type = $(this).closest('tr').find('.content-note').data('type');
+        let val = $(this).closest('td').find('.content-note').val();
+
+        $.post("{{ route('approval.quick.update') }}", {
+            id: id,
+            type: type,
+            field: 'content_report_note',
+            value: val,
+            _token: "{{ csrf_token() }}"
+        }, function() {
+            showSuccess("Content note updated!");
+        });
+    });
+
+    // Save Host Note
+    $(document).on('click', '.save-host-note', function() {
+        let id = $(this).data('id');
+
+        let type = $(this).closest('tr').find('.content-note').data('type');
+        let val = $(this).closest('td').find('.host-note').val();
+
+        $.post("{{ route('approval.quick.update') }}", {
+            id: id,
+            type: type,
+            field: 'host_record_note',
+            value: val,
+            _token: "{{ csrf_token() }}"
+        }, function() {
+            showSuccess("Host note updated!");
         });
     });
 </script>

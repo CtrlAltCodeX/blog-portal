@@ -22,36 +22,36 @@
 
             {{-- <form method="GET" action="" id="filterForm">
                 <input type='hidden' name='status' value='{{ request()->status }}' />
-                <div class="row mb-3">
-                    <div class="col-md-2">
-                        <label>Category</label>
-                        <select class="form-control" name="category_id" id='category_id'>
-                            <option value="">All</option>
-                            @foreach($categories as $cat)
-                            <option value="{{ $cat->id }}" {{ $category_id==$cat->id?'selected':'' }}>
-                                {{ $cat->name }}
-                            </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="col-md-2">
-                        <label>Sub Category</label>
-                        <select class="form-control" name="sub_category_id" id='sub_category_id'>
-                        </select>
-                    </div>
-
-                    <div class="col-md-2">
-                        <label>Sub Sub Category</label>
-                        <select class="form-control" name="sub_sub_category_id" id='sub_sub_category_id'>
-                        </select>
-                    </div>
-
-                    <div class="col-md-2 d-flex align-items-end mt-2">
-                        <button type="submit" class="btn btn-primary btn-block">Filter</button>
-                    </div>
-
+            <div class="row mb-3">
+                <div class="col-md-2">
+                    <label>Category</label>
+                    <select class="form-control" name="category_id" id='category_id'>
+                        <option value="">All</option>
+                        @foreach($categories as $cat)
+                        <option value="{{ $cat->id }}" {{ $category_id==$cat->id?'selected':'' }}>
+                            {{ $cat->name }}
+                        </option>
+                        @endforeach
+                    </select>
                 </div>
+
+                <div class="col-md-2">
+                    <label>Sub Category</label>
+                    <select class="form-control" name="sub_category_id" id='sub_category_id'>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <label>Sub Sub Category</label>
+                    <select class="form-control" name="sub_sub_category_id" id='sub_sub_category_id'>
+                    </select>
+                </div>
+
+                <div class="col-md-2 d-flex align-items-end mt-2">
+                    <button type="submit" class="btn btn-primary btn-block">Filter</button>
+                </div>
+
+            </div>
             </form> --}}
 
         </div>
@@ -69,6 +69,7 @@
                     <th>Preferred Date</th>
                     <th>Image</th>
                     <th>URL</th>
+                     <th>Status</th>
                     <th>Created By</th>
                     <th>Created Date</th>
                     <th>Created Time</th>
@@ -104,7 +105,7 @@
                     <td>
                         <div class="max-content">
                             @php
-                                $shortText = Str::words($row->brief_description, 10, '...');
+                            $shortText = Str::words($row->brief_description, 10, '...');
                             @endphp
                             <span data-bs-placement="top" data-bs-toggle="tooltip"
                                 title="{{ $row->brief_description }}">
@@ -113,12 +114,14 @@
                         </div>
                     </td>
 
-                    <td><div class="max-content">{{ $row->preferred_date ?? 'N/A' }}</div></td>
+                    <td>
+                        <div class="max-content">{{ $row->preferred_date ?? 'N/A' }}</div>
+                    </td>
 
                     <td>
                         <div class="max-content">
                             @if($row->attach_image)
-                                <img src="{{ asset('storage/' . $row->attach_image) }}" width="60">
+                            <img src="{{ asset('storage/' . $row->attach_image) }}" width="60">
                             @endif
                         </div>
                     </td>
@@ -126,14 +129,16 @@
                     <td>
                         <div class="max-content">
                             @if($row->attach_url)
-                                <button class="btn btn-sm btn-primary"
-                                    onclick="window.open('{{ $row->attach_url }}', '_blank')">
-                                    View URL
-                                </button>
+                            <button class="btn btn-sm btn-primary"
+                                onclick="window.open('{{ $row->attach_url }}', '_blank')">
+                                View URL
+                            </button>
                             @endif
                         </div>
                     </td>
-
+                    <td>
+                        <div class="max-content">{{ $row->status }}</div>
+                    </td>
                     <td>
                         <div class="max-content">{{ optional($row->creator)->name }}</div>
                     </td>
@@ -164,33 +169,33 @@
 
         </table>
 
-         <div class="d-flex justify-content-end mt-3">
-            {!! $promotionalImage->links('pagination::bootstrap-5') !!}
-
         <div class="d-flex justify-content-end mt-3">
             {!! $promotionalImage->links('pagination::bootstrap-5') !!}
+
+            <div class="d-flex justify-content-end mt-3">
+                {!! $promotionalImage->links('pagination::bootstrap-5') !!}
+            </div>
         </div>
     </div>
-</div>
 
-@include('components.approval-form')
+    @include('components.approval-form')
 
-@endsection
+    @endsection
 
-@push('js')
-@include('posts-script');
+    @push('js')
+    @include('posts-script');
 
 
-<script>
-    function openApproval(type, id) {
-        document.getElementById('itemType').value = type;
-        document.getElementById('itemId').value = id;
+    <script>
+        function openApproval(type, id) {
+            document.getElementById('itemType').value = type;
+            document.getElementById('itemId').value = id;
 
-        document.getElementById('approvalForm').action = "{{ route('approval.submit') }}";
+            document.getElementById('approvalForm').action = "{{ route('approval.submit') }}";
 
-        var approvalModal = new bootstrap.Modal(document.getElementById('approvalModal'));
-        approvalModal.show();
-    }
-</script>
+            var approvalModal = new bootstrap.Modal(document.getElementById('approvalModal'));
+            approvalModal.show();
+        }
+    </script>
 
-@endpush
+    @endpush

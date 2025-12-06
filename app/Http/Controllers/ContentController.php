@@ -184,6 +184,8 @@ class ContentController extends Controller
 
     public function approvalList(Request $request)
     {
+         $worktypes = WorkType::all();
+
         $status = $request->status ?? null;
         $activeTab = $request->tab ?? 'content';
 
@@ -207,7 +209,7 @@ class ContentController extends Controller
             ->orderBy('id', 'DESC')
             ->get();
 
-        return view('approval.index', compact('contents', 'promos', 'status', 'activeTab'));
+        return view('approval.index', compact('contents', 'promos', 'status', 'activeTab','worktypes'));
     }
 
     public function getRow(Request $request)

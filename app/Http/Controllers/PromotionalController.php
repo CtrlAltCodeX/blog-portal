@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 class PromotionalController extends Controller
 {
 
- 
+
     public function index(Request $request)
     {
         $categories = Category::whereNull('parent_id')->with('children.subChildren')->get();
@@ -129,12 +129,31 @@ class PromotionalController extends Controller
             'verified_time'      => now()->format('H:i:s'),
             'status'             => $r->status,
             'rejection_cause'    => $r->status === 'denied' ? $r->rejection_cause : null,
-            'worktype_id'        => $r->worktype_id,
-            'expected_amount'    => $r->expected_amount,
-            'content_report_note' => $r->content_report_note,
-            'host_record_note'   => $r->host_record_note,
+            // 'worktype_id'        => $r->worktype_id,
+            // 'expected_amount'    => $r->expected_amount,
+            // 'content_report_note' => $r->content_report_note,
+            // 'host_record_note'   => $r->host_record_note,
         ]);
 
         return back()->with('success', 'Approval Updated Successfully');
+    }
+
+    public function quickUpdate(Request $r)
+    {
+        if ($r->type == "promotional") {
+            $item = Promotional::find($r->id);
+        } else {
+            $item = Content::find($r->id);
+        }
+
+        if (!$item) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
+
+        $item->update([
+            $r->field => $r->value
+        ]);
+
+        return response()->json(['success' => true]);
     }
 }

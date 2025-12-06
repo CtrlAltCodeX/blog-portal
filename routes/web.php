@@ -385,6 +385,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     Route::post('approval/submit', [PromotionalController::class, 'submit'])
         ->name('approval.submit');
 
+    Route::post('approval/quick-update', [PromotionalController::class, 'quickUpdate'])
+        ->name('approval.quick.update');
+
+
+
     Route::get('promotional/row', [PromotionalController::class, 'getRow'])
         ->name('promotional.row');
 
