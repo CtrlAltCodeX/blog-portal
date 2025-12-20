@@ -194,7 +194,7 @@
                 </div>
 
                 <div class="tab-pane fade {{ $activeTab == 'promo-tab' ? 'show active' : '' }}" id="promoTab" role="tabpanel">
-                    <table class="table table-bordered table-striped">
+                    <table class="table table-bordered table-striped table-responsive">
                         <thead>
                             <tr>
                                 <th>Type</th>

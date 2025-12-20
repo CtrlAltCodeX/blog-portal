@@ -113,6 +113,8 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         @can('Inventory -> Drafted Inventory')
                         <li><a href="{{ route('inventory.drafted') }}" class="slide-item {{ request()->is('admin/inventory/drafted') ? 'active' : '' }}">{{ __('Drafted Inventory ( M/S )') }}</a></li>
                         @endcan
+                        
+                        <li><a href="{{ route('inventory.review.price.issue', ['paging' => 25]) }}" class="slide-item {{ request()->is('admin/review/price/issue') ? 'active' : '' }}">{{ __('Price Issue') }}</a></li>
 
                         @can('Inventory -> Under Review Inventory')
                         <li><a href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => 3,'paging'=>25]) }}" class="slide-item {{ request()->is('admin/inventory/review') ? 'active' : '' }}">{{ __('Review Inventory ( M/S )') }}</a></li>

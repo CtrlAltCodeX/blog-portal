@@ -422,7 +422,9 @@ class DatabaseListingController extends Controller
         $listing = Listing::find($id);
 
         if ($request->status == 2) {
-            $this->updateTheCount('Created', 'reject_count');
+            if (!request()->price_issue) {
+                $this->updateTheCount('Created', 'reject_count');
+            }
 
             $data['status'] = request()->status;
 
@@ -752,7 +754,6 @@ class DatabaseListingController extends Controller
     {
         if (!$url = $this->getSiteBaseUrl()) {
             session()->flash('message', 'Please complete your Site Setting Then Continue');
-
             return view('settings.error');
         }
 
@@ -1075,7 +1076,9 @@ class DatabaseListingController extends Controller
 
             UserListingInfo::create($data);
 
-            $this->updateTheCount('Edited', 'create_count');
+            if (!request()->price_issue) {
+                $this->updateTheCount('Edited', 'create_count');
+            }
 
             session()->flash('success', 'Pending for Approval');
         } else {
@@ -1179,5 +1182,15 @@ class DatabaseListingController extends Controller
         $common = array_intersect($ngrams1, $ngrams2);
         $similarity = (count($common) / max(count($ngrams1), count($ngrams2))) * 100;
         return round($similarity, 2);
+    }
+
+    public function reviewPriceIssue()
+    {
+        $perPage = request()->paging ?? 10;
+        $listings = BackupListing::whereRaw('(mrp - selling_price) BETWEEN 1 AND 10')
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
+
+        return view('database-listing.price-issue', compact('listings'));
     }
 }

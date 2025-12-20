@@ -39,4 +39,13 @@ class BackupListing extends Model
         'packer',
         'last_updated'
     ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'categories' => 'array',
+    ];
 }

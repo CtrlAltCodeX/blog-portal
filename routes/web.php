@@ -117,6 +117,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         Route::get('review', [ListingController::class, 'reviewInventory'])
             ->name('inventory.review');
 
+        Route::get('review/price/issue', [DatabaseListingController::class, 'reviewPriceIssue'])
+            ->name('inventory.review.price.issue');
+
         Route::get('drafted', [ListingController::class, 'draftedInventory'])
             ->name('inventory.drafted');
     });
@@ -387,8 +390,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::post('approval/quick-update', [PromotionalController::class, 'quickUpdate'])
         ->name('approval.quick.update');
-
-
 
     Route::get('promotional/row', [PromotionalController::class, 'getRow'])
         ->name('promotional.row');

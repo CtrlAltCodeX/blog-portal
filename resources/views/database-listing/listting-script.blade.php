@@ -2,7 +2,7 @@
     $(document).ready(function() {
         $('#basic-datatable').DataTable({
             "paging": false,
-            "order": [[1, "asc"]]
+            "order": [[0, "asc"]]
         });
 
         $("#category").on("change", function() {
