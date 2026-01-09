@@ -47,83 +47,85 @@
             $("#form").submit();
         });
 
-        $('input').on('input', function() {
-            var inputValue = $(this).val();
-            var inputName = $(this).attr('name');
+        @if (!request()->price_issue)
+            $('input').on('input', function() {
+                var inputValue = $(this).val();
+                var inputName = $(this).attr('name');
 
-            if (inputName == 'author_name' ||
-                inputName == 'publication' ||
-                inputName == 'edition') {
-                var value = inputValue.replace(/,/g, '');
-                $(this).val(value);
-            }
-
-            if (inputName == 'author_name' ||
-                inputName == 'title' ||
-                inputName == 'publication' ||
-                inputName == 'edition' ||
-                inputName == 'sku'
-            ) {
-                limit(this);
-            }
-
-            if (inputName == 'isbn_10' ||
-                inputName == 'isbn_13'
-            ) {
-                const validPattern = /^[a-zA-Z0-9\-]*$/; // Regex for allowed characters
-                const inputValue = $(this).val();
-
-                if (!validPattern.test(inputValue)) {
-                    // If the value doesn't match the pattern, remove invalid characters
-                    errorHandling(inputName, 'Only alphabets, numbers, and hyphens are allowed', false, $(this))
-                    $(this).val(inputValue.replace(/[^a-zA-Z0-9\-]/g, ''));
+                if (inputName == 'author_name' ||
+                    inputName == 'publication' ||
+                    inputName == 'edition') {
+                    var value = inputValue.replace(/,/g, '');
+                    $(this).val(value);
                 }
-            }
 
-            if (inputName != 'images[]') {
-                requiredFields(inputValue, this);
-            }
+                if (inputName == 'author_name' ||
+                    inputName == 'title' ||
+                    inputName == 'publication' ||
+                    inputName == 'edition' ||
+                    inputName == 'sku'
+                ) {
+                    limit(this);
+                }
 
-            nameValidate(inputValue, this);
+                if (inputName == 'isbn_10' ||
+                    inputName == 'isbn_13'
+                ) {
+                    const validPattern = /^[a-zA-Z0-9\-]*$/; // Regex for allowed characters
+                    const inputValue = $(this).val();
 
-            domainValidation(inputValue, this);
+                    if (!validPattern.test(inputValue)) {
+                        // If the value doesn't match the pattern, remove invalid characters
+                        errorHandling(inputName, 'Only alphabets, numbers, and hyphens are allowed', false, $(this))
+                        $(this).val(inputValue.replace(/[^a-zA-Z0-9\-]/g, ''));
+                    }
+                }
 
-            if (inputName == 'title') {
-                minLimit(this);
-            }
+                if (inputName != 'images[]') {
+                    requiredFields(inputValue, this);
+                }
 
-            if (inputName == 'discount' ||
-                inputName == 'mrp'
-            ) {
-                setSellingPrice();
-            }
+                nameValidate(inputValue, this);
 
-            if (inputName == 'selling_price') {
-                var sellingPrice = $(this).val();
-                var mrp = parseInt($("#mrp").val());
+                domainValidation(inputValue, this);
 
-                $('#discount').val(Math.round(((mrp - sellingPrice) / mrp) * 100));
-            }
-        })
+                if (inputName == 'title') {
+                    minLimit(this);
+                }
 
-        $('textarea').on('input', function() {
-            var textareaValue = $(this).val();
+                if (inputName == 'discount' ||
+                    inputName == 'mrp'
+                ) {
+                    setSellingPrice();
+                }
 
-            requiredFields(textareaValue, this);
+                if (inputName == 'selling_price') {
+                    var sellingPrice = $(this).val();
+                    var mrp = parseInt($("#mrp").val());
 
-            nameValidate(textareaValue, this);
+                    $('#discount').val(Math.round(((mrp - sellingPrice) / mrp) * 100));
+                }
+            })
 
-            domainValidation(textareaValue, this);
-        })
+            $('textarea').on('input', function() {
+                var textareaValue = $(this).val();
 
-        $('#url').on('input', function() {
-            var url = $(this).val();
-            if (!url.includes('https://www.instamojo.com/EXAM360/')) {
-                errorHandling('url', 'Please add instamojo link', false, this);
-            } else {
-                errorHandling('url', '', true, this);
-            }
-        });
+                requiredFields(textareaValue, this);
+
+                nameValidate(textareaValue, this);
+
+                domainValidation(textareaValue, this);
+            })
+
+            $('#url').on('input', function() {
+                var url = $(this).val();
+                if (!url.includes('https://www.instamojo.com/EXAM360/')) {
+                    errorHandling('url', 'Please add instamojo link', false, this);
+                } else {
+                    errorHandling('url', '', true, this);
+                }
+            });
+        @endif
 
         $.ajax({
             type: "GET",
@@ -135,7 +137,6 @@
                 localStorage.setItem('validate', JSON.stringify(result));
             },
         });
-        
 
         $('#form, #formTest').submit(function(event) {
             var valid = true;
@@ -149,87 +150,89 @@
             $('.error-message').text('');
 
             // Iterate over each input field with the class 'no-url-validation'
-            $('input').each(function() {
-                var inputValue = $(this).val();
-                var urlRegex = /^(http|https):\/\/[^\s\[\]]*$/i;
+            @if (!request()->price_issue)
+                $('input').each(function() {
+                    var inputValue = $(this).val();
+                    var urlRegex = /^(http|https):\/\/[^\s\[\]]*$/i;
 
-                if ((urlRegex.test(inputValue) &&
-                        inputValue != 'http://' &&
-                        inputValue != 'url') ||
-                    (inputValue.includes('[') ||
-                        inputValue.includes(']'))
-                ) {
-                    var fieldId = $(this).attr('name');
-                    if (fieldId != 'images[]' && fieldId != 'multipleImages[]' && fieldId != 'url' && fieldId != 'images') {
+                    if ((urlRegex.test(inputValue) &&
+                            inputValue != 'http://' &&
+                            inputValue != 'url') ||
+                        (inputValue.includes('[') ||
+                            inputValue.includes(']'))
+                    ) {
+                        var fieldId = $(this).attr('name');
+                        if (fieldId != 'images[]' && fieldId != 'multipleImages[]' && fieldId != 'url' && fieldId != 'images') {
+                            $(this).css('border', '1px red solid');
+
+                            $('.' + fieldId).text('Please do not enter URLs.');
+                            valid = false;
+                        }
+                    }
+
+                    var notRequiredFields = ['images[]', 'multipleImages[]', 'files', 'isbn_10', 'isbn_13', 'isbn_10', 'reading_age', 'country_origin', 'genre', 'manufacturer', 'importer', 'discount'];
+
+                    if (inputValue == '') {
+                        var fieldId = $(this).attr('name');
+                        if (fieldId && !notRequiredFields.includes(fieldId)) {
+                            $(this).css('border', '1px red solid');
+                            $('.' + fieldId).text('This field is required');
+                            console.log(fieldId);
+                            requiredvalid = false;
+                        }
+                    }
+                });
+
+                $('textarea').each(function() {
+                    var textareaValue = $(this).val();
+                    var urlRegex = /^(http|https):\/\/[^\s]*$/i;
+
+                    if (urlRegex.test(textareaValue)) {
+                        // Display error message
+                        var fieldId = $(this).attr('name');
+                        $('.' + fieldId).text('Please do not enter URLs.');
                         $(this).css('border', '1px red solid');
 
-                        $('.' + fieldId).text('Please do not enter URLs.');
                         valid = false;
                     }
-                }
 
-                var notRequiredFields = ['images[]', 'multipleImages[]', 'files', 'isbn_10', 'isbn_13', 'isbn_10', 'reading_age', 'country_origin', 'genre', 'manufacturer', 'importer', 'discount'];
-
-                if (inputValue == '') {
-                    var fieldId = $(this).attr('name');
-                    if (fieldId && !notRequiredFields.includes(fieldId)) {
-                        $(this).css('border', '1px red solid');
-                        $('.' + fieldId).text('This field is required');
-                        console.log(fieldId);
-                        requiredvalid = false;
+                    if (textareaValue == '') {
+                        var fieldId = $(this).attr('name');
+                        if (fieldId) {
+                            $(this).css('border', '1px red solid');
+                            $('.' + fieldId).text('This field is required');
+                            console.log(fieldId);
+                            requiredvalid = false;
+                        }
                     }
-                }
-            });
+                });
 
-            $('textarea').each(function() {
-                var textareaValue = $(this).val();
-                var urlRegex = /^(http|https):\/\/[^\s]*$/i;
+                $('select').each(function() {
+                    var textareaValue = $(this).val();
+                    var notRequiredFields = ['book_name', 'pub_name'];
 
-                if (urlRegex.test(textareaValue)) {
-                    // Display error message
-                    var fieldId = $(this).attr('name');
-                    $('.' + fieldId).text('Please do not enter URLs.');
-                    $(this).css('border', '1px red solid');
-
+                    if (textareaValue == '') {
+                        var fieldId = $(this).attr('name');
+                        if (fieldId && !notRequiredFields.includes(fieldId)) {
+                            $(this).css('border', '1px red solid');
+                            $('.' + fieldId).text('This field is required');
+                            console.log(fieldId);
+                            requiredvalid = false;
+                        }
+                    }
+                });
+           
+                var url = $('#url').val();
+                if (!url.includes('https://www.instamojo.com/EXAM360/')) {
+                    $('#url').css('border', '1px red solid');
+                    $('.url').text('Please add instamojo link');
                     valid = false;
+                } else {
+                    $(this).css('border', '1px solid #e9edf4');
+                    $('.url').text('');
+                    valid = true;
                 }
-
-                if (textareaValue == '') {
-                    var fieldId = $(this).attr('name');
-                    if (fieldId) {
-                        $(this).css('border', '1px red solid');
-                        $('.' + fieldId).text('This field is required');
-                        console.log(fieldId);
-                        requiredvalid = false;
-                    }
-                }
-            });
-
-            $('select').each(function() {
-                var textareaValue = $(this).val();
-                var notRequiredFields = ['book_name', 'pub_name'];
-
-                if (textareaValue == '') {
-                    var fieldId = $(this).attr('name');
-                    if (fieldId && !notRequiredFields.includes(fieldId)) {
-                        $(this).css('border', '1px red solid');
-                        $('.' + fieldId).text('This field is required');
-                        console.log(fieldId);
-                        requiredvalid = false;
-                    }
-                }
-            });
-
-            var url = $('#url').val();
-            if (!url.includes('https://www.instamojo.com/EXAM360/')) {
-                $('#url').css('border', '1px red solid');
-                $('.url').text('Please add instamojo link');
-                valid = false;
-            } else {
-                $(this).css('border', '1px solid #e9edf4');
-                $('.url').text('');
-                valid = true;
-            }
+            @endif
 
             if (!valid || !requiredvalid) {
                 event.preventDefault();

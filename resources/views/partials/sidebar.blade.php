@@ -51,21 +51,21 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         @can('Product Listing > AI Chat Bots')
                         <li><a href="{{ route('ai.description') }}" class="slide-item {{ request()->is('get/ai/description') ? 'active' : '' }}">{{ __('AI Chat Bots') }}</a></li>
                         @endcan
-
+                        
                         @can('Listing -> Search Listing')
                         <li><a href="{{ route('listing.search') }}" class="slide-item {{ (request()->is('admin/search')) ? 'active' : '' }}">{{ __('Search Listing ( M/S )') }}</a></li>
                         @endcan
-
+                        
                         @can('Product Listing > Bulk Listing Upload')
                         <li><a href="{{ route('upload-file.options') }}" class="slide-item {{ (request()->is('admin/upload-file')) ? 'active' : '' }}">{{ __('Bulk Listing Upload') }}</a></li>
                         @endcan
-
+                        
                         @can('Product Listing > Bulk Listing Review (Edit)')
                         <li><a href="{{ route('view.upload', ['type' => 1]) }}" class="slide-item {{ (request()->is('admin/upload-file')) ? 'active' : '' }}">{{ __('Bulk Listing Review') }}</a></li>
                         @endcan
-
+                        
                         <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
-
+                        
                         @can('Listing Create (M/S)')
                         <li><a href="{{ route('listing.create') }}" class="slide-item {{ (request()->is('admin/images/*')) ? 'active' : '' }}">{{ __('Create New Listing ( M/S )') }}</a></li>
                         @endcan
@@ -100,29 +100,37 @@ $userInfo = app('App\Models\SiteSetting')->first();
                 @endcan
 
                 @can('Inventory (Main Menu)')
-                <li class="slide {{ (request()->is('admin/inventory') || request()->is('admin/inventory/drafted') || request()->is('admin/inventory/review') || request()->is('admin/google/products/list') || request()->is('admin/profile/listings')) ? 'is-expanded' : '' }}">
+                <li class="slide {{ (request()->is('admin/inventory') || request()->is('admin/inventory/drafted') || request()->is('admin/inventory/review') || request()->is('admin/google/products/list') || request()->is('admin/profile/listings') || request()->is('admin/publishers')) ? 'is-expanded' : '' }}">
+
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-box"></i><span class="side-menu__label">{{ __('Inventory') }}</span><i class="angle fe fe-chevron-right"></i></a>
                     <ul class="slide-menu">
                         <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
+                        
                         @can('Inventory -> Blogger Articles')
                         <li><a href="{{ route('articles.index') }}" class="slide-item {{ request()->is('admin/articles') ? 'active' : '' }}">{{ __('Blogger Articles') }}</a></li>
                         @endcan
+
                         @can('Inventory -> Manage Inventory')
                         <li><a href="{{ route('inventory.index', ['startIndex' => 1, 'category' => 'Product','paging'=>25]) }}" class="slide-item {{ request()->is('admin/inventory') ? 'active' : '' }}">{{ __('Manage Inventory ( M/S )') }}</a></li>
                         @endcan
+
                         @can('Inventory -> Drafted Inventory')
                         <li><a href="{{ route('inventory.drafted') }}" class="slide-item {{ request()->is('admin/inventory/drafted') ? 'active' : '' }}">{{ __('Drafted Inventory ( M/S )') }}</a></li>
                         @endcan
                         
-                        <li><a href="{{ route('inventory.review.price.issue', ['paging' => 25]) }}" class="slide-item {{ request()->is('admin/review/price/issue') ? 'active' : '' }}">{{ __('Price Issue') }}</a></li>
+                        <li><a href="{{ route('inventory.review.price.issue', ['paging' => 25]) }}" class="slide-item {{ request()->is('admin/review/price/issue') ? 'active' : '' }}">{{ __('Low Pricing Error ( DB )') }}</a></li>
 
                         @can('Inventory -> Under Review Inventory')
                         <li><a href="{{ route('inventory.review', ['startIndex' => 1, 'category' => 'Product', 'updated_before' => 3,'paging'=>25]) }}" class="slide-item {{ request()->is('admin/inventory/review') ? 'active' : '' }}">{{ __('Review Inventory ( M/S )') }}</a></li>
                         @endcan
+
                         @can('Inventory -> Counts Report')
                         <li><a href="{{ route('profile.listing', ['user' => 'all', 'status' => 0, 'status_listing' => 'Created']) }}" class="slide-item {{ (request()->is('admin/profile/listings')) ? 'active' : '' }}">{{ __('Listing Counts Report ( DB )') }}</a></li>
                         @endcan
+
                         <li><a href="{{ route('users.count') }}" class="slide-item {{ (request()->is('admin/users/count/users')) ? 'active' : '' }}">{{ __('Detail Work Reports') }}</a></li>
+
+                        <li><a href="{{ route('listing.publishers', ['paging' => '25']) }}" class="slide-item {{ request()->is('admin/publishers') ? 'active' : '' }}">{{ __('Publishers') }}</a></li>
                     </ul>
                 </li>
                 @endcan
@@ -183,7 +191,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         @can('Settings -> Site Access')
                         <li><a href="{{ route('settings.site') }}" class="slide-item {{ request()->is('admin/settings/site') ? 'active' : '' }}">{{ __('Site Settings') }}</a></li>
                         @endcan
-
+                        
                         @can('Settings -> Site Access')
                         <li><a href="{{ route('settings.policies') }}" class="slide-item {{ request()->is('admin/settings/policies/term') ? 'active' : '' }}">{{ __('Policies Pages') }}</a></li>
                         @endcan
@@ -203,22 +211,33 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         @can('Settings -> Configure Blog')
                         <li><a href="{{ route('settings.blog') }}" class="slide-item {{ request()->is('admin/settings/blog') ? 'active' : '' }}">{{ __('Configure API') }}</a></li>
                         @endcan
-
+                        
                         <li><a href="{{ route('developers.index', ['users' => 50]) }}" class="slide-item {{ request()->is('admin/developers*') ? 'active' : '' }}">{{ __('Developer API Accounts') }}</a></li>
-
+                        
                         @can('Settings -> Categories')
                         <li><a href="{{ route('categories.index') }}" class="slide-item {{ request()->is('admin/categories') ? 'active' : '' }}">{{ __('Categories') }}</a></li>
                         @endcan
+                        
                         @can('Settings -> Sub Categories')
-                        <li><a href="{{ route('subcategories.index') }}" class="slide-item {{ request()->is('admin/subcategories') ? 'active' : '' }}"> {{ __('Sub Categories') }}</a></li>
-                        @endcan
-
-                        @can('Settings -> Sub Sub Categories')
-                        <li><a href="{{ route('sub-subcategories.index') }}" class="slide-item {{ request()->is('admin/sub-subcategories') ? 'active' : '' }}"> {{ __('Sub Sub Categories') }}</a></li>
+                        <li><a href="{{ route('subcategories.index') }}" class="slide-item {{ request()->is('admin/subcategories') ? 'active' : '' }}">   {{ __('Sub Categories') }}</a></li>
                         @endcan
                     </ul>
                 </li>
                 @endif
+
+                @can('List Post')
+                <!--<li class="slide {{ (request()->is('admin/posts')) ? 'is-expanded' : '' }}">-->
+                <!--    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fa fa-gear"></i><span class="side-menu__label">{{ __('Posts') }}</span><i class="angle fe fe-chevron-right"></i></a>-->
+                <!--    <ul class="slide-menu">-->
+                <!--        @can('Create Post')-->
+                <!--        <li><a href="{{ route('posts.create') }}" class="slide-item {{ request()->is('admin/create') ? 'active' : '' }}">{{ __('Create Post') }}</a></li>-->
+                <!--        @endcan-->
+                <!--        @can('List Post')-->
+                <!--        <li><a href="{{ route('posts.index', ['status' => 'pending_recent']) }}" class="slide-item {{ request()->is('admin/posts') ? 'active' : '' }}">{{ __('Post') }}</a></li>-->
+                <!--        @endcan-->
+                <!--    </ul>-->
+                <!--</li>-->
+                @endcan
 
                 <li class="slide {{ (request()->is('admin/posts')) ? 'is-expanded' : '' }}">
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fa fa-gear"></i><span class="side-menu__label">{{ __('Posts') }}</span><i class="angle fe fe-chevron-right"></i></a>

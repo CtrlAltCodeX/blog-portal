@@ -16,8 +16,9 @@ use App\Models\UserListingInfo;
 use Illuminate\Support\Facades\Http;
 use App\Services\GoogleService;
 use Carbon\Carbon;
-use Auth;
 use App\Models\WeightVSCourier;
+use Auth;
+use DB;
 
 class DatabaseListingController extends Controller
 {
@@ -1192,5 +1193,27 @@ class DatabaseListingController extends Controller
             ->paginate($perPage);
 
         return view('database-listing.price-issue', compact('listings'));
+    }
+
+    public function getPublisher()
+    {
+        $perPage = request()->paging ?? 10;
+        $listings = BackupListing::whereRaw('(mrp - selling_price) BETWEEN 1 AND 10')
+            ->select('publisher')
+            ->groupBy('publisher')
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
+
+        return view('database-listing.publisher', compact('listings'));
+    }
+
+    public function getSpecificPublisher($publisher)
+    {
+        $perPage = request()->paging ?? 10;
+        $listings = BackupListing::where('publisher', $publisher)
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
+
+        return view('database-listing.specific-publisher', compact('listings'));
     }
 }

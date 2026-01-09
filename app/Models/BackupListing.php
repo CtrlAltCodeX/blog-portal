@@ -48,4 +48,9 @@ class BackupListing extends Model
     protected $casts = [
         'categories' => 'array',
     ];
+
+    public static function publisherCount(string $publisher): int
+    {
+        return self::where('publisher', $publisher)->count();
+    }
 }

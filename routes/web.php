@@ -33,6 +33,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\WorkTypeController;
 
 Illuminate\Support\Facades\Auth::routes();
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -43,7 +44,6 @@ Illuminate\Support\Facades\Auth::routes();
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
 Route::post('/auth/google', [GoogleController::class, 'redirectToGoogle'])
     ->name('auth.google');
 
@@ -268,6 +268,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
      */
     Route::resource('listing', ListingController::class);
 
+
     Route::get('articles', [DatabaseListingController::class, 'articles'])
         ->name('articles.index');
 
@@ -289,6 +290,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
      */
     Route::post('publish/database', [DatabaseListingController::class, 'publshInDB'])
         ->name('listing.publish.database');
+
+    Route::get('publishers', [DatabaseListingController::class, 'getPublisher'])
+        ->name('listing.publishers');
+
+    Route::get('publishers/{publisher}', [DatabaseListingController::class, 'getSpecificPublisher'])
+        ->name('listing.specific.publishers');
 
     Route::get('edit/database/{id}', [DatabaseListingController::class, 'editInDB'])
         ->name('listing.edit.database');
