@@ -253,11 +253,11 @@
                                         @endif
                                     </td>
                                     @php
-                                    if(isset($googlePost->images)) {
-                                    $image = json_decode($googlePost->images)[0];
-                                    } else {
-                                    $image = '/public/dummy.jpg';
-                                    }
+                                    $images = json_decode($googlePost->images, true);
+
+                                    $image = (is_array($images) && isset($images[0]))
+                                        ? $images[0]
+                                        : '/public/dummy.jpg';
 
                                     @endphp
                                     <td align="center">

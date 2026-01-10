@@ -51,6 +51,6 @@ class BackupListing extends Model
 
     public static function publisherCount(string $publisher): int
     {
-        return self::where('publisher', $publisher)->count();
+        return self::whereRaw('(mrp - selling_price) BETWEEN 1 AND 10')->where('publisher', $publisher)->count();
     }
 }

@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', __('Publisher'))
+@section('title', __('Affected Publishers List'))
 
 @push('css')
 <style>
@@ -90,10 +90,10 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header justify-content-between">
-                    <h3 class="card-title">Publishers</h3>
+                    <h3 class="card-title">Affected Publishers List</h3>
                         <div class="d-flex align-items-center justify-content-between" style="grid-gap: 10px;">
-
-                        <strong>{{ __('Total Count:') }}</strong><span>{{ $listings->total() }}</span>
+                        <strong>{{ __('Per Page Total Listing Affected:') }}</strong><span id='affected_listing'></span>
+                        <strong>{{ __('Total Publisher Affected:') }}</strong><span>{{ $listings->total() }}</span>
 
                         <form action="" method="get" id='pagingform'>
                             <select class="form-control w-100" id='paging' name="paging">
@@ -102,6 +102,8 @@
                                 <option value="100" {{ request()->paging == '100' ? 'selected' : '' }}>100</option>
                             </select>
                         </form>
+                        
+                        <a class='btn btn-primary' href='{{ route("listing.publishers.export") }}'>Export PDF</a>
                     </div>
                 </div>
 
@@ -117,14 +119,20 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @php $totalCount = 0; @endphp
                                 @forelse ($listings as $key => $googlePost)
+                                @php 
+                                    $totalCount += $googlePost->publisherCount($googlePost->publisher);
+                                @endphp
                                 <tr>
                                     <td>{{ ++$key }}</td>
                                     <td>{{ $googlePost->publisher }}</td>
-                                    <td>{{ $googlePost->publisherCount($googlePost->publisher) }}</td>
                                     <td>
-                                        <a href='{{ route("listing.specific.publishers", $googlePost->publisher) }}?paging=25'>
-                                            <i class='fa fa-eye'></i>
+                                        {{ $googlePost->publisherCount($googlePost->publisher) }}</td>
+                                    <td>
+                                        <a class='btn btn-primary' href='{{ route("listing.specific.publishers", $googlePost->publisher) }}?paging=25'>
+                                            <!--<i class='fa fa-eye'></i>-->
+                                            Click to View
                                         </a>
                                     </td>
                                 </tr>
@@ -132,6 +140,8 @@
                                 @endforelse
                             </tbody>
                         </table>
+                        
+                        <input type='hidden' value='{{ $totalCount }}' id='total_affected' />
 
                         {!! $listings->appends(request()->all())->links() !!}
                     </div>
@@ -172,6 +182,12 @@
 
 <!-- FORMELEMENTS JS -->
 <script src="/assets/js/form-elements.js"></script>
+
+<script>
+    setTimeout(function() {
+        $("#affected_listing").html($('#total_affected').val())
+    }, 500);
+</script>
 
 @include('database-listing.listting-script')
 

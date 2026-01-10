@@ -297,6 +297,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     Route::get('publishers/{publisher}', [DatabaseListingController::class, 'getSpecificPublisher'])
         ->name('listing.specific.publishers');
 
+    Route::get('export/publishers', [DatabaseListingController::class, 'export'])
+        ->name('listing.publishers.export');
+
     Route::get('edit/database/{id}', [DatabaseListingController::class, 'editInDB'])
         ->name('listing.edit.database');
 

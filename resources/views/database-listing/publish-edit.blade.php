@@ -615,7 +615,9 @@
                             @else
                             <button class="btn btn-warning float-right" id='update'>Request for update</button>
                             @endif
+                            @if(isset($listing->id))
                             <button class="btn btn-warning float-right" id='update_db'>Update (DB) </button>
+                            @endif
                         </div>
                     </div>
                 </div>

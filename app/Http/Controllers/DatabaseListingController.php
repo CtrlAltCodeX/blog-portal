@@ -1136,11 +1136,9 @@ class DatabaseListingController extends Controller
 
     public function listingExist($title, $description)
     {
-        $listing = Listing::where('title', $title)
-            ->first();
+        $listing = Listing::where('title', $title)->first();
 
-        $backupListing = BackupListing::where('title', $title)
-            ->first();
+        $backupListing = BackupListing::where('title', $title)->first();
 
         if (!$listing && !$backupListing) return false;
 
@@ -1198,7 +1196,7 @@ class DatabaseListingController extends Controller
     public function getPublisher()
     {
         $perPage = request()->paging ?? 10;
-        $listings = BackupListing::whereRaw('(mrp - selling_price) BETWEEN 1 AND 10')
+        $listings = BackupListing::whereRaw('(mrp - selling_price) BETWEEN 1 AND 5')
             ->select('publisher')
             ->groupBy('publisher')
             ->orderBy('created_at', 'desc')
@@ -1210,10 +1208,26 @@ class DatabaseListingController extends Controller
     public function getSpecificPublisher($publisher)
     {
         $perPage = request()->paging ?? 10;
-        $listings = BackupListing::where('publisher', $publisher)
+        $listings = BackupListing::whereRaw('(mrp - selling_price) BETWEEN 1 AND 5')
+            ->where('publisher', $publisher)
             ->orderBy('created_at', 'desc')
             ->paginate($perPage);
 
         return view('database-listing.specific-publisher', compact('listings'));
+    }
+
+    public function export()
+    {
+        $listings = BackupListing::whereRaw('(mrp - selling_price) BETWEEN 1 AND 5')
+            ->select('publisher')
+            ->groupBy('publisher')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $pdf = Pdf::loadView('exports.publishers', [
+            'listings' => $listings
+        ]);
+
+        return $pdf->download('publishers.pdf');
     }
 }

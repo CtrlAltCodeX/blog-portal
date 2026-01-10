@@ -120,7 +120,7 @@
                                     <th>{{ __('Labels') }}</th>
                                     <th>{{ __('Created at') }}</th>
                                     <th>{{ __('Updated at') }}</th>
-                                    <th>{{ __('Action') }}</th>
+                                    {{-- <th>{{ __('Action') }}</th> --}}
                                 </tr>
                             </thead>
                             <tbody>
@@ -153,7 +153,7 @@
                                     </td>
                                     <td>{{ date("d-m-Y h:i A", strtotime($googlePost->created_at)) }}</td>
                                     <td>{{ date("d-m-Y h:i A", strtotime($googlePost->updated_at)) }}</td>
-                                    <td>
+                                    {{-- <td>
                                         <div class='d-flex'>
                                             @can('Inventory -> Manage Inventory -> Edit')
                                             <a href="{{ route('listing.edit.database', $googlePost->product_id) }}?price_issue=true" class="btn btn-sm btn-primary">{{ __('Edit') }}</a>
@@ -168,7 +168,7 @@
                                             </form>
                                             @endcan
                                         </div>
-                                    </td>
+                                    </td> --}}
                                 </tr>
                                 @empty
                                 @endforelse
