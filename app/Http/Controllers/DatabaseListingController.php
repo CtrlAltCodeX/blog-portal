@@ -1140,7 +1140,7 @@ class DatabaseListingController extends Controller
 
         $backupListing = BackupListing::where('title', $title)->first();
 
-        if (!$listing && !$backupListing) return false;
+        if (!$listing || !$backupListing) return false;
 
         return true;
     }

@@ -42,6 +42,15 @@
     .wrap-login100 {
         width: 100% !important;
     }
+    
+    
+    .select2-container {
+        z-index:1000;
+    }
+    
+    table, tr, th, td {
+        border: 2px solid #b66767 !important;
+    }
 </style>
 @endpush
 
@@ -49,9 +58,13 @@
     .select2-container {
         z-index:1000;
     }
+    
+    table, tr, th, td {
+        border: 2px solid #b66767 !important;
+    }
 </style>
 
-<body class="app sidebar-mini ltr">
+<body class="app sidebar-mini ltr" style='background-image: url("/public-calc.jpg");background-size: cover;'>
     <div class="page">
         <div class="container-login100" >
             <div class="wrap-login100 p-6  w-100">
@@ -73,7 +86,7 @@
                         @endif
                         <div class="row">
                             <div class="form-group col-md-3">
-                                <label for="pub_name" class="form-label">{{ __('Publication') }}</label>
+                                <label for="pub_name" class="form-label">{{ __('Publisher Name') }}</label>
                                 <select class="searchable_dropdown form-control" name="pub_name" id="pub_name">
                                     <option value="">--Publication--</option>
                                     @foreach($publications as $pub)
@@ -83,7 +96,7 @@
                             </div>
                 
                             <div class="form-group col-md-3">
-                                <label for="book_name" class="form-label">{{ __('Book Type') }}</label>
+                                <label for="book_name" class="form-label">{{ __('Book Type/Category') }}</label>
                                 <select class="form-control" name="book_name" id="book_name">
                                     <option value="">-- Select Book --</option>
                                 </select>
@@ -91,22 +104,70 @@
                 
                 
                             <div class="form-group col-md-3 text-danger">
-                                <label class="form-label">{{ __('Selling Prices ( + 45 )') }}</label>
+                                <label class="form-label">Total Selling Prices <br> ( + 45, Including Shipping )</label>
                                 <div class="selling-prices">
-                                    <strong>Min Selling Price:</strong> <span id="selling_price1">--</span> <br>
-                                    <strong>Max Selling Price:</strong> <span id="selling_price2">--</span>
+                                    <strong><i class='fa fa-check'></i>Min Selling Price:</strong> <span id="selling_price1">--</span> <br>
+                                    <strong><i class='fa fa-check'></i>Max Selling Price:</strong> <span id="selling_price2">--</span>
                                 </div>
                             </div>
                 
                             <div class="form-group col-md-2 text-success">
-                                <label class="form-label">{{ __('Selling Prices ( - 45 )') }}</label>
+                                <label class="form-label">Listing Price <br> ( - 45, Exculding Shipping )</label>
                                 <div class="selling-prices">
-                                    <strong>Min Selling Price:</strong> <span id="selling_price_minus1">--</span> <br>
-                                    <strong>Max Selling Price:</strong> <span id="selling_price_minus2">--</span>
+                                    <strong><i class='fa fa-check'></i>Min Selling Price:</strong> <span id="selling_price_minus1">--</span> <br>
+                                    <strong><i class='fa fa-check'></i>Max Selling Price:</strong> <span id="selling_price_minus2">--</span>
                                 </div>
                             </div>
                             <div class="col-md-1">
-                                <strong>Weight:</strong> <span id="weight">--</span> <br>
+                                <strong>Appx. Weight:</strong> <span id="weight">--</span> <br>
+                            </div>
+                        </div>
+                        
+                        <div class="table-responsive mb-3">
+                            <table class="table table-sm table-bordered align-middle mb-0">
+                                <tbody>
+                                    <tr>
+                                        <th class="">Company Status</th>
+                                        <td><span id="company_activity">-</span></td>
+                        
+                                        <th class="">Sourcing Pattern</th>
+                                        <td><span id="sourcing_pattern">-</span></td>
+                        
+                                        <th class="">Sourcing City</th>
+                                        <td><span id="sourcing_city">-</span></td>
+                                    </tr>
+                        
+                                    <tr>
+                                        <th class="">Official URL</th>
+                                        <td><span id="official_url">-</span></td>
+                        
+                                        <th class="">SKU Pattern</th>
+                                        <td><span id="sku_pattern">-</span></td>
+                        
+                                        <th class="">Safety Gaps</th>
+                                        <td><span id="marginal_gaps">-</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class='w-100 d-flex'>
+                            <div style="width: 65%;" class="d-flex justify-content-between">
+                                <div>
+                                    <label class="form-label text-danger">Safety Total Selling Prices <br> ( + 45, Including Shipping )</label>
+                                    <div class="selling-prices">
+                                        <strong><i class='fa fa-check'></i>Min Selling Price:</strong> <span id="selling_price3">--</span> <br>
+                                        <strong><i class='fa fa-check'></i>Max Selling Price:</strong> <span id="selling_price4">--</span>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="form-label text-success">Safety Listing Price <br> ( - 45, Exculding Shipping )</label>
+                                    <div class="selling-prices">
+                                        <strong><i class='fa fa-check'></i>Min Product Price:</strong> <span id="selling_price_minus3">--</span> <br>
+                                        <strong><i class='fa fa-check'></i>Max Product Price:</strong> <span id="selling_price_minus4">--</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -117,19 +178,39 @@
     
     
     <script>
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-        });
+        // document.addEventListener('contextmenu', function(e) {
+        //     e.preventDefault();
+        // });
     </script>
 </body>
 </html>
 
 @else 
+<style>
+    table, tr, th, td {
+        border: 2px solid #b66767 !important;
+    }
+</style>
     <div class="card">
         <div class="card-body" style="background-color: antiquewhite;">
+            @if(request()->route()->getName() == 'listing.search')
+            <div class='row'>
+                <div class="form-group col-md-3">
+                    <label for="mrp" class="form-label">{{ __('MRP') }}<span class="text-danger">*</span><span class="text-success"> ( Maximum Retail Price)</span></label>
+                    <input id="mrp" type="number" class="form-control @error('mrp') is-invalid @enderror" name="mrp" value="{{ old('mrp') }}" autocomplete="mrp" autofocus placeholder="MRP">
+                    <span class="error-message mrp" style="color:red;"></span>
+        
+                    @error('mrp')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                </div>
+            </div>
+            @endif
             <div class="row">
                 <div class="form-group col-md-3">
-                    <label for="pub_name" class="form-label">{{ __('Publication') }}</label>
+                    <label for="pub_name" class="form-label">{{ __('Publisher Name') }}</label>
                     <select class="searchable_dropdown form-control" name="pub_name" id="pub_name">
                         <option value="">--Publication--</option>
                         @foreach($publications as $pub)
@@ -139,7 +220,7 @@
                 </div>
         
                 <div class="form-group col-md-3">
-                    <label for="book_name" class="form-label">{{ __('Book Type') }}</label>
+                    <label for="book_name" class="form-label">{{ __('Book Type/Category') }}</label>
                     <select class="form-control" name="book_name" id="book_name">
                         <option value="">-- Select Book --</option>
                     </select>
@@ -147,22 +228,70 @@
         
         
                 <div class="form-group col-md-3 text-danger">
-                    <label class="form-label">{{ __('Selling Prices ( + 45 )') }}</label>
+                    <label class="form-label">Total Selling Prices <br> ( + 45, Including Shipping )</label>
                     <div class="selling-prices">
-                        <strong>Min Selling Price:</strong> <span id="selling_price1">--</span> <br>
-                        <strong>Max Selling Price:</strong> <span id="selling_price2">--</span>
+                        <strong><i class='fa fa-check'></i>Min Selling Price:</strong> <span id="selling_price1">--</span> <br>
+                        <strong><i class='fa fa-check'></i>Max Selling Price:</strong> <span id="selling_price2">--</span>
                     </div>
                 </div>
         
                 <div class="form-group col-md-2 text-success">
-                    <label class="form-label">{{ __('Selling Prices ( - 45 )') }}</label>
+                    <label class="form-label">Listing Price <br> ( - 45, Exculding Shipping )</label>
                     <div class="selling-prices">
-                        <strong>Min Selling Price:</strong> <span id="selling_price_minus1">--</span> <br>
-                        <strong>Max Selling Price:</strong> <span id="selling_price_minus2">--</span>
+                        <strong><i class='fa fa-check'></i>Min Product Price:</strong> <span id="selling_price_minus1">--</span> <br>
+                        <strong><i class='fa fa-check'></i>Max Product Price:</strong> <span id="selling_price_minus2">--</span>
                     </div>
                 </div>
                 <div class="col-md-1">
-                    <strong>Weight:</strong> <span id="weight">--</span> <br>
+                    <strong>Appx. Weight:</strong> <span id="weight">--</span> <br>
+                </div>
+                
+                <div class="table-responsive mb-3">
+                    <table class="table table-sm table-bordered align-middle mb-0">
+                        <tbody>
+                            <tr>
+                                <th class="">Company Status</th>
+                                <td><span id="company_activity">-</span></td>
+                
+                                <th class="">Sourcing Pattern</th>
+                                <td><span id="sourcing_pattern">-</span></td>
+                
+                                <th class="">Sourcing City</th>
+                                <td><span id="sourcing_city">-</span></td>
+                            </tr>
+                
+                            <tr>
+                                <th class="">Official URL</th>
+                                <td><span id="official_url">-</span></td>
+                
+                                <th class="">SKU Pattern</th>
+                                <td><span id="sku_pattern">-</span></td>
+                
+                                <th class="">Safety Gaps</th>
+                                <td><span id="marginal_gaps">-</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class='w-100 d-flex'>
+                    <div style="width: 65%;" class="d-flex justify-content-between">
+                        <div>
+                            <label class="form-label text-danger">Safety Total Selling Prices <br> ( + 45, Including Shipping )</label>
+                            <div class="selling-prices">
+                                <strong><i class='fa fa-check'></i>Min Selling Price:</strong> <span id="selling_price3">--</span> <br>
+                                <strong><i class='fa fa-check'></i>Max Selling Price:</strong> <span id="selling_price4">--</span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="form-label text-success">Safety Listing Price <br> ( - 45, Exculding Shipping )</label>
+                            <div class="selling-prices">
+                                <strong><i class='fa fa-check'></i>Min Product Price:</strong> <span id="selling_price_minus3">--</span> <br>
+                                <strong><i class='fa fa-check'></i>Max Product Price:</strong> <span id="selling_price_minus4">--</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -174,12 +303,15 @@
 
 <script>
     $(document).ready(function() {
-        $(".searchable_dropdown").select2();
+        if (window.location.pathname === '/price/calculation') {
+            $(".searchable_dropdown").select2();
+        }
         
         const publications = @json($publications);
         const $pubDropdown = $("#pub_name");
         const $bookDropdown = $("#book_name");
         const $mrpInput = $("#mrp");
+        let marginalGap = 0;
         let discount = 0,
             locationDis = 0,
             enteredMRP = 0;
@@ -197,8 +329,57 @@
                     }
                 }
             }
-    
-            calculatePrice();
+            
+            let pubId = $(this).val();
+        
+            if (!pubId) {
+                resetFields();
+                return;
+            }
+        
+            $.ajax({
+                url: "{{ route('get.publication.details') }}",
+                type: "GET",
+                data: { publication_id: pubId },
+                success: function (res) {
+                    let companyActivity = res.company_activity ?? '-';
+                    let dangerStatuses = [
+                        'inactive',
+                        'in-active',
+                        'discontinued',
+                        'discontinue'
+                    ];
+                    
+                    $('#company_activity')
+                        .removeClass('text-success text-danger')
+                        .text(companyActivity);
+                    
+                    if (companyActivity !== '-') {
+                        const status = companyActivity.toLowerCase().trim();
+                    
+                        if (status === 'active') {
+                            $('#company_activity').addClass('text-success');
+                        } 
+                        else if (dangerStatuses.includes(status)) {
+                            $('#company_activity').addClass('text-danger');
+                        }
+                    }
+
+                    $('#sourcing_pattern').text(res.sourcing_pattern ?? '-');
+                    $('#sourcing_city').text(res.sourcing_city ?? '-');
+                    $('#official_url').html(
+                        res.official_url 
+                        ? `<a href="${res.official_url}" target="_blank">Click Here</a>` 
+                        : '-'
+                    );
+                    $('#sku_pattern').text(res.sku_pattern ?? '-');
+                    $('#marginal_gaps').text(res.marginal_gaps ?? '-');
+                    marginalGap = Number(res.marginal_gaps);
+                    
+                    calculatePrice();
+                }
+            });
+            
         });
     
         // Jab Book select ho
@@ -247,15 +428,26 @@
                         const transactionCost = (finalPrice + courier_rate + packing_charge) * (3 / 100);
                         const selling_price = finalPrice + courier_rate + packing_charge + transactionCost;
     
+                        let marginal_amt = (mrp*marginalGap)/100;
+                        
                         const selling_price1 = selling_price + our_min_profit_value;
                         const selling_price2 = selling_price + max_profit_value;
+                        
+                        const selling_price3 = selling_price + our_min_profit_value + marginal_amt;
+                        const selling_price4 = selling_price + max_profit_value + marginal_amt;
     
                         $("#selling_price1").text(selling_price1.toFixed(2));
                         $("#selling_price2").text(selling_price2.toFixed(2));
                         
+                        $("#selling_price3").text(selling_price3.toFixed(2));
+                        $("#selling_price4").text(selling_price4.toFixed(2));
                             
                         $("#selling_price_minus1").text(selling_price1.toFixed(2) - 45);
                         $("#selling_price_minus2").text(selling_price2.toFixed(2) - 45);
+                        
+                        $("#selling_price_minus3").text(selling_price3.toFixed(2) - 45);
+                        $("#selling_price_minus4").text(selling_price4.toFixed(2) - 45);
+                        
                         $("#weight").text(record.weight);
                     })
                     .fail(function(error) {
@@ -263,5 +455,16 @@
                     });
             }
         }
+        
+        
+        // $(document).on('change', '#pub_name', function () {
+            
+        // });
+        
+        function resetFields() {
+            $('#company_activity,#sourcing_pattern,#sourcing_city,#sku_pattern,#marginal_gaps').text('-');
+            $('#official_url').text('-');
+        }
+
     });
 </script>

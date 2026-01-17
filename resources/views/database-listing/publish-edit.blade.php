@@ -30,7 +30,9 @@
                 @endif
                 <input type="hidden" name="created_by" value="{{ $listing->created_by }}" />
                 <input type="hidden" name="product_url" value="{{ $listing->url }}" />
+                @if(request()->price_issue))
                 <input type="hidden" name="price_issue" value="{{ request()->price_issue }}" />
+                @endif
                 @if(request()->edit)
                 <input type="hidden" name="edit" value="true" />
                 @endif

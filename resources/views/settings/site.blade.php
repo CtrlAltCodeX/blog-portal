@@ -93,7 +93,7 @@ $buttonFour = explode(',',$siteSettings?->button_4);
                 </div>
 
                 <div class="form-group">
-                    <label for="name" class="form-label">{{ __('Homepage Image') }}<span class="text-danger">*</span></label>
+                    <label for="name" class="form-label">{{ __('Homepage Background Image') }}<span class="text-danger">*</span></label>
                     <div class="row mb-5">
                         <div class="col-lg-3">
                             <input type="file" class="dropify" data-bs-height="180" id="homepage_image" name="homepage_image" data-default-file="/storage/{{ $siteSettings->homepage_image??'' }}" />
@@ -101,26 +101,29 @@ $buttonFour = explode(',',$siteSettings?->button_4);
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <div class='d-flex align-items-center mt-2 cursor-pointer' style="grid-gap: 10px;cursor: pointer;">
-                        <label for="name" class="form-label">{{ __('Publisher Pricing Chart') }}<span class="text-danger">*</span></label>
-                        <a class='text-dark' href="https://listing.exam360.in/storage/Sample%20File.xlsx" title='Download Sample File' download><i class='fa fa-download'></i></a>
-                        <a href="https://listing.exam360.in/storage/site/upload_file.xlsx" title='Download Current File' download><i class='fa fa-download'></i></a>
-                    </div>
-                    <div class="row mb-5">
-                        <div class="col-lg-3">
-                            <input type="file" class="dropify" data-bs-height="180" id="upload_file" name="upload_file" />
-                        </div>
-                    </div>
-                </div>
+                <!--<div class="form-group">-->
+                <!--    <div class='d-flex align-items-center mt-2 cursor-pointer' style="grid-gap: 10px;cursor: pointer;">-->
+                <!--        <label for="name" class="form-label">{{ __('Publication Discount Chart (Public View)') }}<span class="text-danger">*</span></label>-->
+                <!--        <a class='text-dark' href="https://listing.exam360.in/storage/Sample%20File.xlsx" title='Download Sample File' download><i class='fa fa-download'></i></a>-->
+                <!--        <a href="https://listing.exam360.in/storage/site/upload_file.xlsx" title='Download Current File' download><i class='fa fa-download'></i></a>-->
+                <!--    </div>-->
+                <!--    <div class="row mb-5">-->
+                <!--        <div class="col-lg-3">-->
+                <!--            <input type="file" class="dropify" data-bs-height="180" id="upload_file" name="upload_file" />-->
+                <!--        </div>-->
+                <!--    </div>-->
+                <!--</div>-->
+
+
 
                 <!-- this is for my site  -->
 
                 <div class="form-group">
                     <div class='d-flex align-items-center mt-2 cursor-pointer' style="grid-gap: 10px;cursor: pointer;">
-                        <label for="name" class="form-label">{{ __('Purches Price V/S Weight V/S Courier') }}<span class="text-danger">*</span></label>
-                        <a class='text-dark' href="/purches_file.xlsx" title='Download Sample File' download><i class='fa fa-download'></i></a>
+                        <label for="name" class="form-label">{{ __('Weight V/S Courier V/S Packaging V/S Profit Chart') }}<span class="text-danger">*</span></label>
+                        <a class='text-dark' href="https://listing.exam360.in/purches_file.xlsx" title='Download Sample File' download><i class='fa fa-download'></i></a>
                         <a href="/storage/site/purches_price_weight.xlsx" title='Download Current File' download><i class='fa fa-download'></i></a>
+                        <!--<a href="https://listing.exam360.in/storage/site/purches_file.xlsx" title='Download Current File' download><i class='fa fa-download'></i></a>-->
                     </div>
                     <div class="row mb-5">
                         <div class="col-lg-3">
@@ -132,9 +135,10 @@ $buttonFour = explode(',',$siteSettings?->button_4);
 
                 <div class="form-group">
                     <div class='d-flex align-items-center mt-2 cursor-pointer' style="grid-gap: 10px;cursor: pointer;">
-                        <label for="name" class="form-label">{{ __('Weight V/S Courier') }}<span class="text-danger">*</span></label>
-                        <a class='text-dark' href="/weight_file.xlsx" title='Download Sample File' download><i class='fa fa-download'></i></a>
+                        <label for="name" class="form-label">{{ __('Publication Discount (Category Wise)') }}<span class="text-danger">*</span></label>
+                        <a class='text-dark' href="https://listing.exam360.in/publication_discount.xlsx" title='Download Sample File' download><i class='fa fa-download'></i></a>
                         <a href="/storage/site/weight_vs_courier.xlsx" title='Download Current File' download><i class='fa fa-download'></i></a>
+                        <!--<a href="https://listing.exam360.in/storage/site/weight_file.xlsx" title='Download Current File' download><i class='fa fa-download'></i></a>-->
                     </div>
                     <div class="row mb-5">
                         <div class="col-lg-3">

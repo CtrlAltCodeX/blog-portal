@@ -474,6 +474,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     Route::get('/getpublications', [PublicationController::class, 'getpublications'])
         ->name('getpublications');
 
+    Route::get('/publication/details', [PublicationController::class, 'details'])
+        ->name('get.publication.details');
+
     Route::get('/get/ai/description', [ChatGptController::class, 'openAi'])
         ->name('ai.description');
 

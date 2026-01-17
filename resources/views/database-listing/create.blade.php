@@ -36,7 +36,7 @@
 
         <div class="row">
             <div class="col-md-9 col-xl-12 fields">
- @include('components.fetch-product')
+                @include('components.fetch-product')
   
                 <div class="card">
                     

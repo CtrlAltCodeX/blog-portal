@@ -67,7 +67,7 @@ class ListingController extends Controller
         $siteSetting = SiteSetting::first();
         $publications  = WeightVSCourier::all();
 
-        return view('listing.create', compact('categories', 'siteSetting','publications'));
+        return view('listing.create', compact('categories', 'siteSetting', 'publications'));
     }
 
     public function getPriceRecords(Request $request)
@@ -517,11 +517,12 @@ class ListingController extends Controller
         $publications = [];
 
         if (request()->p) {
-            $publications = WeightVSCourier::where('pub_name', request()->p)
-                ->get();
+            $publications = WeightVSCourier::where('pub_name', request()->p)->get();
         }
 
-        return view('listing.search', compact('googlePosts', 'publications'));
+        $publishers = WeightVSCourier::all();
+
+        return view('listing.search', compact('googlePosts', 'publications', 'publishers'));
     }
 
     public function inventoryReviewExport()

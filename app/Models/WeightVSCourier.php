@@ -27,5 +27,11 @@ class WeightVSCourier extends Model
         'book_discount_6',
         'location_dis',
         'link',
+        'company_activity',
+        'sourcing_pattern',
+        'sourcing_city',
+        'official_url',
+        'sku_pattern',
+        'marginal_gaps',
     ];
 }

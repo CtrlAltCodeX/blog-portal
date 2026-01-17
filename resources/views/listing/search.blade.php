@@ -7,98 +7,230 @@
     ul {
         justify-content: end;
     }
+    
+    .publisher-scroll {
+        height: 300px;            /* vertical scroll */
+        overflow-x: scroll;       /* horizontal scroll */
+        overflow-y: scroll;       /* vertical scroll */
+        white-space: nowrap;
+    }
+    
+    /* Force horizontal overflow */
+    #basic-datatable {
+        min-width: 2500px;        /* MUST be larger than screen */
+    }
+
+
+    .publisher-scroll table {
+        min-width: 2200px;        /* force horizontal scroll */
+    }
+
+    .publisher-scroll::-webkit-scrollbar {
+        width: 16px;   /* increase vertical scrollbar width */
+    }
+
+    .publisher-scroll::-webkit-scrollbar-thumb {
+        background: black;
+    }
+    
+    .publisher-scroll::-webkit-scrollbar-thumb:hover {
+        background: black;
+    }
+    
+    #basic-datatable thead th {
+        position: sticky;
+        top: 0;
+        background: #fff;
+        z-index: 5;
+    }
+
+    #basic-datatable th:first-child,
+    #basic-datatable td:first-child {
+        position: sticky;
+        left: 0;
+        background: #fff;
+        z-index: 6;
+    }
+
 </style>
 @endpush
 @section('content')
 
 <div>
-    @can('Product Listing > Search Listing (M/S) > Discount')
-            <div class='row'>
-                <div class='col-md-6'>
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>Find Publisher Discount</h5>
-                        </div>
-                        <div class="card-body">
-                            <form action="{{ route('listing.search') }}" class="text-center">
-                                <!--<label>To Begin Adding New Products</label><br>-->
-                                <label>
-                                    <h3><b>Enter Publication Name</b></h3>
-                                </label>
-                                <br />
-                                <label>Write Correct Publisher Name to get Correct Results.</label><br>
-                                <div class="d-flex align-items-center">
-                                    <input type="text" class="form-control" name="p" id="publisher-search" placeholder="Search by Publication Name" value="{{ request()->q }}" />
-                                    <button type="submit" class="btn btn-primary mt-2 m-2">Search</button>
-                                </div>
-                                <ul id="suggestions" class="list-group position-absolute mt-1 z-10" style="z-index: 100; display: none;"></ul>
-                            </form>
-                        </div>
-                    </div>
+    @can('Search Listing (M/S) > Normal Discount Table')
+    <div class='row'>
+        <div class='col-md-6'>
+            <div class="card">
+                <div class="card-header">
+                    <h5>Find Publisher Discount</h5>
                 </div>
-                
-                <div class='col-md-6'>
-                    @if (request()->p)
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>Publisher Discount Results:</h5>
+                <div class="card-body">
+                    <form action="{{ route('listing.search') }}" class="text-center">
+                        <!--<label>To Begin Adding New Products</label><br>-->
+                        <label>
+                            <h3><b>Enter Publication Name</b></h3>
+                        </label>
+                        <br />
+                        <label>Write Correct Publisher Name to get Correct Results.</label><br>
+                        <div class="d-flex align-items-center">
+                            <input type="text" class="form-control" name="p" id="publisher-search" placeholder="Search by Publication Name" value="{{ request()->q }}" />
+                            <button type="submit" class="btn btn-primary mt-2 m-2">Search</button>
                         </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">
-                                    <thead>
-                                        <tr>
-                                            <th>{{ __('Publication Name') }}</th>
-                                            <th>{{ __('Book Type 1') }}</th>
-                                            <th>{{ __('Discount 1') }}</th>
-                                            <th>{{ __('Book Type 2') }}</th>
-                                            <th>{{ __('Discount 2') }}</th>
-                                            <th>{{ __('Book Type 3') }}</th>
-                                            <th>{{ __('Discount 3') }}</th>
-                                            <th>{{ __('Book Type 4') }}</th>
-                                            <th>{{ __('Discount 4') }}</th>
-                                            <th>{{ __('Book Type 5') }}</th>
-                                            <th>{{ __('Discount 5') }}</th>
-                                            <th>{{ __('Book Type 6') }}</th>
-                                            <th>{{ __('Discount 6') }}</th>
-                                            <th>{{ __('Location') }}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @forelse($publications as $publisher)
-                                        <tr>
-                                            <td>{{ $publisher->pub_name }}</td>
-                                            <td>{{ $publisher->book_type_1 }}</td>
-                                            <td>{{ $publisher->book_discount_1 ? $publisher->book_discount_1."%" : '' }}</td>
-                                            <td>{{ $publisher->book_type_2 }}</td>
-                                            <td>{{ $publisher->book_discount_2 ? $publisher->book_discount_2."%" : '' }}</td>
-                                            <td>{{ $publisher->book_type_3 }}</td>
-                                            <td>{{ $publisher->book_discount_3 ? $publisher->book_discount_3."%" : '' }}</td>
-                                            <td>{{ $publisher->book_type_4 }}</td>
-                                            <td>{{ $publisher->book_discount_4 ? $publisher->book_discount_4."%" : '' }}</td>
-                                            <td>{{ $publisher->book_type_5 }}</td>
-                                            <td>{{ $publisher->book_discount_5 ? $publisher->book_discount_5."%" : '' }}</td>
-                                            <td>{{ $publisher->book_type_6 }}</td>
-                                            <td>{{ $publisher->book_discount_6 ? $publisher->book_discount_6."%" : '' }}</td>
-                                            <td>{{ $publisher->location_dis }}</td>
-                                        </tr>
-                                        @empty
-                                        @endforelse
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    @endif
+                        <ul id="suggestions" class="list-group position-absolute mt-1 z-10" style="z-index: 100; display: none;"></ul>
+                    </form>
                 </div>
             </div>
-            @endcan
-            
+        </div>
+        
+        <div class='col-md-6'>
+            @if (request()->p)
+            <div class="card">
+                <div class="card-header">
+                    <h5>All Publisher List:</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-nowrap border-bottom">
+                            <thead>
+                                <tr>
+                                    <th>{{ __('Publication Name') }}</th>
+                                    <th>{{ __('Book Type 1') }}</th>
+                                    <th>{{ __('Discount 1') }}</th>
+                                    <th>{{ __('Book Type 2') }}</th>
+                                    <th>{{ __('Discount 2') }}</th>
+                                    <th>{{ __('Book Type 3') }}</th>
+                                    <th>{{ __('Discount 3') }}</th>
+                                    <th>{{ __('Book Type 4') }}</th>
+                                    <th>{{ __('Discount 4') }}</th>
+                                    <th>{{ __('Book Type 5') }}</th>
+                                    <th>{{ __('Discount 5') }}</th>
+                                    <th>{{ __('Book Type 6') }}</th>
+                                    <th>{{ __('Discount 6') }}</th>
+                                    <th>{{ __('Location') }}</th>
+                                    <th>{{ __('Company Activity') }}</th>
+                                    <th>{{ __('Sourcing Pattern') }}</th>
+                                    <th>{{ __('Sourcing City') }}</th>
+                                    <th>{{ __('Official URL') }}</th>
+                                    <th>{{ __('SKU Pattern') }}</th>
+                                    <th>{{ __('Marginal Gaps') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($publications as $publisher)
+                                <tr>
+                                    <td>{{ $publisher->pub_name }}</td>
+                                    <td>{{ $publisher->book_type_1 }}</td>
+                                    <td>{{ $publisher->book_discount_1 ? $publisher->book_discount_1."%" : '' }}</td>
+                                    <td>{{ $publisher->book_type_2 }}</td>
+                                    <td>{{ $publisher->book_discount_2 ? $publisher->book_discount_2."%" : '' }}</td>
+                                    <td>{{ $publisher->book_type_3 }}</td>
+                                    <td>{{ $publisher->book_discount_3 ? $publisher->book_discount_3."%" : '' }}</td>
+                                    <td>{{ $publisher->book_type_4 }}</td>
+                                    <td>{{ $publisher->book_discount_4 ? $publisher->book_discount_4."%" : '' }}</td>
+                                    <td>{{ $publisher->book_type_5 }}</td>
+                                    <td>{{ $publisher->book_discount_5 ? $publisher->book_discount_5."%" : '' }}</td>
+                                    <td>{{ $publisher->book_type_6 }}</td>
+                                    <td>{{ $publisher->book_discount_6 ? $publisher->book_discount_6."%" : '' }}</td>
+                                    <td>{{ $publisher->location_dis }}</td>
+                                    <td>{{ $publisher->company_activity }}</td>
+                                    <td>{{ $publisher->sourcing_pattern }}</td>
+                                    <td>{{ $publisher->sourcing_city }}</td>
+                                    <td>{{ $publisher->official_url }}</td>
+                                    <td>{{ $publisher->sku_pattern }}</td>
+                                    <td>{{ $publisher->marginal_gaps }}</td>
+                                </tr>
+                                @empty
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            @endif
+        </div>
+    </div>
+    @endcan
+    
+    <div class='row'>
+        @can('Search Listing (M/S) -> All Publisher List')
+        <div class='col-md-12' >
+            <div class="card" style="height: 360px;">
+                <div class="card-header">
+                    <h5>All Publisher List:</h5>
+                </div>
+                <div class="card-body publisher-scroll">
+                    <div class="table-responsive">
+                        <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">
+                            <thead>
+                                <tr>
+                                    <th>{{ __('Publication Name') }}</th>
+                                    <th>{{ __('Book Type 1') }}</th>
+                                    <th>{{ __('Discount 1') }}</th>
+                                    <th>{{ __('Book Type 2') }}</th>
+                                    <th>{{ __('Discount 2') }}</th>
+                                    <th>{{ __('Book Type 3') }}</th>
+                                    <th>{{ __('Discount 3') }}</th>
+                                    <th>{{ __('Book Type 4') }}</th>
+                                    <th>{{ __('Discount 4') }}</th>
+                                    <th>{{ __('Book Type 5') }}</th>
+                                    <th>{{ __('Discount 5') }}</th>
+                                    <th>{{ __('Book Type 6') }}</th>
+                                    <th>{{ __('Discount 6') }}</th>
+                                    <th>{{ __('Location') }}</th>
+                                    <th>{{ __('Company Activity') }}</th>
+                                    <th>{{ __('Sourcing Pattern') }}</th>
+                                    <th>{{ __('Sourcing City') }}</th>
+                                    <th>{{ __('Official URL') }}</th>
+                                    <th>{{ __('SKU Pattern') }}</th>
+                                    <th>{{ __('Marginal Gaps') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($publishers as $publisher)
+                                <tr>
+                                    <td>{{ $publisher->pub_name }}</td>
+                                    <td>{{ $publisher->book_type_1 }}</td>
+                                    <td>{{ $publisher->book_discount_1 ? $publisher->book_discount_1."%" : '' }}</td>
+                                    <td>{{ $publisher->book_type_2 }}</td>
+                                    <td>{{ $publisher->book_discount_2 ? $publisher->book_discount_2."%" : '' }}</td>
+                                    <td>{{ $publisher->book_type_3 }}</td>
+                                    <td>{{ $publisher->book_discount_3 ? $publisher->book_discount_3."%" : '' }}</td>
+                                    <td>{{ $publisher->book_type_4 }}</td>
+                                    <td>{{ $publisher->book_discount_4 ? $publisher->book_discount_4."%" : '' }}</td>
+                                    <td>{{ $publisher->book_type_5 }}</td>
+                                    <td>{{ $publisher->book_discount_5 ? $publisher->book_discount_5."%" : '' }}</td>
+                                    <td>{{ $publisher->book_type_6 }}</td>
+                                    <td>{{ $publisher->book_discount_6 ? $publisher->book_discount_6."%" : '' }}</td>
+                                    <td>{{ $publisher->location_dis }}</td>
+                                    <td>{{ $publisher->company_activity }}</td>
+                                    <td>{{ $publisher->sourcing_pattern }}</td>
+                                    <td>{{ $publisher->sourcing_city }}</td>
+                                    <td>{{ $publisher->official_url }}</td>
+                                    <td>{{ $publisher->sku_pattern }}</td>
+                                    <td>{{ $publisher->marginal_gaps }}</td>
+                                </tr>
+                                @empty
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endcan
+    </div>
+    
+    @can('Search Listing (M/S) -> Price Calculator Box')
+    @include('price-calculator')
+    @endcan
+    
+    @can('Search Listing (M/S) -> Search & Edit Product')
     <div class="row row-sm">
         <div class="col-lg-12">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header justify-content-between">
                     <h5>Search Products ( M/S )</h5>
+                    <a href='{{ route("price.calculation") }}' target='_blank' class='btn btn-success'>Selling Price Calculator</a>
                 </div>
                 <div class="card-body">
                     <form action="{{ route('listing.search') }}" class="text-center">
@@ -260,10 +392,9 @@
                 </div>
             </div>
             @endif
-            
-            
         </div>
     </div>
+    @endcan
 </div>
 
 @endsection
@@ -298,7 +429,7 @@
         //______Basic Data Table
         $('#basic-datatable').DataTable({
             "paging": false,
-            'searching': false
+            'searching': true
         });
 
         $("#category").on("change", function() {
