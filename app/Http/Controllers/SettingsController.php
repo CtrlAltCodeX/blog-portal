@@ -9,9 +9,11 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Publication;
 use App\Models\PurchesPriceWeightCourier;
 use App\Models\WeightVSCourier;
+use App\Models\BookSupplierRate;
 use App\Imports\PublicationsImport;
 use App\Imports\PurchesPriceWeightCourierImport;
 use App\Imports\WeightVSCourierImport;
+use App\Imports\BookSupplierRateImport;
 
 class SettingsController extends Controller
 {
@@ -79,10 +81,8 @@ class SettingsController extends Controller
                 ->storeAs("/public/" . $uploadFileName);
 
             Publication::truncate();
-
             Excel::import(new PublicationsImport, storage_path('app/public/' . $uploadFileName));
         }
-
 
         if (request()->file('purches_file')) {
             $filePath = "site/purches_price_weight.xlsx";
@@ -91,11 +91,20 @@ class SettingsController extends Controller
             Excel::import(new PurchesPriceWeightCourierImport, storage_path('app/public/' . $filePath));
         }
 
-        if (request()->file('weight_file')) {
-            $filePath = "site/weight_vs_courier.xlsx";
-            request()->file('weight_file')->storeAs("/public/" . $filePath);
-            WeightVSCourier::truncate();
-            Excel::import(new WeightVSCourierImport, storage_path('app/public/' . $filePath));
+        if (request()->file('offer_item_rates')) {
+            $filePath = "site/offer_item_rates.xlsx";
+            request()->file('offer_item_rates')->storeAs("/public/" . $filePath);
+            BookSupplierRate::truncate();
+            Excel::import(new BookSupplierRateImport, storage_path('app/public/' . $filePath));
+        }
+
+        if (request()->file('upload_file')) {
+            $uploadFileName = "site/upload_file.xlsx";
+            request()->file('upload_file')
+                ->storeAs("/public/" . $uploadFileName);
+
+            Publication::truncate();
+            Excel::import(new PublicationsImport, storage_path('app/public/' . $uploadFileName));
         }
 
         if (request()->file('product_background_image')) {

@@ -12,6 +12,7 @@ use App\Models\PurchesPriceWeightCourier;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Exports\InventoryReviewExport;
+use App\Models\BookSupplierRate;
 use Maatwebsite\Excel\Facades\Excel;
 
 
@@ -509,20 +510,23 @@ class ListingController extends Controller
     public function search()
     {
         $googlePosts = [];
-
         if (request()->q) {
             $googlePosts = $this->googleService->posts();
         }
 
-        $publications = [];
-
+        $publicationsDiscount = [];
+        $search_books_supplier_rates = [];
         if (request()->p) {
-            $publications = WeightVSCourier::where('pub_name', request()->p)->get();
+            $publicationsDiscount = WeightVSCourier::where('pub_name', request()->p)->get();
+
+            $search_books_supplier_rates = BookSupplierRate::where('publisher_name', request()->p)->get();
         }
 
-        $publishers = WeightVSCourier::all();
+        $publications = WeightVSCourier::all();
 
-        return view('listing.search', compact('googlePosts', 'publications', 'publishers'));
+        $books_supplier_rates = BookSupplierRate::all();
+
+        return view('listing.search', compact('googlePosts', 'publicationsDiscount', 'publications', 'search_books_supplier_rates', 'books_supplier_rates'));
     }
 
     public function inventoryReviewExport()

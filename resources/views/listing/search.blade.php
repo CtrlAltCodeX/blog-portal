@@ -89,8 +89,154 @@
                     <h5>All Publisher List:</h5>
                 </div>
                 <div class="card-body">
+                    <h5>
+                        <strong>Publications</strong>
+                    </h5>
                     <div class="table-responsive">
                         <table class="table table-bordered text-nowrap border-bottom">
+                            <thead>
+                                <tr>
+                                    <th>{{ __('Publication Name') }}</th>
+                                    <th>{{ __('Book Type 1') }}</th>
+                                    <th>{{ __('Discount 1') }}</th>
+                                    <th>{{ __('Book Type 2') }}</th>
+                                    <th>{{ __('Discount 2') }}</th>
+                                    <th>{{ __('Book Type 3') }}</th>
+                                    <th>{{ __('Discount 3') }}</th>
+                                    <th>{{ __('Book Type 4') }}</th>
+                                    <th>{{ __('Discount 4') }}</th>
+                                    <th>{{ __('Book Type 5') }}</th>
+                                    <th>{{ __('Discount 5') }}</th>
+                                    <th>{{ __('Book Type 6') }}</th>
+                                    <th>{{ __('Discount 6') }}</th>
+                                    <th>{{ __('Location') }}</th>
+                                    <th>{{ __('Company Activity') }}</th>
+                                    <th>{{ __('Sourcing Pattern') }}</th>
+                                    <th>{{ __('Sourcing City') }}</th>
+                                    <th>{{ __('Official URL') }}</th>
+                                    <th>{{ __('SKU Pattern') }}</th>
+                                    <th>{{ __('Marginal Gaps') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($publicationsDiscount as $publisher)
+                                <tr>
+                                    <td>{{ $publisher->pub_name }}</td>
+                                    <td>{{ $publisher->book_type_1 }}</td>
+                                    <td>{{ $publisher->book_discount_1 ? $publisher->book_discount_1."%" : '' }}</td>
+                                    <td>{{ $publisher->book_type_2 }}</td>
+                                    <td>{{ $publisher->book_discount_2 ? $publisher->book_discount_2."%" : '' }}</td>
+                                    <td>{{ $publisher->book_type_3 }}</td>
+                                    <td>{{ $publisher->book_discount_3 ? $publisher->book_discount_3."%" : '' }}</td>
+                                    <td>{{ $publisher->book_type_4 }}</td>
+                                    <td>{{ $publisher->book_discount_4 ? $publisher->book_discount_4."%" : '' }}</td>
+                                    <td>{{ $publisher->book_type_5 }}</td>
+                                    <td>{{ $publisher->book_discount_5 ? $publisher->book_discount_5."%" : '' }}</td>
+                                    <td>{{ $publisher->book_type_6 }}</td>
+                                    <td>{{ $publisher->book_discount_6 ? $publisher->book_discount_6."%" : '' }}</td>
+                                    <td>{{ $publisher->location_dis }}</td>
+                                    <td>{{ $publisher->company_activity }}</td>
+                                    <td>{{ $publisher->sourcing_pattern }}</td>
+                                    <td>{{ $publisher->sourcing_city }}</td>
+                                    <td>{{ $publisher->official_url }}</td>
+                                    <td>{{ $publisher->sku_pattern }}</td>
+                                    <td>{{ $publisher->marginal_gaps }}</td>
+                                </tr>
+                                @empty
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h5 class='mt-5'>
+                        <strong>Book Supplier Rates:</strong>
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-nowrap border-bottom">
+                            <thead>
+                                <tr>
+                                    <th>{{ __('Book Title') }}</th>
+                                    <th>{{ __('Publisher Name') }}</th>
+                                    <th>{{ __('Supplier 1 Rate') }}</th>
+                                    <th>{{ __('Supplier 2 Rate') }}</th>
+                                    <th>{{ __('Supplier 3 Rate') }}</th>
+                                    <th>{{ __('Supplier 4 Rate') }}</th>
+                                    <th>{{ __('Supplier 5 Rate') }}</th>
+                                    <th>{{ __('Supplier 6 Rate') }}</th>
+                                    <th>{{ __('Supplier 7 Rate') }}</th>
+                                    <th>{{ __('Supplier 8 Rate') }}</th>
+                                    <th>{{ __('Supplier 9 Rate') }}</th>
+                                    <th>{{ __('Supplier 10 Rate') }}</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @forelse($search_books_supplier_rates as $book)
+                                    <tr>
+                                        <td>{{ $book->book_title }}</td>
+                                        <td>{{ $book->publisher_name }}</td>
+
+                                        <td>{{ $book->supplier_1_rate ?? '-' }}</td>
+                                        <td>{{ $book->supplier_2_rate ?? '-' }}</td>
+                                        <td>{{ $book->supplier_3_rate ?? '-' }}</td>
+                                        <td>{{ $book->supplier_4_rate ?? '-' }}</td>
+                                        <td>{{ $book->supplier_5_rate ?? '-' }}</td>
+                                        <td>{{ $book->supplier_6_rate ?? '-' }}</td>
+                                        <td>{{ $book->supplier_7_rate ?? '-' }}</td>
+                                        <td>{{ $book->supplier_8_rate ?? '-' }}</td>
+                                        <td>{{ $book->supplier_9_rate ?? '-' }}</td>
+                                        <td>{{ $book->supplier_10_rate ?? '-' }}</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="12" class="text-center text-muted">
+                                            {{ __('No records found') }}
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            @endif
+        </div>
+    </div>
+    @endcan
+    
+    <div class='row'>
+        @can('Search Listing (M/S) -> All Publisher List')
+        <div class='col-md-12' >
+            <div class="card" style="height: 360px;">
+                <div class="card-header">
+                    <div class='d-flex justify-content-between align-items-center w-100'>
+                        <h5>All Publisher List:</h5>
+                        
+                        <div>
+                            <label>
+                                <strong>{{ __('Select Rate Type:') }}</strong>
+                            </label>
+                            <br>
+
+                            <form action='' method='get' id='rate_type_form'>
+                                <label>
+                                    Without Offers
+                                    <input type='radio' class='rate_type' value='without_offer' name='publisher_rates' 
+                                    {{ request()->publisher_rates == 'without_offer' ? 'checked' : '' }} />
+                                </label>
+                                <label>
+                                    With Offers
+                                    <input type='radio' class='rate_type' value='with_offer' name='publisher_rates' 
+                                    {{ request()->publisher_rates == 'with_offer' ? 'checked' : '' }} />
+                                </label>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body publisher-scroll">
+                    @if(request()->publisher_rates == 'without_offer')
+                    <div class="table-responsive">
+                        <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">
                             <thead>
                                 <tr>
                                     <th>{{ __('Publication Name') }}</th>
@@ -144,76 +290,55 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
-            </div>
-            @endif
-        </div>
-    </div>
-    @endcan
-    
-    <div class='row'>
-        @can('Search Listing (M/S) -> All Publisher List')
-        <div class='col-md-12' >
-            <div class="card" style="height: 360px;">
-                <div class="card-header">
-                    <h5>All Publisher List:</h5>
-                </div>
-                <div class="card-body publisher-scroll">
+                    @endif
+                    @if(request()->publisher_rates == 'with_offer')
                     <div class="table-responsive">
-                        <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">
+                        <table class="table table-bordered text-nowrap border-bottom">
                             <thead>
                                 <tr>
-                                    <th>{{ __('Publication Name') }}</th>
-                                    <th>{{ __('Book Type 1') }}</th>
-                                    <th>{{ __('Discount 1') }}</th>
-                                    <th>{{ __('Book Type 2') }}</th>
-                                    <th>{{ __('Discount 2') }}</th>
-                                    <th>{{ __('Book Type 3') }}</th>
-                                    <th>{{ __('Discount 3') }}</th>
-                                    <th>{{ __('Book Type 4') }}</th>
-                                    <th>{{ __('Discount 4') }}</th>
-                                    <th>{{ __('Book Type 5') }}</th>
-                                    <th>{{ __('Discount 5') }}</th>
-                                    <th>{{ __('Book Type 6') }}</th>
-                                    <th>{{ __('Discount 6') }}</th>
-                                    <th>{{ __('Location') }}</th>
-                                    <th>{{ __('Company Activity') }}</th>
-                                    <th>{{ __('Sourcing Pattern') }}</th>
-                                    <th>{{ __('Sourcing City') }}</th>
-                                    <th>{{ __('Official URL') }}</th>
-                                    <th>{{ __('SKU Pattern') }}</th>
-                                    <th>{{ __('Marginal Gaps') }}</th>
+                                    <th>{{ __('Book Title') }}</th>
+                                    <th>{{ __('Publisher Name') }}</th>
+                                    <th>{{ __('Supplier 1 Rate') }}</th>
+                                    <th>{{ __('Supplier 2 Rate') }}</th>
+                                    <th>{{ __('Supplier 3 Rate') }}</th>
+                                    <th>{{ __('Supplier 4 Rate') }}</th>
+                                    <th>{{ __('Supplier 5 Rate') }}</th>
+                                    <th>{{ __('Supplier 6 Rate') }}</th>
+                                    <th>{{ __('Supplier 7 Rate') }}</th>
+                                    <th>{{ __('Supplier 8 Rate') }}</th>
+                                    <th>{{ __('Supplier 9 Rate') }}</th>
+                                    <th>{{ __('Supplier 10 Rate') }}</th>
                                 </tr>
                             </thead>
+
                             <tbody>
-                                @forelse($publishers as $publisher)
-                                <tr>
-                                    <td>{{ $publisher->pub_name }}</td>
-                                    <td>{{ $publisher->book_type_1 }}</td>
-                                    <td>{{ $publisher->book_discount_1 ? $publisher->book_discount_1."%" : '' }}</td>
-                                    <td>{{ $publisher->book_type_2 }}</td>
-                                    <td>{{ $publisher->book_discount_2 ? $publisher->book_discount_2."%" : '' }}</td>
-                                    <td>{{ $publisher->book_type_3 }}</td>
-                                    <td>{{ $publisher->book_discount_3 ? $publisher->book_discount_3."%" : '' }}</td>
-                                    <td>{{ $publisher->book_type_4 }}</td>
-                                    <td>{{ $publisher->book_discount_4 ? $publisher->book_discount_4."%" : '' }}</td>
-                                    <td>{{ $publisher->book_type_5 }}</td>
-                                    <td>{{ $publisher->book_discount_5 ? $publisher->book_discount_5."%" : '' }}</td>
-                                    <td>{{ $publisher->book_type_6 }}</td>
-                                    <td>{{ $publisher->book_discount_6 ? $publisher->book_discount_6."%" : '' }}</td>
-                                    <td>{{ $publisher->location_dis }}</td>
-                                    <td>{{ $publisher->company_activity }}</td>
-                                    <td>{{ $publisher->sourcing_pattern }}</td>
-                                    <td>{{ $publisher->sourcing_city }}</td>
-                                    <td>{{ $publisher->official_url }}</td>
-                                    <td>{{ $publisher->sku_pattern }}</td>
-                                    <td>{{ $publisher->marginal_gaps }}</td>
-                                </tr>
+                                @forelse($books_supplier_rates as $book)
+                                    <tr>
+                                        <td>{{ $book->book_title }}</td>
+                                        <td>{{ $book->publisher_name }}</td>
+
+                                        <td>{{ $book->supplier_1_rate ?? '-' }}</td>
+                                        <td>{{ $book->supplier_2_rate ?? '-' }}</td>
+                                        <td>{{ $book->supplier_3_rate ?? '-' }}</td>
+                                        <td>{{ $book->supplier_4_rate ?? '-' }}</td>
+                                        <td>{{ $book->supplier_5_rate ?? '-' }}</td>
+                                        <td>{{ $book->supplier_6_rate ?? '-' }}</td>
+                                        <td>{{ $book->supplier_7_rate ?? '-' }}</td>
+                                        <td>{{ $book->supplier_8_rate ?? '-' }}</td>
+                                        <td>{{ $book->supplier_9_rate ?? '-' }}</td>
+                                        <td>{{ $book->supplier_10_rate ?? '-' }}</td>
+                                    </tr>
                                 @empty
+                                    <tr>
+                                        <td colspan="12" class="text-center text-muted">
+                                            {{ __('No records found') }}
+                                        </td>
+                                    </tr>
                                 @endforelse
                             </tbody>
                         </table>
                     </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -426,7 +551,8 @@
 
 <script>
     $(document).ready(function() {
-        //______Basic Data Table
+        $(".searchable_dropdown").select2();
+        
         $('#basic-datatable').DataTable({
             "paging": false,
             'searching': true
@@ -434,7 +560,11 @@
 
         $("#category").on("change", function() {
             $("#form").submit();
-        })
+        });
+
+        $(".rate_type").on("change", function() {
+            $("#rate_type_form").submit();
+        });
     })
 </script>
 

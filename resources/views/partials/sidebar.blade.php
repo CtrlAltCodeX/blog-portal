@@ -53,7 +53,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         @endcan
                         
                         @can('Listing -> Search Listing')
-                        <li><a href="{{ route('listing.search') }}" class="slide-item {{ (request()->is('admin/search')) ? 'active' : '' }}">{{ __('Search Listing ( M/S )') }}</a></li>
+                        <li><a href="{{ route('listing.search', ['publisher_rates' => 'without_offer']) }}" class="slide-item {{ (request()->is('admin/search')) ? 'active' : '' }}">{{ __('Search Listing ( M/S )') }}</a></li>
                         @endcan
                         
                         @can('Product Listing > Bulk Listing Upload')

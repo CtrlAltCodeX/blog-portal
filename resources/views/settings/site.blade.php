@@ -147,6 +147,20 @@ $buttonFour = explode(',',$siteSettings?->button_4);
                     </div>
                 </div>
 
+
+                <div class="form-group">
+                    <div class='d-flex align-items-center mt-2 cursor-pointer' style="grid-gap: 10px;cursor: pointer;">
+                        <label for="name" class="form-label">{{ __('Offer Item Rates') }}<span class="text-danger">*</span></label>
+                        <a class='text-dark' href="https://listing.exam360.in/offer_item_rate_list.xlsx" title='Download Sample File' download><i class='fa fa-download'></i></a>
+                        <a href="/storage/site/offer_item_rate_list.xlsx" title='Download Current File' download><i class='fa fa-download'></i></a>
+                    </div>
+                    <div class="row mb-5">
+                        <div class="col-lg-3">
+                            <input type="file" class="dropify" data-bs-height="180" id="offer_item_rates" name="offer_item_rates" />
+                        </div>
+                    </div>
+                </div>
+
                 @can('Settings -> Site Update')
                 <button class="btn btn-primary mt-5" id="refresh_token">Save</button>
                 @endcan
