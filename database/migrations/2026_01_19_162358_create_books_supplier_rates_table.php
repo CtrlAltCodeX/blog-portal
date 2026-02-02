@@ -14,19 +14,19 @@ return new class extends Migration
         Schema::create('books_supplier_rates', function (Blueprint $table) {
             $table->id();
 
-            $table->string('book_title');
-            $table->string('publisher_name');
+            $table->string('book_title')->nullable();
+            $table->string('publisher_name')->nullable();
 
-            $table->decimal('supplier_1_rate', 10, 2)->nullable();
-            $table->decimal('supplier_2_rate', 10, 2)->nullable();
-            $table->decimal('supplier_3_rate', 10, 2)->nullable();
-            $table->decimal('supplier_4_rate', 10, 2)->nullable();
-            $table->decimal('supplier_5_rate', 10, 2)->nullable();
-            $table->decimal('supplier_6_rate', 10, 2)->nullable();
-            $table->decimal('supplier_7_rate', 10, 2)->nullable();
-            $table->decimal('supplier_8_rate', 10, 2)->nullable();
-            $table->decimal('supplier_9_rate', 10, 2)->nullable();
-            $table->decimal('supplier_10_rate', 10, 2)->nullable();
+            $table->string('supplier_1_rate')->nullable();
+            $table->string('supplier_2_rate')->nullable();
+            $table->string('supplier_3_rate')->nullable();
+            $table->string('supplier_4_rate')->nullable();
+            $table->string('supplier_5_rate')->nullable();
+            $table->string('supplier_6_rate')->nullable();
+            $table->string('supplier_7_rate')->nullable();
+            $table->string('supplier_8_rate')->nullable();
+            $table->string('supplier_9_rate')->nullable();
+            $table->string('supplier_10_rate')->nullable();
 
             $table->timestamps();
         });

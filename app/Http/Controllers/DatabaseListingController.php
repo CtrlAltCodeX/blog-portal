@@ -1064,14 +1064,15 @@ class DatabaseListingController extends Controller
         $listing = Listing::create($allInfo);
 
         if (!isset(request()->duplicate)) {
+            $featureImage = json_decode($listing->images);
             $data = [
-                'image' => $listing->images[0],
+                'image' => $featureImage ? $featureImage[0] : null,
                 'title' => $listing->title,
                 'created_by' => auth()->user()->id,
                 'approved_by' => null,
                 'approved_at' => null,
                 'status' => 0,
-                'status_listing' => 'Edited',
+                'status_listing' => !request()->price_issue ? 'Edited' : 'Price Issue',
                 'listings_id' =>  $listing->id
             ];
 
@@ -1079,6 +1080,8 @@ class DatabaseListingController extends Controller
 
             if (!request()->price_issue) {
                 $this->updateTheCount('Edited', 'create_count');
+            } else {
+                $this->updateTheCount('Price Issue', 'create_count');
             }
 
             session()->flash('success', 'Pending for Approval');

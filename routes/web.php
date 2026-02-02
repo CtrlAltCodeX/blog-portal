@@ -16,6 +16,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\BackupListingsController;
 use App\Http\Controllers\BulkUploadController;
+use App\Http\Controllers\CandidatesController;
 use App\Http\Controllers\DatabaseListingController;
 use App\Http\Controllers\ImageMakerController;
 use App\Http\Controllers\PublicationController;
@@ -72,7 +73,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         'dashboard/analytics',
         [GraphicalDashboardController::class, 'index']
     )->name('graphical.dashboard')->middleware('auth');
-
 
     Route::get('posts/count', [DashboardController::class, 'getStats'])
         ->name('get.posts.count');
@@ -268,7 +268,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
      */
     Route::resource('listing', ListingController::class);
 
-
     Route::get('articles', [DatabaseListingController::class, 'articles'])
         ->name('articles.index');
 
@@ -280,7 +279,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::get('review/inventory/export', [ListingController::class, 'inventoryReviewExport'])
         ->name('review_inventory_export');
-
     /**
      * Direct Blogger End
      */
@@ -492,6 +490,20 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     /**
      *  END
      */
+    Route::prefix('candidates')->name('candidates.')->group(function () {
+        Route::get('enquiries', [CandidatesController::class, 'enquiries'])
+            ->name('enquiries');
+
+        Route::post('enquiries/{id}/save-note', [CandidatesController::class, 'saveNotes'])
+            ->name('enquiries.saveNotes');
+
+        Route::post('enquiries/{id}/update', [CandidatesController::class, 'updateStatus'])
+            ->name('enquiries.status.update');
+
+
+        Route::get('/candidates/export', [CandidatesController::class, 'export'])
+            ->name('enquiries.export');
+    });
 });
 
 Route::group(['prefix' => 'password'], function () {

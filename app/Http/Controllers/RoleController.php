@@ -83,6 +83,11 @@ class RoleController extends Controller
                 // Add the permission to the array for the current category
                 $permissionsInCategory['Post'][] = $permission;
             }
+
+            if (stripos($permission['name'], 'Job') !== false) {
+                // Add the permission to the array for the current category
+                $permissionsInCategory['Jobs'][] = $permission;
+            }
         }
 
         return view('accounts.roles.create', compact('permissions', 'permissionsInCategory'));
@@ -159,6 +164,11 @@ class RoleController extends Controller
             if (stripos($permission['name'], 'Post') !== false) {
                 // Add the permission to the array for the current category
                 $permissionsInCategory['Post'][] = $permission;
+            }
+
+            if (stripos($permission['name'], 'Job') !== false) {
+                // Add the permission to the array for the current category
+                $permissionsInCategory['Jobs'][] = $permission;
             }
         }
 

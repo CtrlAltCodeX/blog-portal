@@ -63,6 +63,22 @@ return [
             ]) : [],
         ],
 
+        'hr-portal' => [
+            'driver' => 'mysql',
+            'url' => env('HR_DATABASE_URL'),
+            'host' => env('HR_DB_HOST', '127.0.0.1'),
+            'port' => env('HR_DB_PORT', '3306'),
+            'database' => env('HR_DB_DATABASE', 'forge'),
+            'username' => env('HR_DB_USERNAME', 'forge'),
+            'password' => env('HR_DB_PASSWORD', ''),
+            'unix_socket' => env('HR_DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => 'InnoDB',
+        ],
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),
@@ -125,7 +141,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
         ],
 
         'default' => [

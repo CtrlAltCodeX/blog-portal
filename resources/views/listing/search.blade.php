@@ -66,7 +66,10 @@
                 </div>
                 <div class="card-body">
                     <form action="{{ route('listing.search') }}" class="text-center">
-                        <!--<label>To Begin Adding New Products</label><br>-->
+                        <input type='hidden' name='publisher_rates' value='{{ request()->publisher_rates }}' />
+                        <input type='hidden' name='p' value='{{ request()->p }}' />
+                        <input type='hidden' name='rate_type' value='{{ request()->rate_type }}' />
+                        
                         <label>
                             <h3><b>Enter Publication Name</b></h3>
                         </label>
@@ -85,10 +88,53 @@
         <div class='col-md-6'>
             @if (request()->p)
             <div class="card">
-                <div class="card-header">
-                    <h5>All Publisher List:</h5>
+                <div class="card-header justify-content-between">
+                    <h5>Specific Publisher:</h5>
+                    <div class='d-flex' style='gap: 30px;' 
+                            data-bs-placement="top"
+                            data-bs-toggle="tooltip"
+                            @if(!auth()->user()->can('Search Listing (M/S) -> Normal Discount -> Offer Table'))
+                            data-bs-original-title="You Do not have Permission"
+                            @endif
+                            >
+                        <label class="form-check-label" for="popularSwitch">
+                            Non Offer
+                        </label>
+                        <div class="form-check form-switch">
+                            <form action='' method='get' id='switch_form'>
+                                <input type='hidden' name='publisher_rates' value='{{ request()->publisher_rates }}' />
+                                <input type='hidden' name='p' value='{{ request()->p }}' />
+                                <input type='hidden' name='rate_type' value='{{ request()->rate_type }}' />
+                                <input type='hidden' name='publisher_rates' value='{{ request()->publisher_rates }}' />
+
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    id='offerSwitch'
+                                    name="offer_switch"
+                                    {{ request()->offer_switch == 'on' ? 'checked' : '' }}
+                                    @if(!auth()->user()->can('Search Listing (M/S) -> Normal Discount -> Offer Table'))
+                                    disabled
+                                    @endif
+                                >
+                            </form>
+                            <label class="form-check-label" for="popularSwitch">
+                                Offer
+                            </label>
+                         </div>
+                    </div>
+
+                    @if($search_books_supplier_rates->count() > 0)
+                    <div class='d-flex'>
+                        <i class="fa fa-check-square-o text-success" style='font-size: 24px;'></i>
+                        <label class="form-check-label ml-2" for="popularSwitch">
+                            Offer Found
+                        </label>
+                    </div>
+                    @endif
                 </div>
                 <div class="card-body">
+                    @if (!request()->offer_switch)
                     <h5>
                         <strong>Publications</strong>
                     </h5>
@@ -135,7 +181,7 @@
                                     <td>{{ $publisher->book_type_6 }}</td>
                                     <td>{{ $publisher->book_discount_6 ? $publisher->book_discount_6."%" : '' }}</td>
                                     <td>{{ $publisher->location_dis }}</td>
-                                    <td>{{ $publisher->company_activity }}</td>
+                                    <td><b>{{ $publisher->company_activity }}</b></td>
                                     <td>{{ $publisher->sourcing_pattern }}</td>
                                     <td>{{ $publisher->sourcing_city }}</td>
                                     <td>{{ $publisher->official_url }}</td>
@@ -147,8 +193,11 @@
                             </tbody>
                         </table>
                     </div>
-
-                    <h5 class='mt-5'>
+                    @endif
+                    
+                    @can('Search Listing (M/S) -> Normal Discount -> Offer Table')
+                    @if (request()->offer_switch)
+                    <h5>
                         <strong>Book Supplier Rates:</strong>
                     </h5>
                     <div class="table-responsive">
@@ -197,6 +246,8 @@
                             </tbody>
                         </table>
                     </div>
+                    @endif
+                    @endcan
                 </div>
             </div>
             @endif
@@ -211,24 +262,22 @@
                 <div class="card-header">
                     <div class='d-flex justify-content-between align-items-center w-100'>
                         <h5>All Publisher List:</h5>
-                        
                         <div>
-                            <label>
-                                <strong>{{ __('Select Rate Type:') }}</strong>
-                            </label>
-                            <br>
-
                             <form action='' method='get' id='rate_type_form'>
+                                <input type='hidden' name='publisher_rates' value='{{ request()->publisher_rates }}' />
+                                <input type='hidden' name='p' value='{{ request()->p }}' />
                                 <label>
-                                    Without Offers
+                                    Non Offer
                                     <input type='radio' class='rate_type' value='without_offer' name='publisher_rates' 
                                     {{ request()->publisher_rates == 'without_offer' ? 'checked' : '' }} />
                                 </label>
+                                @can('Search Listing (M/S) -> All Publisher List -> Offer Table')
                                 <label>
-                                    With Offers
+                                    Offer
                                     <input type='radio' class='rate_type' value='with_offer' name='publisher_rates' 
                                     {{ request()->publisher_rates == 'with_offer' ? 'checked' : '' }} />
                                 </label>
+                                @endcan
                             </form>
                         </div>
                     </div>
@@ -293,7 +342,7 @@
                     @endif
                     @if(request()->publisher_rates == 'with_offer')
                     <div class="table-responsive">
-                        <table class="table table-bordered text-nowrap border-bottom">
+                        <table class="table table-bordered text-nowrap border-bottom" id='with-offer-datatable'>
                             <thead>
                                 <tr>
                                     <th>{{ __('Book Title') }}</th>
@@ -557,13 +606,22 @@
             "paging": false,
             'searching': true
         });
+        
+        $('#with-offer-datatable').DataTable({
+            "paging": false,
+            'searching': true
+        });
 
         $("#category").on("change", function() {
             $("#form").submit();
         });
-
+        
         $(".rate_type").on("change", function() {
             $("#rate_type_form").submit();
+        });
+
+        $("#offerSwitch").on("change", function() {
+            $("#switch_form").submit();
         });
     })
 </script>

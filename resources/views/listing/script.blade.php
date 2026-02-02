@@ -170,7 +170,21 @@
                         }
                     }
 
-                    var notRequiredFields = ['images[]', 'multipleImages[]', 'files', 'isbn_10', 'isbn_13', 'isbn_10', 'reading_age', 'country_origin', 'genre', 'manufacturer', 'importer', 'discount'];
+                    var notRequiredFields = [
+                        'price_issue', 
+                        'multipleImages[]', 
+                        'files', 
+                        'isbn_10', 
+                        'isbn_13', 
+                        'isbn_10', 
+                        'reading_age', 
+                        'country_origin', 
+                        'genre', 
+                        'manufacturer', 
+                        'importer', 
+                        'discount',
+                        'finalPrice'
+                    ];
 
                     if (inputValue == '') {
                         var fieldId = $(this).attr('name');

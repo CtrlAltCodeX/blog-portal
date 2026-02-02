@@ -152,9 +152,52 @@
                 </div>
             </div>
 
+            <div class="card">
+                <div class="card-header justify-content-between">
+                    <h3 class="card-title">Record 3 ( Price Issue Listing )</h3>
+                </div>
+
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="basic-datatable" class="table table-bordered text-nowrap border-bottom">
+                            <thead>
+                                <tr>
+                                    <th>{{ __('Sl. No.') }}</th>
+                                    <th>{{ __('Updated / Created') }}</th>
+                                    <th>{{ __('Approved') }}</th>
+                                    <th>{{ __('Rejected') }}</th>
+                                    <th>{{ __('Delete') }}</th>
+                                    <th>{{ __('View Details') }}</th>
+                                    <th>{{ __('User Name') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($countPriceIssue as $key => $data)
+                                <tr>
+                                    <td>{{ ++$key }}</td>
+                                    <td>{{ $data->total_created }}</td>
+                                    <td>{{ $data->total_approved }}</td>
+                                    <td>{{ $data->total_rejected }}</td>
+                                    <td>{{ $data->total_deleted }}</td>
+                                    <td>
+                                        <a href="{{ route('profile.listing', ['user' => 'all', 'status' => 0]) }}" target='_blank'>View</a>
+                                    </td>
+                                    <td>{{ $data->user->name }}</td>
+                                </tr>
+                                @empty
+                                <tr align=center>
+                                    <td colspan="8">No Result</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
             <div class="card mt-4">
                 <div class="card-header">
-                    <h3 class="card-title">Record 3 (Create Page Report)</h3>
+                    <h3 class="card-title">Record 4 (Create Page Report)</h3>
                 </div>
 
                 <div class="card-body">
@@ -192,7 +235,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>

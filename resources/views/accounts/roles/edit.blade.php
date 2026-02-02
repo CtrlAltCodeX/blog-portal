@@ -50,15 +50,7 @@
                             <div class="form-group">
                                 <div class="d-flex align-items-center">
                                     <label for="name">{{ __('Role Name') }}</label>
-                                    <input
-                                        id="name"
-                                        type="text"
-                                        class="m-2 w-50 form-control @error('name') is-invalid @enderror"
-                                        name="name" value="{{ old('name') ?? $role->name }}"
-                                        autocomplete="name"
-                                        autofocus
-                                        placeholder="Name"
-                                        {{ ($role->name == 'Super Admin' || $role->name ==  'Super Management') ? 'readonly' : '' }}>
+                                    <input id="name" type="text" class="m-2 w-50 form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') ?? $role->name }}"  autocomplete="name" autofocus placeholder="Name" {{ ($role->name == 'Super Admin' || $role->name ==  'Super Management') ? 'readonly' : '' }}>
                                 </div>
 
                                 @error('name')
@@ -168,9 +160,21 @@
                                         </div>
                                     </div>
                                     @endforeach
-
-                                    <label for="name" class="form-label heading-design">{{ __('Post') }}</label>
+                                    
+                                    <label for="name" class="form-label heading-design">{{ __('Posts') }}</label>
                                     @foreach ($permissionsInCategory['Post'] as $permission)
+                                    <div class="col-md-4">
+                                        <div class="custom-controls-stacked">
+                                            <label class="custom-control custom-checkbox-md">
+                                                <input type="checkbox" class="custom-control-input" type="checkbox" name="permissions[]" id="permission_{{ $permission['id'] }}" value="{{ $permission['name'] }}">
+                                                <label class="custom-control-label" for="permission_{{ $permission['id'] }}">
+                                                    {{ $permission['name'] }}</label>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                    <label for="name" class="form-label heading-design">{{ __('Lead/Job Application/Conversion') }}</label>
+                                    @foreach ($permissionsInCategory['Jobs'] as $permission)
                                     <div class="col-md-4">
                                         <div class="custom-controls-stacked">
                                             <label class="custom-control custom-checkbox-md">

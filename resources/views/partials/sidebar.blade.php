@@ -78,6 +78,12 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         @can('RA-Updated Listings (MS)')
                         <li><a href="{{ route('publish.pending', ['status' => 0, 'startIndex' => 1, 'category' => '', 'user' => 'all','paging'=>25]) }}" class="slide-item {{ (request()->is('admin/publish/pending')) ? 'active' : '' }}">{{ __('RA | Updated Listings (MS)') }}</a></li>
                         @endcan
+                        
+                        <!--<li>-->
+                        <!--    <a href="{{ route('candidates.enquiries') }}" class="slide-item {{ (request()->is('admin/candidates/enquiries')) ? 'active' : '' }}">-->
+                        <!--        {{ __('Candidate Enquiries') }}-->
+                        <!--    </a>-->
+                        <!--</li>-->
                     </ul>
                 </li>
                 @endcan
@@ -150,9 +156,10 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         @endcan
 
                         @can('User Details -> All Users List')
-                        <li><a href="{{ route('users.index', ['users' => 50]) }}" class="slide-item {{ (request()->is('admin/users') || request()->is('admin/users/*/edit')) ? 'active' : '' }}">{{ __('All Users List') }}</a>
-                        </li>
+                        <li><a href="{{ route('users.index', ['users' => 50]) }}" class="slide-item {{ (request()->is('admin/users') || request()->is('admin/users/*/edit')) ? 'active' : '' }}">{{ __('All Users List') }}</a></li>
                         @endcan
+                        
+                        <!--<li><a href="{{ route('candidates.enquiries') }}" class="slide-item {{ (request()->is('admin/candidates/enquiries')) ? 'active' : '' }}">{{ __('Enquiries List') }}</a></li>-->
                     </ul>
                 </li>
                 @endcan
@@ -180,6 +187,18 @@ $userInfo = app('App\Models\SiteSetting')->first();
                     </ul>
                 </li>
                 @endif
+                
+                @can('Lead/Job Application')
+                <li class="slide {{ (request()->is('admin/candidates/enquiries')) ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fa fa-gear"></i><span class="side-menu__label">{{ __('Leads/Job Applications') }}</span><i class="angle fe fe-chevron-right"></i></a>
+                    <ul class="slide-menu">
+                        <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
+                        @can('Lead/Job Application -> Job Enquiry List')
+                        <li><a href="{{ route('candidates.enquiries') }}" class="slide-item {{ (request()->is('admin/candidates/enquiries')) ? 'active' : '' }}">{{ __('Job Enquiry List') }}</a></li>
+                        @endcan
+                    </ul>
+                </li>
+                @endcan
 
                 @if(auth()->user()->can('Settings (Main Menu)'))
                 <li class="slide {{ (request()->is('admin/settings/*') || request()->is('admin/settings') || request()->is('admin/backup/emails') || request()->is('admin/backup/logs') || request()->is('admin/subcategories') || request()->is('admin/categories')) ? 'is-expanded' : '' }}">
@@ -223,6 +242,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                     </ul>
                 </li>
                 @endif
+                
                 @can('List Post')
                 <!--<li class="slide {{ (request()->is('admin/posts')) ? 'is-expanded' : '' }}">-->
                 <!--    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fa fa-gear"></i><span class="side-menu__label">{{ __('Posts') }}</span><i class="angle fe fe-chevron-right"></i></a>-->
@@ -236,32 +256,32 @@ $userInfo = app('App\Models\SiteSetting')->first();
                 <!--    </ul>-->
                 <!--</li>-->
                 @endcan
-                <li class="slide {{ (request()->is('admin/posts')) ? 'is-expanded' : '' }}">
-                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fa fa-gear"></i><span class="side-menu__label">{{ __('Posts') }}</span><i class="angle fe fe-chevron-right"></i></a>
-                    <ul class="slide-menu">
-                        <li>
-                            <a href="{{ route('worktype.index') }}" class="slide-item {{ request()->is('admin/WorkType ') ? 'active' : '' }}">{{ __('Work Type') }}</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('content.create') }}" class="slide-item {{ request()->is('admin/content/create') ? 'active' : '' }}">{{ __('Content Create') }}</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('content.index') }}" class="slide-item {{ request()->is('admin/content/listing') ? 'active' : '' }}">{{ __('Content Listing') }}</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('promotional.create') }}" class="slide-item {{ request()->is('admin/promotional/create') ? 'active' : '' }}">{{ __('Create Promotional') }}</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('promotional.index') }}" class="slide-item {{ request()->is('admin/promotional/listing') ? 'active' : '' }}">{{ __('Promotional Listing') }}</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('approval.list') }}" class="slide-item {{ request()->is('admin/approval/list ') ? 'active' : '' }}">{{ __('Approval List') }}</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('pages.index') }}" class="slide-item {{ request()->is('admin/pages ') ? 'active' : '' }}">{{ __('Admin Required') }}</a>
-                        </li>
-                    </ul>
-                </li>
+                <!--<li class="slide {{ (request()->is('admin/posts')) ? 'is-expanded' : '' }}">-->
+                <!--    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fa fa-gear"></i><span class="side-menu__label">{{ __('Posts') }}</span><i class="angle fe fe-chevron-right"></i></a>-->
+                <!--    <ul class="slide-menu">-->
+                <!--        <li>-->
+                <!--            <a href="{{ route('worktype.index') }}" class="slide-item {{ request()->is('admin/WorkType ') ? 'active' : '' }}">{{ __('Work Type') }}</a>-->
+                <!--        </li>-->
+                <!--        <li>-->
+                <!--            <a href="{{ route('content.create') }}" class="slide-item {{ request()->is('admin/content/create') ? 'active' : '' }}">{{ __('Content Create') }}</a>-->
+                <!--        </li>-->
+                <!--        <li>-->
+                <!--            <a href="{{ route('content.index') }}" class="slide-item {{ request()->is('admin/content/listing') ? 'active' : '' }}">{{ __('Content Listing') }}</a>-->
+                <!--        </li>-->
+                <!--        <li>-->
+                <!--            <a href="{{ route('promotional.create') }}" class="slide-item {{ request()->is('admin/promotional/create') ? 'active' : '' }}">{{ __('Create Promotional') }}</a>-->
+                <!--        </li>-->
+                <!--        <li>-->
+                <!--            <a href="{{ route('promotional.index') }}" class="slide-item {{ request()->is('admin/promotional/listing') ? 'active' : '' }}">{{ __('Promotional Listing') }}</a>-->
+                <!--        </li>-->
+                <!--        <li>-->
+                <!--            <a href="{{ route('approval.list') }}" class="slide-item {{ request()->is('admin/approval/list ') ? 'active' : '' }}">{{ __('Approval List') }}</a>-->
+                <!--        </li>-->
+                <!--        <li>-->
+                <!--            <a href="{{ route('pages.index') }}" class="slide-item {{ request()->is('admin/pages ') ? 'active' : '' }}">{{ __('Admin Required') }}</a>-->
+                <!--        </li>-->
+                <!--    </ul>-->
+                <!--</li>-->
             </ul>
         </div>
     </div>

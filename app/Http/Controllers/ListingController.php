@@ -517,9 +517,33 @@ class ListingController extends Controller
         $publicationsDiscount = [];
         $search_books_supplier_rates = [];
         if (request()->p) {
+            $keyword = request()->p;
+            if ($keyword) {
+                // Replace slash with space
+                $cleaned = str_replace('/', ' ', $keyword);
+
+                // Words to ignore
+                $ignoreWords = ['publication'];
+
+                // Split words, trim & filter
+                $terms = array_filter(
+                    array_map('trim', explode(' ', $cleaned)),
+                    function ($term) use ($ignoreWords) {
+                        return mb_strlen($term) >= 5
+                            && !in_array(mb_strtolower($term), $ignoreWords);
+                    }
+                );
+            }
+
             $publicationsDiscount = WeightVSCourier::where('pub_name', request()->p)->get();
 
-            $search_books_supplier_rates = BookSupplierRate::where('publisher_name', request()->p)->get();
+            $search_books_supplier_rates = BookSupplierRate::where(function ($q) use ($terms) {
+                foreach ($terms as $term) {
+                    $q->orWhere('publisher_name', 'LIKE', "%{$term}%");
+                }
+            })->get();
+
+            // $search_books_supplier_rates = BookSupplierRate::where('publisher_name', request()->p)->get();
         }
 
         $publications = WeightVSCourier::all();

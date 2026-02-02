@@ -72,19 +72,41 @@
                     <div class="card-body" style="background-color: antiquewhite;">
                         <h4>PRICE CALCULATION</h4>
                         @if(request()->route()->getName() == 'price.calculation')
-                        <div class="form-group col-md-3">
-                            <label for="mrp" class="form-label">{{ __('MRP') }}<span class="text-danger">*</span><span class="text-success"> ( Maximum Retail Price)</span></label>
-                            <input id="mrp" type="number" class="form-control @error('mrp') is-invalid @enderror" name="mrp" value="{{ old('mrp') }}" autocomplete="mrp" autofocus placeholder="MRP">
-                            <span class="error-message mrp" style="color:red;"></span>
-                
-                            @error('mrp')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
+                        <div class='row'>
+                            <div class="form-group col-md-3">
+                                <label for="mrp" class="form-label">{{ __('MRP') }}<span class="text-danger">*</span><span class="text-success"> ( Maximum Retail Price)</span></label>
+                                <input id="mrp" type="number" class="form-control @error('mrp') is-invalid @enderror" name="mrp" value="{{ old('mrp') }}" autocomplete="mrp" autofocus placeholder="MRP">
+                                <span class="error-message mrp" style="color:red;"></span>
+                    
+                                @error('mrp')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                            <div class="form-group col-md-4">
+                                <div>
+                                    <label for="mrp" class="form-label">{{ __('Purchase Price') }}</label>
+                                </div>
+                                
+                                <div class='d-flex align-items-center'>
+                                    <input disabled style='width:50%;margin-right:10px;border: 1px solid #ccc;' id="finalPrice" type="number" class="mr-2 form-control @error('finalPrice') is-invalid @enderror" name="finalPrice" value="{{ old('finalPrice') }}" autocomplete="finalPrice" autofocus placeholder="Purchase Price">
+                                    <label>
+                                        <input type='checkbox' id='custom_price' /> 
+                                        Change PP
+                                    </label>
+                                </div>
+                    
+                                @error('mrp')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
                         </div>
                         @endif
                         <div class="row">
+                            
                             <div class="form-group col-md-3">
                                 <label for="pub_name" class="form-label">{{ __('Publisher Name') }}</label>
                                 <select class="searchable_dropdown form-control" name="pub_name" id="pub_name">
@@ -175,13 +197,6 @@
             </div>
         </div>
     </div>
-    
-    
-    <script>
-        // document.addEventListener('contextmenu', function(e) {
-        //     e.preventDefault();
-        // });
-    </script>
 </body>
 </html>
 
@@ -206,9 +221,50 @@
                     </span>
                     @enderror
                 </div>
+                
+                <div class="form-group col-md-4">
+                    <div>
+                        <label for="mrp" class="form-label">{{ __('Purchase Price') }}</label>
+                    </div>
+                    
+                    <div class='d-flex align-items-center'>
+                        <input disabled style='width:50%;margin-right:10px' id="finalPrice" type="number" class="mr-2 form-control @error('finalPrice') is-invalid @enderror" name="finalPrice" value="{{ old('finalPrice') }}" autocomplete="finalPrice" autofocus placeholder="Purchase Price">
+                        <label>
+                            <input type='checkbox' id='custom_price' /> 
+                            Change PP
+                        </label>
+                    </div>
+        
+                    @error('mrp')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                </div>
             </div>
             @endif
             <div class="row">
+                @if(request()->route()->getName() != 'listing.search')
+                <div class="form-group col-md-12">
+                    <div>
+                        <label for="mrp" class="form-label">{{ __('Purchase Price') }}</label>
+                    </div>
+                    
+                    <div class='d-flex align-items-center'>
+                        <input disabled style='width:20%;margin-right:10px' id="finalPrice" type="number" class="mr-2 form-control @error('finalPrice') is-invalid @enderror" name="finalPrice" value="{{ old('finalPrice') }}" autocomplete="finalPrice" autofocus placeholder="Purchase Price">
+                        <label>
+                            <input type='checkbox' id='custom_price' /> 
+                            Change PP
+                        </label>
+                    </div>
+        
+                    @error('mrp')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                </div>
+                @endif
                 <div class="form-group col-md-3">
                     <label for="pub_name" class="form-label">{{ __('Publisher Name') }}</label>
                     <select class="searchable_dropdown form-control" name="pub_name" id="pub_name">
@@ -307,6 +363,18 @@
             $(".searchable_dropdown").select2();
         }
         
+        $("#finalPrice").on('input', function() {
+            calculatePrice(); 
+        });
+        
+        $("#custom_price").click(function() {
+            if ($("#finalPrice").attr('disabled')) {
+                $("#finalPrice").removeAttr('disabled')
+            } else {
+                $("#finalPrice").attr('disabled', true)
+            }
+        })
+        
         const publications = @json($publications);
         const $pubDropdown = $("#pub_name");
         const $bookDropdown = $("#book_name");
@@ -403,10 +471,14 @@
             // const locationDiscount = (locationDis / 100) * mrp;
             const locationDiscount = locationDis;
             const netDis = discount - locationDiscount;
-            const finalPrice = mrp - ((netDis*mrp)/100);
-            // console.log("mrp", mrp)
-            // console.log("finalPrice", finalPrice)
-    
+            let finalPrice = 0;
+            
+            if ($("#custom_price").prop('checked')) {
+                finalPrice = Number($('#finalPrice').val());
+            } else {
+                finalPrice = mrp - ((netDis*mrp)/100);
+            }
+            
             if (mrp && finalPrice > 0) {
                 $.get("{{ route('listing.getPriceRecords') }}", {
                         price: finalPrice
@@ -456,10 +528,6 @@
             }
         }
         
-        
-        // $(document).on('change', '#pub_name', function () {
-            
-        // });
         
         function resetFields() {
             $('#company_activity,#sourcing_pattern,#sourcing_city,#sku_pattern,#marginal_gaps').text('-');

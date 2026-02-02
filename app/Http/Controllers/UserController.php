@@ -349,54 +349,60 @@ class UserController extends Controller
     public function userCounts()
     {
         // Initialize query for 'Created' status and group by user
-        $countCreated = UserListingCount::with('user')
-            ->selectRaw('user_id, sum(create_count) as total_created, sum(approved_count) as total_approved, sum(reject_count) as total_rejected, sum(delete_count) as total_deleted')
-            ->where('status', 'Created')
-            ->groupBy('user_id');
+        // $countCreated = UserListingCount::with('user')
+        //     ->selectRaw('user_id, sum(create_count) as total_created, sum(approved_count) as total_approved, sum(reject_count) as total_rejected, sum(delete_count) as total_deleted')
+        //     ->where('status', 'Created')
+        //     ->groupBy('user_id');
 
-        if (request()->has('start_date') && request()->has('end_date')) {
-            $startDate = Carbon::parse(request()->start_date);
-            $endDate = Carbon::parse(request()->end_date);
+        // if (request()->has('start_date') && request()->has('end_date')) {
+        //     $startDate = Carbon::parse(request()->start_date);
+        //     $endDate = Carbon::parse(request()->end_date);
 
-            $countCreated->whereBetween('created_at', [$startDate->startOfDay(), $endDate->endOfDay()]);
-        }
+        //     $countCreated->whereBetween('created_at', [$startDate->startOfDay(), $endDate->endOfDay()]);
+        // }
 
-        if (request()->user_id) {
-            $countCreated->where('user_id', request()->user_id);
-        }
+        // if (request()->user_id) {
+        //     $countCreated->where('user_id', request()->user_id);
+        // }
 
-        if (!auth()->user()->hasRole('Super Admin') && !auth()->user()->hasRole('Super Management')) {
-            $countCreated->where('user_id', auth()->user()->id);
-        }
+        // if (!auth()->user()->hasRole('Super Admin') && !auth()->user()->hasRole('Super Management')) {
+        //     $countCreated->where('user_id', auth()->user()->id);
+        // }
 
-        $countCreated = $countCreated->get();
+        // $countCreated = $countCreated->get();
 
-        // Initialize query for 'Edited' status and group by user
-        $countEdited = UserListingCount::with('user')
-            ->selectRaw('user_id, sum(create_count) as total_created, sum(approved_count) as total_approved, sum(reject_count) as total_rejected, sum(delete_count) as total_deleted')
-            ->where('status', 'Edited')
-            ->groupBy('user_id');
+        // // Initialize query for 'Edited' status and group by user
+        // $countEdited = UserListingCount::with('user')
+        //     ->selectRaw('user_id, sum(create_count) as total_created, sum(approved_count) as total_approved, sum(reject_count) as total_rejected, sum(delete_count) as total_deleted')
+        //     ->where('status', 'Edited')
+        //     ->groupBy('user_id');
 
-        if (request()->has('start_date') && request()->has('end_date')) {
-            $startDate = Carbon::parse(request()->start_date);
-            $endDate = Carbon::parse(request()->end_date);
+        // if (request()->has('start_date') && request()->has('end_date')) {
+        //     $startDate = Carbon::parse(request()->start_date);
+        //     $endDate = Carbon::parse(request()->end_date);
 
-            $countEdited->whereBetween('created_at', [$startDate->startOfDay(), $endDate->endOfDay()]);
-        }
+        //     $countEdited->whereBetween('created_at', [$startDate->startOfDay(), $endDate->endOfDay()]);
+        // }
 
-        if (request()->user_id) {
-            $countEdited->where('user_id', request()->user_id);
-        }
+        // if (request()->user_id) {
+        //     $countEdited->where('user_id', request()->user_id);
+        // }
 
-        if (!auth()->user()->hasRole('Super Admin') && !auth()->user()->hasRole('Super Management')) {
-            $countEdited->where('user_id', auth()->user()->id);
-        }
+        // if (!auth()->user()->hasRole('Super Admin') && !auth()->user()->hasRole('Super Management')) {
+        //     $countEdited->where('user_id', auth()->user()->id);
+        // }
 
-        $countEdited = $countEdited->get();
+        // $countEdited = $countEdited->get();
+
+        $countCreated = $this->getListingCountByStatus('Created');
+        $countEdited  = $this->getListingCountByStatus('Edited');
+        $countPriceIssue  = $this->getListingCountByStatus('Price Issue');
+
 
         // Get all users
         $users = User::all();
 
+        // Create Page Report
         $createPageReport = CreatePage::with('user')
             ->selectRaw("
                 user_id,
@@ -425,10 +431,46 @@ class UserController extends Controller
         }
 
         $createPageReport = $createPageReport->get();
+        // End Create Page Report
 
         // Pass data to the view
-        return view('counts', compact('countCreated', 'countEdited', 'createPageReport', 'users'));
+        return view('counts', compact('countCreated', 'countEdited', 'createPageReport', 'users', 'countPriceIssue'));
     }
+
+    private function getListingCountByStatus(string $status)
+    {
+        $query = UserListingCount::with('user')
+            ->selectRaw('
+            user_id,
+            SUM(create_count)   as total_created,
+            SUM(approved_count) as total_approved,
+            SUM(reject_count)   as total_rejected,
+            SUM(delete_count)   as total_deleted
+        ')
+            ->where('status', $status)
+            ->groupBy('user_id');
+
+        // Date filter
+        if (request()->filled(['start_date', 'end_date'])) {
+            $query->whereBetween('created_at', [
+                Carbon::parse(request()->start_date)->startOfDay(),
+                Carbon::parse(request()->end_date)->endOfDay(),
+            ]);
+        }
+
+        // User filter
+        if (request()->user_id) {
+            $query->where('user_id', request()->user_id);
+        }
+
+        // Role-based restriction
+        if (!auth()->user()->hasAnyRole(['Super Admin', 'Super Management'])) {
+            $query->where('user_id', auth()->id());
+        }
+
+        return $query->get();
+    }
+
 
     public function priceCalculation()
     {
