@@ -447,8 +447,14 @@ class DatabaseListingController extends Controller
         }
 
         if ($listing->update($data)) {
-            session()->flash('success', 'Listing Updated successfully');
+            if (request()->modify_id) {
+                \App\Models\ListingModifyRequest::where('id', request()->modify_id)->update([
+                    'status' => 'Completed',
+                    'updated_by' => auth()->id()
+                ]);
+            }
 
+            session()->flash('success', 'Listing Updated successfully');
             return redirect()->back();
         }
 
@@ -1062,6 +1068,13 @@ class DatabaseListingController extends Controller
         ];
 
         $listing = Listing::create($allInfo);
+
+        if (request()->modify_id) {
+            \App\Models\ListingModifyRequest::where('id', request()->modify_id)->update([
+                'status' => 'Completed',
+                'updated_by' => auth()->id()
+            ]);
+        }
 
         if (!isset(request()->duplicate)) {
             $featureImage = json_decode($listing->images);

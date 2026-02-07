@@ -36,6 +36,9 @@
                 @if(request()->edit)
                 <input type="hidden" name="edit" value="true" />
                 @endif
+                @if(request()->modify_id)
+                <input type="hidden" name="modify_id" value="{{ request()->modify_id }}" />
+                @endif
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">
                         <h4 class="card-title">

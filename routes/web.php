@@ -27,6 +27,7 @@ use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\SubSubCategoryController;
+use App\Http\Controllers\ListingModifyController;
 use App\Http\Controllers\PostsController;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\PromotionalController;
@@ -144,6 +145,19 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         Route::post('watermark/store', [WatermarkController::class, 'store'])->name('image.watermark.store');
 
         Route::post('collage/store', [CollageController::class, 'store'])->name('image.collage.store');
+    });
+
+    /**
+     * Modify Listing
+     */
+    Route::group(['prefix' => 'modify-listing'], function () {
+        Route::get('', [ListingModifyController::class, 'index'])->name('modify-listing.index');
+        Route::get('requested', [ListingModifyController::class, 'requested'])->name('modify-listing.requested');
+        Route::get('approval', [ListingModifyController::class, 'approval'])->name('modify-listing.approval');
+        Route::get('fetch-product', [ListingModifyController::class, 'fetchProduct'])->name('modify-listing.fetch');
+        Route::post('store', [ListingModifyController::class, 'store'])->name('modify-listing.store');
+        Route::get('download-sample', [ListingModifyController::class, 'downloadSample'])->name('modify-listing.sample');
+        Route::post('upload-excel', [ListingModifyController::class, 'uploadExcel'])->name('modify-listing.upload');
     });
 
     /**
