@@ -45,12 +45,15 @@ $userInfo = app('App\Models\SiteSetting')->first();
                 </li>
 
                 @can('Listing (Main Menu)')
-                <li class="slide {{ (request()->is('admin/modify-listing*') || request()->is('admin/listing/*') || request()->is('admin/listing') || request()->is('admin/database-listing') || request()->is('admin/database-listing/*') || request()->is('admin/publish/pending') || request()->is('get/ai/description')) ? 'is-expanded' : '' }}">
+                <li class="slide {{ (request()->is('admin/on-demand-listing*') || request()->is('admin/modify-listing*') || request()->is('admin/listing/*') || request()->is('admin/listing') || request()->is('admin/database-listing') || request()->is('admin/database-listing/*') || request()->is('admin/publish/pending') || request()->is('get/ai/description')) ? 'is-expanded' : '' }}">
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-list"></i><span class="side-menu__label">{{ __('Product Listing') }}</span><i class="angle fe fe-chevron-right"></i></a>
                     <ul class="slide-menu">
                         <li><a href="{{ route('modify-listing.index') }}" class="slide-item {{ (request()->is('admin/modify-listing')) ? 'active' : '' }}">{{ __('Modify Listing') }}</a></li>
                         <li><a href="{{ route('modify-listing.requested') }}" class="slide-item {{ (request()->is('admin/modify-listing/requested')) ? 'active' : '' }}">{{ __('Requested Listings') }}</a></li>
                         <li><a href="{{ route('modify-listing.approval') }}" class="slide-item {{ (request()->is('admin/modify-listing/approval')) ? 'active' : '' }}">{{ __('Approval Section') }}</a></li>
+                        
+                        <li><a href="{{ route('on-demand.index') }}" class="slide-item {{ (request()->is('admin/on-demand-listing')) ? 'active' : '' }}">{{ __('On Demand Upload') }}</a></li>
+                        <li><a href="{{ route('on-demand.verify') }}" class="slide-item {{ (request()->is('admin/on-demand-listing/verify')) ? 'active' : '' }}">{{ __('On Demand Verify') }}</a></li>
                         
                         @can('Product Listing > AI Chat Bots')
                         <li><a href="{{ route('ai.description') }}" class="slide-item {{ request()->is('get/ai/description') ? 'active' : '' }}">{{ __('AI Chat Bots') }}</a></li>

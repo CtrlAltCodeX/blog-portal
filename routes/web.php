@@ -33,6 +33,7 @@ use App\Http\Controllers\ContentController;
 use App\Http\Controllers\PromotionalController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\WorkTypeController;
+use App\Http\Controllers\OnDemandListingController;
 
 Illuminate\Support\Facades\Auth::routes();
 
@@ -158,6 +159,17 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         Route::post('store', [ListingModifyController::class, 'store'])->name('modify-listing.store');
         Route::get('download-sample', [ListingModifyController::class, 'downloadSample'])->name('modify-listing.sample');
         Route::post('upload-excel', [ListingModifyController::class, 'uploadExcel'])->name('modify-listing.upload');
+    });
+
+    /**
+     * On Demand Listing
+     */
+    Route::group(['prefix' => 'on-demand-listing'], function () {
+        Route::get('', [OnDemandListingController::class, 'index'])->name('on-demand.index');
+        Route::post('store', [OnDemandListingController::class, 'store'])->name('on-demand.store');
+        Route::get('verify', [OnDemandListingController::class, 'verify'])->name('on-demand.verify');
+        Route::post('complete', [OnDemandListingController::class, 'complete'])->name('on-demand.complete');
+        Route::post('uncomplete', [OnDemandListingController::class, 'uncomplete'])->name('on-demand.uncomplete');
     });
 
     /**
