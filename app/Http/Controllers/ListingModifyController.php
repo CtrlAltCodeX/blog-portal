@@ -122,4 +122,15 @@ class ListingModifyController extends Controller
 
         return view('modify-listing.approval', compact('exchange', 'update'));
     }
+
+    public function destroy($id)
+{
+    $request = ListingModifyRequest::findOrFail($id);
+    $request->delete();
+
+    return redirect()->back()->with('success', 'Record deleted successfully');
+}
+
+
+
 }

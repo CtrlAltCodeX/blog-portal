@@ -159,6 +159,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         Route::post('store', [ListingModifyController::class, 'store'])->name('modify-listing.store');
         Route::get('download-sample', [ListingModifyController::class, 'downloadSample'])->name('modify-listing.sample');
         Route::post('upload-excel', [ListingModifyController::class, 'uploadExcel'])->name('modify-listing.upload');
+        Route::delete('/modify-listing/{id}', [ListingModifyController::class, 'destroy'])
+    ->name('modify-listing.delete');
+
     });
 
     /**
