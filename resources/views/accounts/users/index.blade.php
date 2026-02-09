@@ -26,12 +26,12 @@ $getRoles = app('App\Http\Controllers\RoleController');
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12">
             <div class="row">
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-2">
                     <div class="card overflow-hidden">
                         <div class="card-body">
                             <a href="{{ route('users.index') }}">
                                 <div class="d-flex">
-                                    <div class="mt-2">
+                                    <div class="mt-2 text-center w-100">
                                         <h6 class="">Total Users</h6>
                                         <h2 class="mb-0 number-font">{{ $allUser }}</h2>
                                     </div>
@@ -40,39 +40,61 @@ $getRoles = app('App\Http\Controllers\RoleController');
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
-                    <div class="card overflow-hidden">
-                        <div class="card-body">
-                            <a href="{{ route('verified.users') }}">
-                                <div class="d-flex">
-                                    <div class="mt-2">
-                                        <h6 class="">Total Active User</h6>
-                                        <h2 class="mb-0 number-font">{{ $active }}</h2>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-2">
                     <div class="card overflow-hidden">
                         <div class="card-body">
                             <div class="d-flex">
-                                <div class="mt-2">
-                                    <h6 class="">Total InActive User</h6>
-                                    <h2 class="mb-0 number-font">{{ $inactive }}</h2>
+                                <div class="mt-2 text-center w-100">
+                                    <h6 class="">Active</h6>
+                                    <h2 class="mb-0 number-font text-success">{{ $active }}</h2>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-2">
                     <div class="card overflow-hidden">
                         <div class="card-body">
                             <div class="d-flex">
-                                <div class="mt-2">
-                                    <h6 class="">Total Roles</h6>
-                                    <h2 class="mb-0 number-font">{{ $getRoles->rolesCount() }}</h2>
+                                <div class="mt-2 text-center w-100">
+                                    <h6 class="">InActive</h6>
+                                    <h2 class="mb-0 number-font text-danger">{{ $inactive }}</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-2">
+                    <div class="card overflow-hidden">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="mt-2 text-center w-100">
+                                    <h6 class="">Suspend</h6>
+                                    <h2 class="mb-0 number-font text-warning">{{ $suspended }}</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-2">
+                    <div class="card overflow-hidden">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="mt-2 text-center w-100">
+                                    <h6 class="">Blocked</h6>
+                                    <h2 class="mb-0 number-font text-dark">{{ $blocked }}</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-2">
+                    <div class="card overflow-hidden">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="mt-2 text-center w-100">
+                                    <h6 class="">Without Roles</h6>
+                                    <h2 class="mb-0 number-font text-primary">{{ $withoutRoles }}</h2>
                                 </div>
                             </div>
                         </div>
@@ -118,6 +140,8 @@ $getRoles = app('App\Http\Controllers\RoleController');
                                     <th>{{ __('Age of Account') }}</th>
                                     <th>{{ __('A/C Create Date') }}</th>
                                     <th>{{ __('Roles') }}</th>
+                                    <th>{{ __('Listing Created') }}</th>
+                                    <th>{{ __('Listing Updated') }}</th>
                                     <th>{{ __('Listing Rate') }}</th>
                                     <th>{{ __('Account Health') }}</th>
                                     <th>{{ __('OTP Features') }}</th>
@@ -154,6 +178,8 @@ $getRoles = app('App\Http\Controllers\RoleController');
                                         @endforeach
                                     </td>
                                     </td>
+                                    <td>{{ $user->total_created ?? 0 }}</td>
+                                    <td>{{ $user->total_updated ?? 0 }}</td>
                                     <td>₹ {{ $user->posting_rate }}</td>
                                     <td>{{ $user->show_health ? 'Yes' : 'No' }}</td>
                                     <td>{{ $user->otp_feature ? 'Yes' : 'No' }}</td>

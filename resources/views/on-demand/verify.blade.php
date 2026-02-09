@@ -10,6 +10,7 @@
         gap: 20px;
         padding: 20px;
     }
+
     .image-item {
         position: relative;
         border: 2px solid #eee;
@@ -22,15 +23,18 @@
         align-items: center;
         justify-content: center;
     }
+
     .image-item:hover {
         transform: scale(1.02);
         border-color: #3366ff;
     }
+
     .image-item img {
         max-width: 100%;
         max-height: 100%;
         object-fit: contain;
     }
+
     .image-checkbox {
         position: absolute;
         top: 10px;
@@ -40,6 +44,7 @@
         height: 22px;
         cursor: pointer;
     }
+
     .select-all-container {
         padding: 10px 20px;
         background: #f1f1f1;
@@ -48,11 +53,13 @@
         display: flex;
         align-items: center;
     }
+
     .select-all-container label {
         margin-left: 10px;
         font-weight: bold;
         cursor: pointer;
     }
+
     .no-data {
         grid-column: 1 / -1;
         text-align: center;
@@ -101,33 +108,33 @@
 
                         {{-- TAB 1 : Request To Create --}}
                         <div class="tab-pane active" id="tab1">
-                             @if($requestedCreate->count() > 0)
+                            @if($requestedCreate->count() > 0)
                             <div class="select-all-container">
                                 <input type="checkbox" id="select-all-create"
-                                       onchange="toggleSelectAll(this, 'tab1')">
+                                    onchange="toggleSelectAll(this, 'tab1')">
                                 <label for="select-all-create">Select All</label>
                             </div>
-  @endif
+                            @endif
                             <form id="form-create">
                                 <div class="image-grid">
                                     @forelse($requestedCreate as $item)
-                                        <div class="image-item">
-                                            <input type="checkbox" name="ids[]" value="{{ $item->id }}"
-                                                   class="image-checkbox row-checkbox">
-                                            <img src="{{ asset('storage/' . $item->image) }}" alt="Request Image">
-                                        </div>
+                                    <div class="image-item">
+                                        <input type="checkbox" name="ids[]" value="{{ $item->id }}"
+                                            class="image-checkbox row-checkbox">
+                                        <img src="{{ asset('storage/' . $item->image) }}" alt="Request Image">
+                                    </div>
                                     @empty
-                                        <div class="no-data">
-                                            No data found
-                                        </div>
+                                    <div class="no-data">
+                                        No data found
+                                    </div>
                                     @endforelse
                                 </div>
 
                                 @if($requestedCreate->count() > 0)
                                 <div class="text-center mt-4">
                                     <button type="button"
-                                            onclick="bulkAction('form-create', '{{ route('on-demand.complete') }}')"
-                                            class="btn btn-warning border-dark text-dark fw-bold">
+                                        onclick="bulkAction('form-create', '{{ route('on-demand.complete') }}')"
+                                        class="btn btn-warning border-dark text-dark fw-bold">
                                         Mark It as "Completed"
                                     </button>
                                 </div>
@@ -137,34 +144,34 @@
 
                         {{-- TAB 2 : Request To Update --}}
                         <div class="tab-pane" id="tab2">
-                             @if($requestedUpdate->count() > 0)
+                            @if($requestedUpdate->count() > 0)
                             <div class="select-all-container">
 
                                 <input type="checkbox" id="select-all-update"
-                                       onchange="toggleSelectAll(this, 'tab2')">
+                                    onchange="toggleSelectAll(this, 'tab2')">
                                 <label for="select-all-update">Select All</label>
                             </div>
-                             @endif
+                            @endif
                             <form id="form-update">
                                 <div class="image-grid">
                                     @forelse($requestedUpdate as $item)
-                                        <div class="image-item">
-                                            <input type="checkbox" name="ids[]" value="{{ $item->id }}"
-                                                   class="image-checkbox row-checkbox">
-                                            <img src="{{ asset('storage/' . $item->image) }}" alt="Request Image">
-                                        </div>
+                                    <div class="image-item">
+                                        <input type="checkbox" name="ids[]" value="{{ $item->id }}"
+                                            class="image-checkbox row-checkbox">
+                                        <img src="{{ asset('storage/' . $item->image) }}" alt="Request Image">
+                                    </div>
                                     @empty
-                                        <div class="no-data">
-                                            No data found
-                                        </div>
+                                    <div class="no-data">
+                                        No data found
+                                    </div>
                                     @endforelse
                                 </div>
 
                                 @if($requestedUpdate->count() > 0)
                                 <div class="text-center mt-4">
                                     <button type="button"
-                                            onclick="bulkAction('form-update', '{{ route('on-demand.complete') }}')"
-                                            class="btn btn-warning border-dark text-dark fw-bold">
+                                        onclick="bulkAction('form-update', '{{ route('on-demand.complete') }}')"
+                                        class="btn btn-warning border-dark text-dark fw-bold">
                                         Mark It as "Completed"
                                     </button>
                                 </div>
@@ -174,37 +181,58 @@
 
                         {{-- TAB 3 : All Completed --}}
                         <div class="tab-pane" id="tab3">
-                             @if($completed->count() > 0)
+                            @if($completed->count() > 0)
                             <div class="select-all-container">
                                 <input type="checkbox" id="select-all-completed"
-                                       onchange="toggleSelectAll(this, 'tab3')">
+                                    onchange="toggleSelectAll(this, 'tab3')">
                                 <label for="select-all-completed">Select All</label>
                             </div>
-                             @endif
+                            @endif
 
                             <form id="form-completed">
                                 <div class="image-grid">
                                     @forelse($completed as $item)
-                                        <div class="image-item">
-                                            <input type="checkbox" name="ids[]" value="{{ $item->id }}"
-                                                   class="image-checkbox row-checkbox">
-                                            <img src="{{ asset('storage/' . $item->image) }}" alt="Request Image">
-                                            <div class="badge bg-success position-absolute bottom-0 end-0 p-1">
-                                                Completed
+                                    <div class="image-item">
+                                        <input type="checkbox" name="ids[]" value="{{ $item->id }}"
+                                            class="image-checkbox row-checkbox">
+
+                                        <img src="{{ asset('storage/' . $item->image) }}" alt="Request Image">
+
+                                        {{-- Completed badge --}}
+                                        <div class="badge bg-success position-absolute top-0 end-0 m-1">
+                                            Completed
+                                        </div>
+
+                                        {{-- Completed info --}}
+                                        <div class="position-absolute bottom-0 start-0 w-100 p-1"
+                                            style="background: rgba(0,0,0,0.6); color:#fff; font-size:12px;">
+
+                                            <div>
+                                                <strong>By:</strong>
+                                                {{ $item->completedBy->name ?? 'N/A' }}
+                                            </div>
+
+                                            <div>
+                                                <strong>At:</strong>
+                                                {{ $item->completed_at
+                    ? \Carbon\Carbon::parse($item->completed_at)->format('d M Y, h:i A')
+                    : 'N/A' }}
                                             </div>
                                         </div>
+                                    </div>
                                     @empty
-                                        <div class="no-data">
-                                            No data found
-                                        </div>
+
+                                    <div class="no-data">
+                                        No data found
+                                    </div>
                                     @endforelse
                                 </div>
 
                                 @if($completed->count() > 0)
                                 <div class="text-center mt-4">
                                     <button type="button"
-                                            onclick="bulkAction('form-completed', '{{ route('on-demand.uncomplete') }}')"
-                                            class="btn btn-info border-dark text-dark fw-bold">
+                                        onclick="bulkAction('form-completed', '{{ route('on-demand.uncomplete') }}')"
+                                        class="btn btn-info border-dark text-dark fw-bold">
                                         Mark It as "Un Completed"
                                     </button>
                                 </div>
@@ -245,24 +273,26 @@
         }
 
         fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({ ids: selected })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                location.reload();
-            } else {
-                alert('Something went wrong.');
-            }
-        })
-        .catch(() => {
-            alert('Error updating status.');
-        });
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    ids: selected
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Something went wrong.');
+                }
+            })
+            .catch(() => {
+                alert('Error updating status.');
+            });
     }
 </script>
 @endpush

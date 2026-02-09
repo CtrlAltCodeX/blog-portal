@@ -50,6 +50,12 @@ class UserController extends Controller
         $users = User::whereDoesntHave('roles', function ($query) {
             $query->where('name', 'Developer');
         })
+            ->withSum(['counts as total_created' => function ($query) {
+                $query->where('status', 'Created');
+            }], 'create_count')
+            ->withSum(['counts as total_updated' => function ($query) {
+                $query->where('status', 'Edited');
+            }], 'create_count')
             ->orderBy('id', 'asc')
             ->paginate(request()->get('users', 10));
 
@@ -68,7 +74,23 @@ class UserController extends Controller
         })
             ->where('status', 0)->count();
 
-        return view('accounts.users.index', compact('users', 'allUser', 'active', 'inactive'));
+        $suspended = User::whereDoesntHave('roles', function ($query) {
+            $query->where('name', 'Developer');
+        })
+            ->where('status', 2)->count();
+
+        $blocked = User::whereDoesntHave('roles', function ($query) {
+            $query->where('name', 'Developer');
+        })
+            ->where('status', 3)->count();
+
+        $withoutRoles = User::whereDoesntHave('roles', function ($query) {
+            $query->where('name', 'Developer');
+        })
+            ->whereDoesntHave('roles')
+            ->count();
+
+        return view('accounts.users.index', compact('users', 'allUser', 'active', 'inactive', 'suspended', 'blocked', 'withoutRoles'));
     }
 
     /**
