@@ -7,6 +7,8 @@ use App\Models\BackupListing;
 use App\Models\ListingModifyRequest;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\User;
+use App\Mail\RequestNotificationMail;
+use Illuminate\Support\Facades\Mail;
 
 class ListingModifyController extends Controller
 {
@@ -45,6 +47,19 @@ class ListingModifyController extends Controller
                 'requested_by' => auth()->id(),
                 'status' => 'Requested'
             ]);
+        }
+
+        // Send Email Notification to all Active Users
+        $activeUsers = User::where('status', 1)->get();
+        $data = [
+            'subject' => 'New Listing Modification Request',
+            'type' => 'Modify Listing Request',
+            'user_name' => auth()->user()->name,
+            'details' => "Total " . count($data) . " modification requests have been submitted."
+        ];
+
+        foreach ($activeUsers as $user) {
+            Mail::to($user->email)->send(new RequestNotificationMail($data));
         }
         
         return response()->json(['success' => true, 'message' => 'Requests saved successfully']);

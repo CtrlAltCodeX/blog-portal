@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\OnDemandListing;
 use Illuminate\Support\Facades\Storage;
+use App\Models\User;
+use App\Mail\RequestNotificationMail;
+use Illuminate\Support\Facades\Mail;
 
 class OnDemandListingController extends Controller
 {
@@ -31,6 +34,21 @@ class OnDemandListingController extends Controller
                     'status' => 'Requested'
                 ]);
             }
+
+            // Send Email Notification to all Active Users
+            $activeUsers = User::where('status', 1)->get();
+            // dd($activeUsers);
+            $count = count($request->file('images'));
+            $data = [
+                'subject' => 'New On Demand Images Uploaded',
+                'type' => 'On Demand Upload',
+                'user_name' => auth()->user()->name,
+                'details' => "Total $count image(s) uploaded for " . $request->category . " request."
+            ];
+
+            // foreach ($activeUsers as $user) {
+                Mail::to('bstteam114@gmail.com')->send(new RequestNotificationMail($data));
+            // }
         }
 
         session()->flash('success', 'Images uploaded successfully.');
@@ -51,6 +69,7 @@ class OnDemandListingController extends Controller
 
         $completed = OnDemandListing::with(['requestedBy', 'completedBy'])
             ->where('status', 'Completed')
+            ->orderBy('completed_at', 'desc')
             ->get();
 
         return view('on-demand.verify', compact('requestedCreate', 'requestedUpdate', 'completed'));
@@ -84,6 +103,70 @@ class OnDemandListingController extends Controller
             'completed_by' => null,
             'completed_at' => null
         ]);
+
+        return response()->json(['success' => true]);
+    }
+
+    public function download($id)
+    {
+        $listing = OnDemandListing::findOrFail($id);
+        $path = storage_path('app/public/' . $listing->image);
+
+        if (!file_exists($path)) {
+            return redirect()->back()->with('error', 'Image not found.');
+        }
+
+        return response()->download($path);
+    }
+
+    public function bulkDownload(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:on_demand_listings,id'
+        ]);
+
+        $listings = OnDemandListing::whereIn('id', $request->ids)->get();
+
+        if ($listings->isEmpty()) {
+            return response()->json(['success' => false, 'message' => 'No images selected.']);
+        }
+
+        $zip = new \ZipArchive();
+        $zipFileName = 'on-demand-images-' . time() . '.zip';
+        $zipPath = storage_path('app/public/' . $zipFileName);
+
+        if ($zip->open($zipPath, \ZipArchive::CREATE) === TRUE) {
+            foreach ($listings as $listing) {
+                $filePath = storage_path('app/public/' . $listing->image);
+                if (file_exists($filePath)) {
+                    $zip->addFile($filePath, basename($filePath));
+                }
+            }
+            $zip->close();
+        }
+
+        return response()->json([
+            'success' => true,
+            'download_url' => asset('storage/' . $zipFileName)
+        ]);
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:on_demand_listings,id'
+        ]);
+
+        $listings = OnDemandListing::whereIn('id', $request->ids)->get();
+
+        foreach ($listings as $listing) {
+            if (Storage::disk('public')->exists($listing->image)) {
+                Storage::disk('public')->delete($listing->image);
+            }
+            $listing->delete();
+        }
 
         return response()->json(['success' => true]);
     }
