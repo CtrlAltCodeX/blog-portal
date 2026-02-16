@@ -47,6 +47,7 @@ class ListingModifyController extends Controller
                     'book_name' => $product->title,
                     'mrp' => $product->mrp,
                     'selling_price' => $product->selling_price,
+                    'image' => $product->base_url,
                 ]
             ]);
         }
@@ -134,6 +135,7 @@ class ListingModifyController extends Controller
                 'book_name' => $product->title ?? 'N/A',
                 'mrp' => $product->mrp ?? '0',
                 'selling' => $product->selling_price ?? '0',
+                'image' => $product->base_url ?? null,
             ];
         }
         fclose($handle);

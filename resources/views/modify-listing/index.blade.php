@@ -67,6 +67,7 @@
                         <tr class="bg-light">
                             <th>SL.</th>
                             <th style="width: 200px;">PRODUCT ID</th>
+                            <th>IMAGE</th>
                             <th>Request type <span class='text-danger'>*</span></th>
                             <th>PUBLISHER</th>
                             <th>BOOK NAME</th>
@@ -83,6 +84,11 @@
                                     <input type="text" class="form-control product-id" placeholder="ID">
                                     <button class="btn btn-primary fetch-btn" type="button">Fetch</button>
                                 </div>
+                            </td>
+                            <td class="image-val">
+                                <a href="#" target="_blank" class="img-link">
+                                    <img src="{{ asset('assets/images/no-image.png') }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" class="prod-img">
+                                </a>
                             </td>
                             <td>
                                 <select class="form-control category-select" required>
@@ -126,6 +132,11 @@ $(document).ready(function() {
                         <input type="text" class="form-control product-id" placeholder="ID">
                         <button class="btn btn-primary fetch-btn" type="button">Fetch</button>
                     </div>
+                </td>
+                <td class="image-val">
+                    <a href="#" target="_blank" class="img-link">
+                        <img src="{{ asset('assets/images/no-image.png') }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" class="prod-img">
+                    </a>
                 </td>
                 <td>
                     <select class="form-control category-select">
@@ -176,6 +187,10 @@ $(document).ready(function() {
                 row.find('.book-name-val').text(response.data.book_name || 'N/A');
                 row.find('.mrp-val').text(response.data.mrp || '0');
                 row.find('.selling-val').text(response.data.selling_price || '0');
+                if(response.data.image) {
+                    row.find('.prod-img').attr('src', response.data.image);
+                    row.find('.img-link').attr('href', response.data.image);
+                }
             } else {
                 alert(response.message);
             }
@@ -208,6 +223,11 @@ $(document).ready(function() {
                                     <input type="text" class="form-control product-id" value="${item.product_id}">
                                     <button class="btn btn-primary fetch-btn" type="button">Fetch</button>
                                 </div>
+                            </td>
+                            <td class="image-val">
+                                <a href="${item.image || '#'}" target="_blank" class="img-link">
+                                    <img src="${item.image || '{{ asset("assets/images/no-image.png") }}'}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" class="prod-img">
+                                </a>
                             </td>
                             <td>
                                 <select class="form-control category-select">

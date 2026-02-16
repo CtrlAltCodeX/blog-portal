@@ -56,6 +56,7 @@
                                 <tr>
                                     <th>SL.</th>
                                     <th>PRODUCT ID</th>
+                                    <th>IMAGE</th>
                                     <th>Request Type</th>
                                     <th>PUBLISHER</th>
                                     <th>BOOK NAME</th>
@@ -74,6 +75,11 @@
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
                                     <td>{{ $item->product_id }}</td>
+                                    <td>
+                                        <a href="{{ $item->product->base_url ?? '#' }}" target="_blank">
+                                            <img src="{{ $item->product->base_url ?? asset('assets/images/no-image.png') }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+                                        </a>
+                                    </td>
                                     <td>{{ $item->category }}</td>
                                     <td>{{ $item->product->publisher ?? 'N/A' }}</td>
                                     <td>{{ $item->product->title ?? 'N/A' }}</td>
@@ -103,7 +109,7 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="10" class="text-center text-muted">
+                                    <td colspan="11" class="text-center text-muted">
                                         No data found
                                     </td>
                                 </tr>
@@ -121,6 +127,7 @@
                                 <tr>
                                     <th>SL.</th>
                                     <th>PRODUCT ID</th>
+                                    <th>IMAGE</th>
                                     <th>Request Type</th>
                                     <th>PUBLISHER</th>
                                     <th>BOOK NAME</th>
@@ -141,6 +148,11 @@
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
                                     <td>{{ $item->product_id }}</td>
+                                    <td>
+                                        <a href="{{ $item->product->base_url ?? '#' }}" target="_blank">
+                                            <img src="{{ $item->product->base_url ?? asset('assets/images/no-image.png') }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+                                        </a>
+                                    </td>
                                     <td>{{ $item->category }}</td>
                                     <td>{{ $item->product->publisher ?? 'N/A' }}</td>
                                     <td>{{ $item->product->title ?? 'N/A' }}</td>
@@ -171,7 +183,7 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="11" class="text-center text-muted">
+                                    <td colspan="12" class="text-center text-muted">
                                         No data found
                                     </td>
                                 </tr>
