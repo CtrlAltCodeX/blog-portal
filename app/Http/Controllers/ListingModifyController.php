@@ -26,6 +26,17 @@ class ListingModifyController extends Controller
 
     public function fetchProduct(Request $request)
     {
+        $existingRequest = ListingModifyRequest::where('product_id', $request->product_id)
+            ->where('status', 'Requested')
+            ->first();
+
+        if ($existingRequest) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product Id already exist'
+            ]);
+        }
+
         $product = BackupListing::where('product_id', $request->product_id)->first();
 
         if ($product) {
