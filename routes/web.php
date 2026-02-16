@@ -173,6 +173,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         Route::get('verify', [OnDemandListingController::class, 'verify'])->name('on-demand.verify');
         Route::post('complete', [OnDemandListingController::class, 'complete'])->name('on-demand.complete');
         Route::post('uncomplete', [OnDemandListingController::class, 'uncomplete'])->name('on-demand.uncomplete');
+        Route::get('download/{id}', [OnDemandListingController::class, 'download'])->name('on-demand.download');
+        Route::post('bulk-download', [OnDemandListingController::class, 'bulkDownload'])->name('on-demand.bulk-download');
+        Route::post('bulk-delete', [OnDemandListingController::class, 'bulkDelete'])->name('on-demand.bulk-delete');
     });
 
     /**
