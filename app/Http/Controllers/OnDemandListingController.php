@@ -8,6 +8,12 @@ use Illuminate\Support\Facades\Storage;
 
 class OnDemandListingController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role_or_permission:Product Listing -> Request New Listings (Img)', ['only' => ['index']]);
+        $this->middleware('role_or_permission:Product Listing -> Review / Verify Listing (Img)', ['only' => ['verify']]);
+    }
+
     public function index()
     {
         return view('on-demand.index');
@@ -23,7 +29,7 @@ class OnDemandListingController extends Controller
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $path = $image->store('on-demand', 'public');
-                
+
                 OnDemandListing::create([
                     'requested_by' => auth()->id(),
                     'image' => $path,

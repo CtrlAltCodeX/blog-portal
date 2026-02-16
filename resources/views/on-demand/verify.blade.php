@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', __('Verify On Demand Listings'))
+@section('title', __('Review/Verify Listings'))
 
 @push('css')
 <style>
@@ -67,43 +67,72 @@
         color: #888;
         font-weight: 500;
     }
+    
+    .panel-tabs {
+        grid-gap:10px;
+    }
+    
+    .panel-tabs li a {
+        background-color: lightgrey;
+        color:black;
+        padding: 1rem 1.8rem !important;
+        border-bottom:0px !important;
+        border-top-right-radius: 10px;
+        border-top-left-radius: 10px;
+        
+    }
+    
+    .panel-tabs li a.active {
+        color:white !important;
+        background-color:#6c5ffc;
+    }
+    
+    .select-all-label {
+        margin-bottom:0px;
+    }
 </style>
 @endpush
 
 @section('content')
 <div class="main-container container-fluid">
-    <div class="page-header">
-        <h1 class="page-title">{{ __('Verify On Demand Listings') }}</h1>
-    </div>
+    <!--<div class="page-header">-->
+    <!--    <h1 class="page-title">{{ __('Verify On Demand Listings') }}</h1>-->
+    <!--</div>-->
 
     <div class="row">
         <div class="col-md-12">
             <div class="card">
 
                 {{-- Tabs --}}
-                <div class="card-header border-bottom-0">
+                <div class="card-header">
+                    <h1 class="page-title">{{ __('Review/Verify Listings') }}</h1>
+                </div>
+
+                <div class="card-body">
                     <div class="tabs-menu1">
                         <ul class="nav panel-tabs">
+                            @can('Product Listing -> Review/Verify Listings (Img) -> Create New Listigs & Update Existing Listings')
                             <li>
                                 <a href="#tab1" class="active" data-bs-toggle="tab">
-                                    Request To Create ({{ $requestedCreate->count() }})
+                                    Create New Listings ({{ $requestedCreate->count() }})
                                 </a>
                             </li>
                             <li>
                                 <a href="#tab2" data-bs-toggle="tab">
-                                    Request To Update ({{ $requestedUpdate->count() }})
+                                    Update Existing Listings ({{ $requestedUpdate->count() }})
                                 </a>
                             </li>
+                            @endcan
+                            @can('Product Listing -> Review/Verify Listings (Img) -> All Completed Listings')
                             <li>
                                 <a href="#tab3" data-bs-toggle="tab">
-                                    All Completed ({{ $completed->count() }})
+                                    All Completed Listings ({{ $completed->count() }})
                                 </a>
                             </li>
+                            @endcan
                         </ul>
                     </div>
-                </div>
-
-                <div class="card-body">
+                    
                     <div class="tab-content">
 
                         {{-- TAB 1 : Request To Create --}}
@@ -112,7 +141,7 @@
                             <div class="select-all-container">
                                 <input type="checkbox" id="select-all-create"
                                     onchange="toggleSelectAll(this, 'tab1')">
-                                <label for="select-all-create">Select All</label>
+                                <label for="select-all-create" class='select-all-label'>Select All</label>
                             </div>
                             @endif
                             <form id="form-create">
@@ -134,8 +163,8 @@
                                 <div class="text-center mt-4">
                                     <button type="button"
                                         onclick="bulkAction('form-create', '{{ route('on-demand.complete') }}')"
-                                        class="btn btn-warning border-dark text-dark fw-bold">
-                                        Mark It as "Completed"
+                                        class="btn btn-warning text-dark">
+                                        Mark Completed
                                     </button>
                                 </div>
                                 @endif
@@ -149,7 +178,7 @@
 
                                 <input type="checkbox" id="select-all-update"
                                     onchange="toggleSelectAll(this, 'tab2')">
-                                <label for="select-all-update">Select All</label>
+                                <label for="select-all-update" class='select-all-label'>Select All</label>
                             </div>
                             @endif
                             <form id="form-update">
@@ -171,8 +200,8 @@
                                 <div class="text-center mt-4">
                                     <button type="button"
                                         onclick="bulkAction('form-update', '{{ route('on-demand.complete') }}')"
-                                        class="btn btn-warning border-dark text-dark fw-bold">
-                                        Mark It as "Completed"
+                                        class="btn btn-warning text-dark">
+                                        Mark Completed
                                     </button>
                                 </div>
                                 @endif
@@ -185,7 +214,7 @@
                             <div class="select-all-container">
                                 <input type="checkbox" id="select-all-completed"
                                     onchange="toggleSelectAll(this, 'tab3')">
-                                <label for="select-all-completed">Select All</label>
+                                <label for="select-all-completed" class='select-all-label'>Select All</label>
                             </div>
                             @endif
 
@@ -214,9 +243,7 @@
 
                                             <div>
                                                 <strong>At:</strong>
-                                                {{ $item->completed_at
-                    ? \Carbon\Carbon::parse($item->completed_at)->format('d M Y, h:i A')
-                    : 'N/A' }}
+                                                {{ $item->completed_at ? \Carbon\Carbon::parse($item->completed_at)->format('d M Y, h:i A') : 'N/A' }}
                                             </div>
                                         </div>
                                     </div>
@@ -232,8 +259,8 @@
                                 <div class="text-center mt-4">
                                     <button type="button"
                                         onclick="bulkAction('form-completed', '{{ route('on-demand.uncomplete') }}')"
-                                        class="btn btn-info border-dark text-dark fw-bold">
-                                        Mark It as "Un Completed"
+                                        class="btn btn-danger">
+                                        Mark In-Completed
                                     </button>
                                 </div>
                                 @endif

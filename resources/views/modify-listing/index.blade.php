@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', __('Modify Listing'))
+@section('title', __('Request to Modify'))
 
 @push('css')
 <style>
@@ -35,7 +35,7 @@
         margin-top: 20px;
     }
     .top-actions {
-        margin-bottom: 20px;
+        /*margin-bottom: 20px;*/
         display: flex;
         gap: 10px;
     }
@@ -44,17 +44,22 @@
 
 @section('content')
 <div class="main-container container-fluid">
-    <div class="page-header">
-        <h1 class="page-title">{{ __('Modify Listing') }}</h1>
-    </div>
+    <!--<div class="page-header">-->
+    <!--    <h1 class="page-title">{{ __('Modify Listing') }}</h1>-->
+    <!--</div>-->
 
-    <div class="top-actions">
-        <a href="{{ route('modify-listing.sample') }}" class="btn btn-primary"><i class="fa fa-download"></i> Download Sample Excel</a>
-        <input type="file" id="bulkUpload" style="display: none;" accept=".csv,.xlsx">
-        <button class="btn btn-success" onclick="$('#bulkUpload').click()"><i class="fa fa-upload"></i> Upload Excel</button>
-    </div>
 
     <div class="card">
+        <div class="card-header justify-content-between">
+            <h1 class="page-title">{{ __('Request to Modify ( Exchange or Update )') }}</h1>
+            
+            <div class="top-actions">
+                <a href="{{ route('modify-listing.sample') }}" class="btn btn-primary"><i class="fa fa-download"></i> Download Sample File</a>
+                <input type="file" id="bulkUpload" style="display: none;" accept=".csv,.xlsx">
+                <button class="btn btn-success" onclick="$('#bulkUpload').click()"><i class="fa fa-upload"></i> Upload Excel</button>
+            </div>
+        </div>
+        
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered" id="modifyTable">
@@ -62,7 +67,7 @@
                         <tr class="bg-light">
                             <th>SL.</th>
                             <th style="width: 200px;">PRODUCT ID</th>
-                            <th>Category</th>
+                            <th>Request type <span class='text-danger'>*</span></th>
                             <th>PUBLISHER</th>
                             <th>BOOK NAME</th>
                             <th>MRP.</th>
@@ -80,8 +85,8 @@
                                 </div>
                             </td>
                             <td>
-                                <select class="form-control category-select">
-                                         <option value="" selected>Select Category</option>
+                                <select class="form-control category-select" required>
+                                    <option value="" selected>Select Category</option>
                                     <option value="Exchange with Others">Exchange with Others</option>
                                     <option value="Update To Latest" >Update To Latest</option>
                                 </select>
@@ -99,7 +104,7 @@
                 
                 <div class="d-flex justify-content-between align-items-center">
                     <button class="add-row-btn" id="addRow" type="button"><i class="fa fa-plus"></i></button>
-                    <button class="save-btn" id="saveAll" type="button">SAVE ALL</button>
+                    <button class="save-btn" id="saveAll" type="button">SAVE & REQUEST TO UPDATE</button>
                 </div>
             </div>
         </div>
@@ -227,12 +232,25 @@ $(document).ready(function() {
     // Save All
     $('#saveAll').click(function() {
         let rows = [];
-        $('.data-row').each(function() {
+        $('.data-row').each(function () {
             let pid = $(this).find('.product-id').val();
-            if(pid) {
+            let category = $(this).find('.category-select').val();
+        
+            if (pid) {
+        
+                if (!category) {
+                    hasError = true;
+        
+                    $(this).find('.category-select')
+                        .addClass('border-red-500'); // highlight error
+        
+                    alert('Category is required for selected product.');
+                    return false; // break .each loop
+                }
+        
                 rows.push({
                     product_id: pid,
-                    category: $(this).find('.category-select').val()
+                    category: category
                 });
             }
         });
@@ -246,7 +264,7 @@ $(document).ready(function() {
             rows: rows
         }, function(response) {
             $('#saveAll').html('SAVE ALL').prop('disabled', false);
-            if(response.success) {
+            if (response.success) {
                 alert(response.message);
                 window.location.href = "{{ route('modify-listing.requested') }}";
             }

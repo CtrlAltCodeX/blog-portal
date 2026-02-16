@@ -138,11 +138,10 @@ $getRoles = app('App\Http\Controllers\RoleController');
                                     <th>{{ __('Email') }}</th>
                                     <th>{{ __('Mobile') }}</th>
                                     <th>{{ __('Age of Account') }}</th>
+                                    <th>{{ __('Total Listings') }}</th>
+                                    <th>{{ __('Listing Rate') }}</th>
                                     <th>{{ __('A/C Create Date') }}</th>
                                     <th>{{ __('Roles') }}</th>
-                                    <th>{{ __('Listing Created') }}</th>
-                                    <th>{{ __('Listing Updated') }}</th>
-                                    <th>{{ __('Listing Rate') }}</th>
                                     <th>{{ __('Account Health') }}</th>
                                     <th>{{ __('OTP Features') }}</th>
                                     <th>{{ __('Data Transfer') }}</th>
@@ -168,6 +167,8 @@ $getRoles = app('App\Http\Controllers\RoleController');
                                         $daysSinceCreation = \Carbon\Carbon::parse($createdAt)->diffInDays(\Carbon\Carbon::now());
                                     @endphp
                                     <td>{{ $daysSinceCreation }} Days</td>
+                                    <td>Cre:{{$user->total_created??0}}+Upd:{{$user->total_updated??0}}=Tot:{{$user->total_created+$user->total_updated}}</td>
+                                    <td>₹ {{ $user->posting_rate }}</td>
                                     <td>{{ \Carbon\Carbon::parse($user->created_at)->format('d-m-Y h:i A') }}</td>
                                     <td>
                                         @foreach ($user->roles as $index => $role)
@@ -178,9 +179,8 @@ $getRoles = app('App\Http\Controllers\RoleController');
                                         @endforeach
                                     </td>
                                     </td>
-                                    <td>{{ $user->total_created ?? 0 }}</td>
-                                    <td>{{ $user->total_updated ?? 0 }}</td>
-                                    <td>₹ {{ $user->posting_rate }}</td>
+                                    
+                                    <!--<td>{{ $user->total_updated ?? 0 }}</td>-->
                                     <td>{{ $user->show_health ? 'Yes' : 'No' }}</td>
                                     <td>{{ $user->otp_feature ? 'Yes' : 'No' }}</td>
                                     <td>{{ $user->data_transfer ? 'Yes' : 'No' }}</td>

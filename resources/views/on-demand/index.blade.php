@@ -1,18 +1,18 @@
 @extends('layouts.master')
 
-@section('title', __('On Demand Listing - Bulk Upload'))
+@section('title', __('Request New Listings (On Demand)'))
 
 @section('content')
 <div class="main-container container-fluid">
-    <div class="page-header">
-        <h1 class="page-title">{{ __('On Demand Listing - Bulk Upload') }}</h1>
-    </div>
+    <!--<div class="page-header">-->
+    <!--    <h1 class="page-title">{{ __('On Demand Listing - Bulk Upload') }}</h1>-->
+    <!--</div>-->
 
     <div class="row">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ __('Upload Multiple Images') }}</h3>
+                    <h3 class="card-title">{{ __('Request New Listings (On Demand)') }}</h3>
                 </div>
                 <div class="card-body">
 
@@ -21,10 +21,11 @@
                         @csrf
                         <div class="row mb-4">
                             <div class="col-md-6">
-                                <label class="form-label">{{ __('Select Category') }}</label>
+                                <label class="form-label">{{ __('Requested Type') }}<span class='text-danger'>*</span></label>
                                 <select name="category" class="form-control" required>
-                                    <option value="Create">Request To Create</option>
-                                    <option value="Update">Request To Update</option>
+                                    <option value="">Select</option>
+                                    <option value="Create">Create New Listings</option>
+                                    <option value="Update">Update Existing Listings</option>
                                 </select>
                             </div>
                             <div class="col-md-6">

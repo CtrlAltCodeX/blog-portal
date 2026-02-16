@@ -1,15 +1,36 @@
 @extends('layouts.master')
 
-@section('title', __('Requested Listings'))
+@section('title', __('Modify Listings Status'))
 
 @section('content')
-<div class="main-container container-fluid">
-    <div class="page-header">
-        <h1 class="page-title">{{ __('Verify Requested Listings') }}</h1>
-    </div>
+<style>
+    .panel-tabs {
+        grid-gap:10px;
+    }
+    
+    .panel-tabs li a {
+        background-color: lightgrey;
+        color:black;
+        padding: 1rem 1.8rem !important;
+        border-bottom:0px !important;
+        border-top-right-radius: 10px;
+        border-top-left-radius: 10px;
+        
+    }
+    
+    .panel-tabs li a.active {
+        color:white !important;
+        background-color:#6c5ffc;
+    }
+</style>
 
+<div class="main-container container-fluid">
     <div class="card">
-        <div class="card-header border-bottom-0">
+        <div class="card-header">
+            <h1 class="page-title">{{ __('Modify Listings Status') }}</h1>
+        </div>
+
+        <div class="card-body">
             <div class="tabs-menu1">
                 <ul class="nav panel-tabs">
                     <li>
@@ -24,9 +45,7 @@
                     </li>
                 </ul>
             </div>
-        </div>
-
-        <div class="card-body">
+            
             <div class="tab-content">
 
                 {{-- TAB 1 : Request For Update --}}
@@ -37,7 +56,7 @@
                                 <tr>
                                     <th>SL.</th>
                                     <th>PRODUCT ID</th>
-                                    <th>Category</th>
+                                    <th>Request Type</th>
                                     <th>PUBLISHER</th>
                                     <th>BOOK NAME</th>
                                     <th>MRP.</th>
@@ -45,8 +64,9 @@
                                     <th>STATUS</th>
                                     <th>Requested By</th>
                                     <th>Requested Time</th>
+                                    @can('Product Listing -> Modified Listing Status ->  Delete Button')
                                     <th>ACTION</th>
-
+                                    @endcan
                                 </tr>
                             </thead>
                             <tbody>
@@ -66,6 +86,7 @@
                                     </td>
                                     <td>{{ $item->requestedBy->name ?? 'System' }}</td>
                                     <td>{{ $item->created_at->format('d-m-Y H:i') }}</td>
+                                    @can('Product Listing -> Modified Listing Status ->  Delete Button')
                                     <td>
                                         <form method="POST" action="{{ route('modify-listing.delete', $item->id) }}"
                                               style="display:inline;">
@@ -78,6 +99,7 @@
                                             </button>
                                         </form>
                                     </td>
+                                    @endcan
                                 </tr>
                                 @empty
                                 <tr>
@@ -99,7 +121,7 @@
                                 <tr>
                                     <th>SL.</th>
                                     <th>PRODUCT ID</th>
-                                    <th>Category</th>
+                                    <th>Request Type</th>
                                     <th>PUBLISHER</th>
                                     <th>BOOK NAME</th>
                                     <th>MRP.</th>
@@ -108,7 +130,9 @@
                                     <th>Requested By</th>
                                     <th>Updated By</th>
                                     <th>Updated Time</th>
+                                    @can('Product Listing -> Modified Listing Status ->  Delete Button')
                                     <th>ACTION</th>
+                                    @endcan
 
                                 </tr>
                             </thead>
@@ -130,6 +154,7 @@
                                     <td>{{ $item->requestedBy->name ?? 'System' }}</td>
                                     <td>{{ $item->updatedBy->name ?? 'N/A' }}</td>
                                     <td>{{ $item->updated_at->format('d-m-Y H:i') }}</td>
+                                    @can('Product Listing -> Modified Listing Status ->  Delete Button')
                                     <td>
                                         <form method="POST" action="{{ route('modify-listing.delete', $item->id) }}"
                                               style="display:inline;">
@@ -142,6 +167,7 @@
                                             </button>
                                         </form>
                                     </td>
+                                    @endcan
                                 </tr>
                                 @empty
                                 <tr>
