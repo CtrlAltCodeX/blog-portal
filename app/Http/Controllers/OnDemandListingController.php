@@ -52,9 +52,9 @@ class OnDemandListingController extends Controller
                 'details' => "Total $count image(s) uploaded for " . $request->category . " request."
             ];
 
-            // foreach ($activeUsers as $user) {
-                Mail::to('bstteam114@gmail.com')->send(new RequestNotificationMail($data));
-            // }
+            foreach ($activeUsers as $user) {
+                Mail::to($user->email)->send(new RequestNotificationMail($data));
+            }
         }
 
         session()->flash('success', 'Images uploaded successfully.');
