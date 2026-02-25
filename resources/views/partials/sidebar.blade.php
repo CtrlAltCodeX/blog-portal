@@ -304,6 +304,17 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         </li>
                     </ul>
                 </li>
+                <li class="slide {{ (request()->is('admin/issue-types*') || request()->is('admin/departments*')) ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-info"></i><span class="side-menu__label">{{ __('Complaint Section') }}</span><i class="angle fe fe-chevron-right"></i></a>
+                    <ul class="slide-menu">
+                        <li>
+                            <a href="{{ route('issue-types.index') }}" class="slide-item {{ request()->is('admin/issue-types*') ? 'active' : '' }}">{{ __('Issue Type') }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('departments.index') }}" class="slide-item {{ request()->is('admin/departments*') ? 'active' : '' }}">{{ __('Department') }}</a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </div>

@@ -34,6 +34,9 @@ use App\Http\Controllers\PromotionalController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\WorkTypeController;
 use App\Http\Controllers\OnDemandListingController;
+use App\Http\Controllers\IssueTypeController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\PublicComplaintController;
 
 Illuminate\Support\Facades\Auth::routes();
 
@@ -436,6 +439,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::resource('worktype', WorkTypeController::class);
 
+    Route::resource('issue-types', IssueTypeController::class);
+
+    Route::resource('departments', DepartmentController::class);
+
     Route::get('count/users', [UserController::class, 'userCounts'])
         ->name('users.count');
 
@@ -519,6 +526,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
     Route::post('/support/mail', [HomeController::class, 'supportMail'])
         ->name('support.mail');
+
+
     /**
      *  END
      */
@@ -570,3 +579,10 @@ Route::get('', [HomeController::class, 'index'])
 
 Route::match(['get', 'post'], 'price/calculation', [UserController::class, 'priceCalculation'])
     ->name('price.calculation');
+
+Route::get('/complaints/start', [PublicComplaintController::class, 'startVerification'])->name('public.complaints.verify.start');
+Route::get('/complaints/create', [PublicComplaintController::class, 'create'])->name('public.complaints.create');
+Route::post('/complaints/send-otp', [PublicComplaintController::class, 'sendOtp'])->name('public.complaints.sendOtp');
+Route::post('/complaints/verify-otp', [PublicComplaintController::class, 'verifyOtp'])->name('public.complaints.verifyOtp');
+Route::post('/complaints/store', [PublicComplaintController::class, 'store'])->name('public.complaints.store');
+Route::get('/complaints/success/{ticket_id}', [PublicComplaintController::class, 'success'])->name('public.complaints.success');

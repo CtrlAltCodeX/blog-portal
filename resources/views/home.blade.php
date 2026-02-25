@@ -25,6 +25,36 @@
     html {
       scroll-behavior: smooth;
     }
+
+    .dashboard-card {
+      border: none;
+      border-radius: 18px !important;
+      transition: all 0.3s ease;
+      background: #fff;
+      padding: 2rem;
+      text-align: center;
+      height: 100%;
+    }
+
+    .dashboard-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .icon-circle {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin: 0 auto 1.5rem auto;
+    }
+    
+    .bg-complaint {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+    }
   </style>
 </head>
 
@@ -51,6 +81,7 @@
             <li><a href="#about" class="menu-links">About</a></li>
             <li><a href="#review" class="menu-links">Reviews</a></li>
             <li><a href="#contact" class="menu-links">Contact</a></li>
+            <li><a href="#complaint" class="menu-links text-danger fw-bold">COMPLAINT</a></li>
             <li><a href="https://support.exam360.in/freelance-partner" class="menu-links">FREELANCE</a></li>
             <li><a href="{{ route('register') }}" class="btn-br bg-btn5 btshad-b2 lnk">Signup <span class="circle"></span></a> </li>
             <li><a href="{{ route('login') }}" class="btn-br bg-btn5 btshad-b2 lnk">Office Login <span class="circle"></span></a> </li>
@@ -70,6 +101,7 @@
           <li><a href="#about" class="menu-links">About</a></li>
           <li><a href="#review" class="menu-links">Reviews</a></li>
           <li><a href="#contact" class="menu-links">Contact</a></li>
+          <li><a href="#complaint" class="menu-links text-danger fw-bold">COMPLAINT</a></li>
           <li><a href="https://support.exam360.in/freelance-partner">FREELANCE</a></li>
           <li><a href="{{ route('register') }}" class="btn-br bg-btn5 btshad-b2 lnk">Signup <span class="circle"></span></a> </li>
           <li><a href="{{ route('login') }}" class="btn-br bg-btn5 btshad-b2 lnk">Office Login <span class="circle"></span></a> </li>
@@ -282,6 +314,64 @@
     </div>
   </section>
   <!--End Testinomial-->
+
+  <!--Start Complaints Section-->
+  <section class="pad-tb bg-complaint" id="complaint">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="common-heading">
+            <span class="text-white">Complaint Management System</span>
+            <h2 class="text-white">Quickly create, reply and track your complaints</h2>
+          </div>
+        </div>
+      </div>
+      <div class="row g-4 justify-content-center mt30">
+        <!-- Create -->
+        <div class="col-lg-4 col-sm-6 mt30">
+          <div class="dashboard-card shadow-lg">
+            <div class="icon-circle bg-primary text-white">
+              <i class="fas fa-plus"></i>
+            </div>
+            <h5 class="fw-bold">Create Complaint</h5>
+            <p class="text-muted small">Raise a new issue quickly</p>
+            <a href="{{ route('public.complaints.verify.start') }}" class="btn-main bg-btn3 lnk w-100 mt20">
+              CREATE NEW COMPLAINT <i class="fas fa-chevron-right fa-icon"></i><span class="circle"></span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Reply -->
+        <div class="col-lg-4 col-sm-6 mt30">
+          <div class="dashboard-card shadow-lg">
+            <div class="icon-circle bg-success text-white">
+              <i class="fas fa-reply"></i>
+            </div>
+            <h5 class="fw-bold">Reply to Complaint</h5>
+            <p class="text-muted small">Respond to updates</p>
+            <a href="#" class="btn-main bg-btn lnk w-100 mt20">
+              REPLY TO MY COMPLAINT <i class="fas fa-chevron-right fa-icon"></i><span class="circle"></span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Status -->
+        <div class="col-lg-4 col-sm-6 mt30">
+          <div class="dashboard-card shadow-lg">
+            <div class="icon-circle bg-warning text-white">
+              <i class="fas fa-search"></i>
+            </div>
+            <h5 class="fw-bold">Check Status</h5>
+            <p class="text-muted small">Track complaint progress</p>
+            <a href="#" class="btn-main bg-btn2 lnk w-100 mt20">
+              CHECK COMPLAINT STATUS <i class="fas fa-chevron-right fa-icon"></i><span class="circle"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!--End Complaints Section-->
   <!--Start Enquire Form-->
   <section class="enquire-form pad-tb" id="contact">
     <div class="container">
