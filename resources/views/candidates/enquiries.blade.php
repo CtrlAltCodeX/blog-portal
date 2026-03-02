@@ -69,11 +69,36 @@
                     <form action='' method='GET'>
                         <div class='w-100 d-flex justify-content-between mb-4 align-items-center' style='grid-gap:10px;'>
                             <input type='text' name='search' class='form-control' placeholder='Search...' value='{{ request()->search }}' />
-                            
+                            @php
+                                $hasOffice = auth()->user()->can('Lead/Job Application -> Work From Office');
+                                $hasHome   = auth()->user()->can('Lead/Job Application -> Work From Home');
+                            @endphp
                             <select class="form-control" id="jobTypeFilter" name='preference' style="width: 30%;">
                                 <option value="">All</option>
-                                <option {{ request()->preference == 'Work From Office' ? 'selected' : '' }}>Work From Office</option>
-                                <option {{ request()->preference == 'Work From Home' ? 'selected' : '' }}>Work From Home</option>
+                                @if(!$hasOffice && !$hasHome)
+                                    {{-- If no permissions → show both --}}
+                                    <option {{ request()->preference == 'Work From Office' ? 'selected' : '' }}>
+                                        Work From Office
+                                    </option>
+                                    <option {{ request()->preference == 'Work From Home' ? 'selected' : '' }}>
+                                        Work From Home
+                                    </option>
+                                @else
+                                    {{-- Show only permitted ones --}}
+                                    
+                                    @if($hasOffice)
+                                        <option {{ request()->preference == 'Work From Office' ? 'selected' : '' }}>
+                                            Work From Office
+                                        </option>
+                                    @endif
+
+                                    @if($hasHome)
+                                        <option {{ request()->preference == 'Work From Home' ? 'selected' : '' }}>
+                                            Work From Home
+                                        </option>
+                                    @endif
+
+                                @endif
                                 <option {{ request()->preference == 'Others' ? 'selected' : '' }}>Others</option>
                             </select>
                             

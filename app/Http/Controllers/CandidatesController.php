@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Exports\CandidateEnquiriesExport;
 use App\Models\CandidateEnquiry;
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Excel;
 use Maatwebsite\Excel\Facades\Excel as FacadesExcel;
 
 class CandidatesController extends Controller
@@ -28,7 +27,8 @@ class CandidatesController extends Controller
             ? $orderBy
             : 'desc';
 
-        $enquiries = CandidateEnquiry::with('user')
+        $enquiries = CandidateEnquiry::inRandomOrder()
+            ->with('user')
             ->orderBy('created_at', $orderBy);
 
         if ($status) $enquiries->where('status', $status);
@@ -52,9 +52,21 @@ class CandidatesController extends Controller
                     ->orWhere('address', 'like', '%' . request()->search . '%')
                     ->orWhere('preference', 'like', '%' . request()->search . '%');
             });
+        } else {
+            $hasOffice = auth()->user()->can('Lead/Job Application -> Work From Office');
+            $hasHome   = auth()->user()->can('Lead/Job Application -> Work From Home');
+
+            $enquiries->when(true, function ($q) use ($hasOffice, $hasHome) {
+                if ($hasOffice && !$hasHome) {
+                    $q->where('preference', 'like', '%Work From Office%');
+                }
+
+                if ($hasHome && !$hasOffice) {
+                    $q->where('preference', 'like', '%Work From Home%');
+                }
+            });
         }
 
-        // ðŸ”¥ Start & End Date Filter
         $enquiries->when(request()->created_start_date || request()->created_end_date, function ($q) {
             if (request()->created_start_date && request()->created_end_date) {
                 $q->whereBetween('created_at', [
@@ -80,6 +92,18 @@ class CandidatesController extends Controller
                 $q->where('updated_at', '<=', request()->updated_end_date . ' 23:59:59');
             }
         });
+
+        $limit = null;
+        if (auth()->user()->can('Lead/Job Application -> 20 Entries')) {
+            $limit = 20;
+        } elseif (auth()->user()->can('Lead/Job Application -> 10 Entries')) {
+            $limit = 10;
+        }
+
+        if ($limit) {
+            $baseQuery = $enquiries->limit($limit);
+            $enquiries = \DB::query()->fromSub($baseQuery, 'limited_data');
+        }
 
         $enquiries = $enquiries->paginate(request()->paging ?? 25);
 

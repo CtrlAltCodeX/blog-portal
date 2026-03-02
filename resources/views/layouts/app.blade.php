@@ -43,7 +43,7 @@
 <body class="app sidebar-mini ltr" style='background-image:url(/storage/{{$homepageImage}});background-size:cover;'>
     <div class="page">
         <div class="container-login100" >
-            <div class="wrap-login100 p-6  w-30">
+            <div class="wrap-login100 p-6">
                 @yield('content')
             </div>
         </div>

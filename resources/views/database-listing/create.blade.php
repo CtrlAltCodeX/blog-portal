@@ -15,6 +15,79 @@
         background-color: #808007;
         color: white;
     }
+    
+    body {
+        background-image: inherit !important;
+    }
+    
+    .alert {
+      position: relative;
+      display: flex;
+      gap: 14px;
+      padding: 20px 22px;
+      background: #f0f7ff;
+      border-left: 5px solid #3b82f6;
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+      /*max-width: 600px;*/
+      animation: fadeSlide 0.4s ease;
+    }
+
+    .alert-icon {
+      font-size: 22px;
+      color: var(--info-border);
+      margin-top: 2px;
+      padding-left: 0px !important;
+    }
+
+    .alert-content {
+      flex: 1;
+    }
+
+    .alert-title {
+      font-weight: 600;
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: var(--info-text);
+    }
+
+    .alert-notes {
+      font-size: 14px;
+      color: #334155;
+      line-height: 1.6;
+    }
+
+    .alert-notes strong {
+      color: #0f172a;
+    }
+
+    .alert-close {
+      position: absolute;
+      right: 14px;
+      top: 14px;
+      background: transparent;
+      border: none;
+      font-size: 30px;
+      cursor: pointer;
+      color: #64748b;
+      transition: 0.2s ease;
+    }
+
+    .alert-close:hover {
+      color: #111827;
+    }
+
+    @keyframes fadeSlide {
+      from {
+        opacity: 0;
+        transform: translateY(-6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
 </style>
 @endpush
 
@@ -36,15 +109,23 @@
 
         <div class="row">
             <div class="col-md-9 col-xl-12 fields">
+                <div class="alert">
+                    <div class="alert-icon">💰</div>
+                    <div class="alert-content">
+                      <div class="alert-title">Additional Earning Guide</div>
+                      <div class="alert-notes">
+                        If you wish to earn more, you can request or contact the system admin to allot additional roles in your account, i.e., <strong>"Leads Conversion"</strong>. We will provide 10–20 random candidate listings who may be interested in work-from-home or work-from-office opportunities. Your responsibility is to explain the joining process and convert the applications. If successfully converted, you will receive a cash reward of <strong>Rs. 50/- per application</strong>.
+                      </div>
+                    </div>
+                    <button class="alert-close" type='button' onclick="this.parentElement.style.display='none'">×</button>
+                  </div>
+
+                
                 @include('components.fetch-product')
-  
                 <div class="card">
-                    
                     <div class="card-body">
                         <span class="d-flex justify-content-center mb-4 alert-msg text-center align-items-center" style='grid-gap:5px;'><i class='fa fa-warning'></i><strong>Alert:</strong> Please refrain from creating duplicate listings repeatedly. Prior to creating any new listings, ensure to first check the product in 'Search Listing (M/S)'.</span>
                         <hr />
-                       
-
                         <div id="progressBar" class="text-end"></div>
                         <div>
                             <div class="form-group">
@@ -76,10 +157,8 @@
                                 </label>
                                 <label for="description" class="form-label d-flex justify-content-between text-danger" style="margin-top: -10px;">
                                     <div>{{ __('Do not use 3rd Party Links/Website Names') }}</div>
-                                     @include('components.discription-fetcher')
+                                    @include('components.discription-fetcher')
                                 </label>
-
-                             
                                 <textarea type="text" class="form-control @error('description') is-invalid @enderror" name="description" autocomplete="description" autofocus placeholder="Description" rows="10" id='desc'>{{ old('description') }}</textarea>
                                 <span class="error-message desc" style="color:red;"></span>
 
@@ -92,8 +171,6 @@
                         </div>
                     </div>
                 </div>
-
-
                 
                 <div class="card">
                     <div class="card-body">
@@ -139,7 +216,6 @@
                 </div>
 
                 @include('price-calculator')
-
 
                 <div class="card">
                     <div class="card-body">
@@ -234,7 +310,7 @@
                                                     {{ __('ISBN 10') }}
                                                 </label>
                                             </div>
-                                            <input type="text" class="form-control " name="isbn_10" id="isbn_10" value="{{ old('isbn_10') }}" autofocus placeholder="ISBN 10">
+                                            <input type="text" class="form-control" id='isbn_10' name="isbn_10" value="{{ old('isbn_10') }}" autofocus placeholder="ISBN 10">
                                             <span class="error-message isbn_10" style="color:red;"></span>
 
                                             @error('isbn_10')
@@ -359,7 +435,7 @@
                                     <div class="col-md-4">
                                         <div class="">
                                             <label for="weight" class="form-label d-flex justify-content-between">{{ __('Weight (grams)') }}</label>
-                                            <input type="number" class="form-control @error('weight') is-invalid @enderror" name="weight" id="weight" value="{{ old('weight') }}" autocomplete="weight" autofocus placeholder="Weight (g)">
+                                            <input type="number" class="form-control @error('weight') is-invalid @enderror" name="weight" value="{{ old('weight') }}" autocomplete="weight" autofocus placeholder="Weight (g)">
                                             <span class="error-message weight" style="color:red;"></span>
 
                                             @error('weight')
@@ -374,7 +450,7 @@
                                         <div class="">
                                             <label for="reading_age" class="form-label d-flex justify-content-between">{{ __('Reading Age') }}</label>
 
-                                            <select class="form-control @error('reading_age') is-invalid @enderror" name="reading_age" id="reading_age" value="{{ old('reading_age') }}">
+                                            <select class="form-control @error('reading_age') is-invalid @enderror" name="reading_age" value="{{ old('reading_age') }}">
                                                 <option value="">--Select--</option>
                                                 <option value="Above 18 Years">Above 18 Years</option>
                                                 <option value="Above 10 Years">Above 10 Years</option>
@@ -471,7 +547,6 @@
                                                 <option value="Textbooks & Study Guides">Textbooks & Study Guides</option>
                                                 <option value="Travel & Tourism">Travel & Tourism</option>
                                             </select>
-                                             <span class="error-message genre" style="color:red;"></span>
                                             @error('genre')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -536,7 +611,7 @@
 
                                     <div class="form-group col-md-4">
                                         <label for="url" class="form-label">{{ __('Main Image URL') }}</label>
-                                        <input id="base_url" type="text" value="{{ old('images')[0]??'' }}" class="form-control @error('images') is-invalid @enderror images[]" name="images[]" autocomplete="images" autofocus placeholder="Base URL">
+                                        <input id="base_url" type="text" value="{{ old('images')[0]??'' }}" class="form-control @error('images') is-invalid @enderror" name="images[]" autocomplete="images" autofocus placeholder="Base URL">
                                         <span class="error-message base_url" style="color:red;"></span>
 
                                         @error('images')

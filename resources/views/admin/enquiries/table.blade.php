@@ -86,6 +86,7 @@
                         </a>
                         @endcan
                     </td>
+                </tr>
             @empty
                 <tr>
                     <td colspan="13" class="text-center">No records found</td>

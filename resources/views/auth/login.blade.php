@@ -63,7 +63,7 @@ $buttonFour = explode(',',$siteSettings?->button_4);
                         @enderror
 
                     </div>
-                    <div class="text-end pt-4 d-flex justify-content-between">
+                    <div class="pt-4 d-flex justify-content-between">
                         <p class="mb-0"><a href="{{ route('register') }}" class="text-primary ms-1">Sign Up (Management)</a>
                         </p>
                         <p class="mb-0"><a href="{{ route('password.request') }}" class="text-primary ms-1">Forgot Password?</a>

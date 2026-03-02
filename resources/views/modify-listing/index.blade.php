@@ -87,7 +87,7 @@
                             </td>
                             <td class="image-val">
                                 <a href="#" target="_blank" class="img-link">
-                                    <img src="{{ asset('assets/images/no-image.png') }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" class="prod-img">
+                                    <img src="/dummy.jpg" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" class="prod-img">
                                 </a>
                             </td>
                             <td>
