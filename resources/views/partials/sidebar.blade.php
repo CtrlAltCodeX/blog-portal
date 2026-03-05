@@ -101,11 +101,11 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         <li><a href="{{ route('publish.pending', ['status' => 0, 'startIndex' => 1, 'category' => '', 'user' => 'all','paging'=>25]) }}" class="slide-item {{ (request()->is('admin/publish/pending')) ? 'active' : '' }}">{{ __('RA | Updated Listings (MS)') }}</a></li>
                         @endcan
                         
-                        <!--<li>-->
-                        <!--    <a href="{{ route('candidates.enquiries') }}" class="slide-item {{ (request()->is('admin/candidates/enquiries')) ? 'active' : '' }}">-->
-                        <!--        {{ __('Candidate Enquiries') }}-->
-                        <!--    </a>-->
-                        <!--</li>-->
+                        <li>
+                            <a href="{{ route('marketplace.calculation') }}" class="slide-item {{ (request()->is('admin/marketplace/calculation')) ? 'active' : '' }}">
+                                {{ __('Market Place Calculation') }}
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 @endcan
@@ -314,6 +314,12 @@ $userInfo = app('App\Models\SiteSetting')->first();
                             <a href="{{ route('departments.index') }}" class="slide-item {{ request()->is('admin/departments*') ? 'active' : '' }}">{{ __('Department') }}</a>
                         </li>
                     </ul>
+                </li>
+                <li class="slide">
+                    <a class="side-menu__item" href="{{ route('fulfilment.index') }}">
+                        <i class="side-menu__icon fe fe-box"></i>
+                        <span class="side-menu__label">{{ __('Fulfilment Types') }}</span>
+                    </a>
                 </li>
             </ul>
         </div>

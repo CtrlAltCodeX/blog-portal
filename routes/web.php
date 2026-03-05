@@ -5,6 +5,7 @@ use App\Http\Controllers\CollageController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\FulfilmentTypeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\DashboardController;
@@ -163,9 +164,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         Route::get('download-sample', [ListingModifyController::class, 'downloadSample'])->name('modify-listing.sample');
         Route::post('upload-excel', [ListingModifyController::class, 'uploadExcel'])->name('modify-listing.upload');
         Route::delete('/modify-listing/{id}', [ListingModifyController::class, 'destroy'])
-    ->name('modify-listing.delete');
-
+            ->name('modify-listing.delete');
     });
+
+    Route::get('marketplace/calculation', [App\Http\Controllers\MarketPlaceController::class, 'index'])
+        ->name('marketplace.calculation');
+    Route::post('marketplace/calculate', [App\Http\Controllers\MarketPlaceController::class, 'calculate'])
+        ->name('marketplace.calculate');
 
     /**
      * On Demand Listing
@@ -220,6 +225,19 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
             Route::post('update/{id}', [SettingsController::class, 'updateKeywords'])
                 ->name('settings.keywords.update');
         });
+
+        Route::get('city-cost/sample', [SettingsController::class, 'downloadCityCostSample'])
+            ->name('settings.city_cost.sample');
+
+        Route::get('marketplace-commission/sample', [SettingsController::class, 'downloadMarketplaceCommissionSample'])
+            ->name('settings.marketplace_commission.sample');
+    });
+
+    Route::group(['prefix' => 'fulfilment-types'], function () {
+        Route::get('/', [FulfilmentTypeController::class, 'index'])->name('fulfilment.index');
+        Route::post('store', [FulfilmentTypeController::class, 'store'])->name('fulfilment.store');
+        Route::post('update/{id}', [FulfilmentTypeController::class, 'update'])->name('fulfilment.update');
+        Route::get('delete/{id}', [FulfilmentTypeController::class, 'destroy'])->name('fulfilment.delete');
     });
     /**
      * Settings ENd

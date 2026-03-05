@@ -14,6 +14,10 @@ use App\Imports\PublicationsImport;
 use App\Imports\PurchesPriceWeightCourierImport;
 use App\Imports\WeightVSCourierImport;
 use App\Imports\BookSupplierRateImport;
+use App\Models\CityCost;
+use App\Models\MarketplaceCommission;
+use App\Imports\CityCostImport;
+use App\Imports\MarketplaceCommissionImport;
 
 class SettingsController extends Controller
 {
@@ -50,8 +54,10 @@ class SettingsController extends Controller
     public function site()
     {
         $siteSettings = SiteSetting::latest()->first();
+        $cityCosts = CityCost::all();
+        $commissions = MarketplaceCommission::all();
 
-        return view('settings.site', compact('siteSettings'));
+        return view('settings.site', compact('siteSettings', 'cityCosts', 'commissions'));
     }
 
     /**
@@ -81,30 +87,35 @@ class SettingsController extends Controller
                 ->storeAs("/public/" . $uploadFileName);
 
             Publication::truncate();
-            Excel::import(new PublicationsImport, storage_path('app/public/' . $uploadFileName));
+            Excel::import(new PublicationsImport, request()->file('upload_file'));
         }
 
         if (request()->file('purches_file')) {
             $filePath = "site/purches_price_weight.xlsx";
             request()->file('purches_file')->storeAs("/public/" . $filePath);
             PurchesPriceWeightCourier::truncate();
-            Excel::import(new PurchesPriceWeightCourierImport, storage_path('app/public/' . $filePath));
+            Excel::import(new PurchesPriceWeightCourierImport, request()->file('purches_file'));
         }
 
         if (request()->file('offer_item_rates')) {
             $filePath = "site/offer_item_rates.xlsx";
             request()->file('offer_item_rates')->storeAs("/public/" . $filePath);
             BookSupplierRate::truncate();
-            Excel::import(new BookSupplierRateImport, storage_path('app/public/' . $filePath));
+            Excel::import(new BookSupplierRateImport, request()->file('offer_item_rates'));
         }
 
-        if (request()->file('upload_file')) {
-            $uploadFileName = "site/upload_file.xlsx";
-            request()->file('upload_file')
-                ->storeAs("/public/" . $uploadFileName);
+        if (request()->file('city_cost_file')) {
+            $filePath = "site/city_costs.xlsx";
+            request()->file('city_cost_file')->storeAs("/public/" . $filePath);
+            CityCost::truncate();
+            Excel::import(new CityCostImport, request()->file('city_cost_file'));
+        }
 
-            Publication::truncate();
-            Excel::import(new PublicationsImport, storage_path('app/public/' . $uploadFileName));
+        if (request()->file('marketplace_commission_file')) {
+            $filePath = "site/marketplace_commissions.xlsx";
+            request()->file('marketplace_commission_file')->storeAs("/public/" . $filePath);
+            MarketplaceCommission::truncate();
+            Excel::import(new MarketplaceCommissionImport, request()->file('marketplace_commission_file'));
         }
 
         if (request()->file('product_background_image')) {
@@ -245,5 +256,43 @@ class SettingsController extends Controller
         $siteSettings = SiteSetting::find(1);
 
         return view('settings.policy', compact('siteSettings'));
+    }
+
+
+
+    public function downloadCityCostSample()
+    {
+        $headers = ['city_name', 'cost_percentage'];
+        $data = [
+            ['Delhi', '2%'],
+            ['Mumbai', '1%'],
+        ];
+
+        return response()->streamDownload(function () use ($headers, $data) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $headers);
+            foreach ($data as $row) {
+                fputcsv($file, $row);
+            }
+            fclose($file);
+        }, 'sample_city_costs.csv');
+    }
+
+    public function downloadMarketplaceCommissionSample()
+    {
+        $headers = ['min_range', 'max_range', 'min_commission', 'max_commission'];
+        $data = [
+            ['0', '290', '8', '10'],
+            ['291', '470', '25', '30'],
+        ];
+
+        return response()->streamDownload(function () use ($headers, $data) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $headers);
+            foreach ($data as $row) {
+                fputcsv($file, $row);
+            }
+            fclose($file);
+        }, 'sample_marketplace_commissions.csv');
     }
 }
