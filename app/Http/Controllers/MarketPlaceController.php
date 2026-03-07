@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\CityCost;
 use App\Models\MarketplaceCommission;
 use App\Models\FulfilmentType;
+use App\Models\WeightVSCourier;
+use App\Models\PurchesPriceWeightCourier;
 
 class MarketPlaceController extends Controller
 {
@@ -15,8 +17,65 @@ class MarketPlaceController extends Controller
         $cityCosts = CityCost::all();
         $commissions = MarketplaceCommission::all();
         $fulfilmentTypes = FulfilmentType::all();
+        $publications = WeightVSCourier::select('pub_name')->distinct()->get();
 
-        return view('marketplace.calculation', compact('cityCosts', 'commissions', 'fulfilmentTypes'));
+        return view('marketplace.calculation', compact('cityCosts', 'commissions', 'fulfilmentTypes', 'publications'));
+    }
+
+    public function getBookTypes(Request $request)
+    {
+        $pubName = $request->pub_name;
+        $record = WeightVSCourier::where('pub_name', $pubName)->first();
+        
+        $bookTypes = [];
+        if ($record) {
+            for ($i = 1; $i <= 6; $i++) {
+                $typeField = "book_type_$i";
+                if (!empty($record->$typeField)) {
+                    $bookTypes[] = [
+                        'id' => $i,
+                        'name' => $record->$typeField
+                    ];
+                }
+            }
+        }
+
+        return response()->json($bookTypes);
+    }
+
+    public function getDiscount(Request $request)
+    {
+        $pubName = $request->pub_name;
+        $typeId = $request->type_id;
+        $record = WeightVSCourier::where('pub_name', $pubName)->first();
+        
+        $discount = 0;
+        if ($record) {
+            $discountField = "book_discount_$typeId";
+            $discount = (float)$record->$discountField;
+        }
+
+        return response()->json(['discount' => $discount]);
+    }
+
+    public function getWeightCharges(Request $request)
+    {
+        $weight = (float)$request->weight;
+        
+        // Find exact match or next higher weight
+        $record = PurchesPriceWeightCourier::where('weight', '>=', $weight)
+            ->orderBy('weight', 'asc')
+            ->first();
+
+        if (!$record) {
+            // If no higher weight found, get the absolute maximum weight record
+            $record = PurchesPriceWeightCourier::orderBy('weight', 'desc')->first();
+        }
+
+        return response()->json([
+            'courier_rate' => $record ? (float)$record->courier_rate : 0,
+            'packing_charge' => $record ? (float)$record->packing_charge : 0,
+        ]);
     }
 
     public function calculate(Request $request)

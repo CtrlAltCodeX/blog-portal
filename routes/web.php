@@ -167,10 +167,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
             ->name('modify-listing.delete');
     });
 
-    Route::get('marketplace/calculation', [App\Http\Controllers\MarketPlaceController::class, 'index'])
-        ->name('marketplace.calculation');
-    Route::post('marketplace/calculate', [App\Http\Controllers\MarketPlaceController::class, 'calculate'])
-        ->name('marketplace.calculate');
+    Route::group(['prefix' => 'marketplace'], function () {
+        Route::get('calculation', [\App\Http\Controllers\MarketPlaceController::class, 'index'])->name('marketplace.calculation');
+        Route::post('calculate', [\App\Http\Controllers\MarketPlaceController::class, 'calculate'])->name('marketplace.calculate');
+        Route::post('get-book-types', [\App\Http\Controllers\MarketPlaceController::class, 'getBookTypes'])->name('marketplace.get_book_types');
+        Route::post('get-discount', [\App\Http\Controllers\MarketPlaceController::class, 'getDiscount'])->name('marketplace.get_discount');
+        Route::post('get-weight-charges', [\App\Http\Controllers\MarketPlaceController::class, 'getWeightCharges'])->name('marketplace.get_weight_charges');
+    });
 
     /**
      * On Demand Listing

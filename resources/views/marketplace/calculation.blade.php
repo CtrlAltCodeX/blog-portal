@@ -20,10 +20,53 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label class="form-label">{{ __('Discount %:') }}</label>
-                        <input type="number" step="0.01" class="form-control calc-trigger" name="discount" id="discount" value="0">
+                        <label class="form-label">{{ __('Publication:') }}</label>
+                        <select class="form-control" name="publication" id="publication">
+                            <option value="">Select Publication</option>
+                            @foreach($publications as $pub)
+                                <option value="{{ $pub->pub_name }}">{{ $pub->pub_name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">{{ __('Sub Category:') }}</label>
+                        <select class="form-control" name="sub_category" id="sub_category">
+                            <option value="">Select Sub Category</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">{{ __('Discount %:') }}</label>
+                        <input type="number" step="0.01" class="form-control calc-trigger" name="discount" id="discount" value="0" >
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">{{ __('Weight (gms):') }}</label>
+                        <input type="number" step="0.01" class="form-control" name="weight" id="weight" placeholder="Enter Weight">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label text-success">{{ __('Packaging Cost:') }}</label>
+                        <input type="number" step="0.01" class="form-control calc-trigger" name="packaging_cost" id="packaging_cost" value="0" readonly>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label text-success">{{ __('Courier Charges:') }}</label>
+                        <input type="number" step="0.01" class="form-control calc-trigger" name="courier_charges" id="courier_charges" value="0" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
                 <div class="col-md-3">
                     <div class="form-group">
                         <label class="form-label">{{ __('Transportation %:') }}</label>
@@ -32,7 +75,7 @@
                             <select class="form-control ms-2" id="city_dropdown">
                                 <option value="">Select City</option>
                                 @foreach($cityCosts as $city)
-                                    <option value="{{ (float)$city->cost_percentage }}">{{ $city->city_name }} ({{ $city->cost_percentage }})</option>
+                                    <option value="{{ (float)$city->cost_percentage }}">{{ $city->city_name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -42,21 +85,6 @@
                     <div class="form-group">
                         <label class="form-label">{{ __('Purchase Price:') }}</label>
                         <input type="text" class="form-control" id="res_purchase_price" readonly>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row mt-3">
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label class="form-label text-success">{{ __('Packaging Cost:') }}</label>
-                        <input type="number" step="0.01" class="form-control calc-trigger" name="packaging_cost" id="packaging_cost" value="0">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label class="form-label text-success">{{ __('Courier Charges:') }}</label>
-                        <input type="number" step="0.01" class="form-control calc-trigger" name="courier_charges" id="courier_charges" value="0">
                     </div>
                 </div>
             </div>
@@ -161,7 +189,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="form-label font-weight-bold text-primary">{{ __('Competitor Price:') }}</label>
-                            <!-- <small class="text-muted d-block mb-1">(Product Price + Shipping – Fulfilment)</small> -->
+                            <small class="text-muted d-block mb-1">(Product Price + Shipping – Fulfilment)</small>
                             <input type="text" class="form-control bg-white" id="res_competitor_price" readonly>
                         </div>
                     </div>
@@ -186,6 +214,60 @@
 @push('js')
 <script>
 $(document).ready(function() {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    // Publication change -> Load Book Types
+    $('#publication').on('change', function() {
+        const pubName = $(this).val();
+        $('#sub_category').html('<option value="">Select Sub Category</option>');
+        $('#discount').val(0);
+        
+        if (pubName) {
+            $.post("{{ route('marketplace.get_book_types') }}", { pub_name: pubName }, function(data) {
+                data.forEach(function(type) {
+                    $('#sub_category').append(`<option value="${type.id}">${type.name}</option>`);
+                });
+            });
+        }
+        performCalculation();
+    });
+
+    // Sub Category change -> Load Discount
+    $('#sub_category').on('change', function() {
+        const typeId = $(this).val();
+        const pubName = $('#publication').val();
+        
+        if (typeId && pubName) {
+            $.post("{{ route('marketplace.get_discount') }}", { pub_name: pubName, type_id: typeId }, function(data) {
+                $('#discount').val(data.discount);
+                performCalculation();
+            });
+        } else {
+            $('#discount').val(0);
+            performCalculation();
+        }
+    });
+
+    // Weight change -> Load Charges
+    $('#weight').on('input', function() {
+        const weight = $(this).val();
+        if (weight > 0) {
+            $.post("{{ route('marketplace.get_weight_charges') }}", { weight: weight }, function(data) {
+                $('#packaging_cost').val(data.packing_charge);
+                $('#courier_charges').val(data.courier_rate);
+                performCalculation();
+            });
+        } else {
+            $('#packaging_cost').val(0);
+            $('#courier_charges').val(0);
+            performCalculation();
+        }
+    });
+
     // City selection updates transportation manually but allows override
     $('#city_dropdown').on('change', function() {
         if($(this).val()) {
