@@ -88,7 +88,8 @@ class MarketPlaceController extends Controller
         $preDefinedShipping = (float)$request->pre_defined_shipping;
         
         // Stage 1: Basic Costing
-        $purchasePrice = $mrp - ($mrp * ($discountPer / 100)) - ($mrp * ($transportationPer / 100));
+        // Formula: Purchase Price = MRP - (Discount % - Transportation %) of MRP
+        $purchasePrice = $mrp - ($mrp * (($discountPer - $transportationPer) / 100));
         $netCost = $purchasePrice + $packagingCost + $courierCharges;
 
         // Marketplace Commission Slab Logic

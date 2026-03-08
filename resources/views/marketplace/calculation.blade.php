@@ -18,7 +18,7 @@
                         <input type="number" step="0.01" class="form-control calc-trigger" name="mrp" id="mrp" placeholder="Enter MRP">
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group">
                         <label class="form-label">{{ __('Publication:') }}</label>
                         <select class="form-control" name="publication" id="publication">
@@ -29,7 +29,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group">
                         <label class="form-label">{{ __('Sub Category:') }}</label>
                         <select class="form-control" name="sub_category" id="sub_category">
@@ -41,27 +41,6 @@
                     <div class="form-group">
                         <label class="form-label">{{ __('Discount %:') }}</label>
                         <input type="number" step="0.01" class="form-control calc-trigger" name="discount" id="discount" value="0" >
-                    </div>
-                </div>
-            </div>
-
-            <div class="row mt-3">
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label class="form-label">{{ __('Weight (gms):') }}</label>
-                        <input type="number" step="0.01" class="form-control" name="weight" id="weight" placeholder="Enter Weight">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label class="form-label text-success">{{ __('Packaging Cost:') }}</label>
-                        <input type="number" step="0.01" class="form-control calc-trigger" name="packaging_cost" id="packaging_cost" value="0" readonly>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label class="form-label text-success">{{ __('Courier Charges:') }}</label>
-                        <input type="number" step="0.01" class="form-control calc-trigger" name="courier_charges" id="courier_charges" value="0" readonly>
                     </div>
                 </div>
             </div>
@@ -88,6 +67,27 @@
                     </div>
                 </div>
             </div>
+            <div class="row mt-3">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">{{ __('Weight (gms):') }}</label>
+                        <input type="number" step="0.01" class="form-control" name="weight" id="weight" placeholder="Enter Weight">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label text-success">{{ __('Packaging Cost:') }}</label>
+                        <input type="number" step="0.01" class="form-control calc-trigger" name="packaging_cost" id="packaging_cost" value="0" readonly>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label text-success">{{ __('Courier Charges:') }}</label>
+                        <input type="number" step="0.01" class="form-control calc-trigger" name="courier_charges" id="courier_charges" value="0" readonly>
+                    </div>
+                </div>
+            </div>
+
 
             <div class="row mt-3">
                 <div class="col-md-3">
