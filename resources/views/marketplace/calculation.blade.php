@@ -18,35 +18,31 @@
                         <input type="number" step="0.01" class="form-control calc-trigger" name="mrp" id="mrp" placeholder="Enter MRP">
                     </div>
                 </div>
-                <div class="col-md-2">
+                  <div class="col-md-3">
                     <div class="form-group">
-                        <label class="form-label">{{ __('Publication:') }}</label>
+                        <label class="form-label">{{ __('Discount %:') }}</label>
+                        <input type="number" step="0.01" class="form-control calc-trigger" name="discount" id="discount" value="0" >
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    
+                    <div class="form-group">
+                        <label class="form-label">{{ __('Publication / Sub Category: ') }}</label>
+                          <div class="d-flex">
                         <select class="form-control" name="publication" id="publication">
                             <option value="">Select Publication</option>
                             @foreach($publications as $pub)
                                 <option value="{{ $pub->pub_name }}">{{ $pub->pub_name }}</option>
                             @endforeach
                         </select>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <label class="form-label">{{ __('Sub Category:') }}</label>
-                        <select class="form-control" name="sub_category" id="sub_category">
+                         <select class="form-control" name="sub_category" id="sub_category">
                             <option value="">Select Sub Category</option>
                         </select>
+</div>
                     </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label class="form-label">{{ __('Discount %:') }}</label>
-                        <input type="number" step="0.01" class="form-control calc-trigger" name="discount" id="discount" value="0" >
-                    </div>
-                </div>
-            </div>
 
-            <div class="row mt-3">
-                <div class="col-md-3">
+                </div>
+            <div class="col-md-3">
                     <div class="form-group">
                         <label class="form-label">{{ __('Transportation %:') }}</label>
                         <div class="d-flex">
@@ -60,15 +56,18 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="row mt-3">
+              
                 <div class="col-md-3">
                     <div class="form-group">
                         <label class="form-label">{{ __('Purchase Price:') }}</label>
                         <input type="text" class="form-control" id="res_purchase_price" readonly>
                     </div>
                 </div>
-            </div>
-            <div class="row mt-3">
-                <div class="col-md-3">
+
+                  <div class="col-md-3">
                     <div class="form-group">
                         <label class="form-label">{{ __('Weight (gms):') }}</label>
                         <input type="number" step="0.01" class="form-control" name="weight" id="weight" placeholder="Enter Weight">
@@ -87,6 +86,7 @@
                     </div>
                 </div>
             </div>
+        
 
 
             <div class="row mt-3">
