@@ -3,10 +3,16 @@
 @section('title', __('Market Place Calculation'))
 
 @section('content')
+<style>
+    .form-group {
+        margin-bottom: 0px;
+    }
+</style>
+
 <div class="card mt-5">
-    <div class="card-header">
-        <h3 class="card-title">{{ __('Market Place Calculation') }}</h3>
-    </div>
+    <!--<div class="card-header">-->
+    <!--    <h3 class="card-title">{{ __('Market Place Calculation') }}</h3>-->
+    <!--</div>-->
     <div class="card-body">
         <form id="calculationForm">
             @csrf
@@ -28,26 +34,26 @@
                     
                     <div class="form-group">
                         <label class="form-label">{{ __('Publication / Sub Category: ') }}</label>
-                          <div class="d-flex">
-                        <select class="form-control" name="publication" id="publication">
-                            <option value="">Select Publication</option>
-                            @foreach($publications as $pub)
-                                <option value="{{ $pub->pub_name }}">{{ $pub->pub_name }}</option>
-                            @endforeach
-                        </select>
-                         <select class="form-control" name="sub_category" id="sub_category">
-                            <option value="">Select Sub Category</option>
-                        </select>
-</div>
+                          <div class="d-flex" style="grid-gap: 10px;">
+                            <select class="form-control searchable_dropdown" name="publication" id="publication">
+                                <option value="">Select Publication</option>
+                                @foreach($publications as $pub)
+                                    <option value="{{ $pub->pub_name }}">{{ $pub->pub_name }}</option>
+                                @endforeach
+                            </select>
+                             <select class="form-control searchable_dropdown" name="sub_category" id="sub_category">
+                                <option value="">Select Sub Category</option>
+                            </select>
+                        </div>
                     </div>
 
                 </div>
             <div class="col-md-3">
                     <div class="form-group">
-                        <label class="form-label">{{ __('Transportation %:') }}</label>
-                        <div class="d-flex">
+                        <label class="form-label">{{ __('Transportation Cost %:') }}</label>
+                        <div class="d-flex" style="grid-gap: 10px;">
                             <input type="number" step="0.01" class="form-control calc-trigger" name="transportation" id="transportation" value="0">
-                            <select class="form-control ms-2" id="city_dropdown">
+                            <select class="form-control ms-2 searchable_dropdown" id="city_dropdown">
                                 <option value="">Select City</option>
                                 @foreach($cityCosts as $city)
                                     <option value="{{ (float)$city->cost_percentage }}">{{ $city->city_name }}</option>
@@ -69,8 +75,8 @@
 
                   <div class="col-md-3">
                     <div class="form-group">
-                        <label class="form-label">{{ __('Weight (gms):') }}</label>
-                        <input type="number" step="0.01" class="form-control" name="weight" id="weight" placeholder="Enter Weight">
+                        <label class="form-label text-red">{{ __('Product Weight (In Grams):') }}</label>
+                        <input type="number" step="0.01" class="form-control" name="weight" id="weight" placeholder="Enter Weight" style="border: 1px solid red;">
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -81,7 +87,7 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label class="form-label text-success">{{ __('Courier Charges:') }}</label>
+                        <label class="form-label text-success">{{ __('Shipping Charges:') }}</label>
                         <input type="number" step="0.01" class="form-control calc-trigger" name="courier_charges" id="courier_charges" value="0" readonly>
                     </div>
                 </div>
@@ -92,7 +98,7 @@
             <div class="row mt-3">
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label class="form-label">{{ __('Net Cost:') }}</label>
+                        <label class="form-label">{{ __('Net Costing:') }}</label>
                         <input type="text" class="form-control" id="res_net_cost" readonly>
                     </div>
                 </div>
@@ -104,51 +110,43 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label class="form-label">{{ __('Final Costing (+2% Profit):') }}</label>
+                        <label class="form-label">{{ __('Final Costing ( +1% ) | (Round-Up):') }}</label>
                         <input type="text" class="form-control" id="res_final_costing" readonly>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label class="form-label font-weight-bold">{{ __('Final Costing (Round-Up):') }}</label>
-                        <input type="text" class="form-control bg-light" id="res_final_rounded" readonly style="font-size: 1.2rem; font-weight: bold; color: #1e40af;">
+                        <label class="form-label font-weight-bold text-red" style="font-weight: bold;">{{ __('Pre-Defined Shipping:') }}</label>
+                        <input type="number" step="0.01" class="form-control calc-trigger" name="pre_defined_shipping" id="pre_defined_shipping" value="0" style="border: 1px solid red;">
                     </div>
                 </div>
             </div>
 
             <hr class="my-4">
 
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label font-weight-bold">{{ __('Pre-Defined Shipping:') }}</label>
-                        <input type="number" step="0.01" class="form-control calc-trigger" name="pre_defined_shipping" id="pre_defined_shipping" value="0">
-                    </div>
-                </div>
-            </div>
+            <!--<div class="row mb-3">-->
+            <!--    <div class="col-md-4">-->
+            <!--        <div class="form-group">-->
+            <!--            <label class="form-label font-weight-bold">{{ __('Pre-Defined Shipping:') }}</label>-->
+            <!--            <input type="number" step="0.01" class="form-control calc-trigger" name="pre_defined_shipping" id="pre_defined_shipping" value="0">-->
+            <!--        </div>-->
+            <!--    </div>-->
+            <!--</div>-->
 
             <div class="table-responsive mb-4">
                 <table class="table table-bordered text-center">
                     <thead class="bg-warning text-dark">
                         <tr>
-                            <th colspan="2">WITHOUT PRE-DEFINED SHIPPING</th>
+                            <th colspan=2 class='bg-warning text-dark' style="border-bottom: 1px solid black;">WITHOUT PRE-DEFINED SHIPPING</th>
+                            <th colspan=2 class='bg-success text-white' style="border-bottom: 1px solid black;">WITH PRE-DEFINED SHIPPING</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td><strong>Min Price - 1:</strong> (Final Costing) <span id="span_min_price_1" class="ml-2 font-weight-bold">0</span></td>
-                            <td><strong>Max. Price:</strong> Show MRP. <span id="span_max_price_1" class="ml-2 font-weight-bold">0</span></td>
-                        </tr>
-                    </tbody>
-                    <thead class="bg-warning text-dark">
-                        <tr>
-                            <th colspan="2">WITH PRE-DEFINED SHIPPING</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Min Price - 2:</strong> (Final Cost - Shipping) <span id="span_min_price_2" class="ml-2 font-weight-bold">0</span></td>
-                            <td><strong>Max. Price:</strong> Show MRP. <span id="span_max_price_2" class="ml-2 font-weight-bold">0</span></td>
+                            <td style="border-bottom: 1px solid black;"><strong>Minimum Price: </strong><span id="span_min_price_1" class="ml-2 font-weight-bold">0</span></td>
+                            <td style="border-bottom: 1px solid black;"><strong>Maximum Price: </strong><span id="span_max_price_1" class="ml-2 font-weight-bold">0</span></td>
+                            <td style="border-bottom: 1px solid black;"><strong>Minimum Price: </strong><span id="span_min_price_2" class="ml-2 font-weight-bold">0</span></td>
+                            <td style="border-bottom: 1px solid black;"><strong>Maximum Price: </strong><span id="span_max_price_2" class="ml-2 font-weight-bold">0</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -156,40 +154,38 @@
 
             <!-- STAGE 2 Header -->
             <div class="text-center bg-dark text-white p-2 mb-4">
-                <h3 class="m-0">STAGE - 2</h3>
+                <h3 class="m-0">COMPETITIVE PRICING</h3>
             </div>
 
-            <div class="bg-light p-4 rounded">
+            <div class="bg-light p-4">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="form-group">
-                            <label class="form-label">{{ __('Other Seller Sold (Product Price):') }}</label>
+                            <label class="form-label">{{ __('Competitor Product Price:') }}</label>
                             <input type="number" step="0.01" class="form-control calc-trigger" name="seller_price" id="seller_price" value="0">
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="form-group">
-                            <label class="form-label">{{ __('Shipping Charges:') }}</label>
+                            <label class="form-label">{{ __('Competitor Shipping:') }}</label>
                             <input type="number" step="0.01" class="form-control calc-trigger" name="seller_shipping" id="seller_shipping" value="0">
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label class="form-label">{{ __('Fulfilment Type:') }}</label>
                             <select class="form-control calc-trigger" name="fulfilment_id" id="fulfilment_id">
                                 @foreach($fulfilmentTypes as $type)
-                                    <option value="{{ $type->id }}">{{ $type->name }} ({{ (float)$type->difference_amount }})</option>
+                                    <option value="{{ $type->id }}">{{ $type->name }} </option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
-                </div>
-
-                <div class="row mt-3">
-                    <div class="col-md-6">
+                    
+                    <div class="col-md-3">
                         <div class="form-group">
-                            <label class="form-label font-weight-bold text-primary">{{ __('Competitor Price:') }}</label>
-                            <small class="text-muted d-block mb-1">(Product Price + Shipping – Fulfilment)</small>
+                            <label class="form-label font-weight-bold text-primary">{{ __('Competitor Price - Fullfilment:') }}</label>
+                            <!--<small class="text-muted d-block mb-1">(Product Price + Shipping – Fulfilment)</small>-->
                             <input type="text" class="form-control bg-white" id="res_competitor_price" readonly>
                         </div>
                     </div>
@@ -197,7 +193,7 @@
 
                 <div class="row mt-4 pt-3 border-top">
                     <div class="col-md-6 text-center border-right">
-                        <h5 class="text-info">{{ __('Your Product Price:') }}</h5>
+                        <h5 class="text-info">{{ __('Beating Product Price:') }}</h5>
                         <div id="res_your_product_price" class="display-4 font-weight-bold text-dark">0</div>
                     </div>
                     <div class="col-md-6 text-center">
@@ -214,6 +210,8 @@
 @push('js')
 <script>
 $(document).ready(function() {
+    $(".searchable_dropdown").select2();
+    
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -291,8 +289,7 @@ $(document).ready(function() {
                 $('#res_purchase_price').val(response.purchase_price);
                 $('#res_net_cost').val(response.net_cost);
                 $('#res_commission').val(response.commission);
-                $('#res_final_costing').val(response.final_costing);
-                $('#res_final_rounded').val(response.final_costing_rounded);
+                $('#res_final_costing').val(response.final_costing + "   |   "  + response.final_costing_rounded);
 
                 // Auto-populate Weight if returned and different
                 if (response.auto_weight > 0 && $('#weight').val() != response.auto_weight) {

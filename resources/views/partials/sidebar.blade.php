@@ -101,11 +101,12 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         <li><a href="{{ route('publish.pending', ['status' => 0, 'startIndex' => 1, 'category' => '', 'user' => 'all','paging'=>25]) }}" class="slide-item {{ (request()->is('admin/publish/pending')) ? 'active' : '' }}">{{ __('RA | Updated Listings (MS)') }}</a></li>
                         @endcan
                         
-                        <li>
-                            <a href="{{ route('marketplace.calculation') }}" class="slide-item {{ (request()->is('admin/marketplace/calculation')) ? 'active' : '' }}">
-                                {{ __('Market Place Calculation') }}
-                            </a>
-                        </li>
+                        
+                        <!--<li>-->
+                        <!--    <a href="{{ route('candidates.enquiries') }}" class="slide-item {{ (request()->is('admin/candidates/enquiries')) ? 'active' : '' }}">-->
+                        <!--        {{ __('Candidate Enquiries') }}-->
+                        <!--    </a>-->
+                        <!--</li>-->
                     </ul>
                 </li>
                 @endcan
@@ -161,7 +162,15 @@ $userInfo = app('App\Models\SiteSetting')->first();
                     </ul>
                 </li>
                 @endcan
-
+                
+                @can('Marketplace Calculator')
+                <li class="slide">
+                    <a class="side-menu__item" href="{{ route('marketplace.calculation') }}">
+                        <i class="side-menu__icon fe fe-percent"></i>
+                        <span class="side-menu__label">{{ __('Market Place Calculation') }}</span>
+                    </a>
+                </li>
+                @endcan
                 @can('User Details (Main Menu)')
                 <li class="slide {{ (request()->is('admin/users/*') || request()->is('admin/users')) ? 'is-expanded' : '' }}">
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-users"></i><span class="side-menu__label">{{ __('Users Details') }}</span><i class="angle fe fe-chevron-right"></i></a>
@@ -223,7 +232,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                 @endcan
 
                 @if(auth()->user()->can('Settings (Main Menu)'))
-                <li class="slide {{ (request()->is('admin/settings/*') || request()->is('admin/settings') || request()->is('admin/backup/emails') || request()->is('admin/backup/logs') || request()->is('admin/subcategories') || request()->is('admin/categories')) ? 'is-expanded' : '' }}">
+                <li class="slide {{ (request()->is('admin/fulfilment-types') || request()->is('admin/settings/*') || request()->is('admin/settings') || request()->is('admin/backup/emails') || request()->is('admin/backup/logs') || request()->is('admin/subcategories') || request()->is('admin/categories')) ? 'is-expanded' : '' }}">
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fa fa-gear"></i><span class="side-menu__label">{{ __('Settings') }}</span><i class="angle fe fe-chevron-right"></i></a>
                     <ul class="slide-menu">
                         <li class="side-menu-label1"><a href="javascript:void(0)">Apps</a></li>
@@ -260,6 +269,12 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         
                         @can('Settings -> Sub Categories')
                         <li><a href="{{ route('subcategories.index') }}" class="slide-item {{ request()->is('admin/subcategories') ? 'active' : '' }}">   {{ __('Sub Categories') }}</a></li>
+                        @endcan
+                        
+                        @can('Settings -> Fullfilled/NonFulfilled Settings')
+                        <li>
+                            <a href="{{ route('fulfilment.index') }}" class="slide-item {{ request()->is('admin/fulfilment-types ') ? 'active' : '' }}">{{ __('Fulfilment Types') }}</a>
+                        </li>
                         @endcan
                     </ul>
                 </li>
@@ -303,24 +318,7 @@ $userInfo = app('App\Models\SiteSetting')->first();
                             <a href="{{ route('pages.index') }}" class="slide-item {{ request()->is('admin/pages ') ? 'active' : '' }}">{{ __('Admin Required') }}</a>
                         </li>
                     </ul>
-                </li>
-                <li class="slide {{ (request()->is('admin/issue-types*') || request()->is('admin/departments*')) ? 'is-expanded' : '' }}">
-                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-info"></i><span class="side-menu__label">{{ __('Complaint Section') }}</span><i class="angle fe fe-chevron-right"></i></a>
-                    <ul class="slide-menu">
-                        <li>
-                            <a href="{{ route('issue-types.index') }}" class="slide-item {{ request()->is('admin/issue-types*') ? 'active' : '' }}">{{ __('Issue Type') }}</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('departments.index') }}" class="slide-item {{ request()->is('admin/departments*') ? 'active' : '' }}">{{ __('Department') }}</a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="slide">
-                    <a class="side-menu__item" href="{{ route('fulfilment.index') }}">
-                        <i class="side-menu__icon fe fe-box"></i>
-                        <span class="side-menu__label">{{ __('Fulfilment Types') }}</span>
-                    </a>
-                </li>
+                </li>          
             </ul>
         </div>
     </div>

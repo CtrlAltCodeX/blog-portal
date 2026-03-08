@@ -121,7 +121,7 @@ class MarketPlaceController extends Controller
             }
         }
 
-        $minProfitPer = 2; // Fixed 2% profit as per requirement
+        $minProfitPer = 1; // Fixed 2% profit as per requirement
         $finalCosting = $netCost + $commission + (($netCost + $commission) * ($minProfitPer / 100));
         $finalCostingRounded = ceil($finalCosting);
 
