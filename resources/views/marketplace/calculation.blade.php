@@ -294,6 +294,11 @@ $(document).ready(function() {
                 $('#res_final_costing').val(response.final_costing);
                 $('#res_final_rounded').val(response.final_costing_rounded);
 
+                // Auto-populate Weight if returned and different
+                if (response.auto_weight > 0 && $('#weight').val() != response.auto_weight) {
+                    $('#weight').val(response.auto_weight).trigger('input');
+                }
+
                 // Update Stage 2 base values
                 $('#span_min_price_1').text(response.min_price_1);
                 $('#span_min_price_2').text(response.min_price_2);

@@ -90,6 +90,13 @@ class MarketPlaceController extends Controller
         // Stage 1: Basic Costing
         // Formula: Purchase Price = MRP - (Discount % - Transportation %) of MRP
         $purchasePrice = $mrp - ($mrp * (($discountPer - $transportationPer) / 100));
+        
+        // Lookup Weight based on Purchase Price range
+        $weightRecord = PurchesPriceWeightCourier::where('min', '<=', $purchasePrice)
+            ->where('max', '>=', $purchasePrice)
+            ->first();
+        $autoWeight = $weightRecord ? (float)$weightRecord->weight : 0;
+
         $netCost = $purchasePrice + $packagingCost + $courierCharges;
 
         // Marketplace Commission Slab Logic
@@ -144,6 +151,7 @@ class MarketPlaceController extends Controller
             'commission' => round($commission, 2),
             'final_costing' => round($finalCosting, 2),
             'final_costing_rounded' => $finalCostingRounded,
+            'auto_weight' => $autoWeight,
             'min_price_1' => $minPrice1,
             'min_price_2' => $minPrice2,
             'competitor_price' => round($competitorPrice, 2),
