@@ -173,6 +173,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         Route::post('get-book-types', [\App\Http\Controllers\MarketPlaceController::class, 'getBookTypes'])->name('marketplace.get_book_types');
         Route::post('get-discount', [\App\Http\Controllers\MarketPlaceController::class, 'getDiscount'])->name('marketplace.get_discount');
         Route::post('get-weight-charges', [\App\Http\Controllers\MarketPlaceController::class, 'getWeightCharges'])->name('marketplace.get_weight_charges');
+        
+        // MP Calculation Settings
+        Route::get('settings', [\App\Http\Controllers\MarketPlaceCalculationSettingsController::class, 'index'])->name('marketplace.settings');
+        Route::post('settings/upload', [\App\Http\Controllers\MarketPlaceCalculationSettingsController::class, 'upload'])->name('marketplace.settings.upload');
+        Route::get('settings/sample', [\App\Http\Controllers\MarketPlaceCalculationSettingsController::class, 'downloadSample'])->name('marketplace.settings.sample');
     });
 
     /**

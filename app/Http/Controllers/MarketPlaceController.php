@@ -8,7 +8,7 @@ use App\Models\CityCost;
 use App\Models\MarketplaceCommission;
 use App\Models\FulfilmentType;
 use App\Models\WeightVSCourier;
-use App\Models\PurchesPriceWeightCourier;
+use App\Models\MarketPlaceCalculationSetting;
 
 class MarketPlaceController extends Controller
 {
@@ -63,13 +63,13 @@ class MarketPlaceController extends Controller
         $weight = (float)$request->weight;
         
         // Find exact match or next higher weight
-        $record = PurchesPriceWeightCourier::where('weight', '>=', $weight)
+        $record = MarketPlaceCalculationSetting::where('weight', '>=', $weight)
             ->orderBy('weight', 'asc')
             ->first();
 
         if (!$record) {
             // If no higher weight found, get the absolute maximum weight record
-            $record = PurchesPriceWeightCourier::orderBy('weight', 'desc')->first();
+            $record = MarketPlaceCalculationSetting::orderBy('weight', 'desc')->first();
         }
 
         return response()->json([
@@ -92,7 +92,7 @@ class MarketPlaceController extends Controller
         $purchasePrice = $mrp - ($mrp * (($discountPer - $transportationPer) / 100));
         
         // Lookup Weight based on Purchase Price range
-        $weightRecord = PurchesPriceWeightCourier::where('min', '<=', $purchasePrice)
+        $weightRecord = MarketPlaceCalculationSetting::where('min', '<=', $purchasePrice)
             ->where('max', '>=', $purchasePrice)
             ->first();
         $autoWeight = $weightRecord ? (float)$weightRecord->weight : 0;

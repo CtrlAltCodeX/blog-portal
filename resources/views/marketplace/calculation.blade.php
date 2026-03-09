@@ -218,8 +218,11 @@ $(document).ready(function() {
         }
     });
 
+    let isManualWeight = false;
+
     // Publication change -> Load Book Types
     $('#publication').on('change', function() {
+        isManualWeight = false; // Reset on change
         const pubName = $(this).val();
         $('#sub_category').html('<option value="">Select Sub Category</option>');
         $('#discount').val(0);
@@ -236,6 +239,7 @@ $(document).ready(function() {
 
     // Sub Category change -> Load Discount
     $('#sub_category').on('change', function() {
+        isManualWeight = false; // Reset on change
         const typeId = $(this).val();
         const pubName = $('#publication').val();
         
@@ -251,7 +255,10 @@ $(document).ready(function() {
     });
 
     // Weight change -> Load Charges
-    $('#weight').on('input', function() {
+    $('#weight').on('input', function(e) {
+        if (e.originalEvent) { // Only if manually triggered by user input
+            isManualWeight = true;
+        }
         const weight = $(this).val();
         if (weight > 0) {
             $.post("{{ route('marketplace.get_weight_charges') }}", { weight: weight }, function(data) {
@@ -264,6 +271,11 @@ $(document).ready(function() {
             $('#courier_charges').val(0);
             performCalculation();
         }
+    });
+
+    // Reset manual flag on MRP or Discount change
+    $('#mrp, #discount').on('input', function() {
+        isManualWeight = false;
     });
 
     // City selection updates transportation manually but allows override
@@ -291,8 +303,8 @@ $(document).ready(function() {
                 $('#res_commission').val(response.commission);
                 $('#res_final_costing').val(response.final_costing + "   |   "  + response.final_costing_rounded);
 
-                // Auto-populate Weight if returned and different
-                if (response.auto_weight > 0 && $('#weight').val() != response.auto_weight) {
+                // Auto-populate Weight if returned and NOT manual
+                if (!isManualWeight && response.auto_weight > 0 && $('#weight').val() != response.auto_weight) {
                     $('#weight').val(response.auto_weight).trigger('input');
                 }
 
