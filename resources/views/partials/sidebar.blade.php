@@ -276,9 +276,6 @@ $userInfo = app('App\Models\SiteSetting')->first();
                             <a href="{{ route('fulfilment.index') }}" class="slide-item {{ request()->is('admin/fulfilment-types ') ? 'active' : '' }}">{{ __('Fulfilment Types') }}</a>
                         </li>
                         @endcan
-                        <li>
-                            <a href="{{ route('marketplace.settings') }}" class="slide-item {{ request()->is('admin/settings/marketplace') ? 'active' : '' }}">{{ __('MP Calculation Settings') }}</a>
-                        </li>
                     </ul>
                 </li>
                 @endif

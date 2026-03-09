@@ -185,6 +185,18 @@ $buttonFour = explode(',',$siteSettings?->button_4);
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <div class='d-flex align-items-center mt-2 cursor-pointer' style="grid-gap: 10px;cursor: pointer;">
+                        <label for="name" class="form-label">{{ __('Add uploader as MP Cal. (Weight, Packing, Shipping):') }}<span class="text-danger">*</span></label>
+                        <a href="/storage/site/marketplace_calculation_settings.xlsx" title='Download Current File' download><i class='fa fa-download'></i></a>
+                    </div>
+                    <div class="row mb-5">
+                        <div class="col-lg-3">
+                            <input type="file" class="dropify" data-bs-height="180" id="marketplace_calculation_settings_file" name="marketplace_calculation_settings_file" />
+                        </div>
+                    </div>
+                </div>
+
                 @can('Settings -> Site Update')
                 <button class="btn btn-primary mt-5" id="refresh_token">Save</button>
                 @endcan

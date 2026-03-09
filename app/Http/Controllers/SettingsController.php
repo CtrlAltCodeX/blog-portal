@@ -18,6 +18,8 @@ use App\Models\CityCost;
 use App\Models\MarketplaceCommission;
 use App\Imports\CityCostImport;
 use App\Imports\MarketplaceCommissionImport;
+use App\Models\MarketPlaceCalculationSetting;
+use App\Imports\MarketPlaceCalculationSettingImport;
 
 class SettingsController extends Controller
 {
@@ -116,6 +118,13 @@ class SettingsController extends Controller
             request()->file('marketplace_commission_file')->storeAs("/public/" . $filePath);
             MarketplaceCommission::truncate();
             Excel::import(new MarketplaceCommissionImport, request()->file('marketplace_commission_file'));
+        }
+
+        if (request()->file('marketplace_calculation_settings_file')) {
+            $filePath = "site/marketplace_calculation_settings.xlsx";
+            request()->file('marketplace_calculation_settings_file')->storeAs("/public/" . $filePath);
+            MarketPlaceCalculationSetting::truncate();
+            Excel::import(new MarketPlaceCalculationSettingImport, request()->file('marketplace_calculation_settings_file'));
         }
 
         if (request()->file('product_background_image')) {
