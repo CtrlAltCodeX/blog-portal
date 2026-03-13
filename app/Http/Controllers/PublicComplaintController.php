@@ -98,7 +98,9 @@ class PublicComplaintController extends Controller
             'attachments.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf,xlsx,xls|max:5120'
         ]);
 
-        $complaint_id = 'CMP-' . date('Ymd') . '-' . rand(1000, 9999);
+        $today = date('dmY');
+        $count = Complaint::whereDate('created_at', now()->toDateString())->count() + 1;
+        $complaint_id = $today . '-' . str_pad($count, 4, '0', STR_PAD_LEFT);
 
         $complaint = Complaint::create([
             'complaint_id' => $complaint_id,

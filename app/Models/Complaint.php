@@ -40,6 +40,11 @@ class Complaint extends Model
         return $this->hasMany(ComplaintAttachment::class, 'complaint_id');
     }
 
+    public function replies()
+    {
+        return $this->hasMany(ComplaintReply::class, 'complaint_id');
+    }
+
     public function issueType()
     {
         return $this->belongsTo(IssueType::class, 'issue_type_id');

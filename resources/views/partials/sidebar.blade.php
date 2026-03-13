@@ -318,7 +318,15 @@ $userInfo = app('App\Models\SiteSetting')->first();
                             <a href="{{ route('pages.index') }}" class="slide-item {{ request()->is('admin/pages ') ? 'active' : '' }}">{{ __('Admin Required') }}</a>
                         </li>
                     </ul>
-                </li>          
+                </li>
+                
+               
+                <li class="slide {{ request()->is('admin/complaints*') ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item {{ request()->is('admin/complaints*') ? 'active' : '' }}" href="{{ route('admin.complaints.index') }}">
+                        <i class="side-menu__icon fe fe-file-text"></i>
+                        <span class="side-menu__label">{{ __('Manage Complaints') }}</span>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
