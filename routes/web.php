@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\FulfilmentTypeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminComplaintController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
@@ -607,3 +608,10 @@ Route::post('/complaints/send-otp', [PublicComplaintController::class, 'sendOtp'
 Route::post('/complaints/verify-otp', [PublicComplaintController::class, 'verifyOtp'])->name('public.complaints.verifyOtp');
 Route::post('/complaints/store', [PublicComplaintController::class, 'store'])->name('public.complaints.store');
 Route::get('/complaints/success/{ticket_id}', [PublicComplaintController::class, 'success'])->name('public.complaints.success');
+
+// Admin Complaint Routes
+Route::prefix('admin')->middleware(['auth'])->group(function () {
+    Route::get('/complaints', [AdminComplaintController::class, 'index'])->name('admin.complaints.index');
+    Route::get('/complaints/{id}', [AdminComplaintController::class, 'show'])->name('admin.complaints.show');
+    Route::post('/complaints/{id}/reply', [AdminComplaintController::class, 'storeReply'])->name('admin.complaints.reply');
+});
