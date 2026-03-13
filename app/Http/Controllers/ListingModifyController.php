@@ -87,12 +87,22 @@ class ListingModifyController extends Controller
     public function requested()
     {
         $requested = ListingModifyRequest::with(['product', 'requestedBy', 'updatedBy'])
-            ->where('status', 'Requested')
-            ->get();
+            ->where('status', 'Requested');
+
+        if (request()->filled('category')) {
+            $requested->where('category', request()->input('category'));
+        }
+
+        $requested = $requested->get();
 
         $completed = ListingModifyRequest::with(['product', 'requestedBy', 'updatedBy'])
-            ->where('status', 'Completed')
-            ->get();
+            ->where('status', 'Completed');
+
+        if (request()->has('category')) {
+            $completed->where('category', request()->input('category'));
+        }
+
+        $completed = $completed->get();
 
         return view('modify-listing.requested', compact('requested', 'completed'));
     }

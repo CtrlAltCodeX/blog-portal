@@ -64,9 +64,11 @@ class SubSubCategoryController extends Controller
      * @param  \App\Models\Category  $subcategory
      * @return \Illuminate\View\View
      */
-    public function edit(Category $subcategory)
+    public function edit($id)
     {
         $categories = Category::whereNull('parent_id')->get();
+        
+        $subcategory = Category::find($id);
 
         return view('sub-subcategories.edit', compact('subcategory', 'categories'));
     }
@@ -90,7 +92,7 @@ class SubSubCategoryController extends Controller
         $subcategory->update($request->only(['name', 'parent_id', 'category_limit', 'preference']));
 
         return redirect()
-            ->route('subcategories.index')
+            ->route('sub-subcategories.index')
             ->with('success', 'Sub-Category updated successfully!');
     }
 

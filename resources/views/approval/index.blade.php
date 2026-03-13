@@ -13,22 +13,58 @@
     .max-content {
         width: max-content;
     }
+    
+    .nav-item {
+        margin-right: 10px;
+    }
+    
+    .nav-tabs .nav-link {
+        background-color: lightgrey;
+        color:black;
+    }
+    
+    #candidateEnquiriesTable thead tr {
+        background: #ccc;
+    }
+    
+    .table {
+        color: #9a9da1;
+    }
+    
+    .table td {
+        color:black !important;
+    }
+    
+    .nav-tabs {
+        padding-left: 12px;
+        border-bottom: 0px;
+    }
 </style>
 
 <div class="card">
     <div class="card-header">
-        <h4>Approval List</h4>
-    </div>
-    <div class="card-body">
-        <form method="GET" class="mb-3">
-            <input type="hidden" name="tab" id="activeTabInput" value="{{ $activeTab }}">
-
+        <div class='d-flex justify-content-between w-100 align-items-center'>
+            <h4>Approval List</h4>
+            
             <select name="status" onchange="this.form.submit()" class="form-select" style="width:400px;height:50px">
                 <option value="">Filter By Status</option>
                 <option value="all" {{ ($status=='all') ? 'selected' : '' }}>All</option>
                 <option value="approved" {{ ($status=='approved') ? 'selected' : '' }}>Approved</option>
                 <option value="denied" {{ ($status=='denied') ? 'selected' : '' }}>Denied</option>
             </select>
+        </div>
+        
+    </div>
+    <div class="card-body">
+        <form method="GET" class="mb-3 text-end">
+            <input type="hidden" name="tab" id="activeTabInput" value="{{ $activeTab }}">
+
+            <!--<select name="status" onchange="this.form.submit()" class="form-select" style="width:400px;height:50px">-->
+            <!--    <option value="">Filter By Status</option>-->
+            <!--    <option value="all" {{ ($status=='all') ? 'selected' : '' }}>All</option>-->
+            <!--    <option value="approved" {{ ($status=='approved') ? 'selected' : '' }}>Approved</option>-->
+            <!--    <option value="denied" {{ ($status=='denied') ? 'selected' : '' }}>Denied</option>-->
+            <!--</select>-->
         </form>
 
         <div class="container-fluid py-3">

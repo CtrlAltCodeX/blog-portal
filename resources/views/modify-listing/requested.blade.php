@@ -22,12 +22,57 @@
         color:white !important;
         background-color:#6c5ffc;
     }
+    
+    .img-hover-wrapper{
+        position: relative;
+        display: inline-block;
+    }
+    
+    .prod-img{
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    
+    .img-preview{
+        display: none;
+        position: absolute;
+        top: -50px;
+        left: 70px;
+        z-index: 9999;
+        background: #fff;
+        padding: 8px;
+        border-radius: 8px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    }
+    
+    .img-preview img{
+        width: 350px;   /* Bigger preview */
+        height: 350px;
+        object-fit: contain;
+        border-radius: 6px;
+    }
+    
+    .img-hover-wrapper:hover .img-preview{
+        display: block;
+    }
 </style>
 
 <div class="main-container container-fluid">
     <div class="card">
         <div class="card-header">
-            <h1 class="page-title">{{ __('Modify Listings Status') }}</h1>
+            <div class='d-flex justify-content-between w-100'>
+                <h1 class="page-title">{{ __('Modify Listings Status') }}</h1>
+                <form action='' method='GET' id='categoryform'>
+                    <select class='form-control w-100 category' name='category'>
+                        <option value=''>--Select--</option>
+                        <option value='Exchange with Others' {{ request()->category == 'Exchange with Others' ? 'selected' : '' }}>Exchange with Others</option>
+                        <option value='Update to Latest' {{ request()->category == 'Update to Latest' ? 'selected' : '' }}>Update to Latest</option>
+                    </select>
+                </form>
+            </div>
         </div>
 
         <div class="card-body">
@@ -47,7 +92,6 @@
             </div>
             
             <div class="tab-content">
-
                 {{-- TAB 1 : Request For Update --}}
                 <div class="tab-pane active" id="tab1">
                     <div class="table-responsive">
@@ -75,12 +119,22 @@
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
                                     <td>{{ $item->product_id }}</td>
-                                    <td>
-                                        <a href="{{ $item->product->base_url ?? '#' }}" target="_blank">
-                                            <img src="{{ $item->product->base_url ?? asset('assets/images/no-image.png') }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
-                                        </a>
+                                    <td class="image-val">
+                                        <div class="img-hover-wrapper">
+                                            <img src="{{ $item->product->base_url ?? asset('assets/images/no-image.png') }}" class="prod-img"
+                                            style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+                                            <div class="img-preview" style='width: 350px;'>
+                                                <img src="{{ $item->product->base_url ?? asset('assets/images/no-image.png') }}" class="prod-img">
+                                            </div>
+                                        </div>
                                     </td>
-                                    <td>{{ $item->category }}</td>
+                                    <td>
+                                        <button class="btn btn-sm 
+                                            {{ $item->category == 'Exchange with Others' ? 'btn-warning' : '' }}
+                                            {{ $item->category == 'Update To Latest' ? 'btn-success' : '' }}">
+                                            {{ $item->category }}
+                                        </button>
+                                    </td>
                                     <td>{{ $item->product->publisher ?? 'N/A' }}</td>
                                     <td>{{ $item->product->title ?? 'N/A' }}</td>
                                     <td>{{ $item->product->mrp ?? '0' }}</td>
@@ -148,12 +202,27 @@
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
                                     <td>{{ $item->product_id }}</td>
-                                    <td>
-                                        <a href="{{ $item->product->base_url ?? '#' }}" target="_blank">
-                                            <img src="{{ $item->product->base_url ?? asset('assets/images/no-image.png') }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
-                                        </a>
+                                    <td class="image-val">
+                                        <div class="img-hover-wrapper">
+                                            <img src="{{ $item->product->base_url ?? asset('assets/images/no-image.png') }}" class="prod-img"
+                                            style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+                                            <div class="img-preview" style='width: 350px;'>
+                                                <img src="{{ $item->product->base_url ?? asset('assets/images/no-image.png') }}" class="prod-img">
+                                            </div>
+                                        </div>
                                     </td>
-                                    <td>{{ $item->category }}</td>
+                                    <!--<td>-->
+                                    <!--    <a href="{{ $item->product->base_url ?? '#' }}" target="_blank">-->
+                                    <!--        <img src="{{ $item->product->base_url ?? asset('assets/images/no-image.png') }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">-->
+                                    <!--    </a>-->
+                                    <!--</td>-->
+                                    <td>
+                                        <button class="btn btn-sm 
+                                            {{ $item->category == 'Exchange with Others' ? 'btn-warning' : '' }}
+                                            {{ $item->category == 'Update To Latest' ? 'btn-success' : '' }}">
+                                            {{ $item->category }}
+                                        </button>
+                                    </td>
                                     <td>{{ $item->product->publisher ?? 'N/A' }}</td>
                                     <td>{{ $item->product->title ?? 'N/A' }}</td>
                                     <td>{{ $item->product->mrp ?? '0' }}</td>
@@ -192,9 +261,20 @@
                         </table>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
 </div>
 @endsection
+
+@push('js')
+<script>
+    $('.category').on('change', function(){
+        $("#categoryform").submit()
+    })
+</script>
+
+@endpush
+
+
+

@@ -39,6 +39,42 @@
         display: flex;
         gap: 10px;
     }
+    
+    .img-hover-wrapper{
+        position: relative;
+        display: inline-block;
+    }
+    
+    .prod-img{
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    
+    .img-preview{
+        display: none;
+        position: absolute;
+        top: -50px;
+        left: 70px;
+        z-index: 9999;
+        background: #fff;
+        padding: 8px;
+        border-radius: 8px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    }
+    
+    .img-preview img{
+        width: 350px;   /* Bigger preview */
+        height: 350px;
+        object-fit: contain;
+        border-radius: 6px;
+    }
+    
+    .img-hover-wrapper:hover .img-preview{
+        display: block;
+    }
 </style>
 @endpush
 
@@ -61,7 +97,7 @@
         </div>
         
         <div class="card-body">
-            <div class="table-responsive">
+            <div class="table-responsive" style='height:99vh;'>
                 <table class="table table-bordered" id="modifyTable">
                     <thead>
                         <tr class="bg-light">
@@ -86,9 +122,12 @@
                                 </div>
                             </td>
                             <td class="image-val">
-                                <a href="#" target="_blank" class="img-link">
-                                    <img src="/dummy.jpg" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" class="prod-img">
-                                </a>
+                                <div class="img-hover-wrapper">
+                                    <img src="/dummy.jpg" class="prod-img">
+                                    <div class="img-preview" style='width: 350px;'>
+                                        <img src="/dummy.jpg" class="prod-img">
+                                    </div>
+                                </div>
                             </td>
                             <td>
                                 <select class="form-control category-select" required>

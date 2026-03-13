@@ -82,7 +82,6 @@
                                         <div class="custom-controls-stacked">
                                             <label class="custom-control custom-checkbox-md">
                                                 <input type="checkbox" class="custom-control-input" type="checkbox" name="permissions[]" id="permission_{{ $permission['id'] }}" value="{{ $permission['name'] }}">
-
                                                 <label class="custom-control-label" for="permission_{{ $permission['id'] }}">
                                                     {{ $permission['name'] }}</label>
                                             </label>
@@ -183,6 +182,19 @@
                                     
                                     <label for="name" class="form-label heading-design">{{ __('Marketplace Calculator') }}</label>
                                     @foreach ($permissionsInCategory['Marketplace'] as $permission)
+                                    <div class="col-md-4">
+                                        <div class="custom-controls-stacked">
+                                            <label class="custom-control custom-checkbox-md">
+                                                <input type="checkbox" class="custom-control-input" type="checkbox" name="permissions[]" id="permission_{{ $permission['id'] }}" value="{{ $permission['name'] }}">
+                                                <label class="custom-control-label" for="permission_{{ $permission['id'] }}">
+                                                    {{ $permission['name'] }}</label>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                    
+                                    <label for="name" class="form-label heading-design">{{ __('Marketing and Promotion') }}</label>
+                                    @foreach ($permissionsInCategory['Marketing'] as $permission)
                                     <div class="col-md-4">
                                         <div class="custom-controls-stacked">
                                             <label class="custom-control custom-checkbox-md">
