@@ -370,7 +370,12 @@ $userInfo = app('App\Models\SiteSetting')->first();
                     </ul>
                 </li>
                 @endif
-                
+                    <li class="slide {{ request()->is('admin/complaints*') ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item {{ request()->is('admin/complaints*') ? 'active' : '' }}" href="{{ route('admin.complaints.index') }}">
+                        <i class="side-menu__icon fe fe-file-text"></i>
+                        <span class="side-menu__label">{{ __('Manage Complaints') }}</span>
+                    </a>
+                </li>
                 <!--<li class="slide {{ (request()->is('admin/posts')) ? 'is-expanded' : '' }}">-->
                 <!--    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fa fa-bullhorn"></i><span class="side-menu__label">{{ __('Marketing / Promotion') }}</span><i class="angle fe fe-chevron-right"></i></a>-->
                 <!--    <ul class="slide-menu">-->

@@ -174,8 +174,37 @@
             var status = $(this).data('status');
 
             $('#modalTicketId').text(ticket);
-            $('#modalStatusSelect').val(status);
             
+            var $statusSelect = $('#modalStatusSelect');
+            var $statusDiv = $statusSelect.closest('.col-md-6'); // Find the column wrapper
+
+            // Reset options to full list for a clean start
+            $statusSelect.html(`
+                <option value="pending">Pending / Response Needed</option>
+                <option value="verification">Waiting For Verification</option>
+                <option value="solved">Case Solved Successful</option>
+                <option value="mercy">Mercy</option>
+                <option value="recovered">Loss Recovered</option>
+            `);
+
+            if (status === 'pending') {
+                // If Response Needed, hide status dropdown and set to Verification
+                $statusDiv.hide();
+                $statusSelect.val('verification');
+            } else if (status === 'verification') {
+                // If Waiting For Verification, show all options
+                $statusDiv.show();
+                $statusSelect.val(status);
+            } else {
+                // If other, restrict to Verification and Pending only
+                $statusDiv.show();
+                $statusSelect.html(`
+                    <option value="verification">Waiting For Verification</option>
+                    <option value="pending">Pending / Response Needed</option>
+                `);
+                $statusSelect.val('verification'); // Default to verification
+            }
+
             // Generate exact reply URL dynamically
             var replyUrl = "{{ route('admin.complaints.reply', ':id') }}";
             replyUrl = replyUrl.replace(':id', id);

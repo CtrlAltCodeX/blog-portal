@@ -76,8 +76,18 @@ class PublicComplaintController extends Controller
         session(['complaint_user_id' => $user->id]);
         $user->update(['otp' => null, 'otp_expires_at' => null]);
 
-        return redirect()->route('public.complaints.create');
+        return redirect()->route('public.complaints.dashboard');
     }
+
+    public function dashboard()
+    {
+        if (!session()->has('complaint_user_id')) {
+            return redirect()->route('public.complaints.create');
+        }
+
+        return view('public.complaints.dashboard');
+    }
+
 
     public function store(Request $request)
     {
@@ -88,19 +98,20 @@ class PublicComplaintController extends Controller
             'description' => 'required|string',
             'specific_tag' => 'required|boolean',
             'send_mail' => 'required|boolean',
-            'orders' => 'required|array|min:1',
-            'orders.*.order_id' => 'required|string',
-            'orders.*.ref_no' => 'required|string',
-            'orders.*.tracking_id' => 'required|string',
-            'orders.*.cx_name' => 'required|string',
-            'orders.*.cx_phone' => 'required|string',
-            'orders.*.loss_value' => 'required|numeric',
-            'attachments.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf,xlsx,xls|max:5120'
+            'orders' => 'nullable|array',
+            'orders.*.order_id' => 'nullable|string',
+            'orders.*.ref_no' => 'nullable|string',
+            'orders.*.tracking_id' => 'nullable|string',
+            'orders.*.cx_name' => 'nullable|string',
+            'orders.*.cx_phone' => 'nullable|string',
+            'orders.*.loss_value' => 'nullable|numeric',
+            'attachments.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf,xlsx,xls|max:5120',
+            'delivery_timeline' => 'required|integer|min:1|max:7'
         ]);
 
         $today = date('dmY');
         $count = Complaint::whereDate('created_at', now()->toDateString())->count() + 1;
-        $complaint_id = $today . '-' . str_pad($count, 4, '0', STR_PAD_LEFT);
+        $complaint_id = 'charge-' . $today . '-' . str_pad($count, 4, '0', STR_PAD_LEFT);
 
         $complaint = Complaint::create([
             'complaint_id' => $complaint_id,
@@ -109,7 +120,7 @@ class PublicComplaintController extends Controller
             'department_id' => $request->department_id,
             'title' => $request->title,
             'description' => $request->description,
-            'delivery_timeline' => '3 Days',
+            'delivery_timeline' => $request->delivery_timeline . ($request->delivery_timeline == 1 ? ' Day' : ' Days'),
             'specific_tag' => $request->specific_tag,
             'employee_name' => $request->employee_name,
             'employee_email' => $request->employee_email,
@@ -118,9 +129,15 @@ class PublicComplaintController extends Controller
             'status' => 'pending'
         ]);
 
-        // Save Orders
-        foreach ($request->orders as $orderData) {
-            $complaint->orders()->create($orderData);
+        // Save Orders (Filter out completely empty rows)
+        if ($request->has('orders')) {
+            foreach ($request->orders as $orderData) {
+                // Check if any field has content
+                $hasData = array_filter($orderData, fn($value) => !is_null($value) && $value !== '');
+                if (!empty($hasData)) {
+                    $complaint->orders()->create($orderData);
+                }
+            }
         }
 
         // Handle Attachments

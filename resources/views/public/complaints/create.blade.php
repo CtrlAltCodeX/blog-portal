@@ -40,8 +40,14 @@
                                 </div>
                                 <div class="col-6 col-md-3">
                                     <div class="p-3 bg-white rounded-4 text-center shadow-sm h-100">
-                                        <label class="form-label small text-muted text-uppercase fw-bold d-block mb-1">Delivery Timeline</label>
-                                        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill text-wrap">By Default 3 Days</span>
+                                          <label class="form-label small text-muted text-uppercase fw-bold d-block mb-1">Delivery Timeline</label>
+
+                                        <select name="delivery_timeline" class="form-select bg-warning text-dark border-0 px-3 py-2 rounded-pill text-center shadow-sm fw-bold mx-auto" style="width: auto; min-width: 130px; cursor: pointer;">
+                                            @for($i = 1; $i <= 7; $i++)
+                                                <option value="{{ $i }}" {{ $i == 3 ? 'selected' : '' }} class="bg-white text-dark">{{ $i }} {{ $i == 1 ? 'Day' : 'Days' }}</option>
+                                            @endfor
+                                        </select>
+
                                     </div>
                                 </div>
                                 <div class="col-6 col-md-3 text-center">
@@ -161,12 +167,12 @@
                                         </thead>
                                         <tbody class="bg-white">
                                             <tr>
-                                                <td class="ps-4"><input type="text" name="orders[0][order_id]" class="form-control border-0" required placeholder="..."></td>
-                                                <td><input type="text" name="orders[0][ref_no]" class="form-control border-0" required placeholder="..."></td>
-                                                <td><input type="text" name="orders[0][tracking_id]" class="form-control border-0" required placeholder="..."></td>
-                                                <td><input type="text" name="orders[0][cx_name]" class="form-control border-0" required placeholder="..."></td>
-                                                <td><input type="text" name="orders[0][cx_phone]" class="form-control border-0" required placeholder="..."></td>
-                                                <td><input type="number" step="0.01" name="orders[0][loss_value]" class="form-control border-0" required placeholder="0.00"></td>
+                                                <td class="ps-4"><input type="text" name="orders[0][order_id]" class="form-control border-0" placeholder="..."></td>
+                                                <td><input type="text" name="orders[0][ref_no]" class="form-control border-0" placeholder="..."></td>
+                                                <td><input type="text" name="orders[0][tracking_id]" class="form-control border-0" placeholder="..."></td>
+                                                <td><input type="text" name="orders[0][cx_name]" class="form-control border-0" placeholder="..."></td>
+                                                <td><input type="text" name="orders[0][cx_phone]" class="form-control border-0" placeholder="..."></td>
+                                                <td><input type="number" step="0.01" name="orders[0][loss_value]" class="form-control border-0" placeholder="0.00"></td>
                                                 <td></td>
                                             </tr>
                                         </tbody>
@@ -175,7 +181,7 @@
                             </div>
 
                             <div class="d-flex justify-content-end gap-3 mt-5">
-                                <a href="{{ url('/') }}" class="btn btn-light px-5 py-3 rounded-pill fw-bold">CANCEL</a>
+                                <a href="{{ route('public.complaints.dashboard') }}" class="btn btn-light px-5 py-3 rounded-pill fw-bold border shadow-sm"><i class="fas fa-arrow-left me-2"></i> BACK</a>
                                 <button type="submit" class="btn btn-primary px-5 py-3 rounded-pill fw-bold shadow-lg" style="background: linear-gradient(135deg, #667eea, #764ba2); border: none;">
                                     SUBMIT COMPLAINT <i class="fas fa-check-circle ms-2"></i>
                                 </button>
@@ -202,12 +208,12 @@
         const newRow = table.insertRow();
         newRow.className = "border-top";
         newRow.innerHTML = `
-            <td class="ps-4"><input type="text" name="orders[${rowCount}][order_id]" class="form-control border-0" required placeholder="..."></td>
-            <td><input type="text" name="orders[${rowCount}][ref_no]" class="form-control border-0" required placeholder="..."></td>
-            <td><input type="text" name="orders[${rowCount}][tracking_id]" class="form-control border-0" required placeholder="..."></td>
-            <td><input type="text" name="orders[${rowCount}][cx_name]" class="form-control border-0" required placeholder="..."></td>
-            <td><input type="text" name="orders[${rowCount}][cx_phone]" class="form-control border-0" required placeholder="..."></td>
-            <td><input type="number" step="0.01" name="orders[${rowCount}][loss_value]" class="form-control border-0" required placeholder="0.00"></td>
+            <td class="ps-4"><input type="text" name="orders[${rowCount}][order_id]" class="form-control border-0" placeholder="..."></td>
+            <td><input type="text" name="orders[${rowCount}][ref_no]" class="form-control border-0" placeholder="..."></td>
+            <td><input type="text" name="orders[${rowCount}][tracking_id]" class="form-control border-0" placeholder="..."></td>
+            <td><input type="text" name="orders[${rowCount}][cx_name]" class="form-control border-0" placeholder="..."></td>
+            <td><input type="text" name="orders[${rowCount}][cx_phone]" class="form-control border-0" placeholder="..."></td>
+            <td><input type="number" step="0.01" name="orders[${rowCount}][loss_value]" class="form-control border-0" placeholder="0.00"></td>
             <td class="pe-3"><button type="button" class="btn btn-link text-danger p-0" onclick="removeRow(this)"><i class="fas fa-times-circle fs-5"></i></button></td>
         `;
         rowCount++;

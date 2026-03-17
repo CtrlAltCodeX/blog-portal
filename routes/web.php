@@ -606,6 +606,8 @@ Route::get('/complaints/start', [PublicComplaintController::class, 'startVerific
 Route::get('/complaints/create', [PublicComplaintController::class, 'create'])->name('public.complaints.create');
 Route::post('/complaints/send-otp', [PublicComplaintController::class, 'sendOtp'])->name('public.complaints.sendOtp');
 Route::post('/complaints/verify-otp', [PublicComplaintController::class, 'verifyOtp'])->name('public.complaints.verifyOtp');
+Route::get('/complaints/dashboard', [PublicComplaintController::class, 'dashboard'])->name('public.complaints.dashboard');
+
 Route::post('/complaints/store', [PublicComplaintController::class, 'store'])->name('public.complaints.store');
 Route::get('/complaints/success/{ticket_id}', [PublicComplaintController::class, 'success'])->name('public.complaints.success');
 
