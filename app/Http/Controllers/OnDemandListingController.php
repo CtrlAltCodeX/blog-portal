@@ -49,12 +49,17 @@ class OnDemandListingController extends Controller
                 'subject' => 'New On Demand Images Uploaded',
                 'type' => 'On Demand Upload',
                 'user_name' => auth()->user()->name,
-                'details' => "Total $count image(s) uploaded for " . $request->category . " request."
+                'count' => $count,
+                'category' => $request->category,
+                'details' => "Images uploaded for " . $request->category . " request."
             ];
 
-            foreach ($activeUsers as $user) {
-                Mail::to($user->email)->send(new RequestNotificationMail($data));
-            }
+
+            // foreach ($activeUsers as $user) {
+            // Mail::to($user->email)->send(new RequestNotificationMail($data));
+            Mail::to("bstteam114@gmail.com")->send(new RequestNotificationMail($data));
+
+        // }
         }
 
         session()->flash('success', 'Images uploaded successfully.');
@@ -176,4 +181,21 @@ class OnDemandListingController extends Controller
 
         return response()->json(['success' => true]);
     }
+
+    public function bulkTransfer(Request $request)
+
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:on_demand_listings,id',
+            'category' => 'required|in:Create,Update'
+        ]);
+
+        OnDemandListing::whereIn('id', $request->ids)->update([
+            'category' => $request->category
+        ]);
+
+        return response()->json(['success' => true]);
+    }
 }
+

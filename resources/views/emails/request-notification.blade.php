@@ -18,7 +18,10 @@
         <div style="background: #f9f9f9; padding: 15px; border-radius: 4px; border-left: 4px solid #3366ff; margin: 20px 0;">
             <p style="margin: 0;"><strong>Type:</strong> {{ $data['type'] }}</p>
             <p style="margin: 5px 0 0;"><strong>Requested By:</strong> {{ $data['user_name'] }}</p>
+            <p style="margin: 5px 0 0;"><strong>Category:</strong> {{ $data['category'] ?? 'N/A' }}</p>
+            <p style="margin: 5px 0 0;"><strong>Count:</strong> {{ $data['count'] ?? 'N/A' }}</p>
             <p style="margin: 5px 0 0;"><strong>Details:</strong> {{ $data['details'] }}</p>
+
             <p style="margin: 5px 0 0;"><strong>Date:</strong> {{ date('d M Y, h:i A') }}</p>
         </div>
 

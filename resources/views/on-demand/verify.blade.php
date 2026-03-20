@@ -207,9 +207,14 @@
                                         onchange="toggleSelectAll(this, 'tab1')">
                                     <label for="select-all-create">Select All</label>
                                 </div>
-                                <button type="button" class="btn btn-sm btn-info" onclick="bulkDownload('form-create')">
-                                    <i class="fe fe-download me-1"></i> Download Selected
-                                </button>
+                                <div class="d-flex">
+                                    <button type="button" class="btn btn-sm btn-warning text-dark me-2" onclick="bulkTransfer('form-create', 'Update')">
+                                        <i class="fe fe-repeat me-1"></i> Move to Update
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-info" onclick="bulkDownload('form-create')">
+                                        <i class="fe fe-download me-1"></i> Download Selected
+                                    </button>
+                                </div>
                             </div>
                             @endif
                             <form id="form-create">
@@ -257,9 +262,14 @@
                                         onchange="toggleSelectAll(this, 'tab2')">
                                     <label for="select-all-update">Select All</label>
                                 </div>
-                                <button type="button" class="btn btn-sm btn-info" onclick="bulkDownload('form-update')">
-                                    <i class="fe fe-download me-1"></i> Download Selected
-                                </button>
+                                <div class="d-flex">
+                                    <button type="button" class="btn btn-sm btn-warning text-dark me-2" onclick="bulkTransfer('form-update', 'Create')">
+                                        <i class="fe fe-repeat me-1"></i> Move to Create
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-info" onclick="bulkDownload('form-update')">
+                                        <i class="fe fe-download me-1"></i> Download Selected
+                                    </button>
+                                </div>
                             </div>
                             @endif
                             <form id="form-update">
@@ -491,6 +501,45 @@
         })
         .catch(() => {
             alert('Error during bulk download.');
+        });
+    }
+
+    function bulkTransfer(formId, targetCategory) {
+        const form = document.getElementById(formId);
+        const selected = Array.from(
+            form.querySelectorAll('.row-checkbox:checked')
+        ).map(cb => cb.value);
+
+        if (selected.length === 0) {
+            alert('Please select at least one image.');
+            return;
+        }
+
+        if (!confirm('Are you sure you want to transfer selected listings?')) {
+            return;
+        }
+
+        fetch('{{ route("on-demand.bulk-transfer") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({
+                ids: selected,
+                category: targetCategory
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Something went wrong.');
+            }
+        })
+        .catch(() => {
+            alert('Error transferring listings.');
         });
     }
 </script>
