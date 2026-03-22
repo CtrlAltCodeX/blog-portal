@@ -92,7 +92,9 @@ $userInfo = app('App\Models\SiteSetting')->first();
                         
                         @can('Product Listing -> Review / Verify Listing (Img)')
                         <li><a href="{{ route('on-demand.verify') }}" class="slide-item {{ (request()->is('admin/on-demand-listing/verify')) ? 'active' : '' }}">{{ __('Review/Verify Listings (Img)') }}</a></li>
+                        <li><a href="{{ route('on-demand.logs') }}" class="slide-item {{ (request()->is('admin/on-demand-listing/logs')) ? 'active' : '' }}">{{ __('Logs of Request Images') }}</a></li>
                         @endcan
+
                         
                         @can('RA-Pending Listing (DB)')
                         <li><a href="{{ route('database-listing.index', ['status' => 0, 'startIndex' => 1, 'category' => '', 'user' => 'all','paging'=>25]) }}" class="slide-item {{ (request()->is('admin/database-listing')) ? 'active' : '' }}">{{ __('RA | Pending Listing (DB)') }}</a></li>

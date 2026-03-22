@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use App\Mail\RequestNotificationMail;
 use Illuminate\Support\Facades\Mail;
+use App\Models\OnDemandListingLog;
+
 
 class OnDemandListingController extends Controller
 {
@@ -41,7 +43,15 @@ class OnDemandListingController extends Controller
                 ]);
             }
 
+            // Create Log Entry
+            OnDemandListingLog::create([
+                'requested_by' => auth()->id(),
+                'count' => count($request->file('images')),
+                'category' => $request->category
+            ]);
+
             // Send Email Notification to all Active Users
+
             $activeUsers = User::where('status', 1)->get();
             // dd($activeUsers);
             $count = count($request->file('images'));
@@ -55,11 +65,9 @@ class OnDemandListingController extends Controller
             ];
 
 
-            // foreach ($activeUsers as $user) {
-            // Mail::to($user->email)->send(new RequestNotificationMail($data));
-            Mail::to("bstteam114@gmail.com")->send(new RequestNotificationMail($data));
-
-        // }
+            foreach ($activeUsers as $user) {
+                Mail::to($user->email)->send(new RequestNotificationMail($data));
+            }
         }
 
         session()->flash('success', 'Images uploaded successfully.');
@@ -84,6 +92,8 @@ class OnDemandListingController extends Controller
             ->get();
 
         return view('on-demand.verify', compact('requestedCreate', 'requestedUpdate', 'completed'));
+
+
     }
 
     public function complete(Request $request)
@@ -182,8 +192,16 @@ class OnDemandListingController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function bulkTransfer(Request $request)
+    public function logs()
+    {
+        $requestLogs = OnDemandListingLog::with('requestedBy')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
+        return view('on-demand.logs', compact('requestLogs'));
+    }
+
+    public function bulkTransfer(Request $request)
     {
         $request->validate([
             'ids' => 'required|array',
@@ -198,4 +216,3 @@ class OnDemandListingController extends Controller
         return response()->json(['success' => true]);
     }
 }
-

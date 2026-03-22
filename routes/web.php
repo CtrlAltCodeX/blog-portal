@@ -189,7 +189,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         Route::post('bulk-download', [OnDemandListingController::class, 'bulkDownload'])->name('on-demand.bulk-download');
         Route::post('bulk-delete', [OnDemandListingController::class, 'bulkDelete'])->name('on-demand.bulk-delete');
         Route::post('bulk-transfer', [OnDemandListingController::class, 'bulkTransfer'])->name('on-demand.bulk-transfer');
+        Route::get('logs', [OnDemandListingController::class, 'logs'])->name('on-demand.logs');
     });
+
 
 
     /**
