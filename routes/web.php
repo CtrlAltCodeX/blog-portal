@@ -38,6 +38,7 @@ use App\Http\Controllers\WorkTypeController;
 use App\Http\Controllers\OnDemandListingController;
 use App\Http\Controllers\IssueTypeController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\DistributionController;
 use App\Http\Controllers\PublicComplaintController;
 
 Illuminate\Support\Facades\Auth::routes();
@@ -573,6 +574,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
     });
 });
 
+Route::get('authorised-distributor', [DistributionController::class, 'index'])
+    ->name('distribution.index');
+    
+Route::get('our-distribution', [DistributionController::class, 'index']);
+
 Route::group(['prefix' => 'password'], function () {
     Route::get('reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
 
@@ -590,7 +596,6 @@ Route::get('getPriceRecords', [ListingController::class, 'getPriceRecords'])
 
 Route::get('/check-session-status', function () {
     session()->put('expire_error', 'Your session has expired. Please log in again.');
-
     return redirect()->route('login');
 })->name('check.session');
 
