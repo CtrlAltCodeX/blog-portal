@@ -33,5 +33,6 @@ class WeightVSCourier extends Model
         'official_url',
         'sku_pattern',
         'marginal_gaps',
+        'logo_url',
     ];
 }
