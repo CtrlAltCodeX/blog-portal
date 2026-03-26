@@ -86,6 +86,83 @@ class PublicComplaintController extends Controller
         return view('public.complaints.dashboard');
     }
 
+    public function index(Request $request)
+    {
+        if (!session()->has('complaint_user_id')) {
+            return redirect()->route('public.complaints.create');
+        }
+
+        $userId = session('complaint_user_id');
+        $status = $request->get('status', 'pending');
+        
+        $query = Complaint::where('user_id', $userId)->with(['issueType', 'department']);
+
+        if ($status !== 'all') {
+            $query->where('status', $status);
+        }
+
+        $complaints = $query->latest()->get();
+
+        $counts = [
+            'pending' => Complaint::where('user_id', $userId)->where('status', 'pending')->count(),
+            'verification' => Complaint::where('user_id', $userId)->where('status', 'verification')->count(),
+            'solved' => Complaint::where('user_id', $userId)->where('status', 'solved')->count(),
+            'mercy' => Complaint::where('user_id', $userId)->where('status', 'mercy')->count(),
+            'recovered' => Complaint::where('user_id', $userId)->where('status', 'recovered')->count(),
+            'all' => Complaint::where('user_id', $userId)->count(),
+        ];
+
+        return view('public.complaints.index', compact('complaints', 'counts', 'status'));
+    }
+
+    public function show($id)
+    {
+        if (!session()->has('complaint_user_id')) {
+            return redirect()->route('public.complaints.create');
+        }
+
+        $userId = session('complaint_user_id');
+        $complaint = Complaint::where('user_id', $userId)
+            ->with(['issueType', 'department', 'orders', 'attachments', 'replies.user', 'replies.attachments'])
+            ->findOrFail($id);
+
+        return view('public.complaints.show', compact('complaint'));
+    }
+
+    public function storeReply(Request $request, $id)
+    {
+        if (!session()->has('complaint_user_id')) {
+            return redirect()->route('public.complaints.create');
+        }
+
+        $userId = session('complaint_user_id');
+        $complaint = Complaint::where('user_id', $userId)->findOrFail($id);
+
+        $request->validate([
+            'message' => 'required|string',
+            'status' => 'required|string',
+            'attachments.*' => 'nullable|file|max:5120'
+        ]);
+        
+        $reply = \App\Models\ComplaintReply::create([
+            'complaint_id' => $complaint->id,
+            'user_id' => null, 
+            'message' => $request->message
+        ]);
+
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $file) {
+                $path = $file->store('complaints/replies', 'public');
+                $reply->attachments()->create(['file_path' => $path]);
+            }
+        }
+
+        // Apply status transition from request (matching admin logic)
+        $complaint->update(['status' => $request->status]);
+
+        return back()->with('success', 'Reply submitted successfully.');
+    }
+
 
     public function store(Request $request)
     {
@@ -104,7 +181,8 @@ class PublicComplaintController extends Controller
             'orders.*.cx_phone' => 'nullable|string',
             'orders.*.loss_value' => 'nullable|numeric',
             'attachments.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf,xlsx,xls|max:5120',
-            'delivery_timeline' => 'required|integer|min:1|max:7'
+            'delivery_timeline' => 'required|integer|min:1|max:7',
+            'managed_by' => 'required|string|in:self with admin,admin'
         ]);
 
         $today = date('dmY');
@@ -119,6 +197,7 @@ class PublicComplaintController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'delivery_timeline' => $request->delivery_timeline . ($request->delivery_timeline == 1 ? ' Day' : ' Days'),
+            'managed_by' => $request->managed_by,
             'specific_tag' => $request->specific_tag,
             'employee_name' => $request->employee_name,
             'employee_email' => $request->employee_email,
@@ -146,8 +225,7 @@ class PublicComplaintController extends Controller
             }
         }
 
-        // Clear verification session after success
-        session()->forget('complaint_user_id');
+        // session()->forget('complaint_user_id'); // Keep session to allow dashboard access after success
 
         return redirect()->route('public.complaints.success', ['ticket_id' => $complaint_id]);
     }

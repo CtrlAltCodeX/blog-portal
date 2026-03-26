@@ -616,6 +616,10 @@ Route::get('/complaints/create', [PublicComplaintController::class, 'create'])->
 Route::post('/complaints/send-otp', [PublicComplaintController::class, 'sendOtp'])->name('public.complaints.sendOtp');
 Route::post('/complaints/verify-otp', [PublicComplaintController::class, 'verifyOtp'])->name('public.complaints.verifyOtp');
 Route::get('/complaints/dashboard', [PublicComplaintController::class, 'dashboard'])->name('public.complaints.dashboard');
+Route::get('/complaints/list', [PublicComplaintController::class, 'index'])->name('public.complaints.index');
+Route::get('/complaints/view/{id}', [PublicComplaintController::class, 'show'])->name('public.complaints.show');
+Route::post('/complaints/reply/{id}', [PublicComplaintController::class, 'storeReply'])->name('public.complaints.reply');
+
 
 Route::post('/complaints/store', [PublicComplaintController::class, 'store'])->name('public.complaints.store');
 Route::get('/complaints/success/{ticket_id}', [PublicComplaintController::class, 'success'])->name('public.complaints.success');
