@@ -17,6 +17,7 @@ class Complaint extends Model
         'title',
         'description',
         'delivery_timeline',
+        'managed_by',
         'specific_tag',
         'employee_name',
         'employee_email',

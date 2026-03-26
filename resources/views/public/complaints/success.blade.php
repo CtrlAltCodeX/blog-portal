@@ -21,8 +21,8 @@
                         </div>
 
                         <div class="d-grid gap-3">
-                            <a href="{{ url('/') }}" class="btn btn-primary btn-lg rounded-pill py-3 fw-bold shadow-lg" style="background: linear-gradient(135deg, #667eea, #764ba2); border: none;">
-                                <i class="fas fa-home me-2"></i> BACK TO HOME PAGE
+                            <a href="{{ route('public.complaints.dashboard') }}" class="btn btn-primary btn-lg rounded-pill py-3 fw-bold shadow-lg" style="background: linear-gradient(135deg, #667eea, #764ba2); border: none;">
+                                <i class="fas fa-th-large me-2"></i> BACK TO DASHBOARD
                             </a>
                             <p class="small text-muted mt-3">Please keep your Ticket ID for future reference.</p>
                         </div>

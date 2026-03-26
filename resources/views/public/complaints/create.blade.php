@@ -59,6 +59,8 @@
                                     </div>
                                 </div>
                             </div>
+                            
+
 
                             <div class="row g-4 mb-5">
                                 <div class="col-md-6">
@@ -128,6 +130,26 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <!-- Managed By Selection (Moved) -->
+                                    <div class="mt-4 pt-3 border-top">
+                                        <div class="row align-items-center">
+                                            <div class="col-md-12">
+                                                <label class="form-label fw-bold small text-muted text-uppercase">Managed By: <span class="text-danger">*</span></label>
+                                                <div class="d-flex gap-5 mt-1">
+                                                    <div class="form-check custom-radio">
+                                                        <input class="form-check-input" type="radio" name="managed_by" id="managed_self" value="self with admin" checked required>
+                                                        <label class="form-check-label fw-bold text-dark" for="managed_self">Self with Admin</label>
+                                                    </div>
+                                                    <div class="form-check custom-radio">
+                                                        <input class="form-check-input" type="radio" name="managed_by" id="managed_admin" value="admin" required>
+                                                        <label class="form-check-label fw-bold text-dark" for="managed_admin">Admin</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="mt-4 pt-3 border-top">
                                         <label class="form-label fw-bold small text-muted">Do You Want to Send This Records through E-mail to The Employee? <span class="text-danger">*</span></label>
                                         <div class="d-flex gap-4 mt-1">
@@ -140,6 +162,7 @@
                                                 <label class="form-check-label" for="mail_no">No</label>
                                             </div>
                                         </div>
+                                    </div>
                                     </div>
                                 </div>
                             </div>

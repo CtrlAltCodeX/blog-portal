@@ -86,7 +86,7 @@
                 <h4 class="fw-bold mb-2">Reply to Complaint</h4>
                 <p class="text-muted mb-4">Respond to updates from our support desk.</p>
             </div>
-            <a href="#" class="btn btn-success w-100 rounded-pill py-2 fw-bold shadow-sm" style="background: linear-gradient(135deg, #11998e, #38ef7d); border: none;">
+            <a href="{{ route('public.complaints.index') }}" class="btn btn-success w-100 rounded-pill py-2 fw-bold shadow-sm" style="background: linear-gradient(135deg, #11998e, #38ef7d); border: none;">
               REPLY NOW <i class="fas fa-chevron-right ms-2 small"></i>
             </a>
           </div>
@@ -102,9 +102,10 @@
                 <h4 class="fw-bold mb-2">Check Status</h4>
                 <p class="text-muted mb-4">Track your complaint progress and solutions.</p>
             </div>
-            <a href="#" class="btn btn-warning w-100 rounded-pill py-2 fw-bold shadow-sm text-white" style="background: linear-gradient(135deg, #f12711, #f5af19); border: none;">
+            <a href="{{ route('public.complaints.index') }}" class="btn btn-warning w-100 rounded-pill py-2 fw-bold shadow-sm text-white" style="background: linear-gradient(135deg, #f12711, #f5af19); border: none;">
               CHECK STATUS <i class="fas fa-chevron-right ms-2 small"></i>
             </a>
+
           </div>
         </div>
       </div>
