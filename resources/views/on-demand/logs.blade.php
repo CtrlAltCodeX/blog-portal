@@ -15,15 +15,18 @@
                         <table class="table table-bordered text-nowrap border-bottom bg-white">
                             <thead class="bg-light">
                                 <tr>
-                                    <th>Created By</th>
-                                    <th>Category</th>
-                                    <th>Count of Images</th>
-                                    <th>Created Time</th>
+                                    <th>Sr.no.</th>
+                                    <th>Requested Date and Timestamp</th>
+                                    <th>Created By ( Users )</th>
+                                    <th>Type of Requests</th>
+                                    <th>Number of Images Uploaded</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse($requestLogs as $log)
+                                @forelse($requestLogs as $key => $log)
                                 <tr>
+                                    <td>{{ ++$key }}</td>
+                                    <td>{{ $log->created_at ? $log->created_at->format('d M Y, h:i A') : 'N/A' }}</td>
                                     <td>{{ $log->requestedBy->name ?? 'N/A' }}</td>
                                     <td>
                                         <span class="badge {{ $log->category == 'Create' ? 'bg-success' : 'bg-primary' }}">
@@ -31,7 +34,6 @@
                                         </span>
                                     </td>
                                     <td><strong>{{ $log->count }}</strong></td>
-                                    <td>{{ $log->created_at ? $log->created_at->format('d M Y, h:i A') : 'N/A' }}</td>
                                 </tr>
                                 @empty
                                 <tr>

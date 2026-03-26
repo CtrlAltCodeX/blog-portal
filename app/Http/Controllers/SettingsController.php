@@ -92,6 +92,13 @@ class SettingsController extends Controller
             Excel::import(new PublicationsImport, request()->file('upload_file'));
         }
 
+        if (request()->file('weight_file')) {
+            $filePath = "site/weight_vs_courier.xlsx";
+            request()->file('weight_file')->storeAs("/public/" . $filePath);
+            WeightVSCourier::truncate();
+            Excel::import(new WeightVSCourierImport, storage_path('app/public/' . $filePath));
+        }
+
         if (request()->file('purches_file')) {
             $filePath = "site/purches_price_weight.xlsx";
             request()->file('purches_file')->storeAs("/public/" . $filePath);

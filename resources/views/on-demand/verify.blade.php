@@ -153,6 +153,64 @@
         z-index: 9998;
         pointer-events: none; /* Add this to prevent flickering */
     }
+    
+    .alert {
+      position: relative;
+      display: flex;
+      gap: 14px;
+      padding: 20px 22px;
+      background: #f0f7ff;
+      border-left: 5px solid #3b82f6;
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+      /*max-width: 600px;*/
+      animation: fadeSlide 0.4s ease;
+    }
+
+    .alert-icon {
+      font-size: 22px;
+      color: var(--info-border);
+      margin-top: 2px;
+      padding-left: 0px !important;
+    }
+
+    .alert-content {
+      flex: 1;
+    }
+
+    .alert-title {
+      font-weight: 600;
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: var(--info-text);
+    }
+
+    .alert-notes {
+      font-size: 14px;
+      color: #334155;
+      line-height: 1.6;
+    }
+
+    .alert-notes strong {
+      color: #0f172a;
+    }
+
+    .alert-close {
+      position: absolute;
+      right: 14px;
+      top: 14px;
+      background: transparent;
+      border: none;
+      font-size: 30px;
+      cursor: pointer;
+      color: #64748b;
+      transition: 0.2s ease;
+    }
+
+    .alert-close:hover {
+      color: #111827;
+    }
+
 </style>
 @endpush
 
@@ -164,6 +222,16 @@
 
     <div class="row">
         <div class="col-md-12">
+            <div class="alert">
+                <div class="alert-icon">ðŸ’°</div>
+                <div class="alert-content">
+                  <div class="alert-title">Additional Earning Guide</div>
+                  <div class="alert-notes">
+                    If you wish to earn more, you can contact the system admin to allot additional roles in your account, i.e., <strong>"Leads Conversion"</strong>. We will provide 10 - 20 random candidate list who may be interested in work-from-home or work-from-office opportunities. Your responsibility is to explain the joining process properly and convert the applications. If successfully converted, you will receive a cash reward of <strong>Rs. 50/- per application</strong>.
+                  </div>
+                </div>
+                <button class="alert-close" type='button' onclick="this.parentElement.style.display='none'">Ã—</button>
+            </div>
             <div class="card">
 
                 {{-- Tabs --}}

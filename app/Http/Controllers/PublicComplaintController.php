@@ -6,8 +6,6 @@ use App\Models\Department;
 use App\Models\IssueType;
 use App\Models\ComplaintUser;
 use App\Models\Complaint;
-use App\Models\ComplaintOrder;
-use App\Models\ComplaintAttachment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ComplaintOtpMail;
