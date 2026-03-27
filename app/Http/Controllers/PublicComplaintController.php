@@ -27,6 +27,7 @@ class PublicComplaintController extends Controller
         $issueTypes = IssueType::where('status', 1)->get();
         $departments = Department::where('status', 1)->get();
         $verifiedUser = ComplaintUser::find(session('complaint_user_id'));
+
         return view('public.complaints.create', compact('issueTypes', 'departments', 'verifiedUser'));
     }
 
@@ -52,7 +53,9 @@ class PublicComplaintController extends Controller
         // Keep it flashed for testing if needed
         session()->flash('test_otp', $otp);
 
-        return back()->with('success', 'OTP sent to your email.')->with('email_sent', true)->with('email', $request->email);
+        return back()->with('success', 'OTP sent to your email.')
+            ->with('email_sent', true)
+            ->with('email', $request->email);
     }
 
     public function verifyOtp(Request $request)
@@ -94,8 +97,8 @@ class PublicComplaintController extends Controller
 
         $userId = session('complaint_user_id');
         $status = $request->get('status', 'pending');
-        
-        $query = Complaint::where('user_id', $userId)->with(['issueType', 'department']);
+
+        $query = Complaint::where('complaint_user_id', $userId)->with(['issueType', 'department']);
 
         if ($status !== 'all') {
             $query->where('status', $status);
@@ -104,12 +107,12 @@ class PublicComplaintController extends Controller
         $complaints = $query->latest()->get();
 
         $counts = [
-            'pending' => Complaint::where('user_id', $userId)->where('status', 'pending')->count(),
-            'verification' => Complaint::where('user_id', $userId)->where('status', 'verification')->count(),
-            'solved' => Complaint::where('user_id', $userId)->where('status', 'solved')->count(),
-            'mercy' => Complaint::where('user_id', $userId)->where('status', 'mercy')->count(),
-            'recovered' => Complaint::where('user_id', $userId)->where('status', 'recovered')->count(),
-            'all' => Complaint::where('user_id', $userId)->count(),
+            'pending' => Complaint::where('complaint_user_id', $userId)->where('status', 'pending')->count(),
+            'verification' => Complaint::where('complaint_user_id', $userId)->where('status', 'verification')->count(),
+            'solved' => Complaint::where('complaint_user_id', $userId)->where('status', 'solved')->count(),
+            'mercy' => Complaint::where('complaint_user_id', $userId)->where('status', 'mercy')->count(),
+            'recovered' => Complaint::where('complaint_user_id', $userId)->where('status', 'recovered')->count(),
+            'all' => Complaint::where('complaint_user_id', $userId)->count(),
         ];
 
         return view('public.complaints.index', compact('complaints', 'counts', 'status'));
@@ -122,7 +125,8 @@ class PublicComplaintController extends Controller
         }
 
         $userId = session('complaint_user_id');
-        $complaint = Complaint::where('user_id', $userId)
+
+        $complaint = Complaint::where('complaint_user_id', $userId)
             ->with(['issueType', 'department', 'orders', 'attachments', 'replies.user', 'replies.attachments'])
             ->findOrFail($id);
 
@@ -136,17 +140,17 @@ class PublicComplaintController extends Controller
         }
 
         $userId = session('complaint_user_id');
-        $complaint = Complaint::where('user_id', $userId)->findOrFail($id);
+        $complaint = Complaint::where('complaint_user_id', $userId)->findOrFail($id);
 
         $request->validate([
             'message' => 'required|string',
             'status' => 'required|string',
             'attachments.*' => 'nullable|file|max:5120'
         ]);
-        
+
         $reply = \App\Models\ComplaintReply::create([
             'complaint_id' => $complaint->id,
-            'user_id' => null, 
+            'complaint_user_id' => $userId,
             'message' => $request->message
         ]);
 
@@ -191,7 +195,7 @@ class PublicComplaintController extends Controller
 
         $complaint = Complaint::create([
             'complaint_id' => $complaint_id,
-            'user_id' => session('complaint_user_id'),
+            'complaint_user_id' => session('complaint_user_id'),
             'issue_type_id' => $request->issue_type_id,
             'department_id' => $request->department_id,
             'title' => $request->title,

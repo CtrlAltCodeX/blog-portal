@@ -11,6 +11,7 @@ class Complaint extends Model
 
     protected $fillable = [
         'complaint_id',
+        'complaint_user_id',
         'user_id',
         'issue_type_id',
         'department_id',
@@ -26,9 +27,14 @@ class Complaint extends Model
         'status'
     ];
 
+    public function complaint_user()
+    {
+        return $this->belongsTo(ComplaintUser::class, 'complaint_user_id');
+    }
+
     public function user()
     {
-        return $this->belongsTo(ComplaintUser::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function orders()

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('complaints', function (Blueprint $table) {
             $table->id();
             $table->string('complaint_id')->unique();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('complaint_user_id')->nullable();
             $table->unsignedBigInteger('issue_type_id');
             $table->unsignedBigInteger('department_id');
             $table->string('title', 1000);

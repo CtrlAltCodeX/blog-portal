@@ -576,7 +576,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
 
 Route::get('authorised-distributor', [DistributionController::class, 'index'])
     ->name('distribution.index');
-    
+
 Route::get('our-distribution', [DistributionController::class, 'index']);
 
 Route::group(['prefix' => 'password'], function () {
@@ -611,22 +611,54 @@ Route::get('', [HomeController::class, 'index'])
 Route::match(['get', 'post'], 'price/calculation', [UserController::class, 'priceCalculation'])
     ->name('price.calculation');
 
-Route::get('/complaints/start', [PublicComplaintController::class, 'startVerification'])->name('public.complaints.verify.start');
-Route::get('/complaints/create', [PublicComplaintController::class, 'create'])->name('public.complaints.create');
-Route::post('/complaints/send-otp', [PublicComplaintController::class, 'sendOtp'])->name('public.complaints.sendOtp');
-Route::post('/complaints/verify-otp', [PublicComplaintController::class, 'verifyOtp'])->name('public.complaints.verifyOtp');
-Route::get('/complaints/dashboard', [PublicComplaintController::class, 'dashboard'])->name('public.complaints.dashboard');
-Route::get('/complaints/list', [PublicComplaintController::class, 'index'])->name('public.complaints.index');
-Route::get('/complaints/view/{id}', [PublicComplaintController::class, 'show'])->name('public.complaints.show');
-Route::post('/complaints/reply/{id}', [PublicComplaintController::class, 'storeReply'])->name('public.complaints.reply');
+Route::group(['prefix' => 'complaints'], function () {
+    Route::get('start', [PublicComplaintController::class, 'startVerification'])
+        ->name('public.complaints.verify.start');
 
+    Route::get('create', [PublicComplaintController::class, 'create'])
+        ->name('public.complaints.create');
 
-Route::post('/complaints/store', [PublicComplaintController::class, 'store'])->name('public.complaints.store');
-Route::get('/complaints/success/{ticket_id}', [PublicComplaintController::class, 'success'])->name('public.complaints.success');
+    Route::post('send-otp', [PublicComplaintController::class, 'sendOtp'])
+        ->name('public.complaints.sendOtp');
+
+    Route::post('verify-otp', [PublicComplaintController::class, 'verifyOtp'])
+        ->name('public.complaints.verifyOtp');
+
+    Route::get('dashboard', [PublicComplaintController::class, 'dashboard'])
+        ->name('public.complaints.dashboard');
+
+    Route::get('list', [PublicComplaintController::class, 'index'])
+        ->name('public.complaints.index');
+
+    Route::get('view/{id}', [PublicComplaintController::class, 'show'])
+        ->name('public.complaints.show');
+
+    Route::post('reply/{id}', [PublicComplaintController::class, 'storeReply'])
+        ->name('public.complaints.reply');
+
+    Route::post('store', [PublicComplaintController::class, 'store'])
+        ->name('public.complaints.store');
+
+    Route::get('success/{ticket_id}', [PublicComplaintController::class, 'success'])
+        ->name('public.complaints.success');
+});
 
 // Admin Complaint Routes
 Route::prefix('admin')->middleware(['auth'])->group(function () {
-    Route::get('/complaints', [AdminComplaintController::class, 'index'])->name('admin.complaints.index');
-    Route::get('/complaints/{id}', [AdminComplaintController::class, 'show'])->name('admin.complaints.show');
-    Route::post('/complaints/{id}/reply', [AdminComplaintController::class, 'storeReply'])->name('admin.complaints.reply');
+    Route::group(['prefix' => 'complaints'], function () {
+        Route::get('', [AdminComplaintController::class, 'index'])
+            ->name('admin.complaints.index');
+
+        Route::get('create', [AdminComplaintController::class, 'create'])
+            ->name('admin.complaints.create');
+
+        Route::post('store', [AdminComplaintController::class, 'store'])
+            ->name('admin.complaints.store');
+
+        Route::get('{id}', [AdminComplaintController::class, 'show'])
+            ->name('admin.complaints.show');
+
+        Route::post('{id}/reply', [AdminComplaintController::class, 'storeReply'])
+            ->name('admin.complaints.reply');
+    });
 });

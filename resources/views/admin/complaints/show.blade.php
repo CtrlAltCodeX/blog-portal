@@ -11,9 +11,9 @@
                 <div class="card-title">COMPLAINT DETAILS: <span class="text-primary">{{ $complaint->complaint_id }}</span></div>
                 <div class="d-flex align-items-center gap-3">
                     @if($complaint->specific_tag)
-                    <span class="badge bg-primary-transparent border border-primary text-primary px-3">
+                    {{-- <span class="badge bg-primary-transparent border border-primary text-primary px-3">
                         <i class="fe fe-user me-1"></i> SPECIFIC EMPLOYEE: {{ $complaint->employee_name }}
-                    </span>
+                    </span> --}}
                     @endif
                     
                     @php
@@ -59,12 +59,12 @@
                 </div>
 
                 @if($complaint->specific_tag)
-                <div class="alert alert-primary light mb-4 border-0 d-flex justify-content-between align-items-center">
+                {{-- <div class="alert alert-primary light mb-4 border-0 d-flex justify-content-between align-items-center">
                    <div>
                         <h6 class="fw-bold mb-1">SPECIFIC EMPLOYEE INFORMATION</h6>
                         <p class="mb-0">Name: <strong>{{ $complaint->employee_name }}</strong> | Email: <strong>{{ $complaint->employee_email }}</strong> | Mobile: <strong>{{ $complaint->employee_mobile }}</strong></p>
                    </div>
-                </div>
+                </div> --}}
                 @endif
 
                 <div class="mb-4">

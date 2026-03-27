@@ -48,7 +48,7 @@
                 <div class="row mb-4">
                     <div class="col-md-3">
                         <p class="text-muted mb-1 small text-uppercase fw-bold">Created By:</p>
-                        <h6 class="fw-bold">{{ $complaint->user->fullname ?? $complaint->user->name ?? 'N/A' }}</h6>
+                    <h6 class="fw-bold">{{ $complaint->user->fullname ?? $complaint->user->name ?? 'N/A' }}</h6>
                         <small class="text-muted">{{ $complaint->user->email ?? 'N/A' }}</small>
                     </div>
                     <div class="col-md-3">

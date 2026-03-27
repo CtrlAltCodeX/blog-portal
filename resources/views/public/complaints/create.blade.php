@@ -168,7 +168,7 @@
                             </div>
 
                             <!-- Order Details Table -->
-                            <div class="mb-5">
+                            <div class="mb-5 px-5">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <h5 class="fw-bold text-dark mb-0">ORDER DETAILS</h5>
                                     <button type="button" class="btn btn-dark btn-sm rounded-pill px-4" onclick="addRow()">

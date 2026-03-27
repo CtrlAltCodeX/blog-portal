@@ -2,51 +2,87 @@
 
 @section('title', 'Manage Complaints')
 
+@push('css')
+<style>
+    .nav-item {
+        margin-right: 10px;
+    }
+    
+    .nav-tabs .nav-link {
+        background-color: lightgrey;
+        color:black;
+    }
+    
+    #candidateEnquiriesTable thead tr {
+        background: #ccc;
+    }
+    
+    .table {
+        color: #9a9da1;
+    }
+    
+    .table td {
+        color:black !important;
+    }
+    
+    .nav-tabs {
+        padding-left: 12px;
+        border-bottom: 0px;
+    }
+    
+    .pagination {
+        justify-content: end;
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="row mt-4">
     <div class="col-12">
         <div class="card overflow-hidden">
             <div class="card-header">
-                <h3 class="card-title">COMPLAINT MANAGEMENT</h3>
+                <div class='d-flex justify-content-between w-100'>
+                    <h3 class="card-title">COMPLAINT MANAGEMENT</h3>
+    
+                    <a class='btn btn-primary' href="{{ route('admin.complaints.create') }}">Create Complaint</a>
+                </div>
             </div>
             
-            <div class="card-body p-0">
-                <div class="bg-light border-bottom">
-                    <ul class="nav nav-tabs nav-fill border-0" id="complaintTabs" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link py-3 fw-bold {{ $status == 'pending' ? 'active bg-primary text-white' : '' }}" href="{{ route('admin.complaints.index', ['status' => 'pending']) }}" style="background: {{ $status == 'pending' ? '#ffc107' : '#f8f9fa' }}; color: {{ $status == 'pending' ? '#000' : '#333' }};">
-                                RESPONSE NEEDED ({{ $counts['pending'] }})
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link py-3 fw-bold {{ $status == 'verification' ? 'active bg-info text-white' : '' }}" href="{{ route('admin.complaints.index', ['status' => 'verification']) }}" style="background: {{ $status == 'verification' ? '#00bcd4' : '#f8f9fa' }}; color: {{ $status == 'verification' ? '#fff' : '#333' }};">
-                                WAITING FOR VERIFICATION ({{ $counts['verification'] }})
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link py-3 fw-bold {{ $status == 'solved' ? 'active bg-success text-white' : '' }}" href="{{ route('admin.complaints.index', ['status' => 'solved']) }}" style="background: {{ $status == 'solved' ? '#4caf50' : '#f8f9fa' }}; color: {{ $status == 'solved' ? '#fff' : '#333' }};">
-                                CASE SOLVED SUCCESSFUL ({{ $counts['solved'] }})
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link py-3 fw-bold {{ $status == 'mercy' ? 'active bg-warning text-dark' : '' }}" href="{{ route('admin.complaints.index', ['status' => 'mercy']) }}" style="background: {{ $status == 'mercy' ? '#f44336' : '#f8f9fa' }}; color: {{ $status == 'mercy' ? '#fff' : '#333' }};">
-                                MERCY ({{ $counts['mercy'] }})
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link py-3 fw-bold {{ $status == 'recovered' ? 'active bg-danger text-white' : '' }}" href="{{ route('admin.complaints.index', ['status' => 'recovered']) }}" style="background: {{ $status == 'recovered' ? '#795548' : '#f8f9fa' }}; color: {{ $status == 'recovered' ? '#fff' : '#333' }};">
-                                LOSS RECOVERED ({{ $counts['recovered'] }})
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link py-3 fw-bold {{ $status == 'all' ? 'active bg-dark text-white' : '' }}" href="{{ route('admin.complaints.index', ['status' => 'all']) }}" style="background: {{ $status == 'all' ? '#9e8d5e' : '#f8f9fa' }}; color: #fff;">
-                                ALL ({{ $counts['all'] }})
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+            <div class="card-body">
+                <ul class="nav nav-tabs mb-4" id="complaintTabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link py-3 fw-bold {{ $status == 'pending' ? 'active bg-primary text-white' : '' }}" href="{{ route('admin.complaints.index', ['status' => 'pending']) }}"  color: {{ $status == 'pending' ? '#000' : '#333' }};">
+                            RESPONSE NEEDED ({{ $counts['pending'] }})
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link py-3 fw-bold {{ $status == 'verification' ? 'active bg-info text-white' : '' }}" href="{{ route('admin.complaints.index', ['status' => 'verification']) }}"  color: {{ $status == 'verification' ? '#fff' : '#333' }};">
+                            WAITING FOR VERIFICATION ({{ $counts['verification'] }})
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link py-3 fw-bold {{ $status == 'solved' ? 'active bg-success text-white' : '' }}" href="{{ route('admin.complaints.index', ['status' => 'solved']) }}"  color: {{ $status == 'solved' ? '#fff' : '#333' }};">
+                            CASE SOLVED SUCCESSFUL ({{ $counts['solved'] }})
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link py-3 fw-bold {{ $status == 'mercy' ? 'active bg-warning text-dark' : '' }}" href="{{ route('admin.complaints.index', ['status' => 'mercy']) }}"  color: {{ $status == 'mercy' ? '#fff' : '#333' }};">
+                            MERCY ({{ $counts['mercy'] }})
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link py-3 fw-bold {{ $status == 'recovered' ? 'active bg-danger text-white' : '' }}" href="{{ route('admin.complaints.index', ['status' => 'recovered']) }}"  color: {{ $status == 'recovered' ? '#fff' : '#333' }};">
+                            LOSS RECOVERED ({{ $counts['recovered'] }})
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link py-3 fw-bold {{ $status == 'all' ? 'active bg-dark text-white' : '' }}" href="{{ route('admin.complaints.index', ['status' => 'all']) }}" >
+                            ALL ({{ $counts['all'] }})
+                        </a>
+                    </li>
+                </ul>
 
-                <div class="table-responsive p-4">
+                <div class="table-responsive">
                     <table class="table table-bordered text-nowrap border-bottom" id="basic-datatable">
                         <thead style="background: #e9ecef;">
                             <tr>
@@ -215,7 +251,7 @@
 @endpush
 
 @push('css')
-<style>
+{{-- <style>
     .nav-tabs .nav-link {
         border-radius: 0;
         border: none;
@@ -233,5 +269,5 @@
     #basic-datatable td {
         vertical-align: middle;
     }
-</style>
+</style> --}}
 @endpush
