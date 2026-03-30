@@ -9,7 +9,7 @@ class ComplaintReply extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['complaint_id', 'complaint_user_id', 'user_id', 'message'];
+    protected $fillable = ['complaint_id', 'complaint_user_id', 'user_id', 'message', 'status'];
 
     public function complaint()
     {

@@ -10,8 +10,8 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::table('candidate_enquiries', function (Blueprint $table) {
-        // $table->boolean('application_status')->default(0);
+        Schema::table('complaint_replies', function (Blueprint $table) {
+            $table->string('status')->nullable()->after('message');
         });
     }
 
@@ -20,8 +20,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::table('candidate_enquiries', function (Blueprint $table) {
-        //
+        Schema::table('complaint_replies', function (Blueprint $table) {
+            $table->dropColumn('status');
         });
     }
 };

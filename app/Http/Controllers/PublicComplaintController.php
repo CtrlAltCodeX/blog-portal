@@ -98,7 +98,16 @@ class PublicComplaintController extends Controller
         $userId = session('complaint_user_id');
         $status = $request->get('status', 'pending');
 
-        $query = Complaint::where('complaint_user_id', $userId)->with(['issueType', 'department']);
+        $query = Complaint::where('complaint_user_id', $userId)->with(['issueType', 'department', 'complaint_user']);
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('complaint_id', 'LIKE', "%{$search}%")
+                    ->orWhere('title', 'LIKE', "%{$search}%")
+                    ->orWhere('description', 'LIKE', "%{$search}%");
+            });
+        }
 
         if ($status !== 'all') {
             $query->where('status', $status);
@@ -127,7 +136,7 @@ class PublicComplaintController extends Controller
         $userId = session('complaint_user_id');
 
         $complaint = Complaint::where('complaint_user_id', $userId)
-            ->with(['issueType', 'department', 'orders', 'attachments', 'replies.user', 'replies.attachments'])
+            ->with(['issueType', 'department', 'orders', 'attachments', 'replies.user', 'replies.attachments', 'complaint_user'])
             ->findOrFail($id);
 
         return view('public.complaints.show', compact('complaint'));
@@ -151,7 +160,8 @@ class PublicComplaintController extends Controller
         $reply = \App\Models\ComplaintReply::create([
             'complaint_id' => $complaint->id,
             'complaint_user_id' => $userId,
-            'message' => $request->message
+            'message' => $request->message,
+            'status' => $request->status
         ]);
 
         if ($request->hasFile('attachments')) {

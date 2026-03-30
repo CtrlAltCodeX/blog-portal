@@ -14,32 +14,34 @@
 
         <!-- Complaint Main Details -->
         <div class="card custom-card shadow-sm border-0 mb-4" style="border-radius: 15px;">
-            <div class="card-header justify-content-between bg-white border-bottom py-3 px-4" style="border-radius: 15px 15px 0 0;">
-                <div class="card-title fw-bold">TICKET: <span class="text-primary">{{ $complaint->complaint_id }}</span></div>
+            <div class="card-header justify-content-between bg-white border-bottom py-3 px-4"
+                style="border-radius: 15px 15px 0 0;">
+                <div class="card-title fw-bold">TICKET: <span class="text-primary">{{ $complaint->complaint_id }}</span>
+                </div>
                 <div class="d-flex align-items-center gap-3">
                     @if($complaint->specific_tag)
                     <span class="badge bg-primary-transparent border border-primary text-primary px-3 py-2">
                         <i class="fas fa-user me-1"></i> SPECIFIC EMPLOYEE: {{ $complaint->employee_name }}
                     </span>
                     @endif
-                    
+
                     @php
-                        $badgeClass = match($complaint->status) {
-                            'pending' => 'bg-warning text-dark',
-                            'verification' => 'bg-info',
-                            'solved' => 'bg-success',
-                            'mercy' => 'bg-danger',
-                            'recovered' => 'bg-secondary',
-                            default => 'bg-light text-dark'
-                        };
-                        $statusLabel = match($complaint->status) {
-                            'pending' => 'Response Needed',
-                            'verification' => 'Waiting Verification',
-                            'solved' => 'Solved',
-                            'mercy' => 'Mercy',
-                            'recovered' => 'Loss Recovered',
-                            default => $complaint->status
-                        };
+                    $badgeClass = match($complaint->status) {
+                    'pending' => 'bg-warning text-dark',
+                    'verification' => 'bg-info',
+                    'solved' => 'bg-success',
+                    'mercy' => 'bg-danger',
+                    'recovered' => 'bg-secondary',
+                    default => 'bg-light text-dark'
+                    };
+                    $statusLabel = match($complaint->status) {
+                    'pending' => 'Response Needed',
+                    'verification' => 'Waiting Verification',
+                    'solved' => 'Solved',
+                    'mercy' => 'Mercy',
+                    'recovered' => 'Loss Recovered',
+                    default => $complaint->status
+                    };
                     @endphp
                     <span class="badge {{ $badgeClass }} px-3 py-2 fs-6">{{ $statusLabel }}</span>
                 </div>
@@ -48,8 +50,9 @@
                 <div class="row mb-4">
                     <div class="col-md-3">
                         <p class="text-muted mb-1 small text-uppercase fw-bold">Created By:</p>
-                    <h6 class="fw-bold">{{ $complaint->user->fullname ?? $complaint->user->name ?? 'N/A' }}</h6>
-                        <small class="text-muted">{{ $complaint->user->email ?? 'N/A' }}</small>
+                        <h6 class="fw-bold">{{ $complaint->complaint_user->fullname ?? $complaint->complaint_user->name
+                            ?? 'N/A' }}</h6>
+                        <small class="text-muted">{{ $complaint->complaint_user->email ?? 'N/A' }}</small>
                     </div>
                     <div class="col-md-3">
                         <p class="text-muted mb-1 small text-uppercase fw-bold">Created Date:</p>
@@ -74,10 +77,12 @@
 
                 @if($complaint->specific_tag)
                 <div class="alert alert-primary light mb-4 border-0 d-flex justify-content-between align-items-center">
-                   <div>
+                    <div>
                         <h6 class="fw-bold mb-1">SPECIFIC EMPLOYEE INFORMATION</h6>
-                        <p class="mb-0 small">Name: <strong>{{ $complaint->employee_name }}</strong> | Email: <strong>{{ $complaint->employee_email }}</strong> | Mobile: <strong>{{ $complaint->employee_mobile }}</strong></p>
-                   </div>
+                        <p class="mb-0 small">Name: <strong>{{ $complaint->employee_name }}</strong> | Email: <strong>{{
+                                $complaint->employee_email }}</strong> | Mobile: <strong>{{ $complaint->employee_mobile
+                                }}</strong></p>
+                    </div>
                 </div>
                 @endif
 
@@ -97,7 +102,8 @@
                     <p class="text-muted mb-1 small text-uppercase fw-bold">Attachments:</p>
                     <div class="d-flex flex-wrap gap-2">
                         @foreach($complaint->attachments as $attachment)
-                        <a href="{{ asset('storage/' . $attachment->file_path) }}" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill">
+                        <a href="{{ asset('storage/' . $attachment->file_path) }}" target="_blank"
+                            class="btn btn-sm btn-outline-primary rounded-pill">
                             <i class="fas fa-file-download me-1"></i> View Attachment
                         </a>
                         @endforeach
@@ -154,6 +160,7 @@
                             <tr>
                                 <th style="width: 80px;">SL. No.</th>
                                 <th>Response Details</th>
+                                <th>Status</th>
                                 <th>Reply Date & Time</th>
                                 <th>Reply By</th>
                             </tr>
@@ -168,7 +175,8 @@
                                         @if($reply->attachments->count() > 0)
                                         <div class="mt-2 pt-2 border-top">
                                             @foreach($reply->attachments as $att)
-                                            <a href="{{ asset('storage/' . $att->file_path) }}" target="_blank" class="badge bg-info-transparent border border-info text-info me-2 py-2 text-decoration-none">
+                                            <a href="{{ asset('storage/' . $att->file_path) }}" target="_blank"
+                                                class="badge bg-info-transparent border border-info text-info me-2 py-2 text-decoration-none">
                                                 <i class="fas fa-paperclip me-1"></i> View Attachment
                                             </a>
                                             @endforeach
@@ -176,8 +184,36 @@
                                         @endif
                                     </div>
                                 </td>
-                                <td class="text-center align-middle small">{{ $reply->created_at->format('d M, Y') }}<br><small class="text-muted">{{ $reply->created_at->format('h:i A') }}</small></td>
-                                <td class="text-center align-middle text-primary fw-bold">{{ $reply->user->name ?? 'YOU' }}</td>
+                                <td class="text-center align-middle">
+                                    @if($reply->status)
+                                    @php
+                                    $badgeClassLog = match($reply->status) {
+                                    'pending' => 'bg-warning text-dark',
+                                    'verification' => 'bg-info',
+                                    'solved' => 'bg-success',
+                                    'mercy' => 'bg-danger',
+                                    'recovered' => 'bg-secondary',
+                                    default => 'bg-light text-dark'
+                                    };
+                                    $statusLabelLog = match($reply->status) {
+                                    'pending' => 'Response Needed',
+                                    'verification' => 'Waiting Verification',
+                                    'solved' => 'Solved',
+                                    'mercy' => 'Mercy',
+                                    'recovered' => 'Loss Recovered',
+                                    default => $reply->status
+                                    };
+                                    @endphp
+                                    <span class="badge {{ $badgeClassLog }}">{{ $statusLabelLog }}</span>
+                                    @else
+                                    -
+                                    @endif
+                                </td>
+                                <td class="text-center align-middle small">{{ $reply->created_at->format('d M, Y')
+                                    }}<br><small class="text-muted">{{ $reply->created_at->format('h:i A') }}</small>
+                                </td>
+                                <td class="text-center align-middle text-primary fw-bold">{{ $reply->user->name ??
+                                    $reply->complaint_user->name ?? 'YOU' }}</td>
                             </tr>
                             @empty
                             <tr>
@@ -192,7 +228,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="text-end mb-5">
             <a href="{{ route('public.complaints.index') }}" class="btn btn-secondary px-5 rounded-pill shadow-sm">
                 <i class="fas fa-arrow-left me-1"></i> BACK TO DASHBOARD

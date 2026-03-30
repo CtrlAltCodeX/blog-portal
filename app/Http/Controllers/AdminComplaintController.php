@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Complaint;
+use App\Models\ComplaintUser;
 use App\Models\ComplaintReply;
 use App\Models\Department;
 use App\Models\IssueType;
@@ -15,17 +16,31 @@ class AdminComplaintController extends Controller
     {
         $status = $request->get('status', 'pending');
 
-        $query = Complaint::with(['user', 'issueType', 'department'])
-            ->whereNotNull('user_id');
+        $query = Complaint::with(['user', 'issueType', 'department', 'complaint_user']);
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('complaint_id', 'LIKE', "%{$search}%")
+                    ->orWhere('title', 'LIKE', "%{$search}%")
+                    ->orWhere('description', 'LIKE', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('complaint_user_id')) {
+            $query->where('complaint_user_id', $request->complaint_user_id);
+        }
 
         $counts = [
-            'pending' => Complaint::whereNotNull('user_id')->where('status', 'pending')->count(),
-            'verification' => Complaint::whereNotNull('user_id')->where('status', 'verification')->count(),
-            'solved' => Complaint::whereNotNull('user_id')->where('status', 'solved')->count(),
-            'mercy' => Complaint::whereNotNull('user_id')->where('status', 'mercy')->count(),
-            'recovered' => Complaint::whereNotNull('user_id')->where('status', 'recovered')->count(),
-            'all' => Complaint::whereNotNull('user_id')->count(),
+            'pending' => Complaint::where('status', 'pending')->count(),
+            'verification' => Complaint::where('status', 'verification')->count(),
+            'solved' => Complaint::where('status', 'solved')->count(),
+            'mercy' => Complaint::where('status', 'mercy')->count(),
+            'recovered' => Complaint::where('status', 'recovered')->count(),
+            'all' => Complaint::count(),
         ];
+
+        $users = ComplaintUser::orderBy('name')->get();
 
         if ($status !== 'all') {
             $query->where('status', $status);
@@ -33,7 +48,7 @@ class AdminComplaintController extends Controller
 
         $complaints = $query->latest()->get();
 
-        return view('admin.complaints.index', compact('complaints', 'counts', 'status'));
+        return view('admin.complaints.index', compact('complaints', 'counts', 'status', 'users'));
     }
 
     public function create()
@@ -110,14 +125,15 @@ class AdminComplaintController extends Controller
             }
 
             return redirect()->route('admin.complaints.index')->with('success', 'Complaint submitted successfully with ID: ' . $complaint_id);
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
             return back()->with('error', 'An error occurred while submitting the complaint: ' . $e->getMessage());
         }
     }
 
     public function show($id)
     {
-        $complaint = Complaint::with(['user', 'issueType', 'department', 'orders', 'attachments', 'replies.user', 'replies.attachments'])
+        $complaint = Complaint::with(['user', 'issueType', 'department', 'orders', 'attachments', 'replies.user', 'replies.attachments', 'complaint_user'])
             ->findOrFail($id);
 
         return view('admin.complaints.show', compact('complaint'));
@@ -132,11 +148,12 @@ class AdminComplaintController extends Controller
         ]);
 
         $complaint = Complaint::findOrFail($id);
-        
+
         $reply = ComplaintReply::create([
             'complaint_id' => $complaint->id,
             'user_id' => Auth::id(),
-            'message' => $request->message
+            'message' => $request->message,
+            'status' => $request->status
         ]);
 
         if ($request->hasFile('attachments')) {
