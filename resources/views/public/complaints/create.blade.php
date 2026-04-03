@@ -232,26 +232,39 @@
                                         <th>Cx. Name.</th>
                                         <th>Cx. Phone</th>
                                         <th>Loss Value</th>
-                                        <th style="width: 50px;"></th>
+                                        <th>Self Note</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white">
                                     <tr>
-                                        <td class="ps-4"><input type="text" name="orders[0][order_id]"
-                                                class="form-control border shadow-sm" placeholder="Enter Order ID"></td>
-                                        <td><input type="text" name="orders[0][ref_no]"
-                                                class="form-control border shadow-sm" placeholder="Enter Ref. No."></td>
-                                        <td><input type="text" name="orders[0][tracking_id]"
+                                        <td class="ps-4">
+                                            <input type="text" name="orders[0][order_id]"
+                                                class="form-control border shadow-sm" placeholder="Enter Order ID">
+                                        </td>
+                                        <td>
+                                            <input type="text" name="orders[0][ref_no]"
+                                                class="form-control border shadow-sm" placeholder="Enter Ref. No.">
+                                        </td>
+                                        <td>
+                                            <input type="text" name="orders[0][tracking_id]"
                                                 class="form-control border shadow-sm" placeholder="Enter Tracking ID">
                                         </td>
-                                        <td><input type="text" name="orders[0][cx_name]"
-                                                class="form-control border shadow-sm" placeholder="Enter Cx. Name"></td>
-                                        <td><input type="text" name="orders[0][cx_phone]"
+                                        <td>
+                                            <input type="text" name="orders[0][cx_name]"
+                                                class="form-control border shadow-sm" placeholder="Enter Cx. Name">
+                                        </td>
+                                        <td>
+                                            <input type="text" name="orders[0][cx_phone]"
                                                 class="form-control border shadow-sm" placeholder="Enter Cx. Phone">
                                         </td>
-                                        <td><input type="number" step="0.01" name="orders[0][loss_value]"
-                                                class="form-control border shadow-sm" placeholder="0.00"></td>
-                                        <td></td>
+                                        <td>
+                                            <input type="number" step="0.01" name="orders[0][loss_value]"
+                                                class="form-control border shadow-sm" placeholder="0.00">
+                                        </td>
+                                        <td>
+                                            <textarea type="text" name="orders[0][self_note]"
+                                                class="form-control border shadow-sm" placeholder="Enter Self Note"></textarea>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -295,6 +308,7 @@
             <td><input type="text" name="orders[${rowCount}][cx_name]" class="form-control border shadow-sm" placeholder="Enter Cx. Name"></td>
             <td><input type="text" name="orders[${rowCount}][cx_phone]" class="form-control border shadow-sm" placeholder="Enter Cx. Phone"></td>
             <td><input type="number" step="0.01" name="orders[${rowCount}][loss_value]" class="form-control border shadow-sm" placeholder="0.00"></td>
+            <td><textarea type="text" name="orders[${rowCount}][self_note]" class="form-control border shadow-sm" placeholder="Enter Self Note"></textarea></td>
             <td class="pe-3"><button type="button" class="btn btn-link text-danger p-0" onclick="removeRow(this)"><i class="fas fa-times-circle fs-5"></i></button></td>
         `;
         rowCount++;

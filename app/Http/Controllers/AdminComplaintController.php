@@ -7,6 +7,7 @@ use App\Models\ComplaintUser;
 use App\Models\ComplaintReply;
 use App\Models\Department;
 use App\Models\IssueType;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,7 +17,8 @@ class AdminComplaintController extends Controller
     {
         $status = $request->get('status', 'pending');
 
-        $query = Complaint::with(['user', 'issueType', 'department', 'complaint_user']);
+        $query = Complaint::whereNotNull('user_id')
+            ->with(['user', 'issueType', 'department', 'complaint_user']);
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -27,20 +29,20 @@ class AdminComplaintController extends Controller
             });
         }
 
-        if ($request->filled('complaint_user_id')) {
-            $query->where('complaint_user_id', $request->complaint_user_id);
+        if ($request->filled('user_id')) {
+            $query->where('user_id', $request->user_id);
         }
 
         $counts = [
-            'pending' => Complaint::where('status', 'pending')->count(),
-            'verification' => Complaint::where('status', 'verification')->count(),
-            'solved' => Complaint::where('status', 'solved')->count(),
-            'mercy' => Complaint::where('status', 'mercy')->count(),
-            'recovered' => Complaint::where('status', 'recovered')->count(),
-            'all' => Complaint::count(),
+            'pending' => Complaint::whereNotNull('user_id')->where('status', 'pending')->count(),
+            'verification' => Complaint::whereNotNull('user_id')->where('status', 'verification')->count(),
+            'solved' => Complaint::whereNotNull('user_id')->where('status', 'solved')->count(),
+            'mercy' => Complaint::whereNotNull('user_id')->where('status', 'mercy')->count(),
+            'recovered' => Complaint::whereNotNull('user_id')->where('status', 'recovered')->count(),
+            'all' => Complaint::whereNotNull('user_id')->count(),
         ];
 
-        $users = ComplaintUser::orderBy('name')->get();
+        $users = User::orderBy('name')->get();
 
         if ($status !== 'all') {
             $query->where('status', $status);
@@ -81,7 +83,8 @@ class AdminComplaintController extends Controller
                 'orders.*.loss_value' => 'nullable|numeric',
                 'attachments.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf,xlsx,xls|max:5120',
                 'delivery_timeline' => 'required|integer|min:1|max:7',
-                // 'managed_by' => 'required|string|in:self with admin,admin'
+                'managed_by' => 'required|string|in:self with admin,admin',
+                'specific_user_email' => 'required_if:specific_tag,1|nullable|email',
             ]);
 
             $today = date('dmY');
@@ -90,33 +93,32 @@ class AdminComplaintController extends Controller
 
             $complaint = Complaint::create([
                 'complaint_id' => $complaint_id,
-                'user_id' => session('complaint_user_id'),
+                'user_id' => auth()->user()->id,
                 'issue_type_id' => $request->issue_type_id,
                 'department_id' => $request->department_id,
                 'title' => $request->title,
                 'description' => $request->description,
                 'delivery_timeline' => $request->delivery_timeline . ($request->delivery_timeline == 1 ? ' Day' : ' Days'),
-                // 'managed_by' => $request->managed_by,
+                'managed_by' => $request->managed_by,
                 'specific_tag' => $request->specific_tag,
                 'employee_name' => $request->employee_name,
                 'employee_email' => $request->employee_email,
                 'employee_mobile' => $request->employee_mobile,
                 'send_mail' => $request->send_mail,
+                'specific_user_email' => $request->specific_user_email,
                 'status' => 'pending'
             ]);
 
-            // Save Orders (Filter out completely empty rows)
             if ($request->has('orders')) {
                 foreach ($request->orders as $orderData) {
-                    // Check if any field has content
                     $hasData = array_filter($orderData, fn($value) => !is_null($value) && $value !== '');
+
                     if (!empty($hasData)) {
                         $complaint->orders()->create($orderData);
                     }
                 }
             }
 
-            // Handle Attachments
             if ($request->hasFile('attachments')) {
                 foreach ($request->file('attachments') as $file) {
                     $path = $file->store('complaints/attachments', 'public');
@@ -125,8 +127,7 @@ class AdminComplaintController extends Controller
             }
 
             return redirect()->route('admin.complaints.index')->with('success', 'Complaint submitted successfully with ID: ' . $complaint_id);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return back()->with('error', 'An error occurred while submitting the complaint: ' . $e->getMessage());
         }
     }

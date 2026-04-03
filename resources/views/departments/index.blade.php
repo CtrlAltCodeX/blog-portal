@@ -18,9 +18,9 @@
                 <tr>
                     <th>SL</th>
                     <th>Department</th>
-                    <th>Dept. Head</th>
-                    <th>E-mail</th>
-                    <th>Phone Nos'</th>
+                    <th>Head of Dept.</th>
+                    <th>E-mail ( HOD )</th>
+                    <th>Phone No ( HOD )</th>
                     <th>Action</th>
                 </tr>
             </thead>

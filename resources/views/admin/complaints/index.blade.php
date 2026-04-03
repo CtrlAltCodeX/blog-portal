@@ -66,18 +66,18 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label fw-bold small text-muted text-uppercase">Filter by User</label>
-                                <select name="complaint_user_id" class="form-control select2">
+                                <select name="user_id" class="form-control select2">
                                     <option value="">All Users</option>
                                     @foreach($users as $user)
-                                    <option value="{{ $user->id }}" {{ request('complaint_user_id')==$user->id ?
+                                    <option value="{{ $user->id }}" {{ request('user_id')==$user->id ?
                                         'selected' : '' }}>
                                         {{ $user->name }} ({{ $user->email }})
                                     </option>
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-4 d-flex align-items-end gap-2">
-                                <button type="submit" class="btn btn-primary px-4"><i class="fas fa-filter me-1"></i>
+                            <div class="col-md-4 d-flex align-items-end gap-2 mt-7">
+                                <button type="submit" class="btn btn-primary px-4"><i class="fa fa-filter me-1"></i>
                                     APPLY FILTER</button>
                                 @if(request()->filled('search') || request()->filled('complaint_user_id'))
                                 <a href="{{ route('admin.complaints.index', ['status' => $status]) }}"
@@ -131,68 +131,149 @@
                     <table class="table table-bordered text-nowrap border-bottom" id="basic-datatable">
                         <thead style="background: #e9ecef;">
                             <tr>
-                                <th class="wd-5p">S.L.</th>
-                                <th class="wd-15p">Batch ID</th>
+                                <th>S.L.</th>
+                                <th>Batch ID</th>
+                                <th>No. of Orders</th>
+                                <th>SLA</th>
                                 <th>Created By</th>
                                 <th>Created Date</th>
                                 <th>Department</th>
                                 <th>Issue Type</th>
                                 <th>Title</th>
                                 <th>Description</th>
+                                <th>Timeline</th>
+                                <th>Managed By</th>
+                                <th>Specific Tag</th>
+                                <th>Employee Details</th>
+                                <th>Mail Sent</th>
                                 <th>Status</th>
                                 <th>ACTION</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($complaints as $index => $c)
-                            <tr>
-                                <td>{{ $index + 1 }}</td>
-                                <td><a href="{{ route('admin.complaints.show', $c->id) }}"
-                                        class="text-primary fw-bold">{{ $c->complaint_id }}</a></td>
-                                <td>{{ $c->user->name ?? 'N/A' }}</td>
-                                <td>{{ $c->created_at->format('d M, Y') }}</td>
-                                <td>{{ $c->department->name }}</td>
-                                <td>{{ $c->issueType->name }}</td>
-                                <td>
-                                    <span data-bs-toggle="tooltip" title="{{ $c->title }}">
-                                        {{ Str::limit($c->title, 20) }}
+                        @foreach($complaints as $index => $c)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                        
+                            <td>
+                                <a href="{{ route('admin.complaints.show', $c->id) }}"
+                                    class="text-primary fw-bold">{{ $c->complaint_id }}
+                                </a>
+                            </td>
+
+                            <td>
+                                <a href='{{ route('admin.complaints.show', $c->id) }}'>
+                                    {{ $c->orders()->count() }}
+                                </a>
+                            </td>
+                        
+                            <td>
+                                @php
+                                    preg_match('/\d+/', $c->delivery_timeline, $matches);
+                                    $days = $matches[0] ?? 0;
+                                    $dueDate = \Carbon\Carbon::parse($c->created_at)->addDays($days);
+                                @endphp
+                        
+                                <span 
+                                    class="badge bg-success sla-counter"
+                                    data-due="{{ $dueDate->toIso8601String() }}">
+                                    Loading...
+                                </span>
+                            </td>
+                        
+                            <td>
+                                <div class="fw-bold">{{ $c->user->name ?? 'N/A' }}</div>
+                                <small class="text-muted">{{ $c->user->email ?? '' }}</small>
+                            </td>
+                        
+                            <td>{{ $c->created_at->format('d M, Y') }}</td>
+                        
+                            <td>{{ $c->department->name }}</td>
+                        
+                            <td>{{ $c->issueType->name }}</td>
+                        
+                            <td>
+                                <span data-bs-toggle="tooltip" title="{{ $c->title }}">
+                                    {{ \Illuminate\Support\Str::limit($c->title, 20) }}
+                                </span>
+                            </td>
+                        
+                            <td>
+                                <span data-bs-toggle="tooltip" title="{{ $c->description }}">
+                                    {{ \Illuminate\Support\Str::limit($c->description, 20) }}
+                                </span>
+                            </td>
+                        
+                            {{-- ✅ NEW COLUMNS FROM FIRST TABLE --}}
+                            <td>{{ $c->delivery_timeline }}</td>
+                        
+                            <td class="text-uppercase small fw-bold">{{ $c->managed_by }}</td>
+                        
+                            <td>
+                                @if($c->specific_tag)
+                                    <span class="badge bg-primary">Yes</span>
+                                @else
+                                    <span class="badge bg-secondary">No</span>
+                                @endif
+                            </td>
+                        
+                            <td>
+                                @if($c->specific_tag)
+                                    <div class="small">
+                                        <strong>{{ $c->specific_user_email }}</strong><br>
+                                    </div>
+                                @else
+                                    -
+                                @endif
+                            </td>
+                        
+                            <td>
+                                @if($c->send_mail)
+                                    <span class="text-success">
+                                        <i class="fas fa-check-circle"></i> Yes
                                     </span>
-                                </td>
-                                <td>
-                                    <span data-bs-toggle="tooltip" title="{{ $c->description }}">
-                                        {{ Str::limit($c->description, 20) }}
-                                    </span>
-                                </td>
-                                <td>
-                                    @php
-                                    $badgeClass = match($c->status) {
+                                @else
+                                    <span class="text-muted">No</span>
+                                @endif
+                            </td>
+                        
+                            {{-- STATUS --}}
+                            <td>
+                                @php
+                                $badgeClass = match($c->status) {
                                     'pending' => 'bg-warning text-dark',
                                     'verification' => 'bg-info',
                                     'solved' => 'bg-success',
                                     'mercy' => 'bg-danger',
                                     'recovered' => 'bg-secondary',
                                     default => 'bg-light text-dark'
-                                    };
-                                    $statusLabel = match($c->status) {
+                                };
+                        
+                                $statusLabel = match($c->status) {
                                     'pending' => 'Response Needed',
                                     'verification' => 'Waiting Verification',
                                     'solved' => 'Solved',
                                     'mercy' => 'Mercy',
                                     'recovered' => 'Loss Recovered',
                                     default => $c->status
-                                    };
-                                    @endphp
-                                    <span class="badge {{ $badgeClass }}">{{ $statusLabel }}</span>
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-sm btn-primary verify-btn"
-                                        data-bs-toggle="modal" data-bs-target="#replyModal" data-id="{{ $c->id }}"
-                                        data-ticket="{{ $c->complaint_id }}" data-status="{{ $c->status }}">
-                                        <i class="fa fa-edit"></i> Verify
-                                    </button>
-                                </td>
-                            </tr>
-                            @endforeach
+                                };
+                                @endphp
+                        
+                                <span class="badge {{ $badgeClass }}">{{ $statusLabel }}</span>
+                            </td>
+                        
+                            <td>
+                                <button type="button" class="btn btn-sm btn-primary verify-btn"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#replyModal"
+                                    data-id="{{ $c->id }}"
+                                    data-ticket="{{ $c->complaint_id }}"
+                                    data-status="{{ $c->status }}">
+                                    <i class="fa fa-edit"></i> Add Reply
+                                </button>
+                            </td>
+                        </tr>
+                        @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -222,13 +303,12 @@
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Update Status <span class="text-danger">*</span></label>
+                            <label class="form-label fw-bold">Update Status<span class="text-danger">*</span></label>
                             <select name="status" id="modalStatusSelect" class="form-control" required>
-                                <option value="pending">Pending / Response Needed</option>
-                                <option value="verification">Waiting For Verification</option>
-                                <option value="solved">Case Solved Successful</option>
-                                <option value="mercy">Mercy</option>
-                                <option value="recovered">Loss Recovered</option>
+                                <option value="pending">Move Back To Response Needed 🔄</option>
+                                <option value="solved">Move Forward To Case Solved ✅</option>
+                                <option value="mercy">Move Forward To Mercy 🙏</option>
+                                <option value="recovered">Move Forward To Loss Recovered 💰</option>
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
@@ -263,11 +343,10 @@
 
             // Reset options to full list for a clean start
             $statusSelect.html(`
-                <option value="pending">Pending / Response Needed</option>
-                <option value="verification">Waiting For Verification</option>
-                <option value="solved">Case Solved Successful</option>
-                <option value="mercy">Mercy</option>
-                <option value="recovered">Loss Recovered</option>
+                <option value="pending">Move Back To Response Needed 🔄</option>
+                <option value="solved">Move Forward To Case Solved ✅</option>
+                <option value="mercy">Move Forward To Mercy 🙏</option>
+                <option value="recovered">Move Forward To Loss Recovered 💰</option>
             `);
 
             if (status === 'pending') {
@@ -293,31 +372,47 @@
             replyUrl = replyUrl.replace(':id', id);
             $('#replyForm').attr('action', replyUrl);
         });
+        
     });
 </script>
-@endpush
 
-@push('css')
-{{-- <style>
-    .nav-tabs .nav-link {
-        border-radius: 0;
-        border: none;
-        margin-bottom: 0;
-        font-size: 13px;
-        text-transform: uppercase;
-        border-right: 1px solid #dee2e6;
+<script>
+    function updateSLACounters() {
+        document.querySelectorAll('.sla-counter').forEach(el => {
+            const dueDate = new Date(el.dataset.due);
+            const now = new Date();
+
+            let diff = dueDate - now;
+
+            if (diff <= 0) {
+                // Overdue
+                diff = Math.abs(diff);
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                const minutes = Math.floor((diff / (1000 * 60)) % 60);
+                const seconds = Math.floor((diff / 1000) % 60);
+
+                el.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+                el.classList.remove('bg-success');
+                el.classList.add('bg-danger');
+
+            } else {
+                // Remaining
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                const minutes = Math.floor((diff / (1000 * 60)) % 60);
+                const seconds = Math.floor((diff / 1000) % 60);
+
+                el.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+                el.classList.remove('bg-danger');
+                el.classList.add('bg-success');
+            }
+        });
     }
 
-    .nav-tabs .nav-link:last-child {
-        border-right: none;
-    }
-
-    .nav-tabs .nav-link.active {
-        box-shadow: inset 0 -3px 0 0 #333;
-    }
-
-    #basic-datatable td {
-        vertical-align: middle;
-    }
-</style> --}}
+    // Run every second
+    setInterval(updateSLACounters, 1000);
+    updateSLACounters();
+</script>
 @endpush

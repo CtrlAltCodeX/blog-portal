@@ -175,7 +175,10 @@
                                         @if($reply->attachments->count() > 0)
                                         <div class="mt-2 pt-2 border-top">
                                             @foreach($reply->attachments as $att)
-                                            <a href="{{ asset('storage/' . $att->file_path) }}" target="_blank"
+                                            @php
+                                            $filename = explode('/', $att->file_path)[2];
+                                            @endphp
+                                            <a href="{{ route('assets', $filename) }}" target="_blank"
                                                 class="badge bg-info-transparent border border-info text-info me-2 py-2 text-decoration-none">
                                                 <i class="fas fa-paperclip me-1"></i> View Attachment
                                             </a>

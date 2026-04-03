@@ -16,7 +16,8 @@ class ComplaintOrder extends Model
         'tracking_id',
         'cx_name',
         'cx_phone',
-        'loss_value'
+        'loss_value',
+        'self_note',
     ];
 
     public function complaint()

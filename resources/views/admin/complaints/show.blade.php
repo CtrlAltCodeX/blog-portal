@@ -39,22 +39,26 @@
             </div>
             <div class="card-body">
                 <div class="row mb-4">
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <p class="text-muted mb-1">Created By:</p>
-                        <h6 class="fw-bold">{{ $complaint->user->name }}</h6>
+                        <h6 class="fw-bold mb-0">{{ $complaint->user->name }}</h6>
                         <small class="text-muted">{{ $complaint->user->email }}</small>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <p class="text-muted mb-1">Created Date:</p>
                         <h6 class="fw-bold">{{ $complaint->created_at->format('d M, Y h:i A') }}</h6>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <p class="text-muted mb-1">Department:</p>
                         <h6 class="fw-bold text-info">{{ $complaint->department->name }}</h6>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <p class="text-muted mb-1">Issue Type:</p>
                         <h6 class="fw-bold text-info">{{ $complaint->issueType->name }}</h6>
+                    </div>
+                    <div class="col-md-2">
+                        <p class="text-muted mb-1">Title:</p>
+                        <h5 class="fw-bold">{{ $complaint->title }}</h5>
                     </div>
                 </div>
 
@@ -67,10 +71,7 @@
                 </div> --}}
                 @endif
 
-                <div class="mb-4">
-                    <p class="text-muted mb-1">Title:</p>
-                    <h5 class="fw-bold">{{ $complaint->title }}</h5>
-                </div>
+                
                 <div class="mb-4">
                     <p class="text-muted mb-1">Description:</p>
                     <div class="p-3 bg-light rounded-4 border">
@@ -109,6 +110,7 @@
                                 <th>Customer Name</th>
                                 <th>Customer Phone</th>
                                 <th>Loss Value</th>
+                                <th>Self Note</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -120,6 +122,7 @@
                                 <td>{{ $order->cx_name }}</td>
                                 <td>{{ $order->cx_phone }}</td>
                                 <td class="text-danger fw-bold">₹{{ number_format($order->loss_value, 2) }}</td>
+                                <td>{{ $order->self_note }}</td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -140,6 +143,8 @@
                             <tr>
                                 <th style="width: 80px;">SL. No.</th>
                                 <th>Response Details</th>
+                                <th>Attachment</th>
+                                <th>Status</th>
                                 <th>Reply Date & Time</th>
                                 <th>Reply By</th>
                             </tr>
@@ -151,19 +156,45 @@
                                 <td>
                                     <div class="p-2">
                                         <p class="mb-2">{{ $reply->message }}</p>
-                                        @if($reply->attachments->count() > 0)
-                                        <div class="mt-2 pt-2 border-top">
-                                            @foreach($reply->attachments as $att)
-                                            <a href="{{ asset('storage/' . $att->file_path) }}" target="_blank" class="badge bg-info-transparent border border-info text-info me-2 py-2">
-                                                <i class="fa fa-paperclip me-1"></i> View Attachment
-                                            </a>
-                                            @endforeach
-                                        </div>
-                                        @endif
                                     </div>
                                 </td>
+                                <td>
+                                    <div class="mt-2 pt-2 text-center">
+                                        @foreach($reply->attachments as $att)
+                                        @php
+                                        $filename = explode('/', $att->file_path)[2];
+                                        @endphp
+                                        <a href="{{ route('assets', $filename) }}" target="_blank" style='font-size:20px;' ><i class="fa fa-download me-1"></i></a>
+                                        @endforeach
+                                    </div>
+                                </td>
+                                <td class="text-center align-middle">
+                                    @if($reply->status)
+                                        @php
+                                        $badgeClassLog = match($reply->status) {
+                                            'pending' => 'bg-warning text-dark',
+                                            'verification' => 'bg-info',
+                                            'solved' => 'bg-success',
+                                            'mercy' => 'bg-danger',
+                                            'recovered' => 'bg-secondary',
+                                            default => 'bg-light text-dark'
+                                        };
+                                        $statusLabelLog = match($reply->status) {
+                                            'pending' => 'Response Needed',
+                                            'verification' => 'Waiting Verification',
+                                            'solved' => 'Solved',
+                                            'mercy' => 'Mercy',
+                                            'recovered' => 'Loss Recovered',
+                                            default => $reply->status
+                                        };
+                                        @endphp
+                                    <span class="badge {{ $badgeClassLog }}">{{ $statusLabelLog }}</span>
+                                    @else
+                                    -
+                                    @endif
+                                </td>
                                 <td class="text-center align-middle">{{ $reply->created_at->format('d M, Y') }}<br><small class="text-muted">{{ $reply->created_at->format('h:i A') }}</small></td>
-                                <td class="text-center align-middle text-primary fw-bold">{{ $reply->user->name }}</td>
+                                <td class="text-center align-middle text-primary fw-bold">{{ $reply->user->name }} <br/><small class="text-muted">{{ $reply->user->email }}</small></td>
                             </tr>
                             @empty
                             <tr>

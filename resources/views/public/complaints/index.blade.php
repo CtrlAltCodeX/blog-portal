@@ -86,6 +86,7 @@
                                 <tr>
                                     <th class="wd-5p">S.L.</th>
                                     <th class="wd-15p">Batch ID</th>
+                                    <th>No. of Orders</th>
                                     <th>Created By</th>
                                     <th>Created Date</th>
                                     <th>Department</th>
@@ -105,8 +106,14 @@
                                 @foreach($complaints as $index => $c)
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
-                                    <td><a href="{{ route('public.complaints.show', $c->id) }}"
-                                            class="text-primary fw-bold">{{ $c->complaint_id }}</a></td>
+                                    <td>
+                                        <a href="{{ route('public.complaints.show', $c->id) }}"
+                                            class="text-primary fw-bold">{{ $c->complaint_id }}</a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('public.complaints.show', $c->id) }}"
+                                            class="text-primary fw-bold">{{ $c->orders()->count() }}</a>
+                                    </td>
                                     <td>
                                         <div class="fw-bold">{{ $c->complaint_user->name ?? 'N/A' }}</div>
                                         <small class="text-muted">{{ $c->complaint_user->email ?? '' }}</small>
@@ -213,11 +220,10 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold">Update Status <span class="text-danger">*</span></label>
                             <select name="status" id="modalStatusSelect" class="form-control" required>
-                                <option value="pending">Pending / Response Needed</option>
-                                <option value="verification">Waiting For Verification</option>
-                                <option value="solved">Case Solved Successful</option>
-                                <option value="mercy">Mercy</option>
-                                <option value="recovered">Loss Recovered</option>
+                                <option value="pending">Move Back To Response Needed 🔄</option>
+                                <option value="solved">Move Forward To Case Solved ✅</option>
+                                <option value="mercy">Move Forward To Mercy 🙏</option>
+                                <option value="recovered">Move Forward To Loss Recovered 💰</option>
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
@@ -250,11 +256,10 @@
 
             // Reset options to full list for a clean start
             $statusSelect.html(`
-                <option value="pending">Pending / Response Needed</option>
-                <option value="verification">Waiting For Verification</option>
-                <option value="solved">Case Solved Successful</option>
-                <option value="mercy">Mercy</option>
-                <option value="recovered">Loss Recovered</option>
+                <option value="pending">Move Back To Response Needed 🔄</option>
+                <option value="solved">Move Forward To Case Solved ✅</option>
+                <option value="mercy">Move Forward To Mercy 🙏</option>
+                <option value="recovered">Move Forward To Loss Recovered 💰</option>
             `);
 
             if (status === 'pending') {

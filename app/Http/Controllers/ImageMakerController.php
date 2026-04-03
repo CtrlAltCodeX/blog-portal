@@ -39,6 +39,7 @@ class ImageMakerController extends Controller
 
         $filePath1 = $basePath . $file;
         $filePath2 = $basePath . 'posts/' . $file;
+        $filePath3 = storage_path('app/public/') . 'complaints/replies/' . $file;
 
         if (file_exists($filePath1)) {
             return response()->file($filePath1);
@@ -46,6 +47,10 @@ class ImageMakerController extends Controller
 
         if (file_exists($filePath2)) {
             return response()->file($filePath2);
+        }
+
+        if (file_exists($filePath3)) {
+            return response()->file($filePath3);
         }
 
         abort(404, 'File not found.');

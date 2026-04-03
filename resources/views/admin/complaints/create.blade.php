@@ -6,29 +6,29 @@
 <div class="row mt-4">
     <div class="col-12">
         <div class="card overflow-hidden shadow-sm">
-
             <!-- Header -->
             <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                 <div>
                     <h5 class="mb-0">CREATE DETAILS</h5>
                     <small>Raise your issue with detailed order information</small>
                 </div>
-                <span class="badge bg-light text-dark">Complaint ID: AUTO-GENERATED</span>
+                <span class="badge bg-light text-dark" style="font-size: 18px;">Complaint ID: AUTO-GENERATED</span>
             </div>
 
             <!-- Top Info -->
             <div class="p-3 border-bottom d-flex justify-content-between flex-wrap">
-                <div><strong>Created Date:</strong> 26 Mar, 2026</div>
-                <div><strong>Created By:</strong> Test</div>
+                <div>
+                  <strong>Created Date:</strong> {{ \Carbon\Carbon::now()->format('d M, Y') }}
+                </div>
+                <div><strong>Created By:</strong> {{ auth()->user()->name }}</div>
                 {{-- <div class='d-flex'>
                     <strong>Delivery Timeline:</strong> 
-                    
                 </div> --}}
-                <div><strong>Verified User:</strong> admin@example.com</div>
+                <div><strong>User's Email:</strong> {{ auth()->user()->email }}</div>
             </div>
 
             <!-- Body -->
-            <div class="card-body">
+            <div class="card-body" style='background-color: #ffefcf;'>
                 <form action="{{ route('admin.complaints.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row g-3">
@@ -62,52 +62,44 @@
                                 @endfor
                             </select>
                         </div>
-    
-                        <div class="col-md-6">
-                            <label class="form-label">File Attach</label>
-                            <input type="file" class="form-control" multiple name="files[]">
-                            <small class="text-muted">Image + PDF + Excel allowed</small>
-                        </div>
-    
+                        
                         <div class="col-md-6">
                             <label class="form-label">Title *</label>
                             <input type="text" class="form-control" placeholder="Brief subject/title" name="title">
                         </div>
     
                         <div class="col-md-6">
+                            <label class="form-label">File Attach ( PDF, Word, XLS, JPG, PNG )</label>
+                            <input type="file" class="form-control" multiple name="files[]">
+                            {{-- <small class="text-muted">Image + PDF + Excel allowed</small> --}}
+                        </div>
+    
+                        <div class="col-md-12">
                             <label class="form-label">Detailed Description *</label>
                             <textarea class="form-control" rows="3" placeholder="Describe your issue in detail..." name="description"></textarea>
                         </div>
                     </div>
     
                     <div class='row'>
-                        <!-- Radio Sections -->
-                        <div class="col-4 mt-3">
-                            <label class="form-label">Specific Tag *</label>
+                        <div class="col-3 mt-3">
+                            <label class="form-label">Specific User Tag *</label>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="specific_tag" value=1>
-                                <label class="form-check-label">Yes</label>
+                                <input class="form-check-input specific_tag" type="radio" name="specific_tag" value=1>
+                                <label class="form-check-label">Yes</label> 
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="specific_tag" value=0>
+                                <input class="form-check-input specific_tag" type="radio" name="specific_tag" value=0  checked>
                                 <label class="form-check-label">No</label>
                             </div>
                         </div>
-    
-                        {{-- <div class="col-4">
-                            <label class="form-label">Managed By *</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="managed" checked>
-                                <label class="form-check-label">Self with Admin</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="managed">
-                                <label class="form-check-label">Admin</label>
-                            </div>
-                        </div> --}}
-    
-                        <div class="col-4">
-                            <label class="form-label">Send Record via Email? *</label>
+
+                        <div class='col-3 mt-3 d-none specific_user_email'>
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" placeholder="Enter email address" name="specific_user_email">
+                        </div>
+
+                        <div class="col-3 mt-3">
+                            <label class="form-label">Email Notification to Specific User? *</label>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" name="send_mail" value=1>
                                 <label class="form-check-label">Yes</label>
@@ -117,13 +109,25 @@
                                 <label class="form-check-label">No</label>
                             </div>
                         </div>
+    
+                        <div class="col-3 mt-3">
+                            <label class="form-label">Complaint Verification By *</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="managed_by" value='self with admin' checked>
+                                <label class="form-check-label">Self with Admin</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="managed_by" value='admin'>
+                                <label class="form-check-label">Admin</label>
+                            </div>
+                        </div>
                     </div>
     
                     <!-- Order Details -->
                     <div class="mt-4">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <h6>ORDER DETAILS</h6>
-                            <button class="btn btn-dark btn-sm" id='addOrderBtn'>+ Add Order</button>
+                            <button type='button' class="btn btn-dark btn-sm" id='addOrderBtn'>+ Add Order</button>
                         </div>
     
                         <div class="table-responsive">
@@ -135,7 +139,8 @@
                                         <th>Tracking ID</th>
                                         <th>Customer Name</th>
                                         <th>Customer Phone</th>
-                                        <th>Loss Value</th>
+                                        <th>Loss/Order Value</th>
+                                        <th>Self Note</th>
                                     </tr>
                                 </thead>
                                 <tbody id="orderTableBody">
@@ -157,6 +162,9 @@
                                         </td>
                                         <td>
                                             <input type="number" step="0.01" name="orders[1][loss_value]" class="form-control" placeholder="0.00">
+                                        </td>
+                                        <td>
+                                            <textarea name="orders[1][self_note]" class="form-control" placeholder="Any notes..."></textarea>
                                         </td>
                                         <td>
                                             <button type="button" class="btn btn-danger btn-sm removeRow">X</button>
@@ -212,6 +220,9 @@
                             <input type="number" step="0.01" name="orders[${rowCount}][loss_value]" class="form-control" placeholder="0.00">
                         </td>
                         <td>
+                            <textarea name="orders[${rowCount}][self_note]" class="form-control" placeholder="Any notes..."></textarea>
+                        </td>
+                        <td>
                             <button type="button" class="btn btn-danger btn-sm removeRow">X</button>
                         </td>
                     </tr>
@@ -225,6 +236,13 @@
                 $(this).closest('tr').remove();
             });
 
+            $('.specific_tag').on('change', function() {
+                if ($(this).val() == '1') {
+                    $('.specific_user_email').removeClass('d-none');
+                } else {
+                    $('.specific_user_email').addClass('d-none');
+                }
+            });
         });
     </script>
 @endpush

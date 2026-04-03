@@ -24,7 +24,8 @@ class Complaint extends Model
         'employee_email',
         'employee_mobile',
         'send_mail',
-        'status'
+        'status',
+        'specific_user_email'
     ];
 
     public function complaint_user()
