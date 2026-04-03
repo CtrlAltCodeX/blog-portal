@@ -523,6 +523,12 @@ $userInfo = app('App\Models\SiteSetting')->first();
                                                                 class="slide-item {{ request()->is('admin/departments ') ? 'active' : '' }}">{{
                                                                 __('Department') }}</a>
                                                 </li>
+
+                                                <li>
+                                                        <a href="{{ route('official-departments.index') }}"
+                                                                class="slide-item {{ request()->is('admin/official-departments ') ? 'active' : '' }}">{{
+                                                                __('Official Department') }}</a>
+                                                </li>
                                         </ul>
                                 </li>
                                 @endif

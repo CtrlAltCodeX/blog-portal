@@ -99,7 +99,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
                 ->name('profile.edit');
 
             Route::get('listings', [ProfileController::class , 'listings'])
-                ->name('profile.listiofficial-issue-typesng');
+                ->name('profile.listing');
 
             Route::post('', [ProfileController::class , 'update'])
                 ->name('profile.update');
@@ -482,6 +482,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'web']], function ()
         Route::resource('official-issue-types', IssueTypeController::class);
 
         Route::resource('departments', DepartmentController::class);
+        Route::resource('official-departments', DepartmentController::class);
 
         Route::get('count/users', [UserController::class , 'userCounts'])
             ->name('users.count');
