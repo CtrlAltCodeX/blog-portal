@@ -422,6 +422,16 @@ $userInfo = app('App\Models\SiteSetting')->first();
                                         </a>
                                 </li>
 
+                                <li
+                                        class="slide {{ request()->is('admin/official-complaints*') ? 'is-expanded' : '' }}">
+                                        <a class="side-menu__item {{ request()->is('admin/official-complaints*') ? 'active' : '' }}"
+                                                href="{{ route('admin.official-complaints.index') }}">
+                                                <i class="side-menu__icon fe fe-file-text"></i>
+                                                <span class="side-menu__label">{{ __('Manage Official Complaints')
+                                                        }}</span>
+                                        </a>
+                                </li>
+
                                 @if(auth()->user()->can('Settings (Main Menu)'))
                                 <li
                                         class="slide {{ (request()->is('admin/departments') || request()->is('admin/issue-types') || request()->is('admin/fulfilment-types') || request()->is('admin/settings/*') || request()->is('admin/settings') || request()->is('admin/backup/emails') || request()->is('admin/backup/logs') || request()->is('admin/subcategories') || request()->is('admin/categories')) ? 'is-expanded' : '' }}">

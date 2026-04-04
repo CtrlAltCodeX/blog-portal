@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Manage Complaints')
+@section('title', 'Manage Official Complaints')
 
 @push('css')
 <style>
@@ -42,16 +42,17 @@
         <div class="card overflow-hidden">
             <div class="card-header">
                 <div class='d-flex justify-content-between w-100'>
-                    <h3 class="card-title">COMPLAINT MANAGEMENT</h3>
+                    <h3 class="card-title">OFFICIAL COMPLAINT MANAGEMENT</h3>
 
-                    <a class='btn btn-primary' href="{{ route('admin.complaints.create') }}">Create Complaint</a>
+                    <a class='btn btn-primary' href="{{ route('admin.official-complaints.create') }}">Create Official
+                        Complaint</a>
                 </div>
             </div>
 
             <div class="card-body">
                 <div class="row mb-4 px-3">
                     <div class="col-md-12">
-                        <form action="{{ route('admin.complaints.index') }}" method="GET"
+                        <form action="{{ route('admin.official-complaints.index') }}" method="GET"
                             class="row g-3 align-items-center">
                             <input type="hidden" name="status" value="{{ $status }}">
                             <div class="col-md-4">
@@ -80,7 +81,7 @@
                                 <button type="submit" class="btn btn-primary px-4"><i class="fa fa-filter me-1"></i>
                                     APPLY FILTER</button>
                                 @if(request()->filled('search') || request()->filled('complaint_user_id'))
-                                <a href="{{ route('admin.complaints.index', ['status' => $status]) }}"
+                                <a href="{{ route('admin.official-complaints.index', ['status' => $status]) }}"
                                     class="btn btn-outline-secondary px-4">CLEAR</a>
                                 @endif
                             </div>
@@ -91,37 +92,37 @@
                 <ul class="nav nav-tabs mb-4" id="complaintTabs" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link py-3 fw-bold {{ $status == 'pending' ? 'active bg-primary text-white' : '' }}"
-                            href="{{ route('admin.complaints.index', array_merge(request()->all(), ['status' => 'pending'])) }}">
+                            href="{{ route('admin.official-complaints.index', array_merge(request()->all(), ['status' => 'pending'])) }}">
                             RESPONSE NEEDED ({{ $counts['pending'] }})
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link py-3 fw-bold {{ $status == 'verification' ? 'active bg-info text-white' : '' }}"
-                            href="{{ route('admin.complaints.index', array_merge(request()->all(), ['status' => 'verification'])) }}">
+                            href="{{ route('admin.official-complaints.index', array_merge(request()->all(), ['status' => 'verification'])) }}">
                             WAITING FOR VERIFICATION ({{ $counts['verification'] }})
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link py-3 fw-bold {{ $status == 'solved' ? 'active bg-success text-white' : '' }}"
-                            href="{{ route('admin.complaints.index', array_merge(request()->all(), ['status' => 'solved'])) }}">
+                            href="{{ route('admin.official-complaints.index', array_merge(request()->all(), ['status' => 'solved'])) }}">
                             CASE SOLVED SUCCESSFUL ({{ $counts['solved'] }})
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link py-3 fw-bold {{ $status == 'mercy' ? 'active bg-warning text-dark' : '' }}"
-                            href="{{ route('admin.complaints.index', array_merge(request()->all(), ['status' => 'mercy'])) }}">
+                            href="{{ route('admin.official-complaints.index', array_merge(request()->all(), ['status' => 'mercy'])) }}">
                             MERCY ({{ $counts['mercy'] }})
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link py-3 fw-bold {{ $status == 'recovered' ? 'active bg-danger text-white' : '' }}"
-                            href="{{ route('admin.complaints.index', array_merge(request()->all(), ['status' => 'recovered'])) }}">
+                            href="{{ route('admin.official-complaints.index', array_merge(request()->all(), ['status' => 'recovered'])) }}">
                             LOSS RECOVERED ({{ $counts['recovered'] }})
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link py-3 fw-bold {{ $status == 'all' ? 'active bg-dark text-white' : '' }}"
-                            href="{{ route('admin.complaints.index', array_merge(request()->all(), ['status' => 'all'])) }}">
+                            href="{{ route('admin.official-complaints.index', array_merge(request()->all(), ['status' => 'all'])) }}">
                             ALL ({{ $counts['all'] }})
                         </a>
                     </li>
@@ -156,13 +157,13 @@
                                 <td>{{ $index + 1 }}</td>
 
                                 <td>
-                                    <a href="{{ route('admin.complaints.show', $c->id) }}"
+                                    <a href="{{ route('admin.official-complaints.show', $c->id) }}"
                                         class="text-primary fw-bold">{{ $c->complaint_id }}
                                     </a>
                                 </td>
 
                                 <td>
-                                    <a href='{{ route('admin.complaints.show', $c->id) }}'>
+                                    <a href='{{ route('admin.official-complaints.show', $c->id) }}'>
                                         {{ $c->orders()->count() }}
                                     </a>
                                 </td>
@@ -300,7 +301,7 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold">Update Status<span class="text-danger">*</span></label>
-                            <select name="status" id="modalStatusSelect" class="form-control" required>
+                            <select name="status" id="modalStatusSelect" class="form-control">
                                 <option value="pending">Move Back To Response Needed 🔄</option>
                                 <option value="solved">Move Forward To Case Solved ✅</option>
                                 <option value="mercy">Move Forward To Mercy 🙏</option>
@@ -368,7 +369,7 @@
             }
 
             // Generate exact reply URL dynamically
-            var replyUrl = "{{ route('admin.complaints.reply', ':id') }}";
+            var replyUrl = "{{ route('admin.official-complaints.reply', ':id') }}";
             replyUrl = replyUrl.replace(':id', id);
             $('#replyForm').attr('action', replyUrl);
         });

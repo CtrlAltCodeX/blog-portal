@@ -677,4 +677,22 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
                 ->name('admin.complaints.reply');
         }
         );
+
+        Route::group(['prefix' => 'official-complaints'], function () {
+            Route::get('', [AdminComplaintController::class , 'officialIndex'])
+                ->name('admin.official-complaints.index');
+
+            Route::get('create', [AdminComplaintController::class , 'officialCreate'])
+                ->name('admin.official-complaints.create');
+
+            Route::post('store', [AdminComplaintController::class , 'officialStore'])
+                ->name('admin.official-complaints.store');
+
+            Route::get('{id}', [AdminComplaintController::class , 'officialShow'])
+                ->name('admin.official-complaints.show');
+
+            Route::post('{id}/reply', [AdminComplaintController::class , 'storeReply'])
+                ->name('admin.official-complaints.reply');
+        }
+        );
     });

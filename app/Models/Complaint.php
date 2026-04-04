@@ -25,41 +25,42 @@ class Complaint extends Model
         'employee_mobile',
         'send_mail',
         'status',
-        'specific_user_email'
+        'specific_user_email',
+        'type'
     ];
 
     public function complaint_user()
     {
-        return $this->belongsTo(ComplaintUser::class, 'complaint_user_id');
+        return $this->belongsTo(ComplaintUser::class , 'complaint_user_id');
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class , 'user_id');
     }
 
     public function orders()
     {
-        return $this->hasMany(ComplaintOrder::class, 'complaint_id');
+        return $this->hasMany(ComplaintOrder::class , 'complaint_id');
     }
 
     public function attachments()
     {
-        return $this->hasMany(ComplaintAttachment::class, 'complaint_id');
+        return $this->hasMany(ComplaintAttachment::class , 'complaint_id');
     }
 
     public function replies()
     {
-        return $this->hasMany(ComplaintReply::class, 'complaint_id');
+        return $this->hasMany(ComplaintReply::class , 'complaint_id');
     }
 
     public function issueType()
     {
-        return $this->belongsTo(IssueType::class, 'issue_type_id');
+        return $this->belongsTo(IssueType::class , 'issue_type_id');
     }
 
     public function department()
     {
-        return $this->belongsTo(Department::class, 'department_id');
+        return $this->belongsTo(Department::class , 'department_id');
     }
 }

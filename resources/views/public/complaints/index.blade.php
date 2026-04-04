@@ -256,6 +256,7 @@
 
             // Reset options to full list for a clean start
             $statusSelect.html(`
+                <option value="verification">Waiting For Verification ⏳</option>
                 <option value="pending">Move Back To Response Needed 🔄</option>
                 <option value="solved">Move Forward To Case Solved ✅</option>
                 <option value="mercy">Move Forward To Mercy 🙏</option>
@@ -266,10 +267,12 @@
                 // If Response Needed, hide status dropdown and set to Verification
                 $statusDiv.hide();
                 $statusSelect.val('verification');
+                $statusSelect.prop('required', false);
             } else if (status === 'verification') {
                 // If Waiting For Verification, show all options
                 $statusDiv.show();
                 $statusSelect.val(status);
+                $statusSelect.prop('required', true);
             } else {
                 // If other, restrict to Verification and Pending only
                 $statusDiv.show();
@@ -278,6 +281,7 @@
                     <option value="pending">Pending / Response Needed</option>
                 `);
                 $statusSelect.val('verification'); // Default to verification
+                $statusSelect.prop('required', true);
             }
 
             // Generate exact reply URL dynamically

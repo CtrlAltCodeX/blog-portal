@@ -48,7 +48,7 @@ class PublicComplaintController extends Controller
         ]);
 
         // Send Email
-        Mail::to($user->email)->send(new ComplaintOtpMail($otp, $user));
+        // Mail::to($user->email)->send(new ComplaintOtpMail($otp, $user));
 
         // Keep it flashed for testing if needed
         session()->flash('test_otp', $otp);
