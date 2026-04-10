@@ -74,22 +74,22 @@ class ListingController extends Controller
     public function getPriceRecords(Request $request)
     {
         $price = $request->query('price');
-    
+
         if (!$price) {
             return response()->json(['error' => 'Price parameter is required'], 400);
         }
-    
+
         // Ensure price is a valid number
         if (!is_numeric($price)) {
             return response()->json(['error' => 'Price must be a numeric value'], 400);
         }
-    
+
         // Check if table and columns exist
         try {
             $records = PurchesPriceWeightCourier::where('min', '<=', $price)
                 ->where('max', '>=', $price)
                 ->get();
-                
+
             return response()->json($records);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
@@ -349,7 +349,7 @@ class ListingController extends Controller
         $siteSetting = SiteSetting::first();
 
         $publications  = WeightVSCourier::all();
-        
+
         return view('listing.edit', compact('post', 'categories', 'allInfo', 'labels', 'siteSetting', 'publications'));
     }
 

@@ -461,7 +461,7 @@
         });
     
         // Jab MRP change ho to naye value store karo aur calculation karo
-        $mrpInput.on("input", function() {
+        $mrpInput.on("change", function() {
             enteredMRP = parseInt($(this).val()) || 0;
             calculatePrice();
         });

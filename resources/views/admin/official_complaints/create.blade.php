@@ -9,10 +9,10 @@
             <!-- Header -->
             <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                 <div>
-                    <h5 class="mb-0">CREATE DETAILS</h5>
+                    <h5 class="mb-0">Create New Task</h5>
                     <small>Raise your issue with detailed order information</small>
                 </div>
-                <span class="badge bg-light text-dark" style="font-size: 18px;">Complaint ID: AUTO-GENERATED</span>
+                <span class="badge bg-light text-dark" style="font-size: 18px;">Task ID: AUTO-GENERATED</span>
             </div>
 
             <!-- Top Info -->
@@ -35,7 +35,7 @@
                     <div class="row g-3">
                         <!-- Left -->
                         <div class="col-md-4">
-                            <label class="form-label">Issue Type *</label>
+                            <label class="form-label">Task - Issue Type *</label>
                             <select class="form-control" name="issue_type_id">
 
                                 <option>Select Issue Type</option>
@@ -46,7 +46,7 @@
                         </div>
 
                         <div class="col-md-4">
-                            <label class="form-label">Department *</label>
+                            <label class="form-label">Task - Department *</label>
                             <select class="form-control" name="department_id">
                                 <option>Select Department</option>
                                 @foreach ($departments as $department)
@@ -56,7 +56,7 @@
                         </div>
 
                         <div class="col-md-4">
-                            <label class="form-label">Delivery Timeline: </label>
+                            <label class="form-label">Task - Delivery Timeline: </label>
                             <select name="delivery_timeline" class="form-control">
                                 @for($i = 1; $i <= 7; $i++) <option value="{{ $i }}" {{ $i==3 ? 'selected' : '' }}
                                     class="bg-white text-dark">{{ $i }} {{ $i == 1 ? 'Day' : 'Days' }}</option>
@@ -65,12 +65,12 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">Title *</label>
+                            <label class="form-label">Task Title ( In Short ) *</label>
                             <input type="text" class="form-control" placeholder="Brief subject/title" name="title">
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">File Attach ( PDF, Word, XLS, JPG, PNG )</label>
+                            <label class="form-label">File Attach - Multiple Attach ( PDF, Word, XLS, JPG, PNG )</label>
                             <input type="file" class="form-control" multiple name="files[]">
                             {{-- <small class="text-muted">Image + PDF + Excel allowed</small> --}}
                         </div>
@@ -84,7 +84,7 @@
 
                     <div class='row'>
                         <div class="col-3 mt-3">
-                            <label class="form-label">Specific User Tag *</label>
+                            <label class="form-label">Specific User Tag Via Email *</label>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input specific_tag" type="radio" name="specific_tag" value=1>
                                 <label class="form-check-label">Yes</label>
@@ -119,7 +119,7 @@
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" name="managed_by" value='self with admin'
                                     checked>
-                                <label class="form-check-label">Self with Admin</label>
+                                <label class="form-check-label">Self + Admin</label>
                             </div>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" name="managed_by" value='admin'>
@@ -191,7 +191,7 @@
                     <div class="d-flex justify-content-end mt-4">
                         <a href="{{ route('admin.official-complaints.index') }}"
                             class="btn btn-outline-secondary me-2">Back</a>
-                        <button class="btn btn-primary">Submit Official Complaint</button>
+                        <button class="btn btn-primary">Submit Task</button>
                     </div>
                 </form>
             </div>

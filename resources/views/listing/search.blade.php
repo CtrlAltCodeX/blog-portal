@@ -444,7 +444,7 @@
                                 <tr>
                                     <th>{{ __('Sl') }}</th>
                                     <th>{{ __('Stock') }}</th>
-                                    <th>{{ __('Image') }}</th>
+                                    <th style='width:50px !important;'>{{ __('Image') }}</th>
                                     <th>{{ __('Product name') }}</th>
                                     <th>{{ __('Sell Price') }}</th>
                                     <th>{{ __('MRP') }}</th>
@@ -486,7 +486,7 @@
                                         @else {{ 'In Stock' }}
                                         @endif
                                     </td>
-                                    <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $image }}" alt="Product Image" /></td>
+                                    <td><img onerror="this.onerror=null;this.src='/public/dummy.jpg';" src="{{ $image }}" alt="Product Image" style="width: 30%;" /></td>
                                     <td>
                                         @if($productTitle)
                                         <a href="{{ $googlePost->link[4]->href??'' }}" target="_blank" style="white-space: normal;">

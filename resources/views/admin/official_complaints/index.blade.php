@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Manage Official Complaints')
+@section('title', 'Task Manager')
 
 @push('css')
 <style>
@@ -42,10 +42,9 @@
         <div class="card overflow-hidden">
             <div class="card-header">
                 <div class='d-flex justify-content-between w-100'>
-                    <h3 class="card-title">OFFICIAL COMPLAINT MANAGEMENT</h3>
+                    <h3 class="card-title">Task Manager</h3>
 
-                    <a class='btn btn-primary' href="{{ route('admin.official-complaints.create') }}">Create Official
-                        Complaint</a>
+                    <a class='btn btn-primary' href="{{ route('admin.official-complaints.create') }}">Create New Task</a>
                 </div>
             </div>
 
@@ -57,11 +56,11 @@
                             <input type="hidden" name="status" value="{{ $status }}">
                             <div class="col-md-4">
                                 <label class="form-label fw-bold small text-muted text-uppercase">Search
-                                    Complaints</label>
+                                    Tasks</label>
                                 <div class="input-group">
 
                                     <input type="text" name="search" class="form-control border-start-0"
-                                        placeholder="Search by ID, Title, Description..."
+                                        placeholder="Search Tasks By ID, Title, Description..."
                                         value="{{ request('search') }}">
                                 </div>
                             </div>
@@ -93,31 +92,31 @@
                     <li class="nav-item">
                         <a class="nav-link py-3 fw-bold {{ $status == 'pending' ? 'active bg-primary text-white' : '' }}"
                             href="{{ route('admin.official-complaints.index', array_merge(request()->all(), ['status' => 'pending'])) }}">
-                            RESPONSE NEEDED ({{ $counts['pending'] }})
+                            REPLY REQUIRED ({{ $counts['pending'] }})
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link py-3 fw-bold {{ $status == 'verification' ? 'active bg-info text-white' : '' }}"
                             href="{{ route('admin.official-complaints.index', array_merge(request()->all(), ['status' => 'verification'])) }}">
-                            WAITING FOR VERIFICATION ({{ $counts['verification'] }})
+                            REPLY UNDER VERIFICATION ({{ $counts['verification'] }})
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link py-3 fw-bold {{ $status == 'solved' ? 'active bg-success text-white' : '' }}"
                             href="{{ route('admin.official-complaints.index', array_merge(request()->all(), ['status' => 'solved'])) }}">
-                            CASE SOLVED SUCCESSFUL ({{ $counts['solved'] }})
+                            REPLIED VERIFIED ({{ $counts['solved'] }})
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link py-3 fw-bold {{ $status == 'mercy' ? 'active bg-warning text-dark' : '' }}"
                             href="{{ route('admin.official-complaints.index', array_merge(request()->all(), ['status' => 'mercy'])) }}">
-                            MERCY ({{ $counts['mercy'] }})
+                            REPLIED NOT REQUIRED ({{ $counts['mercy'] }})
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link py-3 fw-bold {{ $status == 'recovered' ? 'active bg-danger text-white' : '' }}"
                             href="{{ route('admin.official-complaints.index', array_merge(request()->all(), ['status' => 'recovered'])) }}">
-                            LOSS RECOVERED ({{ $counts['recovered'] }})
+                            REPLIED NOT GIVEN ({{ $counts['recovered'] }})
                         </a>
                     </li>
                     <li class="nav-item">
