@@ -263,7 +263,8 @@
                                         </td>
                                         <td>
                                             <textarea type="text" name="orders[0][self_note]"
-                                                class="form-control border shadow-sm" placeholder="Enter Self Note"></textarea>
+                                                class="form-control border shadow-sm"
+                                                placeholder="Enter Self Note"></textarea>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -295,6 +296,12 @@
         const area = document.getElementById('employee_area');
         area.style.display = show ? 'block' : 'none';
         area.querySelectorAll('input').forEach(i => i.required = show);
+
+        if (show) {
+            document.getElementById('mail_yes').checked = true;
+        } else {
+            document.getElementById('mail_no').checked = true;
+        }
     }
 
     function addRow() {

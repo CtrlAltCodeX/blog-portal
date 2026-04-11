@@ -9,6 +9,10 @@ use App\Models\Complaint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ComplaintOtpMail;
+use App\Mail\ComplaintRaisedMail;
+use App\Mail\ComplaintReplyMail;
+use App\Mail\ComplaintUnsatisfactoryMail;
+use App\Models\User;
 
 class PublicComplaintController extends Controller
 {
@@ -25,7 +29,7 @@ class PublicComplaintController extends Controller
         }
 
         $issueTypes = IssueType::where('status', 1)->get();
-        $departments = Department::where('status', 1)->get();
+        $departments = Department::where('status', 1)->where('type', 'task')->get();
         $verifiedUser = ComplaintUser::find(session('complaint_user_id'));
 
         return view('public.complaints.create', compact('issueTypes', 'departments', 'verifiedUser'));
@@ -174,6 +178,20 @@ class PublicComplaintController extends Controller
         // Apply status transition from request (matching admin logic)
         $complaint->update(['status' => $request->status]);
 
+        // Email Notification
+        $creatorEmail = $complaint->complaint_user->email;
+        $adminEmails = User::role('Super Admin')->pluck('email')->toArray();
+        $deptHeadEmail = $complaint->department->email;
+
+        if ($request->status == 'pending' && $complaint->getOriginal('status') != 'pending') {
+            // Response Un-Satisfactory (User moved it back to pending)
+            Mail::to($adminEmails)->cc($deptHeadEmail)->send(new ComplaintUnsatisfactoryMail($complaint, $reply));
+        }
+        else {
+            // Regular Reply
+            Mail::to($adminEmails)->cc($creatorEmail)->send(new ComplaintReplyMail($complaint, $reply));
+        }
+
         return back()->with('success', 'Reply submitted successfully.');
     }
 
@@ -231,12 +249,30 @@ class PublicComplaintController extends Controller
             }
         }
 
+        $verifiedUser = \App\Models\ComplaintUser::find(session('complaint_user_id'));
+
+        // Initial creation log entry
+        \App\Models\ComplaintReply::create([
+            'complaint_id' => $complaint->id,
+            'complaint_user_id' => session('complaint_user_id'),
+            'message' => 'Complaint Created By ' . ($verifiedUser->name ?? 'User'),
+            'status' => 'pending'
+        ]);
+
         // Handle Attachments
         if ($request->hasFile('attachments')) {
             foreach ($request->file('attachments') as $file) {
                 $path = $file->store('complaints/attachments', 'public');
                 $complaint->attachments()->create(['file_path' => $path]);
             }
+        }
+
+        // Email Notification for Complaint Raised
+        $adminEmails = User::role('Super Admin')->pluck('email')->toArray();
+        $deptHeadEmail = $complaint->department->email;
+
+        if ($adminEmails || $deptHeadEmail) {
+            Mail::to($adminEmails)->cc($deptHeadEmail)->send(new ComplaintRaisedMail($complaint));
         }
 
         // session()->forget('complaint_user_id'); // Keep session to allow dashboard access after success

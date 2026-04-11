@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('queue:work --tries=3')->everyFiveMinutes();
         $schedule->command('send:report')->weeklyOn(1, '00:00');
         $schedule->command('app:account-deactivation-mail')->dailyAt('09:00');
+        $schedule->command('complaints:send-reminders')->dailyAt('10:00');
     }
 
     /**
@@ -23,7 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands(): void
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

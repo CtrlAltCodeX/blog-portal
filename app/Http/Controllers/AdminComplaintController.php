@@ -10,6 +10,10 @@ use App\Models\IssueType;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ComplaintRaisedMail;
+use App\Mail\ComplaintReplyMail;
+use App\Mail\ComplaintSolvedMail;
 
 class AdminComplaintController extends Controller
 {
@@ -110,6 +114,14 @@ class AdminComplaintController extends Controller
                 'status' => 'pending'
             ]);
 
+            // Initial creation log entry
+            ComplaintReply::create([
+                'complaint_id' => $complaint->id,
+                'user_id' => Auth::id(),
+                'message' => 'Complaint Created By ' . Auth::user()->name,
+                'status' => 'pending'
+            ]);
+
             if ($request->has('orders')) {
                 foreach ($request->orders as $orderData) {
                     $hasData = array_filter($orderData, fn($value) => !is_null($value) && $value !== '');
@@ -125,6 +137,14 @@ class AdminComplaintController extends Controller
                     $path = $file->store('complaints/attachments', 'public');
                     $complaint->attachments()->create(['file_path' => $path]);
                 }
+            }
+
+            // Email Notification for Complaint Raised
+            $adminEmails = User::role('Super Admin')->pluck('email')->toArray();
+            $deptHeadEmail = $complaint->department->email;
+
+            if ($adminEmails || $deptHeadEmail) {
+                Mail::to($adminEmails)->cc($deptHeadEmail)->send(new ComplaintRaisedMail($complaint));
             }
 
             return redirect()->route('admin.complaints.index')->with('success', 'Complaint submitted successfully with ID: ' . $complaint_id);
@@ -167,6 +187,28 @@ class AdminComplaintController extends Controller
         }
 
         $complaint->update(['status' => $request->status]);
+
+        // Email Notification
+        $adminEmails = User::role('Super Admin')->pluck('email')->toArray();
+        $deptHeadEmail = $complaint->department->email;
+        $creatorEmail = $complaint->complaint_user ? $complaint->complaint_user->email : ($complaint->user ? $complaint->user->email : null);
+
+        if (in_array($request->status, ['solved', 'mercy', 'recovered'])) {
+            $statusLabels = [
+                'solved' => 'Solved',
+                'mercy' => 'Mercy',
+                'recovered' => 'Loss Recovered'
+            ];
+            Mail::to($adminEmails)->cc($deptHeadEmail)->send(new ComplaintSolvedMail($complaint, $statusLabels[$request->status]));
+        }
+        else {
+            if ($creatorEmail) {
+                Mail::to($adminEmails)->cc($creatorEmail)->send(new ComplaintReplyMail($complaint, $reply));
+            }
+            else {
+                Mail::to($adminEmails)->send(new ComplaintReplyMail($complaint, $reply));
+            }
+        }
 
         return back()->with('success', 'Reply submitted and status updated.');
     }
@@ -271,6 +313,14 @@ class AdminComplaintController extends Controller
                 'type' => 'official'
             ]);
 
+            // Initial creation log entry
+            ComplaintReply::create([
+                'complaint_id' => $complaint->id,
+                'user_id' => Auth::id(),
+                'message' => 'Official Complaint Created By ' . Auth::user()->name,
+                'status' => 'pending'
+            ]);
+
             if ($request->has('orders')) {
                 foreach ($request->orders as $orderData) {
                     $hasData = array_filter($orderData, fn($value) => !is_null($value) && $value !== '');
@@ -286,6 +336,14 @@ class AdminComplaintController extends Controller
                     $path = $file->store('complaints/attachments', 'public');
                     $complaint->attachments()->create(['file_path' => $path]);
                 }
+            }
+
+            // Email Notification for Complaint Raised
+            $adminEmails = User::role('Super Admin')->pluck('email')->toArray();
+            $deptHeadEmail = $complaint->department->email;
+
+            if ($adminEmails || $deptHeadEmail) {
+                Mail::to($adminEmails)->cc($deptHeadEmail)->send(new ComplaintRaisedMail($complaint));
             }
 
             return redirect()->route('admin.official-complaints.index')->with('success', 'Official Complaint submitted successfully with ID: ' . $complaint_id);

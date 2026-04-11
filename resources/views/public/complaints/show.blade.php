@@ -73,6 +73,11 @@
                         <p class="text-muted mb-1 small text-uppercase fw-bold">Managed By:</p>
                         <h6 class="fw-bold text-primary text-uppercase">{{ $complaint->managed_by }}</h6>
                     </div>
+                    <div class="col-md-3">
+                        <p class="text-muted mb-1 small text-uppercase fw-bold">Delivery Timeline:</p>
+                        <h6 class="fw-bold text-warning">{{ $complaint->delivery_timeline }} {{
+                            $complaint->delivery_timeline == 1 ? 'Day' : 'Days' }}</h6>
+                    </div>
                 </div>
 
                 @if($complaint->specific_tag)

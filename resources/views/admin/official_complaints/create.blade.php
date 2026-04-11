@@ -105,12 +105,14 @@
                         <div class="col-3 mt-3">
                             <label class="form-label">Email Notification to Specific User? *</label>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="send_mail" value=1>
-                                <label class="form-check-label">Yes</label>
+                                <input class="form-check-input" type="radio" name="send_mail" id="official_mail_yes"
+                                    value=1>
+                                <label class="form-check-label" for="official_mail_yes">Yes</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="send_mail" value=0 checked>
-                                <label class="form-check-label">No</label>
+                                <input class="form-check-input" type="radio" name="send_mail" id="official_mail_no"
+                                    value=0 checked>
+                                <label class="form-check-label" for="official_mail_no">No</label>
                             </div>
                         </div>
 
@@ -252,8 +254,10 @@
         $('.specific_tag').on('change', function () {
             if ($(this).val() == '1') {
                 $('.specific_user_email').removeClass('d-none');
+                $('#official_mail_yes').prop('checked', true);
             } else {
                 $('.specific_user_email').addClass('d-none');
+                $('#official_mail_no').prop('checked', true);
             }
         });
     });
